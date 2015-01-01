@@ -261,7 +261,7 @@ class Chatbox
 
 			if ( $countryID == $Member->countryID )
 			{
-				$tabs .= l_t('Notes');
+				$tabs .= '<span>'.l_t('Notes') . '</span>';
 			}
 			elseif(isset($Game->Members->ByCountryID[$countryID]))
 			{
@@ -271,7 +271,7 @@ class Chatbox
 			}
 			else
 			{
-				$tabs .= l_t('Global');
+				$tabs .= '<span>'. l_t('Global') . '</span>';
 			}
 
 			if ( $msgCountryID != $countryID and in_array($countryID, $Member->newMessagesFrom) )
