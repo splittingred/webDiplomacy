@@ -79,12 +79,10 @@ class libHome
 
 		if(!count($pms))
 		{
-			print '<div class="hr"></div>';
 			print '<p class="notice">'.l_t('No game notices found.').'</p>';
 			return;
 		}
 
-		print '<div class="hr"></div>';
 
 		foreach($pms as $pm)
 		{
@@ -113,12 +111,10 @@ class libHome
 
 		if(!count($pms))
 		{
-			print '<div class="hr"></div>';
 			print '<p class="notice">'.l_t('No private messages found; you can send them to other people on their profile page.').'</p>';
 			return;
 		}
 
-		print '<div class="hr"></div>';
 
 		foreach($pms as $pm)
 		{
@@ -135,13 +131,11 @@ class libHome
 
 		if(!count($pms))
 		{
-			print '<div class="hr"></div>';
 			print '<p class="notice">'.l_t('No game notices found; try browsing the <a href="gamelistings.php">game listings</a>, '.
 				'or <a href="gamecreate.php">create your own</a> game.').'</p>';
 			return;
 		}
 
-		print '<div class="hr"></div>';
 
 		foreach($pms as $pm)
 		{
@@ -158,12 +152,10 @@ class libHome
 
 		if(!count($pms))
 		{
-			print '<div class="hr"></div>';
 			print '<p class="notice">'.l_t('No notices found.').'</p>';
 			return;
 		}
 
-		print '<div class="hr"></div>';
 
 		foreach($pms as $pm)
 		{
@@ -259,13 +251,11 @@ class libHome
 			$Variant=libVariant::loadFromVariantID($game['variantID']);
 			$Game=$Variant->panelGameHome($game);
 
-			$buf .= '<div class="hr"></div>';
 			$buf .= $Game->summary();
 		}
 
 		if($count==0)
 		{
-			$buf .= '<div class="hr"></div>';
 			$buf .= '<div><p class="notice">'.l_t('You\'re not joined to any games!').'<br />
 				'.l_t('Access the <a href="gamelistings.php?tab=">Games</a> '.
 				'link above to find games you can join, or start a '.
@@ -273,7 +263,6 @@ class libHome
 		}
 		elseif ( $count == 1 && $User->points > 5 )
 		{
-			$buf .= '<div class="hr"></div>';
 			$buf .= '<div><p class="notice">'.l_t('You can join as many games as you '.
 			'have the points to join.').' </a></p></div>';
 		}
@@ -341,7 +330,7 @@ class libHome
 		{
 			$data = $threads[$threadID];
 
-			$buf .= '<div class="hr userID'.$threads[$threadID]['threadStarterUserID'].' threadID'.$threadID.'"></div>';
+			$buf .= '<div class="userID'.$threads[$threadID]['threadStarterUserID'].' threadID'.$threadID.'"></div>';
 
 			$buf .= '<div class="homeForumGroup homeForumAlt'.($threadCount%2 + 1).
 				' userID'.$threads[$threadID]['threadStarterUserID'].' threadID'.$threadID.'">

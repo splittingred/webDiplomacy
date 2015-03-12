@@ -151,12 +151,12 @@ class panelGameHome extends panelGameBoard
 	{
 		if( $this->phase == 'Pre-game')
 		{
-			return '<div class="bar homeGameLinks barAlt'.libHTML::alternate().'">
+			return '<div class="bar homeGameLinks barAlt1">
 				<a href="board.php?gameID='.$this->id.'">'.l_t('Open').'</a>
 				</div>';
 		}
 		else
-			return '<div class="bar homeGameLinks barAlt'.libHTML::alternate().'">
+			return '<div class="bar homeGameLinks barAlt1">
 				<a href="board.php?gameID='.$this->id.'#gamePanel">'.l_t('Open').'</a> -
 				<a href="board.php?gameID='.$this->id.'#chatbox">'.l_t('Chatbox').'</a> -
 				<a href="board.php?gameID='.$this->id.'#orders">'.l_t('Orders').'</a> -

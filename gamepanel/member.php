@@ -48,11 +48,11 @@ class panelMember extends Member
 		$buf = '';
 		libHTML::alternate();
 		if ( $this->Game->phase != 'Pre-game' )
-			$buf .= '<div class="panelBarGraph memberProgressBar barAlt'.libHTML::$alternate.'">'.$this->memberProgressBar().'</div>';
+			$buf .= '<div class="panelBarGraph memberProgressBar barAlt2">'.$this->memberProgressBar().'</div>';
 		else
 			$buf .= '<div class="panelBarGraph memberProgressBarBlank"> </div>';
 
-		$buf .= '<div class="memberBoardHeader barAlt'.libHTML::$alternate.' barDivBorderTop ">
+		$buf .= '<div class="memberBoardHeader barAlt2 barDivBorderTop ">
 			<table><tr class="member">';
 
 		$buf .= '

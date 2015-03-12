@@ -334,7 +334,7 @@ class panelGame extends Game
 		$noticeBar = $this->gameNoticeBar();
 		if ( $noticeBar )
 			return $buf.'
-				<div class="bar gameNoticeBar barAlt'.libHTML::alternate().'">
+				<div class="bar gameNoticeBar barAlt2">
 					'.$noticeBar.'
 				</div>';
 		else
