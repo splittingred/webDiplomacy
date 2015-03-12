@@ -293,7 +293,6 @@ print '
 	<div class="message-subject"><strong>'.l_t('Post a new thread').'</strong></div>
 	<div style="clear:both;"></div>
 	</div>
-	<div class="hr"></div>
 	';
 	if( $User->isSilenced() ) {
 		print '<div class="message-body postbox" style="padding-top:0; padding-left:auto; padding-right:auto">';
@@ -431,7 +430,7 @@ while( $message = $DB->tabl_hash($tabl) )
 			$muteLink .= '</span>';
 		}
 	}
-	
+
 	print '<div class="hr userID'.$message['fromUserID'].' threadID'.$message['id'].'"></div>'; // Add the userID and threadID so muted users/threads dont create lines where their threads were
 
 	$switch = 3-$switch; // 1,2,1,2,1,2...
