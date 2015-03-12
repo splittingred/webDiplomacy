@@ -139,7 +139,7 @@ class notice
 		if( $this->isRespondable() )
 			$buf .= '<div class="homeForumPostAlt'.libHTML::alternate().' homeForumPost">'.$this->replyBox().'</div>';
 
-		$buf .= '	</div>';
+		$buf .= '	</div></div>';
 					//<div class="homeForumMessage">'.$post['message'].'</div>
 
 					/*
