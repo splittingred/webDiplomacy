@@ -334,7 +334,7 @@ class OrderInterface
 		foreach($this->Orders as $Order)
 		{
 			$alternate = ! $alternate;
-			$html .= '<tr class="barAlt'.($alternate ? '1' : '2').'">
+			$html .= '<tr class="barAlt1">
 				<td class="uniticon"><span id="orderID'.$Order->id.'UnitIconArea"></span></td>
 				<td class="order"><div id="orderID'.$Order->id.'">'.l_t('Loading order').'...</div></td>
 				</tr>';
