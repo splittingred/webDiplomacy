@@ -484,7 +484,7 @@ class libHTML
 			$notice[]=Config::$serverMessages['Panic'];
 		}
 
-		if ( $Misc->Notice )
+		if ( $Misc->Notice || Config::$isBeta )
 			$notice[] = Config::$serverMessages['Notice'];
 
 		if ( ( time() - $Misc->LastProcessTime ) > Config::$downtimeTriggerMinutes*60 )

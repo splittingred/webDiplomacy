@@ -515,7 +515,7 @@ else
 		print $liveGames;
 	}
 	print '<div class="homeHeader">'.l_t('Forum').' <a href="forum.php">'.libHTML::link().'</a></div>';
-	if( file_exists(libCache::dirName('forum').'/home-forum.html') )
+	if( file_exists(libCache::dirName('forum').'/home-forum.html') && !Config::$isBeta)
 		print file_get_contents(libCache::dirName('forum').'/home-forum.html');
 	else
 	{
