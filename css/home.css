@@ -78,7 +78,6 @@ td.homeGameNotices {
 }
 .homeGameLinks {
 	border-bottom:1px solid #aaa;
- 	margin-bottom: 0.6em;
 }
 
 td.homeGamesStats {
@@ -102,7 +101,7 @@ div.homeHeader {
 	text-align: center;
 	color: #009902;
 	margin-top: 3px;
-	margin-bottom: 1px;
+	margin-bottom: 4px;
 	padding-top: 3px;
 }
 
