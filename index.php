@@ -252,7 +252,6 @@ class libHome
 			$Variant=libVariant::loadFromVariantID($game['variantID']);
 			$Game=$Variant->panelGameHome($game);
 
-			$buf .= '<div class="hr"></div>';
 			$buf .= $Game->summary();
 		}
 
@@ -281,7 +280,6 @@ class libHome
 			$count++;
 			$Variant=libVariant::loadFromVariantID($game['variantID']);
 			$Game=$Variant->panelGameHome($game);
-			$buf .= '<div class="hr"></div>';
 			$buf .= $Game->summary();
 		}
 		return $buf;
