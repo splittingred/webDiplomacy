@@ -126,16 +126,16 @@ class panelMember extends Member
 	}
 
 	/**
-	 * The members country name, colored
+	 * The members country name, colored, with optional HTML inside the span
 	 * @return string
 	 */
-	function memberCountryName()
+	function memberCountryName($append='')
 	{
 		global $User;
 
 		if( $this->countryID != 0 )
 			return '<span class="country'.$this->countryID.' '.($User->id==$this->userID?'memberYourCountry':'').' memberStatus'.$this->status.'">'.
-				l_t($this->country).'</span>';
+				l_t($this->country).$append.'</span>';
 		else
 			return '';
 	}
