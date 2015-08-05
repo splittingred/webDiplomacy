@@ -453,7 +453,7 @@ div.gamelistings-tabs {
 	font-size: 13px;
 	
 }
-div.gamelistings-tabs a.current span {
+div.gamelistings-tabs a.current>span {
 	text-decoration:none;
 	background-color: #f0f0f0;
 	border-top:1px solid #888;
@@ -475,15 +475,15 @@ div.gamelistings-tabs:not(#chatboxtabs) > a
 	background-color: #fafafa;	
 	border:1px solid #aaa;
 }        
-div#chatboxtabs.gamelistings-tabs a.current span {
+div#chatboxtabs.gamelistings-tabs a.current>span {
 	padding-bottom: 4px;
 	border-bottom: none;
 }
-div#chatboxtabs a span {
+div#chatboxtabs a>span {
 	margin:0px 2px 0px 2px;
 	padding:3px 4px 3px 4px;
 }
-div.gamelistings-tabs a span:hover,
+div.gamelistings-tabs a>span:hover,
 div.gamelistings-tabs span a:hover 
 {
 	text-decoration:none;
@@ -491,7 +491,7 @@ div.gamelistings-tabs span a:hover
 	border:1px solid #009902 ! important;
 }
 
-div#chatboxtabs.gamelistings-tabs a:hover span {
+div#chatboxtabs.gamelistings-tabs a:hover>span {
 	text-decoration:none;
 	border-top:1px solid #000 ! important;
 	border-left:1px solid #000 ! important;

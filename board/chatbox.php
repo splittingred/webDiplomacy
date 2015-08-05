@@ -255,34 +255,33 @@ class Chatbox
 			// Do not allow country specific tabs for restricted press games.
 			if ($Game->pressType != 'Regular' && $countryID != 0 && $countryID != $Member->countryID ) continue;
 
+
 			$tabs .= ' <a href="./board.php?gameID='.$Game->id.'&amp;msgCountryID='.$countryID.'&amp;rand='.rand(1,100000).'#chatboxanchor" '.
 				'class="country'.$countryID.' '.( $msgCountryID == $countryID ? 'current"'
 					: '" title="'.l_t('Open %s chatbox tab"',( $countryID == 0 ? 'the global' : $this->countryName($countryID)."'s" )) ).'>';
 
+			// Do we display a new messages icon?
+            $newMessages = '';
+			if (( $msgCountryID != $countryID and in_array($countryID, $Member->newMessagesFrom) )
+			 	|| ( $msgCountryID == $countryID and isset($_REQUEST['MarkAsUnread'])))
+			{
+				$newMessages = ' '. libHTML::unreadMessages();
+			}
+
 			if ( $countryID == $Member->countryID )
 			{
-				$tabs .= '<span>'.l_t('Notes') . '</span>';
+				$tabs .= '<span>'.l_t('Notes') . $newMessages .'</span>';
 			}
 			elseif(isset($Game->Members->ByCountryID[$countryID]))
 			{
-				$tabs .= $Game->Members->ByCountryID[$countryID]->memberCountryName();
 				if ( $Game->Members->ByCountryID[$countryID]->online && !$Game->Members->ByCountryID[$countryID]->isNameHidden() )
-					$tabs .= ' '.libHTML::loggedOn($Game->Members->ByCountryID[$countryID]->userID);
+					$newMessages = ' '. libHTML::loggedOn($Game->Members->ByCountryID[$countryID]->userID) . $newMessages; 
+				$tabs .= $Game->Members->ByCountryID[$countryID]->memberCountryName($newMessages);
 			}
 			else
 			{
-				$tabs .= '<span>'. l_t('Global') . '</span>';
+				$tabs .= '<span>'. l_t('Global') .$newMessages. '</span>';
 			}
-
-			if ( $msgCountryID != $countryID and in_array($countryID, $Member->newMessagesFrom) )
-			{
-				// This isn't the tab I am currently viewing, and it has sent me new messages
-				$tabs .= ' '.libHTML::unreadMessages();
-			}
-			
-			// Mark as unread patch! 
-			if ( $msgCountryID == $countryID and isset($_REQUEST['MarkAsUnread']))
-				$tabs .= ' '.libHTML::unreadMessages();
 
 			$tabs .= '</a>';
 		}
