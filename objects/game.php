@@ -515,7 +515,7 @@ class Game
 				$gamesCanProcess = true;
 			elseif( $Misc->Panic )
 				$gamesCanProcess = false;
-			elseif( (time()-$Misc->LastProcessTime) > Config::$downtimeTriggerMinutes*60 || $Config::$isBeta )
+			elseif( (time()-$Misc->LastProcessTime) > Config::$downtimeTriggerMinutes*60 || Config::$isBeta )
 				$gamesCanProcess = false;
 		}
 
