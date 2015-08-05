@@ -61,7 +61,7 @@ class libHTML
 	 */
 	static function loggedOn($userID)
 	{
-		return '<img style="'.self::$hideStyle.'" class="userOnlineImg" userID="'.$userID.'" src="'.l_s('images/icons/online.png').'" alt="'.
+		return '<img class="userOnlineImg" userID="'.$userID.'" src="'.l_s('images/icons/online.png').'" alt="'.
 			l_t('Online').'" title="'.l_t('User currently logged on').'" />';
 	}
 
