@@ -97,7 +97,31 @@ class panelMembers extends Members
 			}
 		}
 
-		return '<table>'.implode('',$membersList).'</table>';
+		$extras ='';
+		if ($this->Game->hasModeratorPowers() && count($this->Game->civilDisorderInfo) != 0) 
+		{ 
+				$extras = '<div class="bar titleBar modEyes">Civil Disorders</div><table><tbody>';
+				foreach ($this->Game->civilDisorderInfo as $userID => $CD) 
+				{
+						$cdUser = new User($userID);
+						$extras .= '<tr class="member memberAlternate1"><td class="memberLeftSide" style="white-space: nowrap;"><span><a href="profile.php?userID='.$userID .'">'.$cdUser->username.'</a>'.
+								' <span class="points">('.$cdUser->points.libHTML::points().User::typeIcon($cdUser->type).')'
+				.(defined('AdminUserSwitch') ? ' (<a href="board.php?gameID='.$this->Game->id.'&auid='.$cdUser->id.'" class="light">+</a>)':'') .
+								'</span></span></td><td class="memberRightSide">';
+						$extras .= '<span class="country' .$CD['countryID']. '">';
+						if( $CD['countryID']==0 )
+							 $extras .= 'Unassigned';
+						else
+								$extras .= $this->Game->Variant->countries[$CD['countryID']-1];
+						$extras .= '</span> (' .$this->Game->datetxt($CD['turn']). ') with ' .$CD['SCCount']. ' centres.';
+
+						$extras .= '</td></tr>';
+				}
+				$extras .= "</tbody></table>";
+               	
+		}				
+
+		return '<table>'.implode('',$membersList).'</table>'.$extras;
 	}
 
 	/**

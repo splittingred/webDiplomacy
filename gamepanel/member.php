@@ -223,7 +223,7 @@ class panelMember extends Member
 		if( $this->status == 'Playing' || $this->status == 'Left' )
 		{
 			$buf .= l_t('worth:').' <em';
-			$value = $this->pointsValue();
+			$value = $this->Game->Scoring->pointsForDraw($this);
 			if ( $value > $this->bet )
 				$buf .= ' class="good"';
 			elseif ( $value < $this->bet )
@@ -233,8 +233,7 @@ class panelMember extends Member
 			return $buf;
 		}
 		elseif ( $this->status == 'Won' ||
-			($this->Game->potType == 'Points-per-supply-center' && ( $this->status == 'Survived' || $this->status == 'Drawn' ) )
-			)
+			($this->Game->potType == 'Points-per-supply-center' &&  $this->status == 'Survived') || $this->status == 'Drawn' )
 		{
 			$buf .= l_t('won:').' <em';
 			$value = $this->pointsWon;

@@ -31,12 +31,18 @@ class libAuth
 	{
 		global $User;
 
+		/* 
+				Disabled while fixing https://github.com/kestasjk/webDiplomacy/issues/159
+				At the time of writing (5 Aug 2015), no code that calls this function
+				needs users to be logged in, so disabling this seems safe.
+
 		if( !$User->type['User'] )
 			libHTML::notice(
 				l_t('Denied'),
 				l_t("Please <a href='register.php' class='light'>register</a> or ".
 					"<a href='logon.php' class='light'>log in</a> to %s.",l_t($name))
 			);
+		 */
 
 		if( !isset($_SESSION['resources']) )
 			$_SESSION['resources']=array();
@@ -269,7 +275,15 @@ class libAuth
 	 */
 	private static function userID_Key( $userID )
 	{
-		return $userID.'_'.md5(md5(Config::$secret).$userID.sha1(Config::$secret));
+		try
+		{
+			$TRYUser = new User($userID); // The user object associated with this key
+		}
+		catch(Exception $e)
+		{
+			libHTML::error(l_t("The userID provided does not exist."));
+		}
+		return $userID.'_'.md5(md5(Config::$secret).$userID.$TRYUser->password.sha1(Config::$secret));
 	}
 
 	/**
@@ -363,15 +377,15 @@ class libAuth
 
 				// Make sure there's no refresh loop
 				trigger_error(l_t("An invalid log-on cookie was given, but it seems an attempt to remove it has failed.")."<br /><br />".
-					l_t("This error has been logged, please e-mail %s if the problem persists, or you can't log on.",Config::$adminEMail));
+					l_t("This error has been logged, please e-mail %s if the problem persists, or you can't log on.",Config::$modEMail));
 			}
 			else
 			{
 				self::keyWipe();
 				header('refresh: 3; url=logon.php?logoff=on');
-				libHTML::error(l_t("An invalid log-on cookie was given, and it has been removed. ".
+				libHTML::error(l_t("You have been logged out. ".
 					"You are being redirected to the log-on page.")."<br /><br />".
-					l_t("Inform an admin at %s if the problem persists, or you can't log on.",Config::$adminEMail));
+					l_t("Inform the moderators at %s if the problem persists, or you can't log on.",Config::$modEMail));
 			}
 
 		}

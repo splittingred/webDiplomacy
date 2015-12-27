@@ -455,11 +455,14 @@ div.gamelistings-tabs {
 }
 div.gamelistings-tabs a.current>span {
 	text-decoration:none;
-	background-color: #f0f0f0;
+	background-color: #f5f5f5 !important;
 	border-top:1px solid #888;
 	border-left:1px solid #888;
 	border-right:1px solid #888;
 }        
+div.gamelistings-tabs a >span {
+	background-color: #f0f0f0;
+}
 div.gamelistings-tabs a {
 	text-decoration:none;
 }

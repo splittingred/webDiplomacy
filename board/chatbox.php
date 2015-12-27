@@ -113,7 +113,7 @@ class Chatbox
 					libGameMessage::send($msgCountryID, $Member->countryID, $newmessage);
 			}
 			elseif( $User->type['Moderator'] )
-				libGameMessage::send(0, 0, '('.$User->username.'): '.$newmessage);
+				libGameMessage::send(0, 'Moderator', '('.$User->username.'): '.$newmessage);
 		}
 		
 		if( isset($_REQUEST['MarkAsUnread']) )
@@ -149,7 +149,7 @@ class Chatbox
 
 		$chatbox .= '<DIV class="chatbox '.(!isset($Member)?'chatboxnotabs':'').'">
 					<TABLE class="chatbox">
-					<TR class="barAlt2 membersList">
+					<TR class="barAlt1 membersList">
 					<TD>';
 
 		if ( $msgCountryID == 0 )
@@ -194,7 +194,7 @@ class Chatbox
 		{
 			$chatbox .= '<DIV class="chatbox"><TABLE>
 					<form method="post" class="safeForm" action="board.php?gameID='.$Game->id.'&amp;msgCountryID='.$msgCountryID.'">
-					<TR class="barAlt2">
+					<TR class="barAlt1">
 						<TD class="left">
 						'.(($msgCountryID == 0) ? '' : '
 							<a href="#" onclick="document.markUnread.submit(); return false;" tabindex="3">Mark unread</a>
@@ -204,7 +204,7 @@ class Chatbox
 							<TEXTAREA id="sendbox" tabindex="1" NAME="newmessage" style="width:98% !important" width="100%" ROWS="5"></TEXTAREA>
 						</TD>
 					</TR>
-					<TR class="barAlt2">
+					<TR class="barAlt1">
 						<TD class="left send">
 							<input type="hidden" name="formTicket" value="'.libHTML::formTicket().'" />
 							<input type="submit" tabindex="2" class="form-submit" value="'.l_t('Send').'" name="Send" /><br/>

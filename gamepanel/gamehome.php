@@ -150,7 +150,7 @@ class panelGameHome extends panelGameBoard
 	 */
 	function pot()
 	{
-		return $this->pot.' '.libHTML::points();
+		return $this->pot.' '.libHTML::points().'<span title="'.$this->Scoring->longName().'"> '.$this->Scoring->Abbr().'</span>';
 	}
 
 	/**
@@ -172,7 +172,7 @@ class panelGameHome extends panelGameBoard
 				'.$watchString.'</div>';
 		}
 		else
-			return '<div class="bar homeGameLinks barAlt'.libHTML::alternate().'">
+			return '<div class="bar homeGameLinks barAlt1">
 				<a href="board.php?gameID='.$this->id.'#gamePanel">'.l_t('Open').'</a> 
 				'.$watchString.'</div>';
 	}

@@ -29,6 +29,64 @@ font-style:normal;
 	margin-left:30px;
 }
 </style>
+December 27th, 2015
+<ul>
+<li>It is no longer possible to rejoin a game with multiple CDs as a different country.</li>
+</ul>
+<div class="hr"></div>
+December 24th, 2015
+<ul>
+<li>Game title now visible as the page title on the game board (instead of 'board').</li>
+<li>Forum posts no longer repost when a page is refreshed.</li>
+<li>Improved text on new thread post.</li>
+<li>Credits page now automatically lists the moderators.</li>
+</ul>
+<div class="hr"></div>
+December 22nd, 2015
+<ul>
+<li>Unranked games now available. Unranked games return the player's bet at the end of the game.</li>
+<li>Sum-of-Squares scoring now available.</li>
+<li>WTA has been renamed "Draw-Size Scoring".</li>
+<li>PPSC has been renamed "Survivors-Win Scoring".</li>
+<li>The 'worth' section at the bottom of the game panel now tells you what your score would be if the game drew.</li>
+<li>PPSC/SWS has been temporarily disabled for new games.</li>
+<li>All takeovers are now free.</li>
+</ul>
+<div class="hr"></div>
+August 27th, 2015
+<ul>
+<li>Finished games now show up in the notifications bar if you have new messages.</li>
+</ul>
+<div class="hr"></div>
+August 25th, 2015
+<ul>
+<li>Added a cue to the game search page so that it is clear that clicking the current tab brings out additional search options.</li>
+<li>The New game tab now shows all new games, not just the ones that you can afford.</li>
+<li>Pot type is now shown on the small game panels on the home page.</li>
+</ul>
+<div class="hr"></div>
+August 19th, 2015
+<ul>
+<li>Bugfix: Destroyed units are no longer drawn when the "show move arrows" profile setting is set.</li>
+</ul>
+<div class="hr"></div>
+August 18th, 2015
+<ul>
+<li>Bugfix: Anonymous defeats no longer increment the 'defeats' count on a profile page until the game is over.</li>
+</ul>
+<div class="hr"></div>
+August 5th, 2015
+<ul>
+<li>Number of PMs displayed on the <a href="index.php?notices=on">notices</a> page increased to 50 from 35.</li>
+<li>Guests are now allowed to use the user search feature, allowing members who have forgotten their username to find it.</li>
+</ul>
+<div class="hr"></div>
+July 25th, 2015
+<ul>
+<li>Made moderator posts clearly labelled "<strong>moderator</strong>" in global chat. This is important for the larger variants, where some countries have similar text to moderator posts.</li>
+<li>Mousing over the upcoming live games no longer hides game notices.</li>
+</ul>
+<div class="hr"></div>
 May 23rd, 2015
 <ul>
 <li>Bugfix: CD/NMR disband ordering now works correctly on maps with 128 territories or more.</li>

@@ -388,6 +388,9 @@ if( $total )
 	{
 		if ( !in_array($name, $includeStatus) ) continue;
 
+		if (!$showAnon && isset($rankingDetails['anon'][$name]))
+			$status -= $rankingDetails['anon'][$name];
+
 		print '<li>'.l_t($name.': <strong>%s</strong>',$status);
 		print ' ( '.round(($status/$total)*100).'% )';
 		print '</li>';
@@ -475,9 +478,9 @@ list($liked) = $DB->sql_row("SELECT COUNT(*) FROM wD_ForumMessages fm
 $likes = ($likes ? '<strong>'.l_t('Likes:').'</strong> '.$likes : '');
 $liked = ($liked ? '<strong>'.l_t('Liked:').'</strong> '.$liked : '');
 
-print '<li><strong>'.l_t('Forum posts:').'</strong> '.$posts.'<br />
-	<strong>'.l_t('View:').'</strong> <a class="light" href="profile.php?detail=threads&userID='.$UserProfile->id.'">'.l_t('Threads').'</a>,
-		<a class="light" href="profile.php?detail=replies&userID='.$UserProfile->id.'">'.l_t('replies').'</a>';
+print '<li><strong>'.l_t('Forum posts:').'</strong> '.$posts.'<br />';
+	//<strong>'.l_t('View:').'</strong> <a class="light" href="profile.php?detail=threads&userID='.$UserProfile->id.'">'.l_t('Threads').'</a>,
+	//	<a class="light" href="profile.php?detail=replies&userID='.$UserProfile->id.'">'.l_t('replies').'</a>';
 
 print '<br/>'.implode(' / ',array($likes,$liked)).'
 	</li>';
@@ -547,8 +550,6 @@ if ( $User->type['Moderator'] && $User->id != $UserProfile->id )
 	if( !$UserProfile->type['Admin'] && ( $User->type['Admin'] || !$UserProfile->type['Moderator'] ) )
 		$modActions[] = libHTML::admincp('banUser',array('userID'=>$UserProfile->id), l_t('Ban user'));
 	
-	if( !$UserProfile->type['Donator'])
-		$modActions[] = libHTML::admincp('makeDonator',array('userID'=>$UserProfile->id), l_t('Give donator benefits'));
 
 	if( $User->type['Admin'] && !$UserProfile->type['Moderator'] )
 		$modActions[] = libHTML::admincp('giveModerator',array('userID'=>$UserProfile->id), l_t('Make moderator'),true);
