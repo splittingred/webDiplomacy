@@ -308,14 +308,14 @@ class libHome
 
 		if($count==0)
 		{
-			$buf .= '<div><p class="notice">'.l_t('You\'re not joined to any games!').'<br />
+			$buf .= '<div class="bottomborder"><p class="notice">'.l_t('You\'re not joined to any games!').'<br />
 				'.l_t('Access the <a href="gamelistings.php?tab=">Games</a> '.
 				'link above to find games you can join, or start a '.
 				'<a href="gamecreate.php">New game</a> yourself.</a>').'</p></div>';
 		}
 		elseif ( $count == 1 && $User->points > 5 )
 		{
-			$buf .= '<div><p class="notice">'.l_t('You can join as many games as you '.
+			$buf .= '<div class="bottomborder"><p class="notice">'.l_t('You can join as many games as you '.
 			'have the points to join.').' </a></p></div>';
 		}
 		return $buf;
