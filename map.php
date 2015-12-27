@@ -27,7 +27,9 @@ if( !isset($_REQUEST['variantID']) && ( !isset($_REQUEST['gameID']) || !isset($_
 
 define('IN_CODE', 1);
 
-if( isset($_REQUEST['DATC'])||isset($_REQUEST['nocache'])||isset($_REQUEST['uncache'])||isset($_REQUEST['profile']) )
+
+require_once('config.php');
+if( isset($_REQUEST['DATC'])||isset($_REQUEST['nocache'])||isset($_REQUEST['uncache'])||isset($_REQUEST['profile']) || Config::$isBeta )
 	define('IGNORECACHE',1);
 else
 	define('IGNORECACHE',0);
