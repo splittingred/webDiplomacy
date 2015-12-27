@@ -172,7 +172,7 @@ td.homeGameNotices .homeForumSubject {
 	text-align:center;
 }
 .homeForumMessage {
-	padding-left: 1em;
+	padding-left: 2px;
 	color: #39383A;
 	/*color:#666;*/
 }
