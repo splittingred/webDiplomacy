@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<svg width="12.000000000000002" height="12.000000000000002" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <g>
+  <title>Layer 1</title>
+  <ellipse fill="#ffffff" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" cx="79" cy="81" id="svg_5" ry="1" stroke="#006699"/>
+  <ellipse stroke="#006699" ry="5.364583" rx="5.364583" id="svg_1" cy="6.052084" cx="5.947914" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" fill="#ffffff"/>
+  <text font-weight="bold" style="cursor: move;" stroke="#006699" transform="matrix(0.38082355260849,0,0,0.38082355260849,4.388619578443466,7.725898148491978) " xml:space="preserve" text-anchor="middle" font-family="serif" font-size="24" id="svg_3" y="3.291667" x="4.645831" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="0" fill="#009900">D</text>
+ </g>
+</svg>

@@ -536,18 +536,22 @@ class User {
 		$buf='';
 
 		if( strstr($type,'Moderator') )
-			$buf .= ' <img src="'.l_s('images/icons/mod.png').'" alt="'.l_t('Mod').'" title="'.l_t('Moderator/Admin').'" />';
+			$buf .= ' <img src="'.l_s('images/icons/mod.svg').'" alt="'.l_t('Mod').'" title="'.l_t('Moderator/Admin').'" />';
 		elseif(strstr($type,'Banned') )
 			$buf .= ' <img src="'.l_s('images/icons/cross.png').'" alt="X" title="'.l_t('Banned').'" />';
+		
 
 		if( strstr($type,'DonatorPlatinum') )
 			$buf .= libHTML::platinum();
-		elseif( strstr($type,'DonatorGold') )
-			$buf .= libHTML::gold();
+	    elseif( strstr($type,'DonatorGold') )
+	    	$buf .= libHTML::gold();
 		elseif( strstr($type,'DonatorSilver') )
 			$buf .= libHTML::silver();
 		elseif( strstr($type,'DonatorBronze') )
 			$buf .= libHTML::bronze();
+		if (strstr($type,'Developer') )
+			$buf .= libHTML::developer();
+
 
 		return $buf;
 	}
