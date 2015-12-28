@@ -1,6 +1,7 @@
 Changelog
 ---------
 * Added a new press mode, "rulebook press" for no negotiation during builds and retreats.
+* Added developers as a user type
 
 Updating
 --------
