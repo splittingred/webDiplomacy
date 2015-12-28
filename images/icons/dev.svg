@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<svg width="12.000000000000002" height="12.000000000000002" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <g>
+  <title>Layer 1</title>
+  <ellipse fill="#ffffff" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" cx="79" cy="81" id="svg_5" ry="1" stroke="#006699"/>
+  <ellipse ry="0.744417" rx="0.744417" id="svg_10" cy="6.082712" cx="6.248137" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" fill="#009900"/>
+  <polygon transform="rotate(17.911130905151367 6.041354179382323,5.991489410400391) " stroke-width="null" points="11.79750456660986,5.991489551961422 8.919429920613766,10.976462505757809 3.1632791981101036,10.976462505757809 0.2852041944861412,5.991489551961422 3.1632791981101036,1.0065168365836143 8.919429920613766,1.0065168365836143 11.79750456660986,5.991489551961422 " strokeWidth="null" strokecolor="none" fill="#006699" edge="5.383942" orient="x" sides="6" shape="regularPoly" id="svg_7" cy="5.503721" cx="5.50372"/>
+  <ellipse ry="2.812241" rx="2.812241" id="svg_11" cy="5.999999" cx="5.917285" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" fill="#ffffff"/>
+ </g>
+</svg>

@@ -72,17 +72,22 @@ class libHTML
 
 	static function gold()
 	{
-		return ' <img src="'.l_s('images/icons/gold.png').'" alt="(G)" title="'.l_t('Donator - gold').'" />';
+		return ' <img src="'.l_s('images/icons/gold.svg').'" alt="(G)" title="'.l_t('Donator - gold').'" />';
+	}
+
+	static function developer()
+	{
+		return ' <img src="'.l_s('images/icons/dev.svg').'" alt="(Dev)" title="'.l_t('Site developer team').'" />';
 	}
 
 	static function silver()
 	{
-		return ' <img src="'.l_s('images/icons/silver.png').'" alt="(S)" title="'.l_t('Donator - silver').'" />';
+		return ' <img src="'.l_s('images/icons/silver.svg').'" alt="(S)" title="'.l_t('Donator - silver').'" />';
 	}
 
 	static function bronze()
 	{
-		return ' <img src="'.l_s('images/icons/bronze.png').'" alt="(B)" title="'.l_t('Donator - bronze').'" />';
+		return ' <img src="'.l_s('images/icons/bronze.svg').'" alt="(B)" title="'.l_t('Donator - bronze').'" />';
 	}
 
 	/**
@@ -91,13 +96,13 @@ class libHTML
 	 */
 	static function points()
 	{
-		return ' <img src="'.l_s('images/icons/points.png').'" alt="D" title="'.l_t('webDiplomacy points').'" />';
+		return ' <img src="'.l_s('images/icons/points.svg').'" alt="D" title="'.l_t('webDiplomacy points').'" />';
 	}
 
 	static function forumMessage($threadID, $messageID)
 	{
 		return '<a style="'.self::$hideStyle.'" class="messageIconForum" threadID="'.$threadID.'" messageID="'.$messageID.'" href="forum.php?threadID='.$threadID.'#'.$messageID.'">'.
-		'<img src="'.l_s('images/icons/mail.png').'" alt="'.l_t('New').'" title="'.l_t('Unread messages!').'" />'.
+		'<img src="'.l_s('images/icons/mail.svg').'" alt="'.l_t('New').'" title="'.l_t('Unread messages!').'" />'.
 		'</a> ';
 
 	}
@@ -146,7 +151,7 @@ class libHTML
 	{
 		$buf = '';
 		if($url) $buf .= '<a href="'.$url.'">';
-		$buf .= '<img src="'.l_s('images/icons/mail.png').'" alt="'.l_t('Unread message').'" title="'.l_t('Unread message').'" />';
+		$buf .= '<img src="'.l_s('images/icons/mail.svg').'" alt="'.l_t('Unread message').'" title="'.l_t('Unread message').'" />';
 		if($url) $buf .= '</a>';
 		return $buf;
 	}
@@ -160,7 +165,7 @@ class libHTML
 	{
 		$buf = '';
 		if($url) $buf .= '<a href="'.$url.'">';
-		$buf .= '<img src="'.l_s('images/icons/mail_faded.png').'" alt="'.l_t('Recent message').'" title="'.l_t('Recent message').'" />';
+		$buf .= '<img src="'.l_s('images/icons/mail.svg').'" alt="'.l_t('Recent message').'" title="'.l_t('Recent message').'" />';
 		if($url) $buf .= '</a>';
 		return $buf;
 	}
@@ -532,7 +537,7 @@ class libHTML
 		if ( $User->notifications->PrivateMessage and ! isset($_REQUEST['notices']))
 		{
 			$gameNotifyBlock .= '<span class=""><a href="index.php?notices=on">'.
-				l_t('PM').' <img src="'.l_s('images/icons/mail.png').'" alt="'.l_t('New private messages').'" title="'.l_t('New private messages!').'" />'.
+				l_t('PM').' <img src="'.l_s('images/icons/mail.svg').'" alt="'.l_t('New private messages').'" title="'.l_t('New private messages!').'" />'.
 				'</a></span> ';
 		}
 
@@ -557,13 +562,13 @@ class libHTML
 				$notifyGame['name'];
 
 			if ( $notifyGame['processStatus'] == 'Paused' )
-				$gameNotifyBlock .= '-<img src="'.l_s('images/icons/pause.png').'" alt="'.l_t('Paused').'" title="'.l_t('Game paused').'" />';
+				$gameNotifyBlock .= '-<img src="'.l_s('images/icons/pause.svg').'" alt="'.l_t('Paused').'" title="'.l_t('Game paused').'" />';
 
 			$gameNotifyBlock .= ' ';
 
 			$gameNotifyBlock .= $notifyGame['orderStatus']->icon();
 			if ( $notifyGame['newMessagesFrom'] )
-				$gameNotifyBlock .= '<img src="'.l_s('images/icons/mail.png').'" alt="'.l_t('New messages').'" title="'.l_t('New messages!').'" />';
+				$gameNotifyBlock .= '<img src="'.l_s('images/icons/mail.svg').'" alt="'.l_t('New messages').'" title="'.l_t('New messages!').'" />';
 
 			$gameNotifyBlock .= '</a></span> ';
 		}

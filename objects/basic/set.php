@@ -56,13 +56,13 @@ class setMemberOrderStatus extends set {
 		if( $this->None )
 			return '- ';
 		elseif( $this->Ready )
-			return '<img src="'.l_s('images/icons/tick.png').'" alt="'.l_t('Ready').'" title="'.l_t('Ready to move to the next turn').'" /> ';
+			return '<img src="'.l_s('images/icons/tick.svg').'" alt="'.l_t('Ready').'" title="'.l_t('Ready to move to the next turn').'" /> ';
 		elseif( $this->Completed )
-			return '<img src="'.l_s('images/icons/tick_faded.png').'" alt="'.l_t('Completed').'" title="'.l_t('Orders completed, but not ready for next turn').'" /> ';
+			return '<img src="'.l_s('images/icons/tick_faded.svg').'" alt="'.l_t('Completed').'" title="'.l_t('Orders completed, but not ready for next turn').'" /> ';
 		elseif( $this->Saved )
-			return '<img src="'.l_s('images/icons/alert_minor.png').'" alt="'.l_t('Saved').'" title="'.l_t('Orders saved, but not completed!').'" /> ';
+			return '<img src="'.l_s('images/icons/alert_minor.svg').'" alt="'.l_t('Saved').'" title="'.l_t('Orders saved, but not completed!').'" /> ';
 		else
-			return '<img src="'.l_s('images/icons/alert.png').'" alt="'.l_t('Not received').'" title="'.l_t('No orders submitted!').'" /> ';
+			return '<img src="'.l_s('images/icons/alert.svg').'" alt="'.l_t('Not received').'" title="'.l_t('No orders submitted!').'" /> ';
 	}
 	function iconText() {
 		if( $this->None )
