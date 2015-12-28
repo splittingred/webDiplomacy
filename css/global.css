@@ -60,6 +60,15 @@ textarea {
 	width:90%;
 	font-family: sans-serif;
 }
+div.hrnl {
+	height:0;
+	border: 0;
+	margin-top:10px;
+	margin-bottom:10px;
+	width:80%;
+	margin-left:auto;
+	margin-right:auto;
+}
 div.hr, div.hrthin {
 	height:0;
 	border: 0;
@@ -526,21 +535,19 @@ div#chatboxtabs.gamelistings-tabs a:hover>span {
 	background-color:#f0f0f0;
 }
 .replyborder1 {
-	border: 1px solid #c1c1c1;
+	border-bottom: 1px solid #c1c1c1;
 	border-top:0;
 }
 .replyborder1 .first {
 	border-top: 1px solid #c1c1c1;
 }
 .replyborder2 {
-	border: 1px solid #bebebe;
+	border-bottom: 1px solid #bebebe;
 	border-top:0;
 }
 .replyalternate1 {
-	background-color:#eaeaea;
 }
 .replyalternate2 {
-	background-color:#e5e5e5;
 }
 .message-head {
 	font-size:13px;

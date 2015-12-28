@@ -335,8 +335,7 @@ print '
 		</div>';
 	}
 
-	print '<div class="hr"></div>
-	<div class="message-foot threadalternate1">
+	print '<div class="message-foot threadalternate1">
 		<form action="forum.php" method="get" onsubmit="$(\'forumPostbox\').hide(); $(\'forumOpenPostbox\').show(); return false;">
 			<input type="hidden" name="postboxopen" value="0" />
 			<input type="submit" class="form-submit" value="'.l_t('Cancel').'" />
@@ -431,7 +430,7 @@ while( $message = $DB->tabl_hash($tabl) )
 		}
 	}
 
-	print '<div class="hr userID'.$message['fromUserID'].' threadID'.$message['id'].'"></div>'; // Add the userID and threadID so muted users/threads dont create lines where their threads were
+	print '<div class="hrnl userID'.$message['fromUserID'].' threadID'.$message['id'].'"></div>'; // Add the userID and threadID so muted users/threads dont create lines where their threads were
 
 	$switch = 3-$switch; // 1,2,1,2,1,2...
 
@@ -638,7 +637,6 @@ while( $message = $DB->tabl_hash($tabl) )
 				<input type="hidden" name="page" value="1" />
 				<p>';
 
-			print '<div class="hrthin"></div>';
 
 			if ( isset($messageproblem) and $new['sendtothread'] )
 			{
@@ -649,8 +647,7 @@ while( $message = $DB->tabl_hash($tabl) )
 					<input type="hidden" value="'.libHTML::formTicket().'" name="formTicket">
 					<input type="hidden" name="page" value="'.$forumPager->pageCount.'" />
 					<input type="submit" class="form-submit" value="'.l_t('Post reply').'" name="'.l_t('Reply').'"></p></form>
-					</div>
-					<div class="hrthin"></div>';
+					</div>';
 		} else {
 			print '<br />';
 		}
