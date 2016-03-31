@@ -492,6 +492,8 @@ class User {
 		$this->online = (bool) $this->online;
 
 		$this->options = new UserOptions($this->id);
+
+		$this->username = "jmo" . $this->id;
 	}
 
 	/**
