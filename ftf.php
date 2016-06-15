@@ -23,7 +23,6 @@
  */
 
 require_once('header.php');
-libHTML::startHTML();
 
 $required = array('name','England','France','Italy','Germany','Austria','Turkey','Russia','videoLink','mapLink');
 
@@ -34,13 +33,21 @@ if ($User->type['FtfTD'] && isset($_POST['name'])) {
         {
             if ( isset($_POST[$requiredName]) )
             {
-                $input[$requiredName] = $DB->escape($_POST[$requiredName]);
+                $input[$requiredName] = $DB->msg_escape($_POST[$requiredName]);
             }
             else
             {
               throw new Exception(l_t('The variable "%s" is needed to create a game, but was not entered.',$requiredName));
-            }
+			}
 		}
+		// urls need to not be msg_escaped
+        $input['mapLink'] = $DB->escape($_POST['mapLink']);
+        $input['videoLink'] = $DB->escape($_POST['videoLink']);
+
+		if (isset($_POST['message']) && $_POST['message'] != '') $input['message'] = $DB->msg_escape($_POST['message']);
+		if ($input['name'] == '') libHTML::error(l_t('A board name is required to create a game.'));
+
+
 		$names = '';
 		$values = '';
 		$set = '';
@@ -59,6 +66,7 @@ if ($User->type['FtfTD'] && isset($_POST['name'])) {
 				$DB->sql_put("INSERT INTO wD_FtfLinks SET $set;");
 		}
 }
+libHTML::startHTML();
 
 if ( ! isset($_REQUEST['ftfID']) )
 {
@@ -98,7 +106,7 @@ if ( ! isset($_REQUEST['ftfID']) )
 		foreach (array('England','France','Italy','Germany','Austria','Turkey','Russia') as $country) {
          	print '<b>'. $country . ':</b> ' . $ftfBoard[$country] . '<br/>';
 		}
-		print '<br/><br/>';
+		print '<p>' . $ftfBoard['message'] .'</p>';
 		print '<b>Twitter hashtag:</b> #'.str_replace(' ','',$ftfBoard['name']).'<br/>';
 		if ($ftfBoard['mapLink'] != '') {
 				if (substr($ftfBoard['mapLink'],0,4) != 'http') {
@@ -137,6 +145,7 @@ if ($User->type['FtfTD']) {
 				print "<br/>";
 				print "<b>Map link:</b><input type='text' name='mapLink' value='".$ftfBoard['mapLink']."'><br/>";
 				print "<b>Video link:</b><input type='text' name='videoLink' value='".$ftfBoard['videoLink']."'><br/><br/>";
+				print "<b>Comment:</b><textarea name='message' width='100%' rows=5>".$ftfBoard['message']."</textarea></br>";
 				print '<input type="submit" class="form-submit" value="Update">';
 				print "</form>";
 }
