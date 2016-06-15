@@ -614,6 +614,7 @@ class libHTML
 		$links['intro.php']=array('name'=>'Intro', 'inmenu'=>FALSE);
 		$links['credits.php']=array('name'=>'Credits', 'inmenu'=>FALSE);
 		$links['board.php']=array('name'=>'Board', 'inmenu'=>FALSE);
+		$links['ftf.php']=array('name'=>'WDC 2016', 'inmenu'=>FALSE);
 		$links['profile.php']=array('name'=>'Profile', 'inmenu'=>FALSE);
 		$links['translating.php']=array('name'=>'Translating', 'inmenu'=>FALSE);
 		$links['points.php']=array('name'=>'Points', 'inmenu'=>FALSE);
