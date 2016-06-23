@@ -134,6 +134,7 @@ if ($User->type['FtfTD']) {
 				foreach ($required as $key) {
 					$ftfBoard[$key] = '';
 				}
+				$ftfBoard['message']  = '';
 		}
 				print "<b>Board name:</b><input type='text' name='name' value='".$ftfBoard['name']."'><br/><br/>";
 				
