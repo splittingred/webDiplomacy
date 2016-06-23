@@ -630,6 +630,10 @@ class libHTML
 				$links['profile.php']=array('name'=>'Find user', 'inmenu'=>true);  // Overrides the previous one with one that appears in the menu
 				$links['admincp.php']=array('name'=>'Admin CP', 'inmenu'=>true);
 			}
+			if ( $User->type['FtfTD'] )
+			{
+				$links['ftf.php']=array('name'=>'WDC 2016', 'inmenu'=>TRUE);
+			}
 			$links['gamemaster.php']=array('name'=>'GameMaster', 'inmenu'=>FALSE);
 		}
 
