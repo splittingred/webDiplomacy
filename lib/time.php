@@ -180,4 +180,3 @@ class libTime
                     return gmstrftime("%I %p %a %d %b %y", $givenTime); // Day# Month Year
         }
 }
-?>
