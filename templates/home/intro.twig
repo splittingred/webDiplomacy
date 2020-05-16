@@ -1,0 +1,28 @@
+
+<div class="introToDiplomacy">
+    <div class="content-notice" style="text-align:center">
+        {{ globalInfo|raw }}
+    </div>
+</div>
+
+{% include 'common/page_title.twig' with { 'title': 'Welcome to webDiplomacy!', description: 'A multiplayer web implementation of the popular turn-based strategy game Diplomacy.' } %}
+{% include 'home/feature_map.twig' %}
+{% include 'common/page_title.twig' with { 'title': 'Intro to webDiplomacy', description: 'A quick guide to get newcomers playing the game.' } %}
+
+<div class="content content-follow-on introToDiplomacy_show">
+    {% include 'home/intro_tutorial.twig' %}
+    <div class="hr"></div>
+    <ul class="formlist">
+        <li class="formlistdesc">
+            <a name="Play"></a>
+            With these rules you know everything you need to start playing Diplomacy online! After you
+            <a href="/register.php" class="light">register</a> a user account you can
+            <a href="/gamecreate.php" class="light">create a game</a>
+            and <a href="/gamelistings.php?gamelistType=New" class="light">join existing games</a>.
+            <p style="text-align:center;">
+                <img src="/datc/maps/812-large.map-thumb" alt=" "
+                     title="Because Prussia is support-holding the fleet in the Baltic Sea the equally supported move to the Baltic Sea from Livonia fails: This allows the fleet in the Baltic Sea to successfully convoy an army from Berlin to Sweden"  />
+            </p>
+        </li>
+    </ul>
+</div>

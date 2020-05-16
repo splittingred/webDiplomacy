@@ -399,55 +399,20 @@ class libHTML
 	static public function prebody ( $title )
 	{
 		require_once(l_r('global/definitions.php'));
-		
-		global $User;
-		global $UserOptions;
-		$variantCSS=array();
 
-		// set user's dark or light theme
-		if(isset($User) && ($User->options->value['darkMode'] == 'No'))
-			$darkMode = '';
-		else
-			$darkMode = 'darkMode/';
+		$variantCSS = [];
 
 		foreach(Config::$variants as $variantName)
-			$variantCSS[] = '<link rel="stylesheet" href="'.STATICSRV.l_s('variants/'.$variantName.'/resources/'.$darkMode.'style.css').'?var='.CSSVERSION.'" type="text/css" />';
+			$variantCSS[] = '<link rel="stylesheet" href="'.STATICSRV.l_s('variants/'.$variantName.'/resources/style.css').'?var='.CSSVERSION.'" type="text/css" />';
 		$variantCSS=implode("\n",$variantCSS);
 
-		/*
-		 * This line when included in the header caused certain translated hyphenated letters to come out as black diamonds with question marks.
-		 */
-		return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-		<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
-		<head>
-		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-			<meta http-equiv="Content-Style-Type" content="text/css" />
-			<meta name="robots" content="index,follow" />
-			<meta name="description" content="'.l_t('webDiplomacy is an online, multiplayer, turn-based strategy game that lets you play Diplomacy online.').'" />
-			<meta name="keywords" content="'.l_t('diplomacy,diplomacy game,online diplomacy,classic diplomacy,web diplomacy,diplomacy board game,play diplomacy,php diplomacy').'" />
-			<link rel="shortcut icon" href="'.STATICSRV.l_s('favicon.ico').'" />
-			<link rel="icon" href="'.STATICSRV.l_s('favicon.ico').'" />
-			
-			<script type="text/javascript" src="useroptions.php"></script>
-			<script type="text/javascript" src="javascript/clickhandler.js"></script>
-			<script type="text/javascript" src="'.STATICSRV.l_j('contrib/js/prototype.js').'"></script>
-			<script type="text/javascript" src="'.STATICSRV.l_j('contrib/js/scriptaculous.js').'"></script>
-			<link rel="stylesheet" type="text/css" href="'.STATICSRV.l_s('contrib/js/pushup/src/css/pushup.css').'" />
-			<script type="text/javascript" src="'.STATICSRV.l_j('contrib/js/pushup/src/js/pushup.js').'"></script>
-			<script type="text/javascript">
-				STATICSRV="'.STATICSRV.'";
-				var cssDirectory = "'.CSSDIR.'";
-					var cssVersion = "'.CSSVERSION.'";
-			</script>
-
-			<link rel="stylesheet" id="global-css" href="'.CSSDIR.l_s('/'.$darkMode.'global.css').'?ver='.CSSVERSION.'" type="text/css" />
-			<link rel="stylesheet" id="game-panel-css" href="'.CSSDIR.l_s('/'.$darkMode.'gamepanel.css').'?ver='.CSSVERSION.'" type="text/css" />
-			<link rel="stylesheet" id="home-css" href="'.CSSDIR.l_s('/'.$darkMode.'home.css').'?ver='.CSSVERSION.'" type="text/css" />
-			'.$variantCSS.'
-
-			<script type="text/javascript" src="'.l_j('javascript/desktopMode.js').'?ver='.JSVERSION.'"></script>
-			<title>'.l_t('%s - webDiplomacy',$title).'</title>
-		</head>';
+		global $twig;
+		return $twig->render('common/layout/head.twig', [
+            'title' => $title,
+            'css_version' => CSSVERSION,
+            'js_version' => JSVERSION,
+            'variant_css' => $variantCSS,
+        ]);
 	}
 
 	/**
@@ -468,35 +433,12 @@ class libHTML
 			die(l_t('Access to this page denied for your account type.'));
 		}
 
-		print libHTML::prebody($title===FALSE ? l_t($pages[$scriptname]['name']) : $title).
-			'<body>'.libHTML::menu($pages, $scriptname);
-
-		if( defined('FACEBOOKSCRIPT') ) 
-		{
-			?>
-			<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US" type="text/javascript"></script>
-			<script type="text/javascript">
-			FB.init("b24f8dc93cdbf2ff1ee7db508ae14c6d");
-			FB_RequireFeatures(["CanvasUtil"], function(){
-				FB.XdComm.Server.init("xd_receiver.htm");
-				FB.CanvasClient.startTimerToSizeToContent();
-			});
-			</script>
-			<div id="FB_HiddenIFrameContainer" style="display:none; position:absolute; left:-100px; top:-100px; width:0px; height: 0px;"></div>
-			<?php
-		}
-
-		print '<noscript><div class="content-notice">
-					<p class="notice">'.l_t('You do not have JavaScript enabled. It is required to use webDiplomacy fully.').'</p>
-				</div></noscript>';
-
-		print self::globalNotices();
-
+		$bannedMessages = '';
 		if (isset($User) && $User->userIsTempBanned() )
 		{
 			if ( $User->tempBanReason != 'System' && $User->tempBanReason != '')
 			{
-				print '<div class="content-notice">
+				$bannedMessages = '<div class="content-notice">
 					<p class="notice"><br>You are blocked from joining, rejoining, or creating new games by the moderators for '.libTime::remainingText($User->tempBan).
 					 ' for the following reason:</br> '.$User->tempBanReason.' </br>
 					Contact the moderators at '.Config::$modEMail.' for help. If you attempt to get around this temp ban 
@@ -505,7 +447,7 @@ class libHTML
 			}
 			else if ( ($User->tempBan - time() ) > (60*60*24*180))
 			{
-				print '<div class="content-notice">
+				$bannedMessages = '<div class="content-notice">
 					<p class="notice"><br>You are blocked from joining, rejoining, or creating new games for a year because you were too unreliable. 
 					Contact the moderators at '.Config::$modEMail.' for help. If you attempt to get around this temp ban 
 					by making a new account your accounts will be banned with no chance for appeal.<br><br></p>
@@ -513,19 +455,23 @@ class libHTML
 			}
 			else
 			{
-				print '<div class="content-notice">
+				$bannedMessages = '<div class="content-notice">
 						<p class="notice"><br>You are blocked from joining, rejoining, or creating new games for '.libTime::remainingText($User->tempBan).
 						' because you were too unreliable. Contact the moderators at '.Config::$modEMail.' if you need help.<br><br></p>
 					</div>';
 			}
 		}
 
-		if ( is_object($User) && $User->type['User'] )
-		{
-			$gameNotifyBlock = libHTML::gameNotifyBlock();
-			if ( $gameNotifyBlock )
-				print '<div class="content-notice"><div class="gamelistings-tabs">'.$gameNotifyBlock.'</div></div>';
-		}
+		$gameNotification = is_object($User) && $User->type['User'] ? libHTML::gameNotifyBlock() : '';
+
+		global $twig;
+		echo $twig->render('common/layout/header.twig', [
+			'head' => self::prebody($title===FALSE ? l_t($pages[$scriptname]['name']) : $title),
+			'menu' => self::menu($pages, $scriptname),
+			'global_notices' => self::globalNotices(),
+			'banned_messages' => $bannedMessages,
+			'game_notification' => $gameNotification
+		]);
 	}
 
 	/**

@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta name="robots" content="index,follow" />
+    <meta name="description" content="webDiplomacy is an online, multiplayer, turn-based strategy game that lets you play Diplomacy online." />
+    <meta name="keywords" content="diplomacy,diplomacy game,online diplomacy,classic diplomacy,web diplomacy,diplomacy board game,play diplomacy,php diplomacy" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <script type="text/javascript" src="/useroptions.php"></script>
+    <script type="text/javascript" src="/javascript/clickhandler.js"></script>
+    <script type="text/javascript" src="/contrib/js/prototype.js"></script>
+    <script type="text/javascript" src="/contrib/js/scriptaculous.js"></script>
+    <link rel="stylesheet" type="text/css" href="/contrib/js/pushup/src/css/pushup.css" />
+    <script type="text/javascript" src="/contrib/js/pushup/src/js/pushup.js"></script>
+    <script type="text/javascript">
+        STATICSRV="/";
+        let cssDirectory = "/css";
+        let cssVersion = "/css";
+    </script>
+
+    <link rel="stylesheet" id="global-css" href="/css/global.css?ver={{ css_version }}" type="text/css" />
+    <link rel="stylesheet" id="game-panel-css" href="/css/gamepanel.css?ver={{ css_version }}" type="text/css" />
+    <link rel="stylesheet" id="home-css" href="/css/home.css?ver={{ css_version }}" type="text/css" />
+    {{ variant_css|raw }}
+
+    <script type="text/javascript" src="/javascript/desktopMode.js?ver={{ js_version }}"></script>
+    <title>{{ title }} - webDiplomacy</title>
+</head>

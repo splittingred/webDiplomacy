@@ -52,6 +52,7 @@ require_once('config.php');
 
 require_once('global/definitions.php');
 
+
 if( strlen(Config::$serverMessages['ServerOffline']) )
 	die('<html><head><title>Server offline</title></head>'.
 		'<body>'.Config::$serverMessages['ServerOffline'].'</body></html>');
@@ -258,3 +259,10 @@ function close()
 
 	die();
 }
+
+global $twig;
+$loader = new \Twig\Loader\FilesystemLoader(dirname(__FILE__) . '/templates');
+$twig = new \Twig\Environment($loader, [
+    'cache' => dirname(__FILE__) . '/cache/templates',
+    'debug' => true,
+]);

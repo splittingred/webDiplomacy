@@ -1,0 +1,13 @@
+{{ head|raw }}
+<body>
+{{ menu|raw }}
+<noscript>
+    <div class="content-notice">
+        <p class="notice">You do not have JavaScript enabled. It is required to use webDiplomacy fully.</p>
+    </div>
+</noscript>
+{{ global_notices|raw }}
+{{ banned_messages|raw }}
+{% if game_notification %}
+    <div class="content-notice"><div class="gamelistings-tabs">{{ game_notification }}</div></div>
+{% endif %}

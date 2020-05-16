@@ -27,15 +27,14 @@ defined('IN_CODE') or die('This script can not be run by itself.');
 
 print libHTML::pageTitle('Intro to webDiplomacy','A quick guide to get newcomers playing the game.');
 
-print ' <div class = "introToDiplomacy_show">
+?>
+<div class = "introToDiplomacy_show">
 <p>
 Diplomacy is a game which is easy to learn but impossible to master. The rules are all very intuitive;
 lots of people pick them up just by playing, but this document will familiarize you more quickly.
 </p>
 
-<div class="hr"></div>';
-
-?>
+<div class="hr"></div>
 <p style="text-align:center"><a href="#RR">RR</a> - <a href="#Points">Points</a> - <a href="#Objective">Objective</a> - <a href="#Units">Units</a> -
 	<a href="#Moves">Moves</a> - <a href="#Rules">Rules</a> - <a href="#Play">Play</a></p>
 
