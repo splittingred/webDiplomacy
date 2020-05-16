@@ -56,11 +56,8 @@ commands:
 # Jobs
 #################################################################################
 jobs:
-  build:
+  test:
     executor: php
-    branches:
-      ignore:
-        - master
     steps:
       - setup
       - restore_cache:
@@ -81,3 +78,14 @@ jobs:
       - run: php vendor/bin/phpunit
 #      - run: php vendor/bin/phpcbf --standard=ruleset.xml app/
 #      - run: php vendor/bin/phpcs --standard=ruleset.xml app/
+
+
+
+workflows:
+  version: 2
+  full:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore: master
