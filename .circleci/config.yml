@@ -1,8 +1,25 @@
 version: 2.1
 
+#################################################################################
+# Executors
+#################################################################################
+executors:
+  php:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/php:7.2-stretch-node-browsers
+        environment:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_ROOT_PASSWORD: password
+          APP_ENV: test
+
+#################################################################################
+# Commands
+#################################################################################
 commands:
   setup:
     steps:
+      - add_ssh_keys
       - checkout
       - run:
           name: Install things we need
@@ -35,17 +52,15 @@ commands:
             sudo mysql -u root -e "CREATE user myuser IDENTIFIED BY 'magic';"
       - run: sudo composer self-update
 
+#################################################################################
+# Jobs
+#################################################################################
 jobs:
   build:
-    docker:
-      - image: circleci/php:7.2-stretch-node-browsers
-        environment:
-          MYSQL_HOST: 127.0.0.1
-          MYSQL_ROOT_PASSWORD: password
+    executor: php
     branches:
       ignore:
         - master
-
     steps:
       - setup
       - restore_cache:
