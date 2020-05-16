@@ -1,28 +1,53 @@
+version: 2.1
+
+commands:
+  setup:
+    steps:
+      - checkout
+      - run:
+          name: Install things we need
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y libzip-dev
+            sudo apt-get install -y zlib1g-dev libicu-dev g++
+            sudo apt-get install mysql-client
+            sudo apt-get -y install mysql-server
+      - run:
+          name: Install PHP extensions
+          command: |
+            sudo docker-php-ext-install zip
+            sudo docker-php-ext-configure intl
+            sudo docker-php-ext-install intl
+            sudo docker-php-ext-install pdo_mysql
+      - run:
+          name: Fix MySQL socket config
+          command: |
+            sudo sh -c "echo 'pdo_mysql.default_socket=/var/run/mysqld/mysqld.sock' > /usr/local/etc/php/conf.d/pdo.ini"
+      - run:
+          name: Start database server
+          command: |
+            sudo service mysql start
+            sleep 2
+            ps aux | grep mysql
+      - run:
+          name: Create non-admin user
+          command: |
+            sudo mysql -u root -e "CREATE user myuser IDENTIFIED BY 'magic';"
+      - run: sudo composer self-update
+
 jobs:
   build:
     docker:
-      - image: circleci/php:7.1-node-browsers
+      - image: circleci/php:7.2-stretch-node-browsers
         environment:
           MYSQL_HOST: 127.0.0.1
-          MYSQL_DB: webdiplomacy
-          MYSQL_USER: root
-          MYSQL_PASSWORD: magic
-      - image: mysql:5.7
-        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true
-        environment:
-          MYSQL_USER: root
-          MYSQL_PASSWORD: magic
+          MYSQL_ROOT_PASSWORD: password
     branches:
       ignore:
         - master
 
-    working_directory: ~/repo
-
     steps:
-      - checkout
-      - run: sudo apt install -y libsqlite3-dev zlib1g-dev default-mysql-client
-      - run: sudo docker-php-ext-install zip
-      - run: sudo composer self-update
+      - setup
       - restore_cache:
           keys:
             - composer-v1-{{ checksum "composer.lock" }}
@@ -33,7 +58,7 @@ jobs:
           paths:
             - vendor
       - run:
-          name: Mysql database
+          name: Create database
           command: mysql -h 127.0.0.1 -u root -pmagic -e "create database webdiplomacy;"
 #      - run: cp .env.circle .env
 #      - run: php artisan key:generate
