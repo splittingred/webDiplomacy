@@ -49,7 +49,7 @@ commands:
       - run:
           name: Create non-admin user
           command: |
-            sudo mysql -u root -e "CREATE user myuser IDENTIFIED BY 'magic';"
+            sudo mysql -u root -e "CREATE user webdiplomacy IDENTIFIED BY 'magic';"
       - run: sudo composer self-update
 
 #################################################################################
@@ -71,7 +71,7 @@ jobs:
             - vendor
       - run:
           name: Create database
-          command: mysql -h 127.0.0.1 -u root -pmagic -e "create database webdiplomacy;"
+          command: mysql -h 127.0.0.1 -u root -e "create database webdiplomacy;"
 #      - run: cp .env.circle .env
 #      - run: php artisan key:generate
 #      - run: php artisan migrate
@@ -79,8 +79,9 @@ jobs:
 #      - run: php vendor/bin/phpcbf --standard=ruleset.xml app/
 #      - run: php vendor/bin/phpcs --standard=ruleset.xml app/
 
-
-
+#################################################################################
+# Workflows
+#################################################################################
 workflows:
   version: 2
   full:
