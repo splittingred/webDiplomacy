@@ -1,0 +1,41 @@
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.1-node-browsers
+        environment:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_DB: webdiplomacy
+          MYSQL_USER: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_PASSWORD:
+      - image: mysql:5.7
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true
+        environment:
+          MYSQL_USER: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run: sudo apt install -y libsqlite3-dev zlib1g-dev
+      - run: sudo docker-php-ext-install zip
+      - run: sudo composer self-update
+      - restore_cache:
+          keys:
+            - composer-v1-{{ checksum "composer.lock" }}
+            - composer-v1-
+      - run: composer install --dev --ignore-platform-reqs
+      - save_cache:
+          key: composer-v1-{{ checksum "composer.lock" }}
+          paths:
+            - vendor
+      - run:
+          name: Mysql database
+          command: mysql -h 127.0.0.1 -u root -e "create database webdiplomacy;"
+#      - run: cp .env.circle .env
+#      - run: php artisan key:generate
+#      - run: php artisan migrate
+      - run: php vendor/bin/phpunit
+#      - run: php vendor/bin/phpcbf --standard=ruleset.xml app/
+#      - run: php vendor/bin/phpcs --standard=ruleset.xml app/
