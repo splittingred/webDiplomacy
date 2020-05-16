@@ -1,0 +1,43 @@
+<dl class="stats">
+    <dd>Logged on</dd>
+    <dt>{{ logged_on }}</dt>
+
+    <dd>Playing</dd>
+    <dt>{{ playing }}</dt>
+
+    <dd>Registered</dd>
+    <dt>{{ registered }}</dt>
+
+    <dd>Pages served</dd>
+    <dt>{{ pages_served }}</dt>
+
+    <dd>Starting games</dd>
+    <dt>{{ games_starting }}</dt>
+
+    <dd>Joinable games</dd>
+    <dt>{{ games_open }}</dt>
+
+    <dd>Active games</dd>
+    <dt>{{ games_active }}</dt>
+
+    <dd>Finished games</dd>
+    <dt>{{ games_finished }}</dt>
+
+{% if is_moderator %}
+    <dd><a href="/gamemaster.php" class="light">Last process</a></dd>
+    <dt>{{ last_process_time|raw }}</dt>
+
+    <dd><a href="/admincp.php?tab=Control%20Panel%20Logs" class="light">Last mod action</a></dd>
+    <dt>{{ last_mod_action|raw }}</dt>
+
+    <dd><a href="/admincp.php?tab=Status%20lists" class="light">Error logs</a></dd>
+    <dt>{{ error_logs }}</dt>
+
+    <dd>Paused games</dd>
+    <dt>{{ games_paused }}</dt>
+
+    <dd><a href="/admincp.php?tab=Status%20lists" class="light">Crashed games</a></dd>
+    <dt>{{ games_crashed }}</dt>
+{% endif %}
+
+</dl>

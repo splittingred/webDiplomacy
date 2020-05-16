@@ -423,12 +423,13 @@ class libHTML
 	static public function starthtml($title=false)
 	{
 		global $User;
+		global $twig;
 
 		self::$scriptname = $scriptname = basename($_SERVER['PHP_SELF']);
 
 		$pages = libHTML::pages();
 
-		if ( isset($User) and ! isset($pages[$scriptname]) )
+		if (isset($User) and ! isset($pages[$scriptname]))
 		{
 			die(l_t('Access to this page denied for your account type.'));
 		}
@@ -436,35 +437,31 @@ class libHTML
 		$bannedMessages = '';
 		if (isset($User) && $User->userIsTempBanned() )
 		{
-			if ( $User->tempBanReason != 'System' && $User->tempBanReason != '')
+			if ($User->tempBanReason != 'System' && $User->tempBanReason != '')
 			{
-				$bannedMessages = '<div class="content-notice">
-					<p class="notice"><br>You are blocked from joining, rejoining, or creating new games by the moderators for '.libTime::remainingText($User->tempBan).
-					 ' for the following reason:</br> '.$User->tempBanReason.' </br>
-					Contact the moderators at '.Config::$modEMail.' for help. If you attempt to get around this temp ban 
-					by making a new account your accounts will be banned with no chance for appeal.<br><br></p>
-				</div>';
+				$bannedMessages = $twig->render('common/users/banned/custom.twig', [
+					'remaining_time' => libTime::remainingText($User->tempBan),
+					'reason' => $User->tempBanReason,
+					'moderator_email' => \Config::$modEMail,
+				]);
 			}
-			else if ( ($User->tempBan - time() ) > (60*60*24*180))
+			else if (($User->tempBan - time() ) > (60*60*24*180))
 			{
-				$bannedMessages = '<div class="content-notice">
-					<p class="notice"><br>You are blocked from joining, rejoining, or creating new games for a year because you were too unreliable. 
-					Contact the moderators at '.Config::$modEMail.' for help. If you attempt to get around this temp ban 
-					by making a new account your accounts will be banned with no chance for appeal.<br><br></p>
-				</div>';
+				$bannedMessages = $twig->render('common/users/banned/year.twig', [
+					'moderator_email' => \Config::$modEMail,
+				]);
 			}
 			else
 			{
-				$bannedMessages = '<div class="content-notice">
-						<p class="notice"><br>You are blocked from joining, rejoining, or creating new games for '.libTime::remainingText($User->tempBan).
-						' because you were too unreliable. Contact the moderators at '.Config::$modEMail.' if you need help.<br><br></p>
-					</div>';
+				$bannedMessages = $twig->render('common/users/banned/system.twig', [
+					'moderator_email' => \Config::$modEMail,
+					'remaining_time' => libTime::remainingText($User->tempBan),
+				]);
 			}
 		}
 
 		$gameNotification = is_object($User) && $User->type['User'] ? libHTML::gameNotifyBlock() : '';
 
-		global $twig;
 		echo $twig->render('common/layout/header.twig', [
 			'head' => self::prebody($title===FALSE ? l_t($pages[$scriptname]['name']) : $title),
 			'menu' => self::menu($pages, $scriptname),
@@ -890,146 +887,35 @@ class libHTML
 	 */
 	static public function footer()
 	{
-		global $DB;
-
-		print '<div id="footer">';
-
-		if( is_object($DB) )
-		{
-			print self::footerStats();
-
-			print '<br /><br />';
-
-			print self::footerCopyright();
-
-			print '<br />'.l_t('Times are <strong id="UTCOffset">UTC+0:00</strong>');
-
-			print Config::customFooter();
-
-			if( Config::$debug )
-			{
-				print self::footerDebugData();
-			}
-
-			print self::footerScripts();
-		}
-		else
-		{
-			// $DB isn't available, something went wrong
-			print self::footerCopyright();
-		}
-
-		print '</div></body></html>';
-
+		global $twig;
+		echo $twig->render('common/layout/footer.twig', [
+			'stats' => self::footerStats(),
+			'webdiplomacy_version' => number_format(VERSION/100,2),
+			'moderator_email' => \Config::$modEMail,
+		]);
 		close();
-	}
-
-	private static function footerDebugData()
-	{
-		global $Locale, $DB;
-
-		$buf = '';
-		if( is_object($DB) )
-			$buf .= $DB->profilerPrint();
-
-		if( is_object($Locale) )
-		{
-			$buf .= '<br /><strong>Missed localization lookups:</strong><br />';
-			foreach($Locale->failedLookups as $failedText)
-				$buf .= htmlentities($failedText).'<br />';
-		}
-
-		return $buf;
 	}
 
 	private static function footerStats()
 	{
-		global $DB, $Misc, $User;
-		require_once(l_r('global/definitions.php'));
+		global $Misc, $User, $twig;
 
-		$buf = '';
-
-		// Run time, select queries, insert queries
-		$buf .= l_t('Rendered in: <strong>%ssec</strong> - '.
-			'Data retrievals: <strong>%s</strong> - '.
-			'Data insertions: <strong>%s</strong>',
-				round((microtime(true)-$GLOBALS['scriptStartTime']),2),
-				$DB->getqueries,
-				$DB->putqueries).' ';
-
-		if( function_exists('memory_get_usage') )
-			$buf .= ' - '.l_t('Memory used: <strong>%sMB</strong>',round((memory_get_usage()/1024)/1024, 3)).' ';
-
-		$buf .= '<br /><br />';
-
-		$stats=array(
-			'Logged on'=>$Misc->OnlinePlayers,
-			'Playing'=>$Misc->ActivePlayers,
-			'Registered'=>$Misc->TotalPlayers
-		);
-
-		$first=true;
-
-		foreach($stats as $name=>$stat)
-		{
-			if ( $first ) $first=false;
-			else $buf .= ' - ';
-
-			$buf .= l_t($name).': <strong>'.$stat.'</strong> ';
-		}
-		$buf .= ' - '.l_t('Pages served: <strong>%s</strong>',$Misc->Hits);
-		$buf .= '<br />';
-
-		$stats=array('Starting games'=>$Misc->GamesNew,
-			'Joinable games'=>$Misc->GamesOpen,
-			'Active games'=>$Misc->GamesActive,
-			'Finished games'=>$Misc->GamesFinished);
-		$first=true;
-
-		foreach($stats as $name=>$stat)
-		{
-			if ( $first ) $first=false;
-			else $buf .= ' - ';
-
-			$buf .= l_t($name).': <strong>'.$stat.'</strong> ';
-		}
-
-		if ( !isset($User) || !$User->type['Moderator'] ) return $buf;
-
-		$buf .= '<br /><br />';
-
-		$stats=array(
-			'<a href="gamemaster.php" class="light">'.l_t('Last process').'</a>'=>($Misc->LastProcessTime?libTime::text($Misc->LastProcessTime):l_t('Never')),
-			'<a href="admincp.php?tab=Control%20Panel%20Logs" class="light">'.l_t('Last mod action').'</a>'=>($Misc->LastModAction?libTime::text($Misc->LastModAction):l_t('Never')),
-			'<a href="admincp.php?tab=Status%20lists" class="light">'.l_t('Error logs').'</a>'=>$Misc->ErrorLogs,
-			l_t('Paused games')=>$Misc->GamesPaused,
-			'<a href="admincp.php?tab=Status%20lists" class="light">'.l_t('Crashed games').'</a>'=>$Misc->GamesCrashed,
-		);
-
-		$first=true;
-		foreach($stats as $name=>$stat)
-		{
-			if ( $first ) $first=false;
-			else $buf .= ' - ';
-
-			$buf .= $name.': <strong>'.$stat.'</strong> ';
-		}
-
-		return $buf;
-	}
-
-	static private function footerCopyright()
-	{
-		// Version, sourceforge and HTML compliance logos
-		return l_t('webDiplomacy version <strong>%s</strong>',number_format(VERSION/100,2)).'<br />
-			<div>
-			<a class="light" id="js-desktop-mode" style="cursor: pointer; color: #006699;" onclick="toggleDesktopMode(true)">Enable Desktop Mode</a>
-			</div>
-			<br />
-
-			<a href="http://github.com/kestasjk/webDiplomacy" class="light">GitHub Project</a> |
-			<a href="http://github.com/kestasjk/webDiplomacy/issues" class="light">Bug Reports</a> | <a href="mailto:'.Config::$modEMail.'" class="light">Moderator Email</a> |
-			<a href="contactUsDirect.php" class="light">Contact Us Directly</a>';
+		return $twig->render('common/layout/footer/stats.twig',[
+			'logged_on' 		=> (int)$Misc->OnlinePlayers,
+			'playing' 			=> (int)$Misc->ActivePlayers,
+			'registered' 		=> (int)$Misc->TotalPlayers,
+			'pages_served' 		=> (int)$Misc->Hits,
+			'games_starting' 	=> (int)$Misc->GamesNew,
+			'games_open' 		=> (int)$Misc->GamesOpen,
+			'games_active' 		=> (int)$Misc->GamesActive,
+			'games_finished' 	=> (int)$Misc->GamesFinished,
+			'is_moderator' 		=> !empty($User) && $User->type['Moderator'],
+			'last_process_time' => $Misc->LastProcessTime ? libTime::text($Misc->LastProcessTime): l_t('Never'),
+			'last_mod_action' 	=> $Misc->LastModAction ? libTime::text($Misc->LastModAction) : l_t('Never'),
+			'error_logs' 		=> $Misc->ErrorLogs,
+			'games_paused' 		=> (int)$Misc->GamesPaused,
+			'games_crashed' 	=> (int)$Misc->GamesCrashed,
+		]);
 	}
 
 	public static $footerScript=array();

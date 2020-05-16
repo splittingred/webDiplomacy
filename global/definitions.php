@@ -52,4 +52,3 @@ define("CSSVERSION",1.34);
 
 if( !defined('FACEBOOK') )
 	define('FACEBOOK',false);
-?>

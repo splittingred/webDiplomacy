@@ -67,13 +67,13 @@ if(isset($_POST['submit']))
 	}
 }
 
-if( !$User->type['User'] )
+if (!$User->type['User'])
 {
     echo $twig->render('home/intro.twig', [
         'globalInfo' => libHome::globalInfo()
     ]);
 }
-elseif( isset($_REQUEST['notices']) )
+elseif (isset($_REQUEST['notices']))
 {
 	$User->clearNotification('PrivateMessage');
 

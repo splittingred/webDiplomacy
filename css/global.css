@@ -2131,3 +2131,25 @@ input[id^="FinalizeButton"]{
 		font-size: 12px !important;
    }
 }
+
+dl.stats {
+	 width: 20%;
+	 overflow: hidden;
+	 padding: 0;
+	 margin: 0 auto;
+}
+dl.stats dd {
+	float: left;
+	width: 50%;
+	text-align: center;
+	/* adjust the width; make sure the total of both is 100% */
+	padding: 0;
+	margin: 0;
+}
+dl.stats dt {
+	float: left;
+	width: 50%;
+	text-align: left;
+	padding: 0;
+	margin: 0;
+}
