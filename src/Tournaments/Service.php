@@ -20,6 +20,26 @@ class Service
     }
 
     /**
+     * Get all active tournaments
+     *
+     * @return Collection
+     */
+    public function getActive() : Collection
+    {
+        $sqlCount = "SELECT COUNT(t.id) FROM wD_Tournaments t WHERE status != 'PreStart' AND status != 'Registration'";
+        $sql = "SELECT * FROM wD_Tournaments t WHERE status != 'PreStart' AND status != 'Registration' ORDER BY year DESC";
+
+        $result = $this->database->sql_tabl($sql);
+        list($count) = $this->database->sql_row($sqlCount);
+
+        $tournaments = [];
+        while ($row = $this->database->tabl_hash($result)) {
+            $tournaments[] = Tournament::fromRow($row);
+        }
+        return new Collection($tournaments, $count);
+    }
+
+    /**
      * @param int $userId
      * @return Collection
      */

@@ -1,0 +1,25 @@
+{% include 'common/page_title.twig' with { 'title': 'Tournament Scoring', description: 'Scoreboard for each tournament recorded on webDiplomacy.' } %}
+
+<div class="content content-follow-on">
+    <div class="gameCreateShow">
+        <form class="gameCreate" method="get" action="/tournamentScoring.php#tableLocation">
+            <p>
+                <label for="tournamentID">
+                <strong>
+                    <center>Select A Tournament</center>
+                </strong>
+                </label>
+                <br/>
+                <select class="gameCreate" name="tournamentID">
+                    {% for tournament in tournaments %}
+                        <option value="{{ tournament.id }}">{{ tournament.name }} ({{ tournament.year }})</option>
+                    {% endfor %}
+                </select>
+                <br />
+                <br />
+                <br />
+                <input type="submit" name="submit" class="green-Submit" value="Go" />
+            </p>
+        </form>
+    </div>
+</div>

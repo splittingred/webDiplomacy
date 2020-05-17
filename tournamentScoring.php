@@ -27,8 +27,6 @@ require_once('header.php');
 
 libHTML::starthtml();
 
-print libHTML::pageTitle(l_t('Tournament Scoring'),l_t('Scoreboard for each tournament recorded on webDiplomacy.'));
-
 global $DB, $User;
 
 $tournamentID = 0;
@@ -241,17 +239,8 @@ if(isset($_REQUEST['tournamentID']))
 }
 else
 {
-  $tourneys = $DB->sql_tabl("SELECT id, name, year FROM wD_Tournaments WHERE status <> 'PreStart' AND status <> 'Registration' ORDER BY year DESC");
-  print '<div class = "gameCreateShow">
-  <FORM class="gameCreate" method="get" action="tournamentScoring.php#tableLocation">
-    <p><strong><center>Select A Tournament</center></strong>
-    <br/><select  class = "gameCreate" name="tournamentID">';
-      while (list($id, $name, $year) = $DB->tabl_row($tourneys))
-      {
-        print'<option value="'.$id.'">'.$name." (".$year.")".'</option>';
-      }
-		print '</select><br/><br/><br/>
-    <input type="submit" name="submit" class="green-Submit" value="Go" /></p></form></div>';
+    $controller = new Diplomacy\Controllers\Tournaments\Scoring\IndexController();
+    echo $controller->render();
 }
 
 function printHeaderLink($header, $sortCol, $sortType, $rounds)
