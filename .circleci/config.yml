@@ -71,7 +71,8 @@ jobs:
             - vendor
       - run:
           name: Create database
-          command: mysql -h 127.0.0.1 -u root -ppassword -e "create database webdiplomacy;"
+          command: |
+            sudo mysql -u root -ppassword -e "CREATE DATABASE webdiplomacy;"
 #      - run: cp .env.circle .env
 #      - run: php artisan key:generate
 #      - run: php artisan migrate
