@@ -31,7 +31,7 @@ libHTML::starthtml(l_t('Home'));
 
 if( !isset($_SESSION['lastSeenHome']) || $_SESSION['lastSeenHome'] < $User->timeLastSessionEnded )
 {
-	$_SESSION['lastSeenHome']=$User->timeLastSessionEnded;
+	$_SESSION['lastSeenHome'] = $User->timeLastSessionEnded;
 }
 
 global $DB;
@@ -60,7 +60,7 @@ if(isset($_POST['submit']))
 	}
 }
 
-if (!$User->type['User'])
+if (!$User->isAuthenticated())
 {
     echo $twig->render('home/intro.twig', [
         'globalInfo' => libHome::globalInfo()

@@ -151,33 +151,18 @@ class libAuth
 	 */
 	public static function auth()
 	{
-		if( false )
-		{
-			if (!strpos($_SERVER['PHP_SELF'], 'register.php')
-				and !strpos($_SERVER['PHP_SELF'], 'map.php')
-				and !strpos($_SERVER['PHP_SELF'], 'gamemaster.php'))
-			{
-				$User = new User($facebook->require_login());
-				$User->logon(); //key_User does  this if not on facebook
-			}
-			else
-			{
-				$User = new User(GUESTID);
-			}
+		if (isset($_REQUEST['loginuser']) && isset($_REQUEST['loginpass'])) {
+			$key = self::userPass_Key($_REQUEST['loginuser'], $_REQUEST['loginpass'], isset($_REQUEST['loginsession']));
+		} elseif (isset($_COOKIE['wD-Key']) && $_COOKIE['wD-Key']) {
+			$key = $_COOKIE['wD-Key'];
+		} else {
+			$key = false;
 		}
-		else
-		{
-			if(isset($_REQUEST['loginuser']) AND isset($_REQUEST['loginpass']))
-				$key = self::userPass_Key($_REQUEST['loginuser'], $_REQUEST['loginpass'], isset($_REQUEST['loginsession']));
-			elseif(isset($_COOKIE['wD-Key']) and $_COOKIE['wD-Key'])
-				$key = $_COOKIE['wD-Key'];
-			else
-				$key = false;
 
-			if ( $key )
-				$User = self::key_User($key);
-			else
-				$User = new User(GUESTID);
+		if ($key) {
+			$User = self::key_User($key);
+		} else {
+			$User = new User(GUESTID);
 		}
 
 		return $User;

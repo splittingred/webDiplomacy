@@ -332,7 +332,7 @@ class User {
 		else
 		{
 			// Prevent mods from trying to dock more points than a user has, throwing an exception. Just dock the user to 0.
-			if (($points < 0 ) && ($this->points + $points) < 0 ) { $DB->sql_put("UPDATE wD_Users SET points = 0 WHERE id = ".$userID); }
+			if (($points < 0 ) && (self::$points + $points) < 0 ) { $DB->sql_put("UPDATE wD_Users SET points = 0 WHERE id = ".$userID); }
 			else { $DB->sql_put("UPDATE wD_Users SET points = points + ".$points." WHERE id = ".$userID); }
 		}
 	}
@@ -1186,6 +1186,19 @@ class User {
 		return in_array($muteCountryID,$this->getMuteCountries($gameID));
 	}
 
+	public function isAuthenticated()
+	{
+		return !empty($this->id) && $this->id != GUESTID;
+	}
+
+	public function isModerator() {
+		return $this->type['Moderator'];
+	}
+
+	public function isAdmin() {
+		return $this->type['Admin'];
+	}
+
 	public function toggleCountryMute($gameID,$muteCountryID) 
 	{
 		global $DB;
@@ -1362,4 +1375,3 @@ class User {
 		return $modLastCheckedBy;
 	}
 }
-?>

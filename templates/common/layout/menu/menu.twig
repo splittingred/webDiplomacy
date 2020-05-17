@@ -1,0 +1,32 @@
+<div id="header">
+    <div id="header-container">
+        <a href="../header">
+            <img id="logo" src="images/logo.png" alt="webDiplomacy" />
+        </a>
+        <div>
+            <div id="header-welcome">
+                {% if authenticated %}
+                Welcome, {{ user_profile_link|raw }}
+                <span class="logon">
+                    <a href="/logon.php?logoff=on" class="light">Log off</a>
+                    {% if admin_user_switch %}
+                        - <a href="/index.php?auid=0" class="light">Switch back</a>
+                    {% endif %}
+                </span>
+                {% else %}
+                    Welcome, Guest
+                    <a href="/logon.php" class="light">Log on</a>
+                {% endif %}
+            </div>
+
+            <div id="header-goto">
+                <div class="nav-wrap">
+                    <div class="nav-tab"> <a href="/" title="See what's happening">Home</a> </div>
+                    {{ menu|raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="seperator"></div>
+<div id="seperator-fixed"></div>

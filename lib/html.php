@@ -402,16 +402,12 @@ class libHTML
 
 		$variantCSS = [];
 
-		foreach(Config::$variants as $variantName)
-			$variantCSS[] = '<link rel="stylesheet" href="'.STATICSRV.l_s('variants/'.$variantName.'/resources/style.css').'?var='.CSSVERSION.'" type="text/css" />';
-		$variantCSS=implode("\n",$variantCSS);
-
 		global $twig;
-		return $twig->render('common/layout/head.twig', [
+		return $twig->render('common/layout/header/head.twig', [
             'title' => $title,
             'css_version' => CSSVERSION,
             'js_version' => JSVERSION,
-            'variant_css' => $variantCSS,
+			'variants' => \Config::$variants,
         ]);
 	}
 
@@ -460,11 +456,11 @@ class libHTML
 			}
 		}
 
-		$gameNotification = is_object($User) && $User->type['User'] ? libHTML::gameNotifyBlock() : '';
+		$gameNotification = is_object($User) && $User->isAuthenticated() ? libHTML::gameNotifyBlock() : '';
 
 		echo $twig->render('common/layout/header.twig', [
 			'head' => self::prebody($title===FALSE ? l_t($pages[$scriptname]['name']) : $title),
-			'menu' => self::menu($pages, $scriptname),
+			'menu' => self::menu(),
 			'global_notices' => self::globalNotices(),
 			'banned_messages' => $bannedMessages,
 			'game_notification' => $gameNotification
@@ -706,179 +702,30 @@ class libHTML
 	/**
 	 * Prints the logo, welcome text and menu.
 	 *
-	 * @param array $pages The array of pages, with parameters, to be parsed
-	 * @param string $scriptname The name of the script currently running
-	 *
 	 * @return string The logo, welcome text and menu HTML
 	 */
-	static public function menu ($pages, $scriptname)
+	static public function menu()
 	{
 		global $User;
+		global $twig;
+		$authenticated = $User->isAuthenticated();
 
-	 	$menu = '<!-- Menu begin. -->
-				<div id="header">
-					<div id="header-container">
-						<a href="./">
-							<img id="logo" src="'.l_s('images/logo.png').'" alt="'.l_t('webDiplomacy').'" />
-						</a>';
-
-
-		if ( is_object( $User ) )
-		{
-			if ( ! $pages[$scriptname]['inmenu'] )
-				$arguments = str_replace('&', '&amp;', $_SERVER['QUERY_STRING']);
-			else
-				$arguments = '';
-
-			$menu .= '
-				<div>
-					<div id="header-welcome">
-						'.(is_object($User)?l_t('Welcome, %s',$User->profile_link(TRUE)).' -
-						<span class="logon">('.
-							($User->type['User'] ?
-							'<a href="logon.php?logoff=on" class="light">'.l_t('Log off').'</a>)'.
-								( defined('AdminUserSwitch') ? ' (<a href="index.php?auid=0" class="light">'.l_t('Switch back').'</a>)' : '' )
-							:'<a href="logon.php" class="light">'.l_t('Log on').'</a>)').
-						'</span>'
-						:l_t('Welcome, Guest')).'
-					</div>';
-
-			/* begin dropdown menu */
-			$menu .= '
-			<div id="header-goto">
-            <div class="nav-wrap">
-			<div class = "nav-tab"> <a href="index.php?" title="See what\'s happening">Home</a> </div>';
-			if( isset(Config::$customForumURL) )
-			{
-				$menu.='<div class = "nav-tab"> <a href="'.Config::$customForumURL.'" title="The forum; chat, get help, help others, arrange games, discuss strategies">Forum</a> </div>';
-			}
-			else
-			{
-				$menu.='<div class = "nav-tab"> <a href="forum.php" title="The forum; chat, get help, help others, arrange games, discuss strategies">Forum</a> </div>';
-			}
-
-			if (is_object($User))
-			{
-				if( !$User->type['User'] )
-				{
-					$menu.='
-					<div class="nav-tab">
-						<a href="logon.php" title="Log onto webDiplomacy using an existing user account">Log on</a>
-					</div>';
-					$menu.='
-					<div class="nav-tab">
-						<a href="register.php" title="Make a new user account">Register</a>
-					</div>';
-					$menu.='
-					<div id="navSubMenu" class = "clickable nav-tab">Help ▼
-                        <div id="nav-drop">
-                        	<a href="rules.php">Site Rules</a>
-							<a href="faq.php" title="Frequently Asked Questions">FAQ</a>
-							<a href="intro.php" title="Intro to Diplomacy">Diplomacy Intro</a>
-							<a href="points.php" title="Points and Scoring Systems">Points/Scoring</a>
-							<a href="variants.php" title="Active webDiplomacy variants">Variants</a>
-							<a href="help.php" title="Site information, guides, stats, links">More Info</a>
-							<a href="donations.php">Donate</a>
-                        </div>
-                    </div>';
-				}
-				else
-				{
-					$menu.='
-					<div id="navSubMenu" class="clickable nav-tab">Search ▼
-                        <div id="nav-drop">
-							<a href="profile.php">Find User</a>
-							<a href="gamelistings.php?gamelistType=Search">Game Search</a>
-							<a href="detailedSearch.php" title="advanced search of users and games">Advanced Search</a>
-						</div>
-					</div>
-					<div id="navSubMenu" class="clickable nav-tab">Games ▼
-                        <div id="nav-drop">
-							<a href="gamelistings.php?gamelistType=New" title="Game listings; a searchable list of the games on this server">New Games</a>
-							<a href="gamelistings.php?gamelistType=Open%20Positions" title="Open positions dropped by other players, free to claim">Open Positions</a>
-							<a href="gamecreate.php" title="Start up a new game">Create a New Game</a>
-							<a href="https://sites.google.com/view/webdipinfo/ghost-ratings" target=_blank title="Ghost Ratings (external site)">Ghost Ratings</a>
-							<a href="tournaments.php" title="Information about tournaments on webDiplomacy">Tournaments</a>
-							<a href="halloffame.php" title="Information about tournaments on webDiplomacy">Hall of Fame</a>
-                        </div>
-                    </div>
-					<div id="navSubMenu" class="clickable nav-tab">Account ▼
-						<div id="nav-drop">';
-						if( isset(Config::$customForumURL) ) {
-							$menu.='
-								<a href="contrib/phpBB3/ucp.php?i=pm" title="Read your messages">Private Messages</a>
-								<a href="contrib/phpBB3/ucp.php?i=179" title="Change your forum user settings">Forum Settings</a>';
-						}
-						$menu.='
-							<a href="usercp.php" title="Change your user specific settings">Site Settings</a>
-						</div>
-                	</div>
-                	<div id="navSubMenu" class = "clickable nav-tab">Help ▼
-                        <div id="nav-drop">
-                        	<a href="rules.php">Site Rules</a>
-							<a href="faq.php" title="Frequently Asked Questions">FAQ</a>
-							<a href="intro.php" title="Intro to Diplomacy">Diplomacy Intro</a>
-							<a href="points.php" title="Points and Scoring Systems">Points/Scoring</a>
-							<a href="variants.php" title="Active webDiplomacy variants">Variants</a>
-							<a href="help.php" title="Site information; guides, stats, links">More Info</a>
-							<a href="contactUsDirect.php">Contact Us</a>
-							<a href="donations.php">Donate</a>
-                        </div>
-                    </div>';
-				}
-			}
-
-			if ( is_object($User) )
-			{
-				if ( $User->type['Admin'] or $User->type['Moderator'] )
-				{
-					$menu.=' <div id="navSubMenu" class = "clickable nav-tab">Mods ▼
-                        <div id="nav-drop">
-							<a href="admincp.php">Admin CP</a>';
-
-					if( isset(Config::$customForumURL) ) { $menu.='<a href="contrib/phpBB3/mcp.php">Forum CP</a>'; }
-
-					$menu.='
-						<a href="admincp.php?tab=Multi-accounts">Multi Finder</a>
-						<a href="admincp.php?tab=Chatlogs">Pull Press</a>
-						<a href="admincp.php?tab=AccessLog">Access Log</a>
-						<a href="profile.php">Find User</a>';
-
-					if ( $User->type['Admin'] && isset(Config::$customForumURL))
-					{
-						$menu.='<a href="adminInfo.php">Admin Info</a>';
-					}
-
-					$menu.=' </div>
-					</div>';
-				}
-			}
-			$menu.='</div></div></div>';
-		}
-		else
-		{
-			$menu .= '
-				<div id="header-welcome">&nbsp;</div>
-					<div id="header-goto">
-						<div class="nav-wrap">
-							<div class="nav-tab">
-								<a style="color:white" href="index.php">'.l_t('Home').'</a>
-							</div>
-							<div class="nav-tab">
-							<a style="color:white" href="'.$scriptname.'">'.l_t('Reload current page').'</a>
-							</div>
-						</div>
-					</div>';
-		}
-		$menu .= '
-			</div></div>
-			<div id="seperator"></div>
-			<div id="seperator-fixed"></div>
-			<!-- Menu end. -->';
-
-		/* end dropdown menu */
-
-		return $menu;
+        if (!$authenticated) {
+            $menu = $twig->render('common/layout/menu/unauthenticated.twig');
+        } else {
+            $menu = $twig->render('common/layout/menu/authenticated.twig',[
+                'user' => $User,
+                'is_admin' => $User->isAdmin(),
+                'is_moderator' => $User->isModerator(),
+                'admin_user_switch' => defined('AdminUserSwitch'),
+            ]);
+        }
+		return $twig->render('common/layout/menu/menu.twig', [
+		    'menu' => $menu,
+            'authenticated' => $authenticated,
+            'user_profile_link' => $User->profile_link(true),
+            'admin_user_switch' => defined('AdminUserSwitch'),
+        ]);
 	}
 
 	/**
@@ -892,6 +739,7 @@ class libHTML
 			'stats' => self::footerStats(),
 			'webdiplomacy_version' => number_format(VERSION/100,2),
 			'moderator_email' => \Config::$modEMail,
+			'footer_scripts' => self::footerScripts(),
 		]);
 		close();
 	}
@@ -909,7 +757,7 @@ class libHTML
 			'games_open' 		=> (int)$Misc->GamesOpen,
 			'games_active' 		=> (int)$Misc->GamesActive,
 			'games_finished' 	=> (int)$Misc->GamesFinished,
-			'is_moderator' 		=> !empty($User) && $User->type['Moderator'],
+			'is_moderator' 		=> !empty($User) && $User->isModerator(),
 			'last_process_time' => $Misc->LastProcessTime ? libTime::text($Misc->LastProcessTime): l_t('Never'),
 			'last_mod_action' 	=> $Misc->LastModAction ? libTime::text($Misc->LastModAction) : l_t('Never'),
 			'error_logs' 		=> $Misc->ErrorLogs,
@@ -918,8 +766,8 @@ class libHTML
 		]);
 	}
 
-	public static $footerScript=array();
-	public static $footerIncludes=array();
+	public static $footerScript = [];
+	public static $footerIncludes = [];
 
 	public static function likeCount($likeCount)
 	{
@@ -1036,30 +884,7 @@ class libHTML
 			var toggle = localStorage.getItem("desktopEnabled");
 			var darkMode = localStorage.getItem("darkModeEnabled");
 			var dark = User.darkMode;
-			if (dark == "Yes") {
-				dark = true;
-			} else {
-				dark = false;
-			}
-			localStorage.setItem("darkModeEnabled", dark);
-			var toggleElem = document.getElementById(\'js-desktop-mode\');
-            if (toggle == "true") {
-                if(toggleElem !== null) {
-                	toggleElem.innerHTML = "Disable Desktop Mode";
-                }
-            } else {
-                if(toggleElem !== null) {
-                	toggleElem.innerHTML = "Enable Desktop Mode";
-                }
-            }
-		</script>
-		';
-
-		if( Config::$debug )
-			$buf .= '<br /><strong>JavaScript localization lookup failures:</strong><br /><span id="jsLocalizationDebug"></span>';
-
+		</script>';
 		return $buf;
 	}
 }
-
-?>

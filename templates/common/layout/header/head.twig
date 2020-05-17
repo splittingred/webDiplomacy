@@ -16,16 +16,15 @@
     <link rel="stylesheet" type="text/css" href="/contrib/js/pushup/src/css/pushup.css" />
     <script type="text/javascript" src="/contrib/js/pushup/src/js/pushup.js"></script>
     <script type="text/javascript">
-        STATICSRV="/";
+        let STATICSRV = '/';
         let cssDirectory = "/css";
         let cssVersion = "/css";
     </script>
-
+    {% for variant in variants %}
+        <link rel="stylesheet" href="/variants/{{ variant }}/resources/style.css?var={{ css_version }}" type="text/css" />
+    {% endfor %}
     <link rel="stylesheet" id="global-css" href="/css/global.css?ver={{ css_version }}" type="text/css" />
     <link rel="stylesheet" id="game-panel-css" href="/css/gamepanel.css?ver={{ css_version }}" type="text/css" />
     <link rel="stylesheet" id="home-css" href="/css/home.css?ver={{ css_version }}" type="text/css" />
-    {{ variant_css|raw }}
-
-    <script type="text/javascript" src="/javascript/desktopMode.js?ver={{ js_version }}"></script>
     <title>{{ title }} - webDiplomacy</title>
 </head>
