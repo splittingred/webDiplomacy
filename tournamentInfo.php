@@ -26,10 +26,6 @@
 require_once('header.php');
 
 libHTML::starthtml();
-
-print libHTML::pageTitle(l_t('webDiplomacy Tournaments'),l_t('Information on Tournaments and Feature Game rules and setup.'));
-
-require_once(l_r('locales/English/tournamentInfo.php'));
-
-print '</div>';
+$controller = new Diplomacy\Controllers\Tournaments\InfoController();
+echo $controller->render();
 libHTML::footer();
