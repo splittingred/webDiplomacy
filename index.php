@@ -27,13 +27,6 @@ require_once(l_r('objects/game.php'));
 require_once(l_r('gamepanel/gamehome.php'));
 require_once(l_r('lib/libHome.php'));
 
-    /*
-     * A field
-     *
-     * add(field, index)
-     * compare(field1, field2) -> 1 if aligned, 0 if not
-     *
-     */
 libHTML::starthtml(l_t('Home'));
 
 if( !isset($_SESSION['lastSeenHome']) || $_SESSION['lastSeenHome'] < $User->timeLastSessionEnded )

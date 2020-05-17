@@ -83,7 +83,7 @@ else
 		// If viewing an archive page make that the title, otherwise us the name of the game
 		libHTML::starthtml(isset($_REQUEST['viewArchive'])?$_REQUEST['viewArchive']:$Game->titleBarName());
 
-		if ( $Game->Members->isJoined() && !$Game->Members->isTempBanned() )
+		if ($Game->Members->isJoined() && !$Game->Members->isTempBanned())
 		{
 			// We are a member, load the extra code that we might need
 			require_once(l_r('gamemaster/gamemaster.php'));
@@ -266,18 +266,6 @@ if ( 'Pre-game' != $Game->phase )
 
 $map = $Game->mapHTML();
 
-/*if( isset($_REQUEST['goNow']) )
-{
-	$DB->sql_put("UPDATE wD_Games SET processTime=1 WHERE id=".$Game->id);
-}//*/
-/*require_once(l_r('gamemaster/game.php'));
-$Game = $Variant->processGame($Game->id);
-$tabl=$DB->sql_tabl("SELECT id FROM wD_Users WHERE points>150 LIMIT 4");
-while(list($id)=$DB->tabl_row($tabl))
-	processMember::create($id, 5);
-
-$Game = $Game->Variant->panelGameBoard($Game->id);//*/
-
 /*
  * Now there is $orders, $form, and $map. That's all the HTML cached, now begin printing
  */
@@ -301,7 +289,7 @@ if (isset($Orders))
 	print $Orders.'<div class="hr"></div>';
 }
 
-print $Game->summary(true);
+echo $Game->summary(true);
 
 
 if($User->type['Moderator'])
@@ -351,10 +339,10 @@ if($User->type['Moderator'])
 // TODO: Have this loaded up when the game object is loaded up
 list($directorUserID) = $DB->sql_row("SELECT directorUserID FROM wD_Games WHERE id = ".$Game->id);
 list($tournamentDirector, $tournamentCodirector) = $DB->sql_row("SELECT directorID, coDirectorID FROM wD_Tournaments t INNER JOIN wD_TournamentGames g ON t.id = g.tournamentID WHERE g.gameID = ".$Game->id);
-if( (isset($directorUserID) && $directorUserID == $User->id) || (isset($tournamentDirector) && $tournamentDirector == $User->id) || (isset($tournamentCodirector) && $tournamentCodirector == $User->id) )
+if((isset($directorUserID) && $directorUserID == $User->id) || (isset($tournamentDirector) && $tournamentDirector == $User->id) || (isset($tournamentCodirector) && $tournamentCodirector == $User->id) )
 {
 	// This guy is the game director
-	define("INBOARD", true);
+	define('INBOARD', true);
 
 	require_once(l_r("admin/adminActionsForms.php"));
 }
@@ -362,5 +350,3 @@ if( (isset($directorUserID) && $directorUserID == $User->id) || (isset($tourname
 print '</div>';
 
 libHTML::footer();
-
-?>

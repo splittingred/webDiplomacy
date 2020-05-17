@@ -141,7 +141,7 @@ class libVariant {
 			}
 			else
 			{
-				// This variant is saved, and doesn't need to waste database queries retreiving this data again
+				// This variant is saved, and doesn't need to waste database queries retrieving this data again
 				$variantData = file_get_contents($variantCache);
 				$Variant = unserialize($variantData);
 
