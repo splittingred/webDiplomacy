@@ -1,0 +1,9 @@
+{% if live_games %}
+    <div class="homeHeader">
+        Joinable live games
+        <a href="gamelistings.php?gamelistType=Search&phaseLengthMax=30m&messageNorm=Yes&messagePub=Yes&messageNon=Yes&messageRule=Yes&Submit=Search#results">
+            {% include 'common/link.twig' %}
+        </a>
+    </div>
+    {{ live_games|raw }}
+{% endif %}

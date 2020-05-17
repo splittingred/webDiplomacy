@@ -62,7 +62,7 @@ if(isset($_POST['submit']))
 
 if (!$User->isAuthenticated())
 {
-    echo $twig->render('home/intro.twig', [
+    echo $twig->render('pages/home/intro.twig', [
         'globalInfo' => libHome::globalInfo()
     ]);
 }
@@ -101,53 +101,17 @@ else
 
 	print '<td class="homeMessages">';
 
-	$liveGames = libHome::upcomingLiveGames();
-	if ($liveGames != '') 
-	{
-		print '<div class="homeHeader">'.l_t('Joinable live games').' <a href="gamelistings.php?gamelistType=Search&phaseLengthMax=30m&messageNorm=Yes&messagePub=Yes&messageNon=Yes&messageRule=Yes&Submit=Search#results">'.libHTML::link().'</a></div>';
-		print $liveGames;
-	}
+    echo $twig->render('pages/home/live_games.twig',[
+        'live_games' => libHome::upcomingLiveGames(),
+    ]);
 
-	if( isset(Config::$customForumURL) ) 
-	{ 
-		print '<div class="homeHeader">'.l_t('Forum').' <a href="/contrib/phpBB3/">'.libHTML::link().'</a></div>';
-		if( file_exists(libCache::dirName('forum').'/home-forum.html') )
-		{
-			print file_get_contents(libCache::dirName('forum').'/home-forum.html');
-			$diff = (time() - filemtime(libCache::dirName('forum').'/home-forum.html'));
-			if( $diff > 60*5 ) 
-			{
-				unlink(libCache::dirName('forum').'/home-forum.html');
-			}
-		}
-		else
-		{
-			$buf_home_forum=libHome::forumNewExtern();
-			file_put_contents(libCache::dirName('forum').'/home-forum.html', $buf_home_forum);
-			print $buf_home_forum;
-		}
-	}
-	else 
-	{ 
-		print '<div class="homeHeader">'.l_t('Forum').' <a href="forum.php">'.libHTML::link().'</a></div>';
-		if( file_exists(libCache::dirName('forum').'/home-forum.html') )
-			print file_get_contents(libCache::dirName('forum').'/home-forum.html');
-		else
-		{
-			$buf_home_forum=libHome::forumNew();
-			file_put_contents(libCache::dirName('forum').'/home-forum.html', $buf_home_forum);
-			print $buf_home_forum;
-		}
-	}
 	print '</td>';
 
 	print '<td class="homeSplit"></td>';
 
-	print '<td class="homeGameNotices">';
-
-	print '<div class="homeHeader">'.l_t('Notices').' <a href="index.php?notices=on">'.libHTML::link().'</a></div>';
-	print libHome::Notice();
-	print '</td>';
+    echo $twig->render('pages/home/notices.twig',[
+        'notices' => libHome::Notice(),
+    ]);
 
 	print '<td class="homeSplit"></td>';
 

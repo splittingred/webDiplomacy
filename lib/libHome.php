@@ -113,25 +113,28 @@ class libHome
     public static function Notice()
     {
         global $User;
+        $output = '';
 
         $pms = self::getType();
 
         if(!count($pms))
         {
-            print '<div class="hr"></div>';
-            print '<p class="notice">'.l_t('No notices found.').'</p>';
-            return;
+            $output .= '<div class="hr"></div>';
+            $output .= '<p class="notice">'.l_t('No notices found.').'</p>';
+            return $output;
         }
 
-        print '<div class="hr"></div>';
+        $output .= '<div class="hr"></div>';
 
         foreach($pms as $pm)
         {
-            print $pm->viewedSplitter();
+            $output .= $pm->viewedSplitter();
 
-            print $pm->html();
+            $output .= $pm->html();
         }
+        return $output;
     }
+
     static function topUsers()
     {
         global $DB;
@@ -233,7 +236,15 @@ class libHome
         if ($User->options->value['displayUpcomingLive'] == 'No') return '';
 
         $tabl=$DB->sql_tabl("SELECT g.* FROM wD_Games g
-			WHERE (g.phase = 'Pre-game' OR (g.phase in ('Diplomacy','Retreats','Builds') and g.minimumBet is not null and g.gameOver = 'No')) AND g.phaseMinutes < 60 AND g.password IS NULL
+			WHERE (
+			        ( g.phase = 'Pre-game' ) 
+                OR (
+			        g.phase in ('Diplomacy','Retreats','Builds') 
+			        AND g.minimumBet IS NOT NULL 
+			        AND g.gameOver = 'No')
+                ) 
+			AND g.phaseMinutes < 60 
+			AND g.password IS NULL
 			ORDER BY g.processStatus ASC, g.processTime ASC LIMIT 3");
         $buf = '';
         $count=0;

@@ -1,0 +1,20 @@
+<div class="homeHeader">
+    My Tournaments
+    <a href="/tournaments.php?tab=Participating">{% include 'common/link.twig' %}</a></div>';
+
+{% for tournament in tournaments %}
+    <div class = "gamePanelHome">
+        <h3 class = "tournamentCenter">{{ tournament->name }}</h3><div class = "tournamentCenter">
+            {% if tournament->status != 'PreStart' %}
+                <a class="tournamentCenter" href="/tournamentScoring.php?tournamentID={{ tournament->id }}">Scoring and Participants</a>
+                <br />
+                {% if tournament->status != 'Registration' %}
+                    <br />
+                    <a class="tournamentCenter" href="/gamelistings.php?gamelistType=Search&tournamentID={{ tournament->id }}">Tournament Games</a>
+                    <br />
+                {% endif %}
+            {% endif %}
+        <br />
+        </div>
+    </div>
+{% endfor %}
