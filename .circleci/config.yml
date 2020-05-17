@@ -27,15 +27,13 @@ commands:
             sudo apt-get update
             sudo apt-get install -y libzip-dev
             sudo apt-get install -y zlib1g-dev libicu-dev g++
-            sudo apt-get install mysql-client
-            sudo apt-get -y install mysql-server
+            sudo apt-get install default-mysql-client
+            sudo apt-get -y install default-mysql-server
       - run:
           name: Install PHP extensions
           command: |
-            sudo docker-php-ext-install zip
             sudo docker-php-ext-configure intl
-            sudo docker-php-ext-install intl
-            sudo docker-php-ext-install pdo_mysql
+            sudo docker-php-ext-install intl zip pdo_mysql
       - run:
           name: Fix MySQL socket config
           command: |
@@ -64,7 +62,7 @@ jobs:
           keys:
             - composer-v1-{{ checksum "composer.lock" }}
             - composer-v1-
-      - run: composer install --dev --ignore-platform-reqs
+      - run: composer install --ignore-platform-reqs
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
           paths:
