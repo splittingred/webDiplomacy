@@ -39,7 +39,7 @@ class panelGameHome extends panelGameBoard
 	/**
 	 * Load panelMembersHome instead of panelMembers
 	 */
-	function loadMembers()
+	public function loadMembers() : void
 	{
 		$this->Members = $this->Variant->panelMembersHome($this);
 	}
@@ -49,7 +49,7 @@ class panelGameHome extends panelGameBoard
 	 * instead of printing directly.
 	 * @return string
 	 */
-	function summary()
+	public function summary() : string
 	{
 		return '
 		<div class="gamePanelHome variant'.$this->Variant->name.'" gameID="'.$this->id.'">
@@ -65,7 +65,7 @@ class panelGameHome extends panelGameBoard
 	 * Shortened game time remaining info
 	 * @return string
 	 */
-	function gameTimeRemaining()
+	public function gameTimeRemaining() : string
 	{
 		if( $this->processStatus == 'Paused' )
 			return l_t('Paused').' <img src="'.l_s('images/icons/pause.png').'" title="'.l_t('Paused').'" />';
@@ -85,7 +85,7 @@ class panelGameHome extends panelGameBoard
 	 * Game name
 	 * @return string
 	 */
-	function titleBarName()
+	public function titleBarName() : string
 	{
 		$name=parent::titleBarName();
 		if(strlen($name)>30) $name = substr($name,0,30).'...';
@@ -96,7 +96,7 @@ class panelGameHome extends panelGameBoard
 	 * Shortened titlebar info
 	 * @return string
 	 */
-	function titleBar()
+	public function titleBar() : string
 	{
 		global $User;
 		$buf = '
@@ -150,7 +150,7 @@ class panelGameHome extends panelGameBoard
 	 * Shortened pot data. Finished games aren't displayed via Home
 	 * @return string
 	 */
-	function pot()
+	public function pot() : string
 	{
 		return $this->pot.' '.libHTML::points().'<span title="'.$this->Scoring->longName().'"> '.$this->Scoring->Abbr().'</span>';
 	}
@@ -159,7 +159,7 @@ class panelGameHome extends panelGameBoard
 	 * Links to the game and game archives
 	 * @return string
 	 */
-	function links()
+	public function links() : string
 	{
 		global $DB, $User;
 		$userInGame = 0;
@@ -217,4 +217,3 @@ class panelGameHome extends panelGameBoard
 		}	
 	}
 }
-?>

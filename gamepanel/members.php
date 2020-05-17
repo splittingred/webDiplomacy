@@ -36,37 +36,11 @@ class panelMembers extends Members
 		return $this->Game->Variant->panelMember($row);
 	}
 
-	/*
-	private function sortBy($sortList, $by)
-	{
-		$byIndex=array();
-		$byList=array();
-		foreach($sortList as $obj)
-		{
-			$objVal = (int)$obj->{$by};
-
-			if(!isset($byIndex[$objVal]))
-				$byIndex[$objVal] = array();
-
-			$byList[$objVal]=$objVal;
-			$byIndex[$objVal][$obj->id] = $obj;
-		}
-		sort($byList);
-		$byList=array_reverse($byList);
-		$sorted=array();
-		foreach($byList as $objVal)
-			foreach($byIndex[$objVal] as $obj)
-				$sorted[] = $obj;
-
-		return $sorted;
-	}
-	*/
-
 	/**
 	 * The order in which to display the various statuses of members. Which come last etc.
 	 * @var array
 	 */
-	private static $statusOrder=array('Won','Survived','Drawn','Playing','Left','Resigned','Defeated');
+	private static $statusOrder = ['Won','Survived','Drawn','Playing','Left','Resigned','Defeated'];
 
 	/**
 	 * The list of members; just names if pregame, otherwise a full detailed table, ordered by
@@ -74,9 +48,9 @@ class panelMembers extends Members
 	 *
 	 * @return string
 	 */
-	function membersList()
+	public function membersList() : string
 	{
-		if( $this->Game->phase == 'Pre-game')
+		if (!$this->Game->isStarted())
 		{
 			$membersNames = array();
 			foreach($this->ByUserID as $Member)
@@ -99,7 +73,7 @@ class panelMembers extends Members
 
 		$extras ='';
 		// Show members CD users after a game is finished. 	
-		if (($this->Game->hasModeratorPowers() || $this->Game->phase == 'Finished') && count($this->Game->civilDisorderInfo) != 0) 
+		if (($this->Game->hasModeratorPowers() || $this->Game->isFinished()) && $this->Game->hasCivilDisorders())
 		{ 
 				$extras = '<div class="bar titleBar modEyes">Civil Disorders</div><table><tbody>';
 				foreach ($this->Game->civilDisorderInfo as $userID => $CD) 
@@ -171,32 +145,42 @@ class panelMembers extends Members
 	 *
 	 * @return string
 	 */
-	function occupationBar()
+	public function occupationBar() : string
 	{
 		if ( isset($this->occupationBarCache)) return $this->occupationBarCache;
 
+		global $renderer;
+
 		libHTML::$first=true;
-		if( $this->Game->phase != 'Pre-game' )
+		if ($this->Game->isStarted())
 		{
 			$SCPercents = $this->SCPercents();
-			$buf = '';
-			foreach($SCPercents as $countryID=>$width)
-				if ( $width > 0 )
-					$buf .= '<td class="occupationBar'.$countryID.' '.libHTML::first().'" style="width:'.$width.'%"></td>';
+
+			$members = [];
+            foreach ($SCPercents as $countryID => $width) {
+                if ($width <= 0) continue;
+
+                $members[] = [
+                    'country_id' => $countryID,
+                    'width' => $width,
+                    'first' => libHTML::first(),
+                ];
+            }
+
+            $buf = $renderer->render('games/members/occupation_bar/active.twig',[
+                'members' => $members,
+            ]);
 		}
 		else
 		{
-			$joinedPercent = ceil((count($this->ByID)*100.0/count($this->Game->Variant->countries)));
-			$buf = '<td class="occupationBarJoined '.libHTML::first().'" style="width:'.$joinedPercent.'%"></td>';
-			if ( $joinedPercent < 99.0 )
-				$buf .= '<td class="occupationBarNotJoined" style="width:'.(100-$joinedPercent).'%"></td>';
+            $joinedPercent = ceil((count($this->ByID)*100.0/count($this->Game->Variant->countries)));
+            $buf = $renderer->render('games/members/occupation_bar/active.twig',[
+                'joined_percent' => $joinedPercent,
+                'remaining_percent' => 100 - $joinedPercent,
+            ]);
 		}
 
-		$this->occupationBarCache = '<table class="occupationBarTable"><tr>
-					'.$buf.'
-				</tr></table>';
-
+		$this->occupationBarCache = $buf;
 		return $this->occupationBarCache;
 	}
 }
-?>

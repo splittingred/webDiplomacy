@@ -14,8 +14,8 @@ abstract class BaseController
 
     public function __construct()
     {
-        global $twig, $DB, $User;
-        $this->renderer = $twig;
+        global $renderer, $DB, $User;
+        $this->renderer = $renderer;
         $this->database = $DB;
         $this->user = $User;
         $this->setUp();

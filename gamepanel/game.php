@@ -48,7 +48,7 @@ class panelGame extends Game
 	/**
 	 * print the HTML for this game panel; header, members info, voting info, links
 	 */
-	function summary()
+	public function summary() : string
 	{
 		print '
 		<div class="gamePanel variant'.$this->Variant->name.'">
@@ -69,7 +69,7 @@ class panelGame extends Game
 	/**
 	 * Load panelMembers, instead of Members
 	 */
-	function loadMembers()
+	public function loadMembers() : void
 	{
 		$this->Members = $this->Variant->panelMembers($this);
 	}
@@ -79,45 +79,27 @@ class panelGame extends Game
 	 *
 	 * @return string
 	 */
-	function gameNoticeBar()
+	public function gameNoticeBar() : string
 	{
-		if( $this->phase == 'Finished' )
+		if ($this->isFinished()) {
 			return $this->gameGameOverDetails();
-		elseif( $this->phase == 'Pre-game' && count($this->Members->ByID)==count($this->Variant->countries) )
-		{
-			if ( $this->isLiveGame() )
-				return l_t('%s players joined; game will start at the scheduled time', count($this->Variant->countries));
-			else
-				return l_t('%s players joined; game will start on next process cycle', count($this->Variant->countries));
 		}
-		elseif( $this->missingPlayerPolicy=='Wait'&&!$this->Members->isCompleted() && time()>=$this->processTime )
+		elseif( $this->isPreGame() && count($this->Members->ByID) == count($this->Variant->countries))
+		{
+			if ($this->isLiveGame()) {
+				return l_t('%s players joined; game will start at the scheduled time', count($this->Variant->countries));
+			} else {
+				return l_t('%s players joined; game will start on next process cycle', count($this->Variant->countries));
+			}
+		}
+		elseif ($this->missingPlayerPolicy == 'Wait' && !$this->Members->isCompleted() && time() >= $this->processTime) {
 			return l_t("One or more players need to complete their orders before this wait-mode game can go on");
+		}
+		return '';
 	}
 
-	/*
-	 * This is a cute way of displaying the current phase as highlighted out of the list
-	 * of available ones, which become smaller, but it took up too much space
-	function titleBarPhase()
+	public function pausedInfo() : string
 	{
-		return ;
-		if( $this->phase == 'Pre-game' || $this->phase == 'Builds' )
-			return $this->phase;
-
-		$activePhases = array(
-			'Diplomacy'=>'<span class="gamePhaseInactive">Diplomacy</span>',
-			'Retreats'=>'<span class="gamePhaseInactive">Retreats</span>'
-		);
-
-		if( ($this->turn%2) != 0 )
-			$activePhases['Builds']='<span class="gamePhaseInactive">Builds</span>';
-
-		$activePhases[$this->phase] = $this->phase;
-
-		return implode(' - ',$activePhases);
-	}
-	*/
-
-	function pausedInfo() {
 		return l_t('Paused').' <img src="'.l_s('images/icons/pause.png').'" title="'.l_t('Game paused').'" />';
 	}
 
@@ -126,35 +108,30 @@ class panelGame extends Game
 	 *
 	 * @return string
 	 */
-	function gameTimeRemaining()
+	public function gameTimeRemaining() : string
 	{
 
-		if( $this->phase == 'Finished' )
-			return '<span class="gameTimeRemainingNextPhase">'.l_t('Finished:').'</span> '.
-				libTime::detailedText($this->processTime);
-
-		if( $this->processStatus == 'Paused' )
-			return $this->pausedInfo();
-		elseif( $this->processStatus == 'Crashed' )
-			return l_t('Crashed');
-
-		if (!isset($timerCount))
-			static $timerCount=0;
-		$timerCount++;
-
-		if( $this->phase == 'Pre-game' )
-			$buf = '<span class="gameTimeRemainingNextPhase">'.l_t('Start:').'</span> '.
-				$this->processTimetxt().' ('.libTime::detailedText($this->processTime).')';
-		else
-		{
-			$buf = '<span class="gameTimeRemainingNextPhase">'.l_t('Next:').'</span> '.
-				$this->processTimetxt().' ('.libTime::detailedText($this->processTime).')';
-
-			//if ( $this->Members->isJoined() )
-				//$buf .= ' <span class="gameTimeRemainingFixed">('.libTime::text($this->processTime).')</span>';
-
+		if ($this->isFinished()) {
+			return '<span class="gameTimeRemainingNextPhase">' . l_t('Finished:') . '</span> ' . libTime::detailedText($this->processTime);
 		}
 
+		if ($this->processStatus == 'Paused') {
+			return $this->pausedInfo();
+		} elseif ($this->processStatus == 'Crashed') {
+			return l_t('Crashed');
+		}
+
+		if (!isset($timerCount)) {
+			static $timerCount = 0;
+		}
+
+		$timerCount++;
+
+		if ($this->isPreGame()) {
+			$buf = '<span class="gameTimeRemainingNextPhase">' . l_t('Start:') . '</span> ' . $this->processTimetxt() . ' (' . libTime::detailedText($this->processTime) . ')';
+		} else {
+			$buf = '<span class="gameTimeRemainingNextPhase">'.l_t('Next:').'</span> '. $this->processTimetxt().' ('.libTime::detailedText($this->processTime).')';
+		}
 		return $buf;
 	}
 
@@ -162,11 +139,12 @@ class panelGame extends Game
 	 * What circumstances did the game end in? Who won, etc
 	 * @return string
 	 */
-	function gameGameOverDetails()
+	public function gameGameOverDetails() : string
 	{
 		if( $this->gameOver == 'Won' )
 		{
-			foreach($this->Members->ByStatus['Won'] as $Winner);
+			// TODO: replace with just getting last element
+			$Winner = end($this->Members->ByStatus['Won']);
 			return l_t('Game won by %s',$Winner->memberName());
 		}
 		elseif( $this->gameOver == 'Drawn' )
@@ -179,7 +157,7 @@ class panelGame extends Game
 	 * Icons for the game, e.g. private padlock and featured star
 	 * @return string
 	 */
-	function gameIcons()
+	public function gameIcons() : string
 	{
 		global $Misc;
 
@@ -192,8 +170,8 @@ class panelGame extends Game
 
 		return $buf;
 	}
-	
-	function phaseSwitchInfo()
+
+	public function phaseSwitchInfo() : string
 	{
 		$buf = '';
 		
@@ -234,7 +212,7 @@ class panelGame extends Game
 	 *
 	 * @return string
 	 */
-	function titleBar()
+	public function titleBar() : string
 	{
 		$rightTop = '
 			<div class="titleBarRightSide">
@@ -272,7 +250,7 @@ class panelGame extends Game
 		$leftTop .= '</div>';
 		$leftBottom .= '</div>';
 
-		$buf = '
+		return '
 			'.$rightTop.'
 			'.$leftTop.'
 			<div style="clear:both"></div>
@@ -281,11 +259,9 @@ class panelGame extends Game
 			<div style="clear:both"></div>
 			'.$rightBottom.'
 			<div style="clear:both"></div>';
-		
-		return $buf;
 	}
 
-	function gameVariants()
+	public function gameVariants() : string
 	{
 		$alternatives=array();
 		$alternatives[]=$this->Variant->link();
@@ -327,30 +303,25 @@ class panelGame extends Game
 	 * Hours per phase, whether the game is slow or fast etc
 	 * @return string
 	 */
-	function gameHoursPerPhase()
+	public function gameHoursPerPhase() : string
 	{
-		$buf = l_t('<strong>%s</strong> /phase',libTime::timeLengthText($this->phaseMinutes*60));
-		return $buf ;
+		return l_t('<strong>%s</strong> /phase',libTime::timeLengthText($this->phaseMinutes*60));
 	}
 
 	/**
 	 * The notifications list, not yet used, for showing notifications data related to a game within its game-panel
 	 * @return string
 	 */
-	function notificationsList()
+	public function notificationsList() : string
 	{
 		return '';
-		return '<div class="notification">
-					<span class="date"></span>
-					<span class="message"></span>
-				</div>';
 	}
 
 	/**
 	 * Votes form data, only available in the board and if a member, so returns nothing here
 	 * @return string
 	 */
-	function votes()
+	public function votes() : string
 	{
 		return '';
 	}
@@ -359,7 +330,7 @@ class panelGame extends Game
 	 * The header; the vital game info and the vital notice bar
 	 * @return string
 	 */
-	function header()
+	public function header() : string
 	{
 		$buf = '<div class="bar titleBar"><a name="gamePanel"></a>
 				'.$this->titleBar().'
@@ -379,33 +350,23 @@ class panelGame extends Game
 	 * Members data; info about each member is given surrounded by the occupation-bar
 	 * @return string
 	 */
-	function members()
+	public function members() : string
 	{
-		$occupationBar = $this->Members->occupationBar();
-		$buf = '';
-		if ($this->moderatorSeesMemberInfo())
-		{
-                	$buf .= '<div class="bar titleBar modEyes">Anonymous</div>';
-		}
-		$buf .= '<div class="panelBarGraph occupationBar">
-				'.$occupationBar.'
-			</div>
-			<div class="membersList membersFullTable'.($this->moderatorSeesMemberInfo() ? ' modEyes': '').'">
-				'.$this->Members->membersList().'
-			</div>
-			<div class="panelBarGraph occupationBar">
-				'.$occupationBar.'
-			</div>';
-		return $buf;
+		global $renderer;
+		return $renderer->render('games/members/summaryList.twig',[
+			'moderator_sees_member_info' => $this->moderatorSeesMemberInfo(),
+			'occupation_bar' => $this->Members->occupationBar(),
+			'members_list' => $this->Members->membersList(),
+		]);
 	}
 
 	/**
 	 * The links allowing players to join/view games and see the archive data
 	 * @return string
 	 */
-	function links()
+	public function links() : string
 	{
-		$buf = '
+		return '
 			<div class="bar enterBar">
 				<div class="enterBarJoin">
 					'.$this->joinBar().'
@@ -416,28 +377,25 @@ class panelGame extends Game
 				<div style="clear:both"></div>
 			</div>
 			';
-
-		return $buf;
 	}
 
 	/**
 	 * Links to the games archived data, maps/orders/etc
 	 * @return string
 	 */
-	function archiveBar()
+	public function archiveBar() : string
 	{
-		return '<strong>'.l_t('Archive:').'</strong> '.
-			'<a href="board.php?gameID='.$this->id.'&amp;viewArchive=Orders">'.l_t('Orders').'</a>
-			- <a href="board.php?gameID='.$this->id.'&amp;viewArchive=Maps">'.l_t('Maps').'</a>
-			- <a href="board.php?gameID='.$this->id.'&amp;viewArchive=Messages">'.l_t('Messages').'</a>';
-//			- <a href="board.php?gameID='.$this->id.'&amp;viewArchive=Reports">Reports</a>';
+		global $renderer;
+		return $renderer->render('games/board/archive_bar.twig', [
+			'id' => $this->id,
+		]);
 	}
 
 	/**
 	 * The invite code box for joining private games
 	 * @return string
 	 */
-	private static function passwordBox()
+	private static function passwordBox() : string
 	{
 		return ' <span class="gamePasswordBox"><label>'.l_t('Invite Code:').'</label> <input type="password" name="gamepass" size="10" /></span> ';
 	}
@@ -446,7 +404,7 @@ class panelGame extends Game
 	 * A bar with form buttons letting you join/leave a game
 	 * @return string
 	 */
-	function joinBar()
+	public function joinBar() : string
 	{
 		global $User;
 
@@ -556,10 +514,8 @@ class panelGame extends Game
 	 * A bar with a button letting people view the game
 	 * @return string
 	 */
-	function openBar()
+	public function openBar() : string
 	{
-		global $User;
-
 		if( !$this->Members->isJoined() && $this->phase == 'Pre-game' )
 			return '';
 
@@ -572,5 +528,3 @@ class panelGame extends Game
 			</div></form>';
 	}
 }
-
-?>

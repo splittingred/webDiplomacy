@@ -192,5 +192,3 @@ class libVariant {
 		return self::loadFromVariantID(self::$variantIDsByGameID[$gameID]);
 	}
 }
-
-?>

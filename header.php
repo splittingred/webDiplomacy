@@ -23,26 +23,14 @@
  * @package Base
  */
 
-//$_SERVER['HTTP_CACHE_CONTROL'] = 'max-age=10000';
-
-/*
-function setExpires($expires) {
- header('Expires: '.gmdate('D, d M Y H:i:s', time()+$expires).'GMT');
- header('Last-Modified: '.gmdate('D, d M Y H:i:s', time()-$expires).'GMT');
-}
-
-setExpires(600);
-echo ( 'This page will self destruct in 10 seconds<br />' );
-echo ( 'The GMT is now '.gmdate('H:i:s').'<br />' );
-echo ( 'The GMT is now '.gmdate('H:i:s',time()).'<br />' );
-echo ( '<a href="'.$_SERVER['PHP_SELF'].'">View Again</a><br />' );
-
-die();*/
+use Diplomacy\Views\Renderer;
 
 if( strpos($_SERVER['PHP_SELF'], 'header.php') )
 {
 	die("You can't view this document by itself.");
 }
+
+define('ROOT_PATH', dirname(__FILE__) . '/');
 
 if( !defined('IN_CODE') )
 	define('IN_CODE', 1); // A flag to tell scripts they aren't being executed by themselves
@@ -259,9 +247,5 @@ function close()
 	die();
 }
 
-global $twig;
-$loader = new \Twig\Loader\FilesystemLoader(dirname(__FILE__) . '/templates');
-$twig = new \Twig\Environment($loader, [
-    'cache' => dirname(__FILE__) . '/cache/templates',
-    'debug' => true,
-]);
+global $renderer;
+$renderer = Renderer::getInstance();

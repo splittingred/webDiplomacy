@@ -34,7 +34,7 @@ class panelMembersHome extends panelMembers
 	 * takes up a short, thin column.
 	 * @return string
 	 */
-	function membersList()
+	public function membersList() : string
 	{
 		global $User;
 		// $membersList[$i]=array($nameOrCountryID,$iconOne,$iconTwo,...);

@@ -31,7 +31,7 @@ require_once(l_r('objects/scoringsystem.php'));
  */
 class Game
 {
-	public static function mapType() 
+	public static function mapType() : string
 	{
 		if ( isset($_REQUEST['largemap'] ) )
 			return 'large';
@@ -48,7 +48,7 @@ class Game
 		return (isset($_REQUEST['DATC'])?'large':'small');
 	}
 
-	public static function mapFilename($gameID, $turn, $mapType=false)
+	public static function mapFilename($gameID, $turn, $mapType=false) : string
 	{
 		if( $mapType==false ) $mapType = self::mapType();
 
@@ -62,7 +62,7 @@ class Game
 		return $folder.'/'.$filename;
 	}
 
-	public static function wipeCache($gameID, $turn=false)
+	public static function wipeCache($gameID, $turn=false) : void
 	{
 		$dir = self::gameFolder($gameID);
 
@@ -81,7 +81,7 @@ class Game
 	 * @param $gameID The gameID
 	 * @return string The game folder
 	 */
-	public static function gameFolder($gameID)
+	public static function gameFolder($gameID) : string
 	{
 		if( defined('DATC') )
 			return 'datc/maps';
@@ -326,6 +326,43 @@ class Game
 			trigger_error(l_t("Not-paused game process-time values incorrectly set."));
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function isPreGame() : bool
+	{
+		return $this->phase == 'Pre-game';
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isStarted() : bool
+	{
+		return !$this->isPreGame();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isInProgress() : bool
+	{
+		return $this->isStarted() && !$this->isFinished();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isFinished() : bool
+	{
+		return $this->phase == 'Finished';
+	}
+
+	public function hasCivilDisorders() : bool
+	{
+		return count($this->civilDisorderInfo) > 0;
+	}
+
 	private $isMemberInfoHidden;
 
 	/**
@@ -333,10 +370,8 @@ class Game
 	 *
 	 * @return boolean
 	 */
-	public function isMemberInfoHidden()
+	public function isMemberInfoHidden() : bool
 	{
-		global $User;
-
 		if ( !isset($this->isMemberInfoHidden) )
 		{
 			/*
@@ -363,21 +398,18 @@ class Game
 	 *
 	 * @return boolean
 	 */                                                                                                                                    
-	public function moderatorSeesMemberInfo() 
-	{                                                                                            
-		global $User;
-
+	public function moderatorSeesMemberInfo() : bool
+	{
 		return (!($this->anon == 'No' || $this->phase == 'Finished') && $this->hasModeratorPowers());
 	}
 
-	public function hasModeratorPowers() 
+	public function hasModeratorPowers() : bool
 	{
 		global $User;
-
 		return ($User->type['Moderator'] && !isset($this->Members->ByUserID[$User->id]));
 	}
 
-	function loadRow(array $row)
+    public function loadRow(array $row) : void
 	{
 		foreach( $row as $name=>$value )
 		{
@@ -388,16 +420,17 @@ class Game
 		$this->private = isset($this->password);
 
 		$this->Variant = $GLOBALS['Variants'][$this->variantID];
-	}                         
+	}
 
-	function watched() 
+    public function watched() : bool
 	{
         global $DB, $User;
 
 		$row = $DB->sql_row('SELECT * from wD_WatchedGames WHERE gameID='.$this->id.' AND userID=' . $User->id);
 		return $row != false;
 	}
-	function watch() 
+
+    public function watch() : void
 	{
         global $DB, $User;
 
@@ -408,7 +441,7 @@ class Game
 		}
 	}
 
-	function unwatch() 
+    public function unwatch() : void
 	{
         global $DB, $User;
 
@@ -419,7 +452,7 @@ class Game
 		} 
 	}
 
-	function loadCDs() 
+    public function loadCDs() : void
 	{
 		global $DB;
 
@@ -436,7 +469,7 @@ class Game
 	 * Reload the variables which are stored within this object specificially, ie everything
 	 * except aggregates
 	 */
-	function load()
+    public function load() : void
 	{
 		global $DB;
 
@@ -480,12 +513,12 @@ class Game
 	/**
 	 * Reload the Members array
 	 */
-	function loadMembers()
+    public function loadMembers() : void
 	{
 		$this->Members = $this->Variant->Members($this);
 	}
 
-	function isJoinable()
+    public function isJoinable() : bool
 	{
 		global $User;
 
@@ -522,7 +555,7 @@ class Game
 	 *
 	 * @return string Either HTML or text depending on whether map.php is calling
 	 */
-	function gameovertxt($map=FALSE)
+    public function gameovertxt($map=FALSE) : string
 	{
 		assert ('$this->gameOver != "No"');
 
@@ -545,7 +578,7 @@ class Game
 	 *
 	 * @return string The game turn in text format
 	 */
-	function datetxt($turn = false)
+    public function datetxt($turn = false) : string
 	{
 		if( $turn === false )
 			$turn = $this->turn;
@@ -558,7 +591,7 @@ class Game
 	 *
 	 * @return string
 	 */
-	function modetxt()
+    public function modetxt() : string
 	{
 		return $this->phase;
 	}
@@ -567,7 +600,7 @@ class Game
 	 * Check whether this game will be considered a "live" game.
 	 * @return true if phase minutes are less than 60.
 	 **/
-	function isLiveGame()
+    public function isLiveGame() : bool
 	{
 		return $this->phaseMinutes < 60;
 	}
@@ -577,7 +610,7 @@ class Game
 	 *
 	 * @return string
 	 */
-	function processTimetxt()
+    public function processTimetxt() : string
 	{
 		if ( $this->processTime < time() )
 			return l_t("Now");
@@ -585,7 +618,7 @@ class Game
 			return libTime::remainingText($this->processTime);
 	}
 
-	static function gamesCanProcess()
+    public static function gamesCanProcess() : bool
 	{
 		global $Misc;
 
@@ -613,7 +646,7 @@ class Game
 	 *
 	 * @return boolean
 	 */
-	function needsProcess()
+    public function needsProcess() : bool
 	{
 		global $Misc;
 
@@ -643,11 +676,8 @@ class Game
      * Game name
      * @return string
      */
-    function titleBarName()
+	public function titleBarName() : string
     {
         return $this->name;
     }
 }
-
-
-?>

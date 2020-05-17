@@ -1,0 +1,7 @@
+<table class="occupationBarTable">
+    <tr>
+    {% for member in members %}
+        <td class="occupationBar{{ member.country_id }} {{ member.first }}" style="width:{{ member.width }}%"></td>
+    {% endfor %}
+    </tr>
+</table>

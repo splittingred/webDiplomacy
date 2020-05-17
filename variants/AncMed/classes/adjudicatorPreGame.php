@@ -32,5 +32,3 @@ class AncMedVariant_adjudicatorPreGame extends adjudicatorPreGame {
 	);
 
 }
-
-?>

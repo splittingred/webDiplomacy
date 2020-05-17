@@ -402,8 +402,8 @@ class libHTML
 
 		$variantCSS = [];
 
-		global $twig;
-		return $twig->render('common/layout/header/head.twig', [
+		global $renderer;
+		return $renderer->render('common/layout/header/head.twig', [
             'title' => $title,
             'css_version' => CSSVERSION,
             'js_version' => JSVERSION,
@@ -419,7 +419,7 @@ class libHTML
 	static public function starthtml($title=false)
 	{
 		global $User;
-		global $twig;
+		global $renderer;
 
 		self::$scriptname = $scriptname = basename($_SERVER['PHP_SELF']);
 
@@ -435,7 +435,7 @@ class libHTML
 		{
 			if ($User->tempBanReason != 'System' && $User->tempBanReason != '')
 			{
-				$bannedMessages = $twig->render('common/users/banned/custom.twig', [
+				$bannedMessages = $renderer->render('common/users/banned/custom.twig', [
 					'remaining_time' => libTime::remainingText($User->tempBan),
 					'reason' => $User->tempBanReason,
 					'moderator_email' => \Config::$modEMail,
@@ -443,13 +443,13 @@ class libHTML
 			}
 			else if (($User->tempBan - time() ) > (60*60*24*180))
 			{
-				$bannedMessages = $twig->render('common/users/banned/year.twig', [
+				$bannedMessages = $renderer->render('common/users/banned/year.twig', [
 					'moderator_email' => \Config::$modEMail,
 				]);
 			}
 			else
 			{
-				$bannedMessages = $twig->render('common/users/banned/system.twig', [
+				$bannedMessages = $renderer->render('common/users/banned/system.twig', [
 					'moderator_email' => \Config::$modEMail,
 					'remaining_time' => libTime::remainingText($User->tempBan),
 				]);
@@ -458,7 +458,7 @@ class libHTML
 
 		$gameNotification = is_object($User) && $User->isAuthenticated() ? libHTML::gameNotifyBlock() : '';
 
-		echo $twig->render('common/layout/header.twig', [
+		echo $renderer->render('common/layout/header.twig', [
 			'head' => self::prebody($title===FALSE ? l_t($pages[$scriptname]['name']) : $title),
 			'menu' => self::menu(),
 			'global_notices' => self::globalNotices(),
@@ -707,20 +707,20 @@ class libHTML
 	static public function menu()
 	{
 		global $User;
-		global $twig;
+		global $renderer;
 		$authenticated = $User && $User->isAuthenticated();
 
         if (!$authenticated) {
-            $menu = $twig->render('common/layout/menu/unauthenticated.twig');
+            $menu = $renderer->render('common/layout/menu/unauthenticated.twig');
         } else {
-            $menu = $twig->render('common/layout/menu/authenticated.twig',[
+            $menu = $renderer->render('common/layout/menu/authenticated.twig',[
                 'user' => $User,
                 'is_admin' => $User->isAdmin(),
                 'is_moderator' => $User->isModerator(),
                 'admin_user_switch' => defined('AdminUserSwitch'),
             ]);
         }
-		return $twig->render('common/layout/menu/menu.twig', [
+		return $renderer->render('common/layout/menu/menu.twig', [
 		    'menu' => $menu,
             'authenticated' => $authenticated,
             'user_profile_link' => $User ? $User->profile_link(true) : '',
@@ -734,8 +734,8 @@ class libHTML
 	 */
 	static public function footer()
 	{
-		global $twig;
-		echo $twig->render('common/layout/footer.twig', [
+		global $renderer;
+		echo $renderer->render('common/layout/footer.twig', [
 			'stats' => self::footerStats(),
 			'webdiplomacy_version' => number_format(VERSION/100,2),
 			'moderator_email' => \Config::$modEMail,
@@ -746,9 +746,9 @@ class libHTML
 
 	private static function footerStats()
 	{
-		global $Misc, $User, $twig;
+		global $Misc, $User, $renderer;
 
-		return $twig->render('common/layout/footer/stats.twig',[
+		return $renderer->render('common/layout/footer/stats.twig',[
 			'logged_on' 		=> (int)$Misc->OnlinePlayers,
 			'playing' 			=> (int)$Misc->ActivePlayers,
 			'registered' 		=> (int)$Misc->TotalPlayers,

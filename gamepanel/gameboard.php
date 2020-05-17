@@ -30,7 +30,7 @@ require_once(l_r('gamepanel/game.php'));
  */
 class panelGameBoard extends panelGame
 {
-	function mapHTML() 
+	public function mapHTML() : string
 	{
 		global $User;
 
@@ -68,7 +68,7 @@ class panelGameBoard extends panelGame
 		return $map;
 	}
 
-	protected function mapJS($mapTurn) 
+	protected function mapJS($mapTurn) : void
 	{
 		libHTML::$footerScript[] = 'turnToText='.$this->Variant->turnAsDateJS()."
 		mapArrows($mapTurn,$mapTurn);
@@ -76,19 +76,19 @@ class panelGameBoard extends panelGame
 		libHTML::$footerIncludes[] = l_j('mapUI.js');
 	}
 
-	function links()
+	public function links() : string
 	{
 		$buf = '';
 
-		if ( $this->phase != 'Pre-game') 
-			$buf .= '<div class="bar archiveBar"> '.$this->archiveBar().'</div> ';
+		if ($this->isStarted())
+			$buf .= '<div class="bar archiveBar"> ' . $this->archiveBar() . '</div>';
 
 		$buf .= parent::links();
 
 		return $buf;
 	}
 
-	function pausedInfo()
+	public function pausedInfo() : string
 	{
 		$buf = parent::pausedInfo();
 
@@ -107,10 +107,10 @@ class panelGameBoard extends panelGame
 	 * form, which board.php processes.
 	 * @return string
 	 */
-	function votes()
+	public function votes() : string
 	{
 		global $User;
-		if ( ( $this->phase == 'Pre-game' || $this->phase == 'Finished' ) || !isset($this->Members->ByUserID[$User->id]) ) return '';
+		if ( ( !$this->isStarted() || $this->phase == 'Finished' ) || !isset($this->Members->ByUserID[$User->id]) ) return '';
 
 		$vAllowed = Members::$votes;
 		$vSet = $this->Members->ByUserID[$User->id]->votes;
@@ -166,7 +166,7 @@ class panelGameBoard extends panelGame
 	 * @param array $vCancel Votes which can be cancelled
 	 * @return string
 	 */
-	function showVoteForm($vVote, $vCancel)
+	public function showVoteForm($vVote, $vCancel) : string
 	{
 		$buf = '<form onsubmit="return confirm(\''. l_t("Are you sure you want to cast this vote?").'\');" action="board.php?gameID='.$this->id.'#votebar" method="post">';
 		$buf .= '<input type="hidden" name="formTicket" value="'.libHTML::formTicket().'" />';
@@ -292,7 +292,7 @@ class panelGameBoard extends panelGame
 	 * No open bar from within an open game
 	 * @return string Nothing
 	 */
-	public function openBar()
+	public function openBar() : string
 	{
 		return '';
 	}
@@ -303,10 +303,8 @@ class panelGameBoard extends panelGame
 	 *
 	 * @return string
 	 */
-	public function contentHeader()
+	public function contentHeader() : string
 	{
-		global $User;
-
 		$buf = '<a name="gamePanel"></a>';
 		$buf .= $this->header();
 
@@ -320,7 +318,7 @@ class panelGameBoard extends panelGame
 	 * for use at the top of a game board.
 	 * @return string
 	 */
-	function header()
+	public function header() : string
 	{
 		global $User;
 		libHTML::$alternate=2;
@@ -337,7 +335,7 @@ class panelGameBoard extends panelGame
 				</div>';
 		}
 
-		if ( $this->Members->isJoined() && $this->phase != 'Pre-game' )
+		if ( $this->Members->isJoined() && $this->isStarted())
 		{
 			$buf .= '<div class="membersList">'.$this->Members->ByUserID[$User->id]->memberHeaderBar().'</div>';
 		}
@@ -349,15 +347,14 @@ class panelGameBoard extends panelGame
 	 * A summary which is header-less, since it is displayed at the top of board.
 	 * @return string
 	 */
-	function summary()
+	public function summary() : string
 	{
 		print '
 		<div class="gamePanel variant'.$this->Variant->name.'">
-			'.($this->Members->isJoined()?$this->votes():'').'
+			'.($this->Members->isJoined() ? $this->votes() : '').'
 			'.$this->members().'
 			'.$this->links().'
 			<div class="bar lastBar"> </div>
 		</div>';
 	}
 }
-?>

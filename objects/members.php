@@ -19,6 +19,7 @@
  */
 
 require_once(l_r('objects/member.php'));
+
 /**
  * An object which manages the relationship with a game and its members. Often when
  * dealing with a certain game you're actually only dealing with the members of the
@@ -37,7 +38,7 @@ class Members
 	public $ByCountryID;
 	public $ByStatus;
 
-	function SCPercents()
+	public function SCPercents()
 	{
 		$SCPercents=array();
 
@@ -79,19 +80,19 @@ class Members
 	 *
 	 * @return float
 	 */
-	function pointsPerSupplyCenter()
+	public function pointsPerSupplyCenter()
 	{
 		return ((float)$this->Game->pot / (float)$this->supplyCenterCount('Playing'));
 	}
 
-	static $votes = array('Draw','Pause','Cancel','Concede');
+	public static $votes = ['Draw','Pause','Cancel','Concede'];
 
-	function votesPassed()
+	public function votesPassed()
 	{
 		global $DB;
-		$votes=self::$votes;
+		$votes = self::$votes;
 
-		$concede=0;
+		$concede = 0;
 
 		//gets the number of players that are still playing for use of the bot
 		$playerCount = count($this->ByStatus['Playing']);
@@ -159,16 +160,16 @@ class Members
 		return $votes;
 	}
 
-	function isReady()
+	public function isReady()
 	{
 		foreach($this->ByStatus['Playing'] as $Member)
-			if( !$Member->orderStatus->Ready && !$Member->orderStatus->None )
+			if (!$Member->orderStatus->Ready && !$Member->orderStatus->None)
 				return false;
 
 		return true;
 	}
 
-	function isCompleted()
+	public function isCompleted()
 	{
 		foreach($this->ByStatus['Playing'] as $Member)
 			if( !$Member->orderStatus->Completed && !$Member->orderStatus->None )
@@ -180,7 +181,7 @@ class Members
 	/**
 	 * Remove the order status 'Ready' from all members participating
 	 */
-	function unreadyMembers() 
+	public function unreadyMembers()
 	{
 		global $DB;
 		
@@ -201,11 +202,11 @@ class Members
 	 *
 	 * @return boolean
 	 */
-	function isJoined()
+	public function isJoined()
 	{
 		global $User;
 
-		return ( isset($this->ByUserID[$User->id]) );
+		return isset($this->ByUserID[$User->id]);
 	}
 
 	/**
@@ -214,14 +215,14 @@ class Members
 	 *
 	 * @return boolean
 	 */
-	function isTempBanned()
+	public function isTempBanned()
 	{
 		global $User;
 		
 		return ( $this->isJoined() && $this->ByUserID[$User->id]->status == "Left" && $User->userIsTempBanned() );
 	}
 
-	function makeUserMember($userID)
+	public function makeUserMember($userID) : void
 	{
 		$userMember = $this->Game->Variant->userMember($this->ByUserID[$userID]);
 		unset($this->ByStatus[$userMember->status][$userMember->id]);
@@ -229,8 +230,9 @@ class Members
 		$this->ByID[$userMember->id] = $userMember;
 		$this->ByUserID[$userMember->userID] = $userMember;
 		$this->ByStatus[$userMember->status][$userMember->id] = $userMember;
-		if(is_array($this->ByCountryID))
+		if (is_array($this->ByCountryID)) {
 			$this->ByCountryID[$userMember->countryID] = $userMember;
+		}
 	}
 
 	public function __construct(Game $Game)
@@ -243,7 +245,8 @@ class Members
 	{
 		return $this->Game->Variant->Member($row);
 	}
-	function indexMembers()
+
+	public function indexMembers()
 	{
 		$this->ByID=array();
 		$this->ByUserID=array();
@@ -252,10 +255,7 @@ class Members
 			'Won'=>array(),'Drawn'=>array(),'Survived'=>array(),'Resigned'=>array()
 		);
 
-		if($this->Game->phase == 'Pre-game')
-			$this->ByCountryID=null;
-		else
-			$this->ByCountryID=array();
+		$this->ByCountryID = $this->Game->isPreGame() ? null : [];
 
 		foreach($this->ByOrder as $Member)
 		{
@@ -264,8 +264,9 @@ class Members
 			$this->ByUserID[$Member->userID] = $Member;
 
 			// If pre-game all countries are 'Unassigned', so members cannot be indexed by countryID.
-			if ( $Member->countryID != 0 )
+			if ($Member->countryID != 0) {
 				$this->ByCountryID[$Member->countryID] = $Member;
+			}
 		}
 	}
 	public function load()
@@ -313,44 +314,42 @@ class Members
 		$this->indexMembers();
 	}
 
-	function pointsLowestCD()
+	public function pointsLowestCD()
 	{
-		assert($this->Game->phase != 'Pre-game' && $this->Game->phase != 'Finished');
+		assert($this->Game->isInProgress());
 
 		$pointsLowestCD = false;
 		foreach($this->ByStatus['Left'] as $Member)
 		{
 			$pointsValue = $Member->pointsValueInTakeover();
-			if( $pointsLowestCD===false or $pointsLowestCD > $pointsValue )
+			if ($pointsLowestCD === false or $pointsLowestCD > $pointsValue)
 				$pointsLowestCD = $pointsValue;
 		}
 
 		return $pointsLowestCD;
 	}
 
-	public function supplyCenterCount($forMemberStatus=false)
+	public function supplyCenterCount($forMemberStatus = false) : int
 	{
-		$count=0;
+		$count = 0;
 
-		if($forMemberStatus)
-			$Members = $this->ByStatus[$forMemberStatus];
-		else
-			$Members = $this->ByID;
+		$Members = $forMemberStatus ? $this->ByStatus[$forMemberStatus] : $this->ByID;
 
-		foreach($Members as $Member)
+		foreach ($Members as $Member) {
 			$count += $Member->supplyCenterNo;
+		}
 
 		return $count;
 	}
 
-	function send($keep, $text)
+	public function send($keep, $text) : void
 	{
 		foreach($this->ByID as $Member)
 			$Member->send($keep, 'No', $text);
 		$this->sendToWatchers($keep,$text);
 	}
 
-	function sendExcept(Member $notMember, $keep, $text)
+	public function sendExcept(Member $notMember, $keep, $text) : void
 	{
 		foreach($this->ByID as $id=>$Member)
 			if($id != $notMember->id)
@@ -358,14 +357,14 @@ class Members
 		$this->sendToWatchers($keep,$text);
 	}
 
-	function sendToPlaying($keep, $text)
+	public function sendToPlaying($keep, $text) : void
 	{
 		foreach($this->ByStatus['Playing'] as $Member)
 			$Member->send($keep, 'No', $text);
 		$this->sendToWatchers($keep,$text);
 	}
 
-	function sendToWatchers($keep,$text) 
+	public function sendToWatchers($keep,$text) : void
 	{
 		global $DB;
 
@@ -379,7 +378,7 @@ class Members
 		}
 	}
 
-	function cantLeaveReason()
+	public function cantLeaveReason()
 	{
 		global $Misc;
 
@@ -398,4 +397,3 @@ class Members
 			return false;
 	}
 }
-?>

@@ -1,0 +1,12 @@
+{% if moderator_sees_member_info %}
+    <div class="bar titleBar modEyes">Anonymous</div>
+{% endif %}
+<div class="panelBarGraph occupationBar">
+    {{ occupation_bar|raw }}
+</div>
+<div class="membersList membersFullTable{% if moderator_sees_member_info %} modEyes{% endif %}">
+    {{ members_list|raw }}
+</div>
+<div class="panelBarGraph occupationBar">
+    {{ occupation_bar|raw }}
+</div>
