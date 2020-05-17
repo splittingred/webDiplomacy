@@ -17,5 +17,8 @@
     "optimize-autoloader": true
   },
   "minimum-stability": "dev",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {"Diplomacy\\": "src/"}
+  }
 }

@@ -1,0 +1,32 @@
+<div class="content-bare content-home-header">
+    <table class="homeTable">
+        <tr>
+            <td class="homeMessages">
+                {{ live_games|raw }}
+            </td>
+            <td class="homeSplit"></td>
+
+            {{ notices|raw }}
+
+            <td class="homeSplit"></td>
+
+            <td class="homeGamesStats">
+                <div class="homeHeader">
+                    My games
+                    <a href="/gamelistings.php?page=1&gamelistType=My games">{% include 'common/link.twig' %}</a>
+                </div>
+                {{ game_notify_block|raw }}
+
+                <div class="homeHeader">Defeated games</div>
+                {{ game_defeated_notify_block|raw }}
+
+                <div class="homeHeader">Spectated games</div>
+                {{ game_watch_block|raw }}
+
+                {{ my_tournaments|raw }}
+
+                {{ spectating_tournaments|raw }}
+            </td>
+        </tr>
+    </table>
+</div>

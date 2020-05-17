@@ -21,6 +21,11 @@
 /**
  * @package Base
  */
+
+use Diplomacy\Controllers\DashboardController;
+use Diplomacy\Controllers\IntroController;
+use Diplomacy\Controllers\Users\NoticesController;
+
 require_once('header.php');
 require_once(l_r('lib/message.php'));
 require_once(l_r('objects/game.php'));
@@ -62,93 +67,23 @@ if(isset($_POST['submit']))
 
 if (!$User->isAuthenticated())
 {
-    echo $twig->render('pages/home/intro.twig', [
-        'globalInfo' => libHome::globalInfo()
-    ]);
+    $controller = new IntroController();
+    echo $controller->render();
 }
 elseif (isset($_REQUEST['notices']))
 {
-	$User->clearNotification('PrivateMessage');
-
-	print '<div class="content"><a href="index.php" class="light">&lt; '.l_t('Back').'</a></div>';
-
-	print '<div class="content-bare content-home-header">';
-	print '<table class="homeTable"><tr>';
-
-	notice::$noticesPage=true;
-	if( !isset(Config::$customForumURL) ) 
-	{
-		print '<td class="homeNoticesPMs">';
-		print '<div class="homeHeader">'.l_t('Private messages').'</a></div>';
-		print libHome::NoticePMs();
-		print '</td>';
-		print '<td class="homeSplit"></td>';
-	}
-	print '<td class="homeNoticesGame">';
-	print '<div class="homeHeader">'.l_t('Game messages').'</a></div>';
-	print libHome::NoticeGame();
-	print '</td>';
-
-	print '</tr></table>';
-	print '</div>';
-	print '</div>';
+    $controller = new NoticesController();
+    echo $controller->render();
 }
 else
 {
-	print '<div class="content-bare content-home-header">';// content-follow-on">';
-
-	print '<table class="homeTable"><tr>';
-
-	print '<td class="homeMessages">';
-
-    echo $twig->render('pages/home/live_games.twig',[
-        'live_games' => libHome::upcomingLiveGames(),
-    ]);
-
-	print '</td>';
-
-	print '<td class="homeSplit"></td>';
-
-    echo $twig->render('pages/home/notices.twig',[
-        'notices' => libHome::Notice(),
-    ]);
-
-	print '<td class="homeSplit"></td>';
-
-	print '<td class="homeGamesStats">';
-	print '<div class="homeHeader">'.l_t('My games').' <a href="gamelistings.php?page=1&gamelistType=My games">'.libHTML::link().'</a></div>';
-	print libHome::gameNotifyBlock();
-	print '<div class="homeHeader">'.l_t('Defeated games').'</div>';
-	print libHome::gameDefeatedNotifyBlock();
-	print '<div class="homeHeader">'.l_t('Spectated games').'</div>';
-	print libHome::gameWatchBlock();
-
-	$result = \Models\Tournament::findParticipatingForUser($User->id);
-	if (!empty($result['count'])) {
-	    echo $twig->render('pages/home/tournaments.twig', [
-            'title' => 'My Tournaments',
-	        'tournaments' => $result['entities'],
-        ]);
-    }
-
-    $result = \Models\Tournament::findSpectatingForUser($User->id);
-    if (!empty($result['count'])) {
-        echo $twig->render('pages/home/tournaments.twig', [
-            'title' => 'Spectated Tournaments',
-            'tournaments' => $result['entities'],
-        ]);
-    }
-
-	print '</td>
-	</tr></table>';
-
-	print '</div>';
-	print '</div>';
+    $controller = new DashboardController();
+    echo $controller->render();
 }
 
 libHTML::$footerIncludes[] = l_j('home.js');
 libHTML::$footerScript[] = l_jf('homeGameHighlighter').'();';
 
-$_SESSION['lastSeenHome']=time();
+$_SESSION['lastSeenHome'] = time();
 
 libHTML::footer();

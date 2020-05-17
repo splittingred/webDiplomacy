@@ -55,8 +55,7 @@ class libHome
     }
     public static function NoticePMs()
     {
-        global $User;
-
+        $output = '';
         try
         {
             $message=notice::sendPMs();
@@ -67,49 +66,52 @@ class libHome
         }
 
         if ( $message )
-            print '<p class="notice">'.$message.'</p>';
+            $output .= '<p class="notice">'.$message.'</p>';
 
         $pms = self::getType('PM',50);
 
         if(!count($pms))
         {
-            print '<div class="hr"></div>';
-            print '<p class="notice">'.l_t('No private messages found; you can send them to other people on their profile page.').'</p>';
-            return;
+            $output .= '<div class="hr"></div>';
+            $output .= '<p class="notice">'.l_t('No private messages found; you can send them to other people on their profile page.').'</p>';
+            return $output;
         }
 
-        print '<div class="hr"></div>';
+        $output .= '<div class="hr"></div>';
 
         foreach($pms as $pm)
         {
-            print $pm->viewedSplitter();
+            $output .= $pm->viewedSplitter();
 
-            print $pm->html();
+            $output .= $pm->html();
         }
+        return $output;
     }
+
     public static function NoticeGame()
     {
-        global $User;
-
         $pms = self::getType('Game');
+        $output = '';
 
         if(!count($pms))
         {
-            print '<div class="hr"></div>';
-            print '<p class="notice">'.l_t('No game notices found; try browsing the <a href="gamelistings.php">game listings</a>, '.
+            $output .= '<div class="hr"></div>';
+            $output .= '<p class="notice">'.l_t('No game notices found; try browsing the <a href="gamelistings.php">game listings</a>, '.
                     'or <a href="gamecreate.php">create your own</a> game.').'</p>';
-            return;
+            return $output;
         }
 
-        print '<div class="hr"></div>';
+        $output .= '<div class="hr"></div>';
 
         foreach($pms as $pm)
         {
-            print $pm->viewedSplitter();
+            $output .= $pm->viewedSplitter();
 
-            print $pm->html();
+            $output .= $pm->html();
         }
+        return $output;
     }
+
     public static function Notice()
     {
         global $User;

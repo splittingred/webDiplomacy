@@ -1,10 +1,14 @@
 <?php
 
-namespace Models;
+namespace Diplomacy\Models;
 
-require_once('lib/models/Tournament.php');
-
-abstract class Base {
+/**
+ * Base class for database model interaction
+ *
+ * @package Diplomacy\Models
+ */
+abstract class Base
+{
     protected $attributes = [];
     protected $db;
 
@@ -42,5 +46,10 @@ abstract class Base {
         } else {
             throw new \InvalidArgumentException();
         }
+    }
+
+    public function __toString() : string
+    {
+        return var_export($this->attributes, true);
     }
 }

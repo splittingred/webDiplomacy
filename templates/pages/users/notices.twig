@@ -1,0 +1,25 @@
+
+<div class="content">
+    <a href="/index.php" class="light">&lt; Back</a>
+</div>
+
+<div class="content-bare content-home-header">
+    <table class="homeTable">
+        <tr>
+        <td class="homeNoticesPMs">
+            <div class="homeHeader">
+                <a>Private messages</a>
+            </div>
+            {{ pms|raw }}
+        </td>
+
+        <td class="homeSplit"></td>
+        <td class="homeNoticesGame">
+            <div class="homeHeader">
+                <a>Game messages</a>
+            </div>
+            {{ game_notices|raw }}
+        </td>
+        </tr>
+    </table>
+</div>

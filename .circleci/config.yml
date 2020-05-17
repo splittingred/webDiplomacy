@@ -7,7 +7,7 @@ executors:
   php:
     working_directory: ~/repo
     docker:
-      - image: circleci/php:7.2-stretch-node-browsers
+      - image: circleci/php:7.4
         environment:
           MYSQL_HOST: 127.0.0.1
           MYSQL_ROOT_PASSWORD: password
