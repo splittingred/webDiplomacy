@@ -708,7 +708,7 @@ class libHTML
 	{
 		global $User;
 		global $twig;
-		$authenticated = $User->isAuthenticated();
+		$authenticated = $User && $User->isAuthenticated();
 
         if (!$authenticated) {
             $menu = $twig->render('common/layout/menu/unauthenticated.twig');
@@ -723,7 +723,7 @@ class libHTML
 		return $twig->render('common/layout/menu/menu.twig', [
 		    'menu' => $menu,
             'authenticated' => $authenticated,
-            'user_profile_link' => $User->profile_link(true),
+            'user_profile_link' => $User ? $User->profile_link(true) : '',
             'admin_user_switch' => defined('AdminUserSwitch'),
         ]);
 	}
