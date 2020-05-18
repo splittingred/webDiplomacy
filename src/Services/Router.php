@@ -7,6 +7,7 @@ class Router
     public $routes = [
         'default' => \Diplomacy\Controllers\IntroController::class,
         'tournaments/info' => \Diplomacy\Controllers\Tournaments\InfoController::class,
+        'help/rules' => \Diplomacy\Controllers\Help\RulesController::class,
     ];
 
     public function route($path)
