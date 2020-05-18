@@ -12,7 +12,8 @@ abstract class BaseController
     protected $database;
     protected $user;
     protected $template;
-    protected $pageTitle = 'webDiplomacy';
+    protected $pageTitle = '';
+    protected $pageDescription = '';
 
     protected $footerIncludes = [];
     protected $footerScripts = [];
@@ -42,9 +43,22 @@ abstract class BaseController
     {
         $variables = $this->call();
         $header = libHTML::starthtml($this->pageTitle, false);
+
+        if (!empty($this->pageTitle)) {
+            $pageHeader = $this->renderer->render('common/page_title.twig', [
+                'title' => $this->pageTitle,
+                'description' => $this->pageDescription
+            ]);
+        } else {
+            $pageHeader = '';
+        }
         $body = $this->renderer->render($this->getTemplate(), $variables);
+
+        if (!empty($this->footerScripts)) libHTML::$footerScript = $this->footerScripts;
+        if (!empty($this->footerIncludes)) libHTML::$footerIncludes = $this->footerIncludes;
+
         $footer = libHTML::footer(false);
-        return $header . "\n" . $body . "\n" . $footer;
+        return $header . "\n" . $pageHeader . "\n" . $body . "\n" . $footer;
     }
 
     public function renderPartial(string $partial, array $variables)
