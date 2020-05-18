@@ -277,7 +277,7 @@ class processGame extends Game
 	/**
 	 * Load a new processMembers() into $this->Members (overrides Game::loadMembers, which loads Members())
 	 */
-	function loadMembers()
+	public function loadMembers() : void
 	{
 		$this->Members = $this->Variant->processMembers($this);
 	}
