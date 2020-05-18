@@ -832,7 +832,7 @@ else if ( $UserProfile->hideEmail == 'No' )
 	}
 
 	print '<li><strong>'.l_t('E-mail:').'</strong>
-			<img src="'.STATICSRV.$emailCacheFilename.'" alt="'.l_t('[E-mail address image]').'" title="'.l_t('To protect e-mails from spambots they are embedded in an image').'" >
+			<img src="/'.$emailCacheFilename.'" alt="'.l_t('[E-mail address image]').'" title="'.l_t('To protect e-mails from spambots they are embedded in an image').'" >
 		</li>';
 }
 

@@ -2,6 +2,7 @@
 
 namespace Diplomacy\Controllers;
 
+use libHTML;
 use Twig\Environment as Twig;
 
 abstract class BaseController
@@ -11,6 +12,10 @@ abstract class BaseController
     protected $database;
     protected $user;
     protected $template;
+    protected $pageTitle = 'webDiplomacy';
+
+    protected $footerIncludes = [];
+    protected $footerScripts = [];
 
     public function __construct()
     {
@@ -36,7 +41,10 @@ abstract class BaseController
     public function render()
     {
         $variables = $this->call();
-        return $this->renderer->render($this->getTemplate(), $variables);
+        $header = libHTML::starthtml($this->pageTitle, false);
+        $body = $this->renderer->render($this->getTemplate(), $variables);
+        $footer = libHTML::footer(false);
+        return $header . "\n" . $body . "\n" . $footer;
     }
 
     public function renderPartial(string $partial, array $variables)

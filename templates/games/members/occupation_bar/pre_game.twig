@@ -1,7 +1,7 @@
 <table class="occupationBarTable">
     <tr>
         <td class="occupationBarJoined first" style="width:{{ joined_percent }}%"></td>
-    {% if joined_percent < 99.0 %}
+    {% if joined_percent <= 99.0 %}
         <td class="occupationBarNotJoined" style="width:{{ remaining_percent }}%"></td>
     {% endif %}
     </tr>

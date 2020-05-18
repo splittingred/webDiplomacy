@@ -415,15 +415,16 @@ class libHTML
 	 * Print the HTML which comes before the main content; title, menu, notification bar.
 	 *
 	 * @param string|bool[optional] $title If a string is given it will be used as the page title
+     * @param bool $echo
 	 */
-	static public function starthtml($title=false)
+	static public function starthtml($title = false, $echo = true) : string
 	{
 		global $User;
 		global $renderer;
 
 		self::$scriptname = $scriptname = basename($_SERVER['PHP_SELF']);
 
-		$pages = libHTML::pages();
+		$pages = self::pages();
 
 		if (isset($User) and ! isset($pages[$scriptname]))
 		{
@@ -456,15 +457,19 @@ class libHTML
 			}
 		}
 
-		$gameNotification = is_object($User) && $User->isAuthenticated() ? libHTML::gameNotifyBlock() : '';
+		$gameNotification = is_object($User) && $User->isAuthenticated() ? self::gameNotifyBlock() : '';
 
-		echo $renderer->render('common/layout/header.twig', [
+		$output = $renderer->render('common/layout/header.twig', [
 			'head' => self::prebody($title===FALSE ? l_t($pages[$scriptname]['name']) : $title),
 			'menu' => self::menu(),
 			'global_notices' => self::globalNotices(),
 			'banned_messages' => $bannedMessages,
 			'game_notification' => $gameNotification
 		]);
+		if ($echo) {
+		    echo $output;
+        }
+        return $output;
 	}
 
 	/**
@@ -731,17 +736,24 @@ class libHTML
 	/**
 	 * Output the footer HTML and call the close() function to perform final clean-ups. If $DB and $User
 	 * are available then the script has ended successfully, and some statistics around outputted.
+     *
+     * @param boolean echo
+     * @return string
 	 */
-	static public function footer()
+	static public function footer($echo = true) : string
 	{
 		global $renderer;
-		echo $renderer->render('common/layout/footer.twig', [
+		$output = $renderer->render('common/layout/footer.twig', [
 			'stats' => self::footerStats(),
 			'webdiplomacy_version' => number_format(VERSION/100,2),
 			'moderator_email' => \Config::$modEMail,
 			'footer_scripts' => self::footerScripts(),
 		]);
-		close();
+        if ($echo) {
+            echo $output;
+            close();
+        }
+        return $output;
 	}
 
 	private static function footerStats()
@@ -825,7 +837,7 @@ class libHTML
 
 		// Don't localize all the footer includes here, as some of them may be dynamically generated
 		foreach( array_merge($footerIncludes,self::$footerIncludes) as $includeJS ) // Add on the dynamically added includes
-			$buf .= '<script type="text/javascript" src="'.STATICSRV.JSDIR.'/'.$includeJS.'?ver='.JSVERSION.'"></script>';
+			$buf .= '<script type="text/javascript" src="/javascript/'.$includeJS.'?ver='.JSVERSION.'"></script>';
 
 		// Utility (error detection, message protection), HTML post-processing,
 		// time handling functions. Only logged-in users need to run these

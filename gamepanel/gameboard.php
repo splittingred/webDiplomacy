@@ -356,5 +356,6 @@ class panelGameBoard extends panelGame
 			'.$this->links().'
 			<div class="bar lastBar"> </div>
 		</div>';
+		return '';
 	}
 }

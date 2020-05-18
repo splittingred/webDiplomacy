@@ -695,14 +695,14 @@ if ($tab == 'UserSearch')
 			{ 
 				if ($User->getTheme() == 'No') 
 				{
-					print ' <img src="images/icons/mod.png" title="Moderator/Admin" />';
+					print ' <img src="/images/icons/mod.png" title="Moderator/Admin" />';
 				}
 				else
 				{
-					print ' <img src="images/icons/mod3.png" title="Moderator/Admin" />';
+					print ' <img src="/images/icons/mod3.png" title="Moderator/Admin" />';
 				}
 			}
-			if ($values->banned) { print ' <img src="images/icons/cross.png"title="Banned" />'; }
+			if ($values->banned) { print ' <img src="/images/icons/cross.png"title="Banned" />'; }
 
 			// Only show the highest level of donator status held by a user.
 			if ($values->platinum) { print libHTML::platinum(); }

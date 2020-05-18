@@ -113,7 +113,7 @@ foreach($tabs as $tabChoice=>$tabTitle)
 
 print '</div>';
 print '<br/><div style="text-align:center">
-    For detailed information on how tournaments work on webDiplomacy, click <a href="tournamentInfo.php">here</a>.</div>';
+    For detailed information on how tournaments work on webDiplomacy, click <a href="/tournaments/info">here</a>.</div>';
 
 libHTML::pagebreak();
 

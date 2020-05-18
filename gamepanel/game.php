@@ -59,6 +59,7 @@ class panelGame extends Game
 			<div class="bar lastBar"> </div>
 		</div>
 		';
+		return '';
 	}
 
 	public function __construct($gameData)

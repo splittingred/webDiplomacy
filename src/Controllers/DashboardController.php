@@ -15,10 +15,17 @@ class DashboardController extends BaseController
     protected function setUp()
     {
         $this->tournamentsService = new TournamentsService($this->database);
+        \libHTML::$footerIncludes[] = l_j('home.js');
+        \libHTML::$footerScript[] = l_jf('homeGameHighlighter').'();';
     }
 
     public function call()
     {
+        if (isset($_POST['submit'])) {
+            $this->handleDisableNotices();
+        }
+        $this->updateLastSeenHome();
+
         $variables = [
             'live_games' => $this->renderPartial('pages/home/live_games.twig',[
                 'live_games' => libHome::upcomingLiveGames(),
@@ -48,5 +55,31 @@ class DashboardController extends BaseController
         }
 
         return $variables;
+    }
+
+    private function updateLastSeenHome() : void
+    {
+        if (!isset($_SESSION['lastSeenHome']) || $_SESSION['lastSeenHome'] < $this->user->timeLastSessionEnded)
+        {
+            $_SESSION['lastSeenHome'] = $this->user->timeLastSessionEnded;
+        }
+    }
+
+    private function handleDisableNotices() : void
+    {
+        $gameToggleID = isset($_POST['gameToggleName']) && intval($_POST['gameToggleName']);
+
+        if (!$this->user->isAuthenticated() || $gameToggleID <= 0) return;
+
+        list($noticesStatus) = $this->database->sql_row("SELECT hideNotifications FROM wD_Members WHERE userID = ".$this->user->id." AND gameID = ".$gameToggleID);
+
+        if ($noticesStatus == 0)
+        {
+            $this->database->sql_put("UPDATE wD_Members SET hideNotifications = 1 WHERE userID = ".$this->user->id." and gameID = ".$gameToggleID);
+        }
+        else if ($noticesStatus == 1)
+        {
+            $this->database->sql_put("UPDATE wD_Members SET hideNotifications = 0 WHERE userID = ".$this->user->id." and gameID = ".$gameToggleID);
+        }
     }
 }
