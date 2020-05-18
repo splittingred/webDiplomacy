@@ -104,12 +104,12 @@ try
 	print "<h3>".l_t("Welcome to webDiplomacy!")."</h3>
 			<p>".l_t("Welcome, %s!",$SQLVars['username'])."<br /><br />
 
-				".l_t("Before you start your conquest, please check out our <a href='intro.php' class='light'>Intro to Diplomacy</a> which explains the technical bits you’ll need to dominate every board.".
-				"<br /><br /> Want to announce your arrival? Take a stop by our <a href='/contrib/phpBB3/' class='light'>forum</a>.".
-				"<br /><br /> Looking for help? Check out the <a href='/contrib/phpBB3/viewtopic.php?f=6&t=40' class='light'>Mentor Program</a> for new players or the <a href='help.php' class='light'>Help/Info</a> page. ".
+				".l_t("Before you start your conquest, please check out our <a href="intro" class='light'>Intro to Diplomacy</a> which explains the technical bits you’ll need to dominate every board.".
+
+				"<br /><br /> Looking for help? Check out the <a href="help" class='light'>Help/Info</a> page. ".
 				"<br /><br /> Confident in yourself already? Well then, you can jump right into a <a href='gamelistings.php' class='light'>game</a> or <a href='gamecreate.php' class='light'>create your own</a>.")."<br /> ".
 				l_t("<br /> Finally, don’t forget to bookmark the <a href='index.php' class='light'>Home Page</a>, ".
-				"and give our <a href='rules.php' class='light'>Rules/info</a> a read through.")."<br /><br />
+				"and give our <a href='help/rules' class='light'>Rules/info</a> a read through.")."<br /><br />
 
 				".l_t("<font color='red'>If the moderator team needs to contact you they will use your listed email so please make sure to keep it up to date!</font>")."
 			</p>";

@@ -79,13 +79,3 @@ profile.php displays the phpDip profile for a certain user, containing their sta
 register.php presents a form allowing someone to create a new user phpDip user account
 
 usercp.php presents a form allowing an existing user to change their profile details and other preferences
-
--- Static pages
-AGPL.txt - The AGPL license which applies to phpDip
-index.html - The welcome screen
-credits.php - The credits
-faq.php - The FAQ
-intro.php - The intro to (php)Diplomacy
-points.php - An explanation of phpDip points
-roadmap.php - A roadmap detailing what phpDip is aiming for
-translating.php - A guide to translating phpDip (just a placeholder, which was written a few years prematurely)

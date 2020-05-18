@@ -8,6 +8,8 @@ class Router
 {
     public $routes = [
         'default' => \Diplomacy\Controllers\IntroController::class,
+        'help' => \Diplomacy\Controllers\Help\HelpController::class,
+        'help/donations' => \Diplomacy\Controllers\Help\DonationsController::class,
         'help/faq' => \Diplomacy\Controllers\Help\FaqController::class,
         'help/rules' => \Diplomacy\Controllers\Help\RulesController::class,
         'help/points' => \Diplomacy\Controllers\Help\PointsController::class,
