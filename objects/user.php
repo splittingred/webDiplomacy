@@ -856,6 +856,10 @@ class User {
 		list($rankingDetails['position']) = $DB->sql_row("SELECT COUNT(id)+1
 			FROM wD_Users WHERE points > ".$this->points);
 
+		$sixMonths = time() - 15552000;
+        list($rankingDetails['active_position']) = $DB->sql_row("SELECT COUNT(id)+1
+			FROM wD_Users WHERE points > ".$this->points." AND timeLastSessionEnded > ".$sixMonths);
+
 		list($rankingDetails['worth']) = $DB->sql_row(
 			"SELECT SUM(bet) FROM wD_Members WHERE userID = ".$this->id." AND status = 'Playing'");
 
@@ -904,6 +908,7 @@ class User {
 		$rankingDetails['percentile'] = ceil(100.0*$rankingDetails['position'] / $rankingPlayers);
 
 		$rankingDetails['rank'] = 'Political puppet';
+		$rankingDetails['isTop100'] = $rankingDetails['position'] <= 100;
 
 		$ratings = array('<strong>Diplomat</strong>' => 5,
 						'Mastermind' => 10,
@@ -1374,4 +1379,12 @@ class User {
 		
 		return $modLastCheckedBy;
 	}
+
+    /**
+     * @return bool
+     */
+    public function isRanked() : bool
+    {
+        return $this->points > 100;
+    }
 }

@@ -656,30 +656,29 @@ class libHTML
 			}
 		}
 
-		$links['help.php']=array('name'=>'Help/Donate', 'inmenu'=>TRUE, 'title'=>'Get help and information; guides, intros, FAQs, stats, links');
+		$links['help']=array('name'=>'Help/Donate', 'inmenu'=>TRUE, 'title'=>'Get help and information; guides, intros, FAQs, stats, links');
 
 		// Items not displayed on the menu
 		$links['map.php']=array('name'=>'Map', 'inmenu'=>FALSE);
-		$links['faq.php']=array('name'=>'FAQ', 'inmenu'=>FALSE);
+		$links['help/faq']=array('name'=>'FAQ', 'inmenu'=>FALSE);
 		$links['contactUs.php']=array('name'=>'Contact Info', 'inmenu'=>FALSE);
 		$links['contactUsDirect.php']=array('name'=>'Contact Us', 'inmenu'=>FALSE);
-		$links['donations.php']=array('name'=>'Donations', 'inmenu'=>FALSE);
+		$links['help/donations']=array('name'=>'Donations', 'inmenu'=>FALSE);
 		$links['tournaments.php']=array('name'=>'Tournaments', 'inmenu'=>FALSE);
 		$links['tournamentManagement.php']=array('name'=>'Manage Tournaments', 'inmenu'=>FALSE);
-		$links['rules.php']=array('name'=>'Rules', 'inmenu'=>FALSE);
+		$links['help/rules']=array('name'=>'Rules', 'inmenu'=>FALSE);
 		$links['recentchanges.php']=array('name'=>'Recent changes', 'inmenu'=>FALSE);
-		$links['intro.php']=array('name'=>'Intro', 'inmenu'=>FALSE);
+		$links['intro']=array('name'=>'Intro', 'inmenu'=>FALSE);
 		$links['credits.php']=array('name'=>'Credits', 'inmenu'=>FALSE);
 		$links['board.php']=array('name'=>'Board', 'inmenu'=>FALSE);
 		$links['profile.php']=array('name'=>'Profile', 'inmenu'=>FALSE);
-		$links['translating.php']=array('name'=>'Translating', 'inmenu'=>FALSE);
-		$links['points.php']=array('name'=>'Points', 'inmenu'=>FALSE);
-		$links['halloffame.php']=array('name'=>'Hall of fame', 'inmenu'=>FALSE);
+		$links['help/points']=array('name'=>'Points', 'inmenu'=>FALSE);
+		$links['stats/hall-of-fame']=array('name'=>'Hall of fame', 'inmenu'=>FALSE);
 		$links['developers.php']=array('name'=>'Developer info', 'inmenu'=>FALSE);
 		$links['datc.php']=array('name'=>'DATC', 'inmenu'=>FALSE);
 		$links['variants.php']=array('name'=>'Variants', 'inmenu'=>FALSE);
 		$links['adminInfo.php']=array('name'=>'Admin Info', 'inmenu'=>FALSE);
-		$links['tournamentInfo.php']=array('name'=>'Tournament Info', 'inmenu'=>FALSE);
+		$links['tournaments/info']=array('name'=>'Tournament Info', 'inmenu'=>FALSE);
 		$links['tournamentScoring.php']=array('name'=>'Tournament Scoring', 'inmenu'=>FALSE);
 		$links['tournamentRegistration.php']=array('name'=>'Tournament Registration', 'inmenu'=>FALSE);
 		$links['botgamecreate.php']=array('name'=>'New Bot Game', 'inmenu'=>TRUE, 'title'=>"Start up a new bot game");
@@ -693,14 +692,6 @@ class libHTML
 			}
 			$links['gamemaster.php']=array('name'=>'GameMaster', 'inmenu'=>FALSE);
 		}
-
-		if ( defined('FACEBOOKSCRIPT') )
-		{
-			$links['invite.php']=array('name'=>'Invite', 'inmenu'=>TRUE);
-			$links['logon.php']['inmenu']=false;
-			$links['register.php']['inmenu']=false;
-		}
-
 		return $links;
 	}
 

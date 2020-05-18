@@ -14,6 +14,7 @@ class Router
         'help/rules' => \Diplomacy\Controllers\Help\RulesController::class,
         'help/points' => \Diplomacy\Controllers\Help\PointsController::class,
         'intro' => \Diplomacy\Controllers\IntroController::class,
+        'stats/hall-of-fame' => \Diplomacy\Controllers\Stats\HallOfFameController::class,
         'tournaments/info' => \Diplomacy\Controllers\Tournaments\InfoController::class,
     ];
 

@@ -38,8 +38,8 @@ define("SHARE", ' LOCK IN SHARE MODE');
 define("UPDATE", ' FOR UPDATE');
 
 // The dynamic and static server links
-define("DYNAMICSRV", Config::$facebookServerURL);
-define("STATICSRV", Config::$facebookStaticURL);
+define("DYNAMICSRV", '/');
+define("STATICSRV", '/');
 
 // Allow easy renaming of the javascript and css directories, which prevents all sorts of cacheing
 // problems (people complaining about bugs in old code)
@@ -49,6 +49,3 @@ define("CSSDIR", 'css');
 //Increment these versions whenever you update any js or css files for cachebusting
 define("JSVERSION",1.5);
 define("CSSVERSION",1.34);
-
-if( !defined('FACEBOOK') )
-	define('FACEBOOK',false);

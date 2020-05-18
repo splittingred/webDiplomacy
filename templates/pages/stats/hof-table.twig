@@ -1,0 +1,46 @@
+
+{% if user.isAuthenticated and user.isRanked %}
+    <p class="hof">You are ranked
+        <a href="/stats/hall_of_fame#{{ type }}-row-rank-{{ type == 'active' ? user_ranking.active_position : user_ranking.position }}" class="light">#{{ type == 'active' ? user_ranking.active_position : user_ranking.position }}</a>
+        out of {{ total_players }} {{ type }} players with over 100
+        <img src="/images/icons/points.png" alt="D" title="webDiplomacy points" />
+        For more stats on your ranking, visit <a class="light" href="/profile.php?userID={{ user.id }}">your profile</a>
+    </p>
+{% endif %}
+
+<table class="hof">
+    <thead>
+    <tr>
+        <th class="hof">Points/Rank</th>
+        <th class= "hof">User</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for ranked_user in hof_users %}
+        <tr class="hof" id="{{ type }}-row-rank-{{ ranked_user.position }}">
+            <td class="hof">
+                {{  ranked_user.points }}
+                <img src="/images/icons/points.png" alt="D" title="webDiplomacy points" /> - #{{  ranked_user.position }}
+            </td>
+            <td class="hof">
+                <a class="{% if user.username == ranked_user.username %}hof-self{% else %}hof{% endif %}" href="/profile.php?userID={{ ranked_user.id }}">{{ ranked_user.username }}</a>
+            </td>
+        </tr>
+    {% endfor %}
+
+    {% if user.isAuthenticate and not user_ranking.isTop100 %}
+        <tr class="hof">
+            <td class="hof">...</td>
+            <td class="hof">...</td>
+        </tr>
+        <tr class="hof">
+            <td class="hof">
+                {{ user.points }}
+                <img src="/images/icons/points.png" alt="D" title="webDiplomacy points" />
+                - <a id="{{ type }}-me"></a>#{{ user_ranking.position }}
+            </td>
+            <td class="hof hof-self"><strong><em>{{ user.username }}</em></strong></td>
+        </tr>
+    {% endif %}
+</table>

@@ -1,0 +1,32 @@
+<div class="content content-follow-on">
+<p align="center"><img src="/images/points/stack.png" alt="" title="webDiplomacy points" /></p>
+
+<p>&nbsp;</p>
+
+<button class="SearchCollapsible">All Time</button>
+<div class="advancedSearchContent">
+    {% include 'pages/stats/hof-table.twig' with { user: user, hof_users: hof_users, type: 'all-time' } %}
+</div>
+
+<br />
+<br />
+
+<button class="SearchCollapsible">Active (Last 6 Months)</button>
+<div class="advancedSearchContent">
+    {% include 'pages/stats/hof-table.twig' with { user: user, hof_users: hof_active_users, type: 'active' } %}
+</div>
+
+<script type="text/javascript">
+    let coll = document.getElementsByClassName("SearchCollapsible");
+    let searchCounter;
+
+    for (searchCounter = 0; searchCounter < coll.length; searchCounter++) {
+        coll[searchCounter].addEventListener("click", function() {
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            if (content.style.display === "block") { content.style.display = "none"; }
+            else { content.style.display = "block"; }
+        });
+    }
+</script>
+</div>
