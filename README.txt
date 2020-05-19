@@ -192,7 +192,7 @@ may be using
 
 Developing
 ----------
-Check http://webdiplomacy.net/developers.php for the most up-to-date developer documentation.
+Check http://webdiplomacy.net/help/developers for the most up-to-date developer documentation.
 
 Be aware of the obligations of the AGPL software license we use: *If you change webDiplomacy you 
 must be prepared to share any changes you make. If that doesn't fit your requirements do not use 
