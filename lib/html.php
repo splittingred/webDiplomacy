@@ -676,7 +676,7 @@ class libHTML
 		$links['stats/hall-of-fame']=array('name'=>'Hall of fame', 'inmenu'=>FALSE);
 		$links['help/developers']=array('name'=>'Developer info', 'inmenu'=>FALSE);
 		$links['datc.php']=array('name'=>'DATC', 'inmenu'=>FALSE);
-		$links['variants.php']=array('name'=>'Variants', 'inmenu'=>FALSE);
+		$links['variants/list']=array('name'=>'Variants', 'inmenu'=>FALSE);
 		$links['adminInfo.php']=array('name'=>'Admin Info', 'inmenu'=>FALSE);
 		$links['tournaments/info']=array('name'=>'Tournament Info', 'inmenu'=>FALSE);
 		$links['tournamentScoring.php']=array('name'=>'Tournament Scoring', 'inmenu'=>FALSE);

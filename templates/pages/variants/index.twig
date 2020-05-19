@@ -1,0 +1,27 @@
+<div class="content content-follow-on">
+
+<a id="top"></a>
+<h4>Active variants</h4>
+
+<ul>
+    {% for variant in enabled_variants %}
+        {% include 'pages/variants/_variant_list_item.twig' with { variant: variant } %}
+    {% endfor %}
+</ul>
+
+{% if disabled_variants %}
+<h4>Disabled variants</h4>
+<p>Variants which are present but not activated.</p>
+<ul>
+    {% for variant in disabled_variants %}
+        {% include 'pages/variants/_variant_list_item.twig' with { variant: variant } %}
+    {% endfor %}
+</ul>
+{% endif %}
+</div>
+
+<div class="content">
+{% for variant in enabled_variants %}
+    {% include 'pages/variants/_variant.twig' with { variant: variant } %}
+{% endfor %}
+</div>

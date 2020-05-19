@@ -117,6 +117,22 @@ abstract class WDVariant {
 	 * @var int
 	 */
 	public $supplyCenterTarget;
+    /**
+     * @var string
+     */
+    public $homepage = '';
+    /**
+     * @var string
+     */
+    public $adapter = '';
+
+	/** @var int */
+	public $plays;
+
+	public function setPlays($plays)
+    {
+        $this->plays = $plays;
+    }
 
 	/**
 	 * Return the in-game turn in text format. This should be overridden
@@ -370,8 +386,28 @@ abstract class WDVariant {
 	}
 
 	public function link() {
-		return '<a class="light" href="variants.php#'.$this->name.'">'.l_t($this->fullName).'</a>';
+		return '<a class="light" href="variants/list#'.$this->name.'">'.l_t($this->fullName).'</a>';
 	}
+
+	public function hasSampleMap() : bool
+    {
+        return file_exists(\libVariant::cacheDir($this->name).'/sampleMap.png');
+    }
+
+    public function getSampleMapUrl(): string
+    {
+        return \libVariant::cacheDir($this->name) . '/sampleMap.png';
+    }
+
+	public function hasCustomRules() : bool
+    {
+        return file_exists('variants/'. $this->name .'/rules.html');
+    }
+
+    public function getCustomRules() : string
+    {
+        return file_get_contents(l_s('variants/'. $this->name .'/rules.html'));
+    }
 }
 
 /**

@@ -1,0 +1,29 @@
+<h2><a id="{{ variant.name }}"></a>{{ variant.fullName }} ({{ variant.countries|join(', ') }} Players)</h2>
+
+{% if variant.description %}<p>{{ variant.description }}</p>{% endif %}
+
+<div class="center">
+    <img id="Image_{{ variant.name }}" class="center"
+         src="{% if variant.hasSampleMap %}{{ variant.getSampleMapUrl }}{% else %}/map.php?variantID={{ variant.id }}{% endif %}"
+         alt="" title="The map for the {{ variant.name }} Variant" />
+</div>
+
+<br />
+
+<strong>Variant Parameters{% if variant.cacheVersion %} (Version: {{ variant.cacheVersion }}){% endif %}:</strong>
+<ul>
+    {% if variant.homepage %}<li><a href="{{ variant.homepage }}">Variant homepage</a></li>{% endif %}
+    {% if variant.author %}<li>Created by: {{ variant.author }}</li>{% endif %}
+    {% if variant.adapter %}<li>Adapted for webDiplomacy by: {{ variant.adapter }}</li>{% endif %}
+    <li>SCs required for solo win: {{ variant.supplyCenterTarget }}</li>
+
+    {% if not variant.hasCustomRules %}<li>Standard Diplomacy Rules Apply</li>{% endif %}
+</ul>
+
+{% if variant.hasCustomRules %}
+    <p><strong>Special rules/information:</strong></p>
+    <div>{{ variant.getCustomRules|raw }}</div>
+{% endif %}
+<div><a href="variants/list#top" class="light">Back to top</a></div>
+
+<div class="hr"></div>

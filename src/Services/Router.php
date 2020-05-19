@@ -18,6 +18,7 @@ class Router
         'intro' => \Diplomacy\Controllers\IntroController::class,
         'stats/hall-of-fame' => \Diplomacy\Controllers\Stats\HallOfFameController::class,
         'tournaments/info' => \Diplomacy\Controllers\Tournaments\InfoController::class,
+        'variants/list' => \Diplomacy\Controllers\Variants\IndexController::class,
     ];
 
     public function route($path)
