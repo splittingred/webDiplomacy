@@ -284,4 +284,9 @@ class Config
 	 * mark itself in downtime mode.
 	 */
 	public static $downtimeTriggerMinutes=12;
+
+    /**
+     * @var string URL of the site
+     */
+    public static $url = 'http://webdiplomacy.net';
 }

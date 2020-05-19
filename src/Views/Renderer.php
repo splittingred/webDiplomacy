@@ -10,11 +10,14 @@ class Renderer extends Environment
 {
     public static function getInstance()
     {
+        global $User;
         $loader = new FilesystemLoader(ROOT_PATH . 'templates');
-        return new static($loader, [
+        $env = new static($loader, [
             'cache' => ROOT_PATH . '/cache/templates',
             'debug' => true,
         ]);
+        $env->addGlobal('user', $User);
+        return $env;
     }
 
     /**
@@ -28,7 +31,7 @@ class Renderer extends Environment
             return $this->load($name)->render($context);
         } catch (\Exception $e) {
             // TODO: Log something here
-            return '';
+            return $e->getMessage() . ' - <pre>'.$e->getTraceAsString(). '</pre>';
         }
     }
 }

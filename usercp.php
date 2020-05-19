@@ -30,9 +30,10 @@ require_once(l_r('objects/mailer.php'));
 global $Mailer;
 $Mailer = new Mailer();
 
-if(!$User->type['User'])
+if (!$User->isAuthenticated())
 {
-	libHTML::error(l_t("You can't use the user control panel, you're using a guest account."));
+	\libHTML::error(l_t("You can't use the user control panel, you're using a guest account."));
+	die();
 }
 
 libHTML::starthtml();

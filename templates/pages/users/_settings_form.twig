@@ -1,0 +1,64 @@
+<form method="post" action="/users/settings" class="settings_show" autocomplete="off">
+    {% include 'common/notice.twig' with { notice: notice } %}
+    <p>
+        <label>
+            <strong>E-mail address:</strong>
+            <input type="text" class="settings" name="userForm[email]" size="40" value="{{ values.email }}" {% if values.emailToken %}readonly{% endif %}>
+        </label>
+    </p>
+
+    <p>
+        <strong>Hide e-mail address?</strong>
+        <br />
+        <label>
+            <input type="radio" name="userForm[hideEmail]" value="Yes"{% if user.hideEmail == 'Yes' %} checked{% endif %}>
+            Yes
+        </label>
+        <label>
+            <input type="radio" name="userForm[hideEmail]" value="No"{% if user.hideEmail == 'No' %} checked{% endif %}>
+            No
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <strong>Password:</strong>
+            <input type="password" name="userForm[password]" maxlength=30 autocomplete="new-password" class="settings">
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <strong>Confirm Password:</strong>
+            <input type="password" name="userForm[passwordcheck]" maxlength=30 autocomplete="new-password" class="settings">
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <strong>Comment:</strong>
+            <textarea name="userForm[comment]" rows="3" cols="50" class="settings">{{ values.comment }}</textarea>
+        </label>
+        <br />
+        Profile quote visible to others. Consider favorite quotes or links to games.
+    </p>
+
+    <hr />
+
+    {% for option in user_options %}
+    <div>
+        <strong>{{ option.title }}:</strong>
+        <br />
+        {% for possible_value in option.possibleValues %}
+            <label>
+                <input type="radio" name="userForm[{{ option.name }}]" value="{{ possible_value }}" {% if option.value == possible_value %} checked="checked"{% endif %}>
+                {{ possible_value }}
+            </label>
+        {% endfor %}
+    </div>
+    <br />
+    {% endfor %}
+    <br />
+
+    <p><input type="submit" class="green-Submit" value="Update"></p>
+</form>

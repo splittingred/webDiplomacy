@@ -489,7 +489,7 @@ class User {
 	 *
 	 * @param string|bool[optional] If the username is given it is being used instead of ID to load the User *Not filtered*
 	 */
-	function load($username=false)
+	function load($username = false)
 	{
 		global $DB;
 

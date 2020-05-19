@@ -4,6 +4,7 @@ namespace Diplomacy\Controllers;
 
 use libHTML;
 use Twig\Environment as Twig;
+use Twig\Error\Error;
 
 abstract class BaseController
 {
@@ -17,6 +18,7 @@ abstract class BaseController
 
     protected $footerIncludes = [];
     protected $footerScripts = [];
+    protected $noticeMappings = [];
 
     public function __construct()
     {
@@ -42,6 +44,9 @@ abstract class BaseController
     public function render()
     {
         $variables = $this->call();
+        $variables = array_merge([
+            'notice' => $this->getNotice(),
+        ], $variables);
         $header = libHTML::starthtml($this->pageTitle, false);
 
         if (!empty($this->pageTitle)) {
@@ -61,8 +66,44 @@ abstract class BaseController
         return $header . "\n" . $pageHeader . "\n" . $body . "\n" . $footer;
     }
 
-    public function renderPartial(string $partial, array $variables)
+    /**
+     * @param string $partial
+     * @param array $variables
+     * @return string
+     */
+    public function renderPartial(string $partial, array $variables) : string
     {
-        return $this->renderer->render($partial, $variables);
+        try {
+            return $this->renderer->render($partial, $variables);
+        } catch (Error $e) {
+            // TODO: log errors
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * @param string $path
+     */
+    public function redirectRelative(string $path = '/') : void
+    {
+        $baseUrl = rtrim(\Config::$url, '/');
+        $path = ltrim($path, '/');
+        header("Location: {$baseUrl}/{$path}");
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotice() : string
+    {
+        $noticeKeys = array_key_exists('notice', $_REQUEST) ? strip_tags($_REQUEST['notice']) : '';
+        $notices = explode(',', $noticeKeys);
+        $output = [];
+        foreach ($notices as $noticeKey) {
+            $value = array_key_exists($noticeKey, $this->noticeMappings) ? $this->noticeMappings[$noticeKey] : '';
+            $value = str_replace('{{ user.username }}', $this->user->username, $value);
+            $output[] = $value;
+        }
+        return implode("\n", $output);
     }
 }

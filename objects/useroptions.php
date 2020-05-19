@@ -64,7 +64,7 @@ class UserOptions
 	/**
 	 * Load the UserOptions object. It is assumed that username is already escaped.
 	 */
-	function load()
+	public function load()
 	{
 		global $DB;
 		$this->value = UserOptions::$defaults;
@@ -85,11 +85,11 @@ class UserOptions
 		}
 	}
 
-	function set($newValues)
+	public function set($newValues)
 	{
 		global $DB;
 
-		$updates = array();
+		$updates = [];
 
 		// Sanitise array
 		foreach(UserOptions::$defaults as $name=>$val)
