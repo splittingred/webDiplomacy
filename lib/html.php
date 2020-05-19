@@ -667,7 +667,7 @@ class libHTML
 		$links['tournaments.php']=array('name'=>'Tournaments', 'inmenu'=>FALSE);
 		$links['tournamentManagement.php']=array('name'=>'Manage Tournaments', 'inmenu'=>FALSE);
 		$links['help/rules']=array('name'=>'Rules', 'inmenu'=>FALSE);
-		$links['recentchanges.php']=array('name'=>'Recent changes', 'inmenu'=>FALSE);
+		$links['help/recent-changes']=array('name'=>'Recent changes', 'inmenu'=>FALSE);
 		$links['intro']=array('name'=>'Intro', 'inmenu'=>FALSE);
 		$links['credits.php']=array('name'=>'Credits', 'inmenu'=>FALSE);
 		$links['board.php']=array('name'=>'Board', 'inmenu'=>FALSE);
