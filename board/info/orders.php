@@ -244,5 +244,3 @@ orderIndex('',0);
 print $buffer;
 
 print '</p></div>';
-
-?>

@@ -3,6 +3,7 @@
 namespace Diplomacy\Controllers;
 
 use Diplomacy\Tournaments\Service as TournamentsService;
+use Diplomacy\Services\Request;
 use libHome;
 
 class DashboardController extends BaseController
@@ -21,7 +22,7 @@ class DashboardController extends BaseController
 
     public function call()
     {
-        if (isset($_POST['submit'])) {
+        if ($this->request->exists('submit', Request::TYPE_POST)) {
             $this->handleDisableNotices();
         }
         $this->updateLastSeenHome();

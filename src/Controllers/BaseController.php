@@ -2,22 +2,35 @@
 
 namespace Diplomacy\Controllers;
 
+use Diplomacy\Services\Request;
 use libHTML;
 use Twig\Environment as Twig;
-use Twig\Error\Error;
+use Twig\Error\Error as TwigError;
 
 abstract class BaseController
 {
+    use Placeholders;
+
     /** @var Twig */
     protected $renderer;
+    /** @var \Database */
     protected $database;
+    /** @var \User */
     protected $user;
+    /** @var Request */
+    protected $request;
+    /** @var string */
     protected $template;
+    /** @var string */
     protected $pageTitle = '';
+    /** @var string */
     protected $pageDescription = '';
 
+    /** @var array */
     protected $footerIncludes = [];
+    /** @var array */
     protected $footerScripts = [];
+    /** @var array */
     protected $noticeMappings = [];
 
     public function __construct()
@@ -26,6 +39,7 @@ abstract class BaseController
         $this->renderer = $renderer;
         $this->database = $DB;
         $this->user = $User;
+        $this->request = new Request();
         $this->setUp();
     }
 
@@ -36,34 +50,69 @@ abstract class BaseController
 
     abstract public function call();
 
-    protected function getTemplate()
+    /**
+     * @return string
+     */
+    protected function getTemplate() : string
     {
         return $this->template;
     }
 
-    public function render()
+    /**
+     * @param array $parameters
+     */
+    public static function handle(array $parameters = []) : void
     {
-        $variables = $this->call();
-        $variables = array_merge([
-            'notice' => $this->getNotice(),
-        ], $variables);
-        $header = libHTML::starthtml($this->pageTitle, false);
+        $controller = new static();
+        $controller->request->setParameters($parameters);
+        echo $controller->render();
+    }
 
-        if (!empty($this->pageTitle)) {
-            $pageHeader = $this->renderer->render('common/page_title.twig', [
-                'title' => $this->pageTitle,
-                'description' => $this->pageDescription
-            ]);
-        } else {
-            $pageHeader = '';
+    /**
+     * @return string
+     */
+    public function render() : string
+    {
+        try {
+            $this->setDefaultPlaceholders();
+
+            $variables = $this->call();
+            if (empty($variables)) $variables = [];
+            $variables = array_merge([
+                'notice' => $this->getNotice(),
+            ], $variables, $this->getPlaceholders());
+
+            $header = libHTML::starthtml($this->pageTitle, false);
+
+            if (!empty($this->pageTitle)) {
+                $pageHeader = $this->renderer->render('common/page_title.twig', [
+                    'title' => $this->pageTitle,
+                    'description' => $this->pageDescription,
+                ]);
+            } else {
+                $pageHeader = '';
+            }
+            $body = $this->renderer->render($this->getTemplate(), $variables);
+
+            if (!empty($this->footerScripts)) libHTML::$footerScript = $this->footerScripts;
+            if (!empty($this->footerIncludes)) libHTML::$footerIncludes = $this->footerIncludes;
+
+            $footer = libHTML::footer(false);
+            return $header . "\n" . $pageHeader . "\n" . $body . "\n" . $footer;
+        } catch (TwigError $e) {
+            return $e->getMessage();
         }
-        $body = $this->renderer->render($this->getTemplate(), $variables);
+    }
 
-        if (!empty($this->footerScripts)) libHTML::$footerScript = $this->footerScripts;
-        if (!empty($this->footerIncludes)) libHTML::$footerIncludes = $this->footerIncludes;
-
-        $footer = libHTML::footer(false);
-        return $header . "\n" . $pageHeader . "\n" . $body . "\n" . $footer;
+    /**
+     * Sets default placeholders used on nearly all templates
+     *
+     * @return void
+     */
+    protected function setDefaultPlaceholders() : void
+    {
+        $this->setPlaceholder('user', $this->user);
+        $this->setPlaceholder('moderator_email', \Config::$modEMail ? \Config::$modEMail : \Config::$adminEMail);
     }
 
     /**
@@ -75,7 +124,7 @@ abstract class BaseController
     {
         try {
             return $this->renderer->render($partial, $variables);
-        } catch (Error $e) {
+        } catch (TwigError $e) {
             // TODO: log errors
             return $e->getMessage();
         }

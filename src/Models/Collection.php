@@ -2,15 +2,19 @@
 
 namespace Diplomacy\Models;
 
+use Iterator;
+
 /**
  * @package Diplomacy\Models
  */
-class Collection
+class Collection implements Iterator
 {
     /** @var array */
     protected $entities;
     /** @var int */
     protected $total;
+    /** @var int */
+    private $position = 0;
 
     /**
      * @param array $entities
@@ -25,7 +29,7 @@ class Collection
     /**
      * @return int
      */
-    public function getTotal()
+    public function getTotal() : int
     {
         return $this->total;
     }
@@ -33,7 +37,7 @@ class Collection
     /**
      * @return array
      */
-    public function getEntities()
+    public function getEntities() : array
     {
         return $this->entities;
     }
@@ -41,8 +45,33 @@ class Collection
     /**
      * @return bool
      */
-    public function any()
+    public function any() : bool
     {
         return count($this->entities) > 0;
+    }
+
+    public function current()
+    {
+        return $this->entities[$this->position];
+    }
+
+    public function next() : void
+    {
+        ++$this->position;
+    }
+
+    public function key() : int
+    {
+        return $this->position;
+    }
+
+    public function valid() : bool
+    {
+        return isset($this->entities[$this->position]);
+    }
+
+    public function rewind() : void
+    {
+        $this->position = 0;
     }
 }

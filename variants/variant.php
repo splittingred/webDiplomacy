@@ -129,6 +129,9 @@ abstract class WDVariant {
 	/** @var int */
 	public $plays;
 
+	/** @var array */
+	public $territories = [];
+
 	public function setPlays($plays)
     {
         $this->plays = $plays;
@@ -241,6 +244,33 @@ abstract class WDVariant {
 			return ($countryID+1);
 	}
 
+	/** @var array */
+	protected $countryIdToName = [];
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+	public function getCountryName(int $id) : string
+    {
+        if (empty($this->countryIDToName)) {
+            $this->countryIdToName = [];
+            foreach ($this->countries as $index => $countryName) {
+                $this->countryIdToName[$index + 1] = $countryName;
+            }
+        }
+        return array_key_exists($id, $this->countryIdToName) ? $this->countryIdToName[$id] : '';
+    }
+
+    /**
+     * @param int $territoryId
+     * @return string
+     */
+    public function getTerritoryName(int $territoryId) : string
+    {
+        return array_key_exists($territoryId, $this->territories) ? $this->territories[$territoryId] : '';
+    }
+
 	/**
 	 * Saves a datastructure to a PHP file in the cache which makes deCoasting terrIDs fast and
 	 * independant of the database. This is run if the deCoasting datastructures aren't detected,
@@ -270,6 +300,14 @@ abstract class WDVariant {
 
 		if( isset($this->codeVersion) && $this->codeVersion != null && $this->codeVersion > 0 )
 			$this->cacheVersion = $this->codeVersion;
+
+        if (empty($this->territories)) {
+            $this->territories = [];
+            $query = $DB->sql_tabl("SELECT id, name FROM wD_Territories WHERE mapID = " . $this->mapID);
+            while (list($id, $name) = $DB->tabl_row($query)) {
+                $this->territories[$id] = $name;
+            }
+        }
 	}
 
 	/**

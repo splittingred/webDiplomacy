@@ -33,12 +33,13 @@ require_once(l_r('objects/game.php'));
 require_once(l_r('gamepanel/gamehome.php'));
 require_once(l_r('lib/libHome.php'));
 
-if (!empty($_REQUEST['q'])) {
+if (!empty($_REQUEST['q']))
+{
     $router = new Router();
-    echo $router->route($_REQUEST['q']);
+    $router->route();
 }
-else {
-
+else
+{
     if (!$User->isAuthenticated())
     {
         libHTML::$footerScript[] = l_jf('homeGameHighlighter').'();';

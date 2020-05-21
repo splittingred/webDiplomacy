@@ -62,11 +62,6 @@ class panelGame extends Game
 		return '';
 	}
 
-	public function __construct($gameData)
-	{
-		parent::__construct($gameData);
-	}
-
 	/**
 	 * Load panelMembers, instead of Members
 	 */

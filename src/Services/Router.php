@@ -3,33 +3,48 @@
 namespace Diplomacy\Services;
 
 use Diplomacy\Controllers\BaseController;
+use \Bramus\Router\Router as RouterService;
 
 class Router
 {
-    public $routes = [
-        'default' => \Diplomacy\Controllers\IntroController::class,
-        'help' => \Diplomacy\Controllers\Help\HelpController::class,
-        'help/developers' => \Diplomacy\Controllers\Help\DevelopersController::class,
-        'help/donations' => \Diplomacy\Controllers\Help\DonationsController::class,
-        'help/faq' => \Diplomacy\Controllers\Help\FaqController::class,
-        'help/points' => \Diplomacy\Controllers\Help\PointsController::class,
-        'help/rules' => \Diplomacy\Controllers\Help\RulesController::class,
-        'help/recent-changes' => \Diplomacy\Controllers\Help\RecentChangesController::class,
-        'intro' => \Diplomacy\Controllers\IntroController::class,
-        'stats/hall-of-fame' => \Diplomacy\Controllers\Stats\HallOfFameController::class,
-        'tournaments/info' => \Diplomacy\Controllers\Tournaments\InfoController::class,
-        'variants/list' => \Diplomacy\Controllers\Variants\IndexController::class,
-        'users/settings' => \Diplomacy\Controllers\Users\SettingsController::class,
-    ];
+    /** @var RouterService */
+    protected $router;
 
-    public function route($path)
+    public function __construct()
     {
-        /** @var $controller BaseController */
-        if (array_key_exists($path, $this->routes)) {
-            $controller = new $this->routes[$path];
-        } else {
-            $controller = new $this->routes['default'];
-        }
-        return $controller->render();
+        $this->router = new RouterService();
+        $this->router->setNamespace('\Diplomacy\Controllers');
+        $this->configure();
+    }
+
+    /**
+     *
+     */
+    private function configure() : void
+    {
+        $this->router->set404('IntroController@handle');
+        $this->router->get('games/{id}/orders', function($gameId) {
+            \Diplomacy\Controllers\Games\View\OrdersController::handle(['id' => (int)$gameId]);
+        });
+        $this->router->get('help', 'Help\HelpController@handle');
+        $this->router->get('help/developers', 'Help\DevelopersController@handle');
+        $this->router->get('help/donations', 'Help\DonationsController@handle');
+        $this->router->get('help/faq', 'Help\FaqController@handle');
+        $this->router->get('help/points', 'Help\PointsController@handle');
+        $this->router->get('help/rules', 'Help\RulesController@handle');
+        $this->router->get('help/recent-changes', 'Help\RecentChangesController@handle');
+        $this->router->get('intro', 'IntroController@handle');
+        $this->router->get('stats/hall-of-fame', 'Stats\HallOfFameController@handle');
+        $this->router->get('tournaments/info', 'Tournaments\InfoController@handle');
+        $this->router->get('variants/list', 'Variants\IndexController@handle');
+        $this->router->get('users/settings', 'Users\SettingsController@handle');
+    }
+
+    /**
+     * @return void
+     */
+    public function route() : void
+    {
+        $this->router->run();
     }
 }

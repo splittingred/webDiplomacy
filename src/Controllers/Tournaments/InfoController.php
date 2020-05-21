@@ -11,10 +11,7 @@ class InfoController extends BaseController
     protected $pageTitle = 'webDiplomacy Tournaments';
     protected $pageDescription = 'Information on Tournaments and Feature Game rules and setup.';
 
-    public function call() : array
+    public function call()
     {
-        return [
-            'moderator_email' => \Config::$modEMail ? \Config::$modEMail : \Config::$adminEMail
-        ];
     }
 }

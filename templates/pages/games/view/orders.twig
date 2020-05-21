@@ -1,0 +1,42 @@
+<div class="content content-follow-on">
+<h2>Order history</h2>
+<div class="variant{{ game.Variant.name }}">
+    <ul>
+    {% for turn in summary %}
+        <li>
+            <h4><a href="/games/{{ game.id }}/orders#turn-{{ turn.id }}">{{ turn.name }}</a></h4>
+            <ul>
+            {% for country_id, country_name in turn.countries %}
+                <li><a href="/games/{{ game.id }}/orders#turn-{{ turn.id }}-{{ country_id }}">{{ country_name }}</a></li>
+            {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+    </ul>
+
+    {% for turn in orders %}
+        <h3 id="turn-{{ turn.id }}">
+            {{ turn.name }} - {{ turn.phase }}
+            <a href="/map.php?gameID={{ game.id }}&largemap=on&turn={{ turn.id }}" target="_blank">
+                <img src="/images/historyicons/external.png" alt="Large map"
+                     title="This button will open the large map in a new window. The large map shows all the moves, and is useful when the small map isn\'t clear enough." />
+            </a>
+        </h3>
+
+        <ul>
+        {% for country in turn.countries %}
+            <li id="turn-{{ turn.id }}-{{ country.id }}">
+                <h4 class="country{{ country.id }}">{{ country.name }}</h4>
+
+                <ul>
+                    {% for order in country.orders %}
+                        <li>{{ order.text|raw }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+        </ul>
+        <br />
+    {% endfor %}
+</div>
+</div>

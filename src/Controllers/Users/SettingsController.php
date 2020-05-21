@@ -32,8 +32,8 @@ class SettingsController extends BaseController
             'user_options' => $this->getUserOptions(),
         ];
 
-        if (!empty($_POST['userForm'])) {
-            $values = $_POST['userForm'];
+        if (!$this->request->isEmpty('userForm')) {
+            $values = $this->request->get('userForm', []);
             $errors = [];
             $values = \User::processForm($values, $errors);
             if (count($errors)) {
