@@ -68,6 +68,16 @@ abstract class BaseController
         echo $controller->render();
     }
 
+    public function beforeRender() : void
+    {
+
+    }
+
+    public function afterRender() : void
+    {
+
+    }
+
     /**
      * @return string
      */
@@ -75,12 +85,6 @@ abstract class BaseController
     {
         try {
             $this->setDefaultPlaceholders();
-
-            $variables = $this->call();
-            if (empty($variables)) $variables = [];
-            $variables = array_merge([
-                'notice' => $this->getNotice(),
-            ], $variables, $this->getPlaceholders());
 
             $header = libHTML::starthtml($this->pageTitle, false);
 
@@ -92,6 +96,16 @@ abstract class BaseController
             } else {
                 $pageHeader = '';
             }
+
+            $this->beforeRender();
+            $variables = $this->call();
+            $this->afterRender();
+
+            if (empty($variables)) $variables = [];
+            $variables = array_merge([
+                'notice' => $this->getNotice(),
+            ], $variables, $this->getPlaceholders());
+
             $body = $this->renderer->render($this->getTemplate(), $variables);
 
             if (!empty($this->footerScripts)) libHTML::$footerScript = $this->footerScripts;

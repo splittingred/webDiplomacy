@@ -61,6 +61,11 @@ class Order extends Base
         return 'Diplomacy';
     }
 
+    /**
+     * Get name of territory unit is on at the time of the order.
+     *
+     * @return string
+     */
     public function territoryName() : string
     {
         if (empty($this->territoryName) && $this->variant) {
@@ -69,6 +74,11 @@ class Order extends Base
         return $this->territoryName;
     }
 
+    /**
+     * Get name of territory unit desired to move to at the time of the order.
+     *
+     * @return string
+     */
     public function toTerritoryName() : string
     {
         if (empty($this->toTerritoryName) && $this->variant) {
@@ -122,31 +132,60 @@ class Order extends Base
         return $str;
     }
 
+    /**
+     * Was this a hold order?
+     *
+     * @return bool
+     */
     public function isHold() : bool
     {
         return strtolower($this->type) == 'hold';
     }
 
+    /**
+     * Was the unit dislodged after the order?
+     *
+     * @return bool
+     */
     public function wasDislodged() : bool
     {
         return $this->dislodged == 'Yes';
     }
 
+    /**
+     * Was this a convoy order?
+     *
+     * @return bool
+     */
     public function isConvoy() : bool
     {
         return $this->viaConvoy == 'Yes';
     }
 
+    /**
+     * Get the turn in a friendly date format (e.g. Spring 1902)
+     * @return string
+     */
     public function turnAsDate() : string
     {
         return $this->gameBoard ? $this->gameBoard->datetxt($this->turn) : '';
     }
 
+    /**
+     * Was this order successful?
+     *
+     * @return bool
+     */
     public function successful() : bool
     {
         return $this->success == 'Yes';
     }
 
+    /**
+     * Did this order fail?
+     *
+     * @return bool
+     */
     public function failed() : bool
     {
         return !$this->successful();

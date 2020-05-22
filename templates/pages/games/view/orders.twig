@@ -1,4 +1,5 @@
-<div class="content content-follow-on">
+{% include 'pages/games/view/_header.twig' with { game: game } %}
+
 <h2>Order history</h2>
 <div class="variant{{ game.Variant.name }}">
     <ul>

@@ -574,14 +574,13 @@ class Game
 	 * Return the in-game turn in text format. 0 = Spring 1901 , 1 = Autumn 1901, etc.
 	 * It can use the Game object's turn, or a supplied $gdate
 	 *
-	 * @param int[optional] $turn If this optional parameter is not supplied the Game's turn is used
+	 * @param int $turn If this optional parameter is not supplied the Game's turn is used
 	 *
 	 * @return string The game turn in text format
 	 */
-    public function datetxt($turn = false) : string
+    public function datetxt($turn = -1) : string
 	{
-		if( $turn === false )
-			$turn = $this->turn;
+		if ($turn == -1) $turn = $this->turn;
 
 		return $this->Variant->turnAsDate($turn);
 	}

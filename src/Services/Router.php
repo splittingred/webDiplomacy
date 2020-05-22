@@ -26,6 +26,9 @@ class Router
         $this->router->get('games/{id}/orders', function($gameId) {
             \Diplomacy\Controllers\Games\View\OrdersController::handle(['id' => (int)$gameId]);
         });
+        $this->router->get('games/{id}/maps', function($gameId) {
+            \Diplomacy\Controllers\Games\View\MapsController::handle(['id' => (int)$gameId]);
+        });
         $this->router->get('help', 'Help\HelpController@handle');
         $this->router->get('help/developers', 'Help\DevelopersController@handle');
         $this->router->get('help/donations', 'Help\DonationsController@handle');

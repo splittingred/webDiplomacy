@@ -16,22 +16,14 @@ class OrdersController extends BaseController
     public function setUp()
     {
         $this->orders = new OrdersService($this->database);
+        parent::setUp();
     }
 
     public function call()
     {
-        $gameId = $this->request->get('id');
-        require_once 'objects/game.php';
-        require_once 'board/chatbox.php';
-        require_once 'gamepanel/gameboard.php';
-        $Variant = \libVariant::loadFromGameID($gameId);
-        \libVariant::setGlobals($Variant);
-        $game = $Variant->panelGameBoard($gameId);
-
-        $orders = $this->orders->getForGame($gameId);
+        $orders = $this->orders->getForGame($this->game->id);
 
         return [
-            'game' => $game,
             'orders' => $this->structureOrders($orders),
             'summary' => $this->sortOrdersAsIndex($orders),
             'phases' => [

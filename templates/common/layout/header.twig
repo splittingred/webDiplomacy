@@ -9,5 +9,5 @@
 {{ global_notices|raw }}
 {{ banned_messages|raw }}
 {% if game_notification %}
-    <div class="content-notice"><div class="gamelistings-tabs">{{ game_notification }}</div></div>
+    <div class="content-notice"><div class="gamelistings-tabs">{{ game_notification|raw }}</div></div>
 {% endif %}

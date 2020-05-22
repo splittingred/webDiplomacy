@@ -136,6 +136,9 @@ ignore_user_abort(TRUE); // Carry on if the user exits before the script gets pr
 
 ob_start(); // Buffer output. libHTML::footer() flushes.
 
+global $renderer;
+$renderer = Renderer::getInstance();
+
 // All the standard includes.
 require_once('lib/cache.php');
 require_once('lib/time.php');
@@ -228,6 +231,3 @@ function close()
 
 	die();
 }
-
-global $renderer;
-$renderer = Renderer::getInstance();

@@ -117,10 +117,8 @@ if ( isset($_REQUEST['viewArchive']) )
 
 	switch($_REQUEST['viewArchive'])
 	{
-		case 'Orders': require_once(l_r('board/info/orders.php')); break;
 		case 'Messages': require_once(l_r('board/info/messages.php')); break;
 		case 'Graph': require_once(l_r('board/info/graph.php')); break;
-		case 'Maps': require_once(l_r('board/info/maps.php')); break;
 		case 'Reports':
 			require_once(l_r('lib/modnotes.php'));
 			libModNotes::checkDeleteNote();
