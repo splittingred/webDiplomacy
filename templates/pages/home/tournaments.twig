@@ -1,21 +1,23 @@
+<div class="hr"></div>
 <div class="homeHeader">
     {{ title }}
     <a href="/tournaments.php?tab=Participating">{% include 'common/link.twig' %}</a></div>
-
-    {% for tournament in tournaments %}
-    <div class="gamePanelHome">
-        <h3 class="tournamentCenter">{{ tournament.name }}</h3>
-        <div class= "tournamentCenter">
-            {% if tournament.isRunning() %}
-                <a class="tournamentCenter" href="/tournamentScoring.php?tournamentID={{ tournament.id }}">Scoring and Participants</a>
-                <br />
-                {% if tournament.isRegistrationComplete() %}
-                    <br />
-                    <a class="tournamentCenter" href="/gamelistings.php?gamelistType=Search&tournamentID={{ tournament.id }}">Tournament Games</a>
-                    <br />
-                {% endif %}
-            {% endif %}
-        <br />
-    </div>
-    {% endfor %}
 </div>
+<div class="hr"></div>
+
+{% for tournament in tournaments %}
+<div class="gamePanelHome">
+    <h3 class="tournamentCenter">{{ tournament.name }}</h3>
+    <div class= "tournamentCenter">
+        {% if tournament.isRunning() %}
+            <a class="tournamentCenter" href="/tournamentScoring.php?tournamentID={{ tournament.id }}">Scoring and Participants</a>
+            <br />
+            {% if tournament.isRegistrationComplete() %}
+                <br />
+                <a class="tournamentCenter" href="/gamelistings.php?gamelistType=Search&tournamentID={{ tournament.id }}">Tournament Games</a>
+                <br />
+            {% endif %}
+        {% endif %}
+    <br />
+</div>
+{% endfor %}

@@ -3,6 +3,7 @@
 namespace Diplomacy\Services\Variants;
 
 use Config;
+use Diplomacy\Models\Game;
 use libVariant;
 use WDVariant;
 
@@ -30,8 +31,7 @@ class VariantsService
             $variant = libVariant::loadFromVariantName($variantRealName);
             if (in_array($variantRealName, Config::$variants)) {
                 // TODO: make this not O(N)
-                $sql = "SELECT COUNT(*) FROM wD_Games WHERE variantID=' .  $variant->id . ' AND phase != 'Pre-game'";
-                list($num) = $this->database->sql_row($sql);
+                $num = Game::where('variantID', $variant->id)->where('phase', '!=', 'Pre-game')->count();
                 $variant->setPlays($num);
 
                 $variants[] = $variant;
@@ -92,8 +92,7 @@ class VariantsService
         $variant = libVariant::loadFromVariantName($variantRealName);
 
         // TODO: make this not O(N)
-        $sql = "SELECT COUNT(*) FROM wD_Games WHERE variantID={$variant->id} AND phase != 'Pre-game'";
-        list($num) = $this->database->sql_row($sql);
+        $num = Game::where('variantID', $variant->id)->where('phase', '!=', 'Pre-game')->count();
         $variant->setPlays($num);
 
         return $variant;

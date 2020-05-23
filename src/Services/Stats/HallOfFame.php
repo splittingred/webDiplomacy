@@ -2,25 +2,24 @@
 
 namespace Diplomacy\Services\Stats;
 
+use Diplomacy\Models\User;
+
 class HallOfFame
 {
-    protected $database;
-
-    public function __construct(\Database $database)
-    {
-        $this->database = $database;
-    }
+    const SIX_MONTHS_AGO = 15552000;
 
     /**
      * @return array
      */
     public function getUsers()
     {
-        $dataSet = $this->database->sql_tabl("SELECT * FROM wD_Users order BY points DESC LIMIT 100");
-        $rankedUsers = [];
+        $users = User::orderBy('points', 'desc')->limit(100)->get();
 
+        $rankedUsers = [];
         $rank = 1;
-        while ($hash = $this->database->tabl_hash($dataSet)) {
+        /** @var $user User */
+        foreach ($users as $user) {
+            $hash = $user->toArray();
             $hash['position'] = $rank;
             $rankedUsers[] = $hash;
             $rank++;
@@ -33,11 +32,17 @@ class HallOfFame
      */
     public function getActiveUsers()
     {
-        $sixMonths = time() - 15552000;
-        $dataSet = $this->database->sql_tabl("SELECT id, username, points FROM wD_Users WHERE timeLastSessionEnded > ".$sixMonths." order BY points DESC LIMIT 100 ");
+        $sixMonths = time() - self::SIX_MONTHS_AGO;
+        $users = User::orderBy('points', 'desc')
+            ->where('timeLastSessionEnded', '>', $sixMonths)
+            ->limit(100)
+            ->get();
+
         $rankedUsers = [];
         $rank = 1;
-        while ($hash = $this->database->tabl_hash($dataSet)) {
+        /** @var $user User */
+        foreach ($users as $user) {
+            $hash = $user->toArray();
             $hash['position'] = $rank;
             $rankedUsers[] = $hash;
             $rank++;

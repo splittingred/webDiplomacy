@@ -44,7 +44,7 @@ class DashboardController extends BaseController
                 'notices' => libHome::Notice(),
             ]),
             'my_games' => $this->getMyGames(),
-            'defeated_games' => libHome::gameDefeatedNotifyBlock(),
+            'my_defeats' => $this->getMyDefeats(),
             'watched_games' => libHome::gameWatchBlock(),
         ];
 
@@ -73,6 +73,14 @@ class DashboardController extends BaseController
     protected function getMyGames()
     {
         return $this->gamesService->getActiveForUser($this->user->id);
+    }
+
+    /**
+     * @return Collection
+     */
+    protected function getMyDefeats()
+    {
+        return $this->gamesService->getDefeatsForUser($this->user->id);
     }
 
     /**

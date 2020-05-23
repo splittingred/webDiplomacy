@@ -11,14 +11,11 @@
             <td class="homeSplit"></td>
 
             <td class="homeGamesStats">
-                <div class="homeHeader">
-                    My games
-                    <a href="/gamelistings.php?page=1&gamelistType=My games">{% include 'common/link.twig' %}</a>
-                </div>
                 {% include 'pages/home/_my_games.twig' with { games: my_games } %}
+                <div class="hr"></div>
 
-                <div class="homeHeader">Defeated games</div>
-                {{ defeated_games|raw }}
+                {% include 'pages/home/_my_defeats.twig' with { games: my_defeats } %}
+                <div class="hr"></div>
 
                 <div class="homeHeader">Spectated games</div>
                 {{ watched_games|raw }}

@@ -16,7 +16,7 @@ class HallOfFameController extends BaseController
 
     public function setUp()
     {
-        $this->hallOfFame = new HallOfFame($this->database);
+        $this->hallOfFame = new HallOfFame();
     }
 
     public function call()
