@@ -4,29 +4,29 @@ namespace Diplomacy\Controllers\Games\View;
 
 use Diplomacy\Controllers\Games\View\BaseController;
 use Diplomacy\Models\Collection;
-use Diplomacy\Models\Order;
-use Diplomacy\Services\Games\OrdersService;
+use Diplomacy\Models\ArchivedMove;
+use Diplomacy\Services\Games\ArchivedMovesService;
 
 class OrdersController extends BaseController
 {
     protected $template = 'pages/games/view/orders.twig';
 
-    /** @var OrdersService */
-    protected $orders;
+    /** @var ArchivedMovesService */
+    protected $archivedMoves;
 
     public function setUp()
     {
-        $this->orders = new OrdersService();
+        $this->archivedMoves = new ArchivedMovesService();
         parent::setUp();
     }
 
     public function call()
     {
-        $orders = $this->orders->getForGame($this->game->id);
+        $moves = $this->archivedMoves->getForGame($this->game->id);
 
         return [
-            'orders' => $this->structureOrders($orders),
-            'summary' => $this->sortOrdersAsIndex($orders),
+            'orders' => $this->structureMoves($moves),
+            'summary' => $this->sortMovesAsIndex($moves),
             'phases' => [
                 'Diplomacy',
                 'Retreats',
@@ -35,57 +35,60 @@ class OrdersController extends BaseController
         ];
     }
 
-    private function sortOrdersAsIndex(Collection $orders) : array
+    private function sortMovesAsIndex(Collection $archivedMoves) : array
     {
         $summary = [];
-        /** @var Order $order */
-        foreach ($orders as $order) {
-            $turn = floatval($order->turn);
-            if ($order->isInBuildPhase()) $turn += .5;
+        /** @var ArchivedMove $archivedMove */
+        foreach ($archivedMoves as $archivedMove) {
+            $turn = floatval($archivedMove->turn);
+            if ($archivedMove->isInRetreatPhase()) $turn += .25;
+            if ($archivedMove->isInBuildPhase()) $turn += .5;
             $turn = strval($turn);
 
             if (empty($summary[$turn])) {
                 $summary[$turn] = [
                     'countries' => [],
                     'id' => $turn,
-                    'name' => $order->getTurnAsDate(),
-                    'phase' => $order->getPhaseName(),
+                    'name' => $archivedMove->getTurnAsDate(),
+                    'phase' => $archivedMove->getPhaseName(),
                 ];
             }
 
-            if (!array_key_exists($order->countryID, $summary[$turn]['countries'])) {
-                $summary[$turn]['countries'][$order->countryID] = $order->getCountryName();
+            if (!array_key_exists($archivedMove->countryID, $summary[$turn]['countries'])) {
+                $summary[$turn]['countries'][$archivedMove->countryID] = $archivedMove->getCountryName();
             }
         }
         return $summary;
     }
 
-    private function structureOrders(Collection $orders) : array
+    private function structureMoves(Collection $archivedMoves) : array
     {
         $list = [];
-        /** @var Order $order */
-        foreach ($orders as $order) {
-            $turn = floatval($order->turn);
-            if ($order->isInBuildPhase()) $turn += .5;
+        /** @var ArchivedMove $archivedMoves */
+        foreach ($archivedMoves as $archivedMove) {
+            echo $archivedMove->id;
+            $turn = floatval($archivedMove->turn);
+            if ($archivedMove->isInRetreatPhase()) $turn += .25;
+            if ($archivedMove->isInBuildPhase()) $turn += .5;
             $turn = strval($turn);
 
             if (empty($list[$turn])) {
                 $list[$turn] = [
                     'id' => $turn,
-                    'name' => $order->getTurnAsDate(),
-                    'phase' => $order->getPhaseName(),
+                    'name' => $archivedMove->getTurnAsDate(),
+                    'phase' => $archivedMove->getPhaseName(),
                     'countries' => [],
                 ];
             }
 
-            if (!array_key_exists($order->countryID, $list[$turn]['countries'])) {
-                $list[$turn]['countries'][$order->countryID] = [
-                    'id' => $order->countryID,
-                    'name' => $order->getCountryName(),
+            if (!array_key_exists($archivedMove->countryID, $list[$turn]['countries'])) {
+                $list[$turn]['countries'][$archivedMove->countryID] = [
+                    'id' => $archivedMove->countryID,
+                    'name' => $archivedMove->getCountryName(),
                     'orders' => [],
                 ];
             }
-            $list[$turn]['countries'][$order->countryID]['orders'][] = $order;
+            $list[$turn]['countries'][$archivedMove->countryID]['orders'][] = $archivedMove;
         }
         return $list;
     }

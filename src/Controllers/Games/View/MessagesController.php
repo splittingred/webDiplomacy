@@ -3,11 +3,8 @@
 namespace Diplomacy\Controllers\Games\View;
 
 use Diplomacy\Controllers\Games\View\BaseController;
-use Diplomacy\Models\Collection;
 use Diplomacy\Models\GameMessage;
-use Diplomacy\Models\Order;
 use Diplomacy\Services\Games\MessagesService;
-use Diplomacy\Services\Games\OrdersService;
 use Diplomacy\Services\Request;
 
 class MessagesController extends BaseController

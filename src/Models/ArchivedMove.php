@@ -8,7 +8,7 @@ use WDVariant;
 /**
  * @package Diplomacy\Models
  */
-class Order extends EloquentBase
+class ArchivedMove extends EloquentBase
 {
     protected $table = 'wD_MovesArchive';
 
@@ -97,6 +97,14 @@ class Order extends EloquentBase
     public function isInBuildPhase() : bool
     {
         return in_array(strtolower($this->type), ['wait', 'build army', 'build fleet']);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInRetreatPhase() : bool
+    {
+        return in_array(strtolower($this->type), ['retreat', 'disband']);
     }
 
     /**

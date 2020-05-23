@@ -2,7 +2,6 @@
 
 namespace Diplomacy\Services\Games;
 
-use Diplomacy\Models\Collection;
 use Diplomacy\Models\Member;
 
 /**
