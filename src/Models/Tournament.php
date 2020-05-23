@@ -5,8 +5,11 @@ namespace Diplomacy\Models;
 /**
  * @package Diplomacy\Models
  */
-class Tournament extends Base
+class Tournament extends EloquentBase
 {
+    protected $table = 'wD_Tournaments';
+    protected $hidden = [];
+
     /**
      * @return bool
      */

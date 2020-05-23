@@ -35,7 +35,7 @@ abstract class BaseController
 
     public function __construct()
     {
-        global $renderer, $DB, $User;
+        global $renderer, $DB, $User, $capsule;
         $this->renderer = $renderer;
         $this->database = $DB;
         $this->user = $User;

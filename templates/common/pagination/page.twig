@@ -1,0 +1,16 @@
+
+<div class="curr-page">{{ page }}</div>
+}
+else
+{
+print '<div style="display:inline-block; margin:3px;">';
+    print '<FORM method="get" action=board.php#results>';
+        foreach($_REQUEST as $key => $value)
+        {
+        if(strpos('x'.$key,'wD') == false && strpos('x'.$key,'phpbb3')== false && strpos('x'.$key,'__utm')== false && $key!="pagenum")
+        {
+        print '<input type="hidden" name="'.$key.'" value="'.$value.'">';
+        }
+        }
+        print '<input type="submit" name="pagenum" class="form-submit" value='.$pagenum.' /></form></div>';
+}

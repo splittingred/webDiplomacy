@@ -17,10 +17,10 @@ class Collection implements Iterator
     private $position = 0;
 
     /**
-     * @param array $entities
+     * @param $entities
      * @param int $total
      */
-    public function __construct(array $entities = [], int $total = 0)
+    public function __construct($entities = [], int $total = 0)
     {
         $this->entities = $entities;
         $this->total = $total;
@@ -37,7 +37,7 @@ class Collection implements Iterator
     /**
      * @return array
      */
-    public function getEntities() : array
+    public function getEntities()
     {
         return $this->entities;
     }

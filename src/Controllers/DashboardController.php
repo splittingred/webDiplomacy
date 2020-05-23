@@ -2,6 +2,7 @@
 
 namespace Diplomacy\Controllers;
 
+use Diplomacy\Services\Games\MembersService;
 use Diplomacy\Tournaments\Service as TournamentsService;
 use Diplomacy\Services\Request;
 use libHome;
@@ -12,10 +13,13 @@ class DashboardController extends BaseController
     protected $template = 'pages/home/index.twig';
     /** @var TournamentsService */
     protected $tournamentsService;
+    /** @var MembersService */
+    protected $membersService;
 
     protected function setUp()
     {
         $this->tournamentsService = new TournamentsService($this->database);
+        $this->membersService = new MembersService();
         \libHTML::$footerIncludes[] = l_j('home.js');
         \libHTML::$footerScript[] = l_jf('homeGameHighlighter').'();';
     }
@@ -43,7 +47,7 @@ class DashboardController extends BaseController
         if ($result->any()) {
             $variables['my_tournaments'] = $this->renderPartial('pages/home/tournaments.twig', [
                 'title' => 'My Tournaments',
-                'tournaments' => $result->getEntities(),
+                'tournaments' => $result,
             ]);
         }
 
@@ -51,13 +55,16 @@ class DashboardController extends BaseController
         if ($result->any()) {
             $variables['spectating_tournaments'] = $this->renderPartial('pages/home/tournaments.twig', [
                 'title' => 'Spectated Tournaments',
-                'tournaments' => $result->getEntities(),
+                'tournaments' => $result,
             ]);
         }
 
         return $variables;
     }
 
+    /**
+     * Update the user's session with the last time they were home
+     */
     private function updateLastSeenHome() : void
     {
         if (!isset($_SESSION['lastSeenHome']) || $_SESSION['lastSeenHome'] < $this->user->timeLastSessionEnded)
@@ -66,21 +73,18 @@ class DashboardController extends BaseController
         }
     }
 
+    /**
+     * Check to see if the "disable/enable notices" link was clicked for a game, and if so, toggle it
+     */
     private function handleDisableNotices() : void
     {
-        $gameToggleID = isset($_POST['gameToggleName']) && intval($_POST['gameToggleName']);
+        $gameToggleId = (int)$this->request->get('gameToggleName', 0, Request::TYPE_POST);
+        if (!$this->user->isAuthenticated() || empty($gameToggleId)) return;
 
-        if (!$this->user->isAuthenticated() || $gameToggleID <= 0) return;
+        $member = $this->membersService->findForGame($this->user->id, $gameToggleId);
 
-        list($noticesStatus) = $this->database->sql_row("SELECT hideNotifications FROM wD_Members WHERE userID = ".$this->user->id." AND gameID = ".$gameToggleID);
-
-        if ($noticesStatus == 0)
-        {
-            $this->database->sql_put("UPDATE wD_Members SET hideNotifications = 1 WHERE userID = ".$this->user->id." and gameID = ".$gameToggleID);
-        }
-        else if ($noticesStatus == 1)
-        {
-            $this->database->sql_put("UPDATE wD_Members SET hideNotifications = 0 WHERE userID = ".$this->user->id." and gameID = ".$gameToggleID);
-        }
+        $member->hideNotifications = $member->hideNotifications == 1 ? 0 : 1;
+        $member->save();
+        $this->redirectRelative('/');
     }
 }

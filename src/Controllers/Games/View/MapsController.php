@@ -17,15 +17,19 @@ class MapsController extends BaseController
         ];
     }
 
+    /**
+     * @return array
+     */
     protected function getMaps()
     {
         $maps = [];
-        for ($i = $this->game->turn; $i>=0; $i--)
+        for ($i = $this->game->turn; $i >= 0; $i--)
         {
+            $hideMoves = $i == $this->game->turn ? '&hideMoves=1' : '';
             $maps[] = [
                 'name' => $this->game->datetxt($i),
-                'map' => "/map.php?gameID={$this->game->id}&turn=$i",
-                'large_map' => "/map.php?gameID={$this->game->id}&largemap=on&turn=$i",
+                'map' => "/map.php?gameID={$this->game->id}$hideMoves&turn=$i",
+                'large_map' => "/map.php?gameID={$this->game->id}&largemap=on$hideMoves&turn=$i",
             ];
         }
         return $maps;

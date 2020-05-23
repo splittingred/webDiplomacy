@@ -308,7 +308,22 @@ abstract class WDVariant {
                 $this->territories[$id] = $name;
             }
         }
+
+        if (empty($this->countryIDToName)) {
+            $this->countryIdToName = [];
+            foreach ($this->countries as $index => $countryName) {
+                $this->countryIdToName[$index + 1] = $countryName;
+            }
+        }
 	}
+
+    /**
+     * @return array
+     */
+	public function getCountryIDs() : array
+    {
+        return $this->countryIdToName;
+    }
 
 	/**
 	 * Remove coast info from a territory name

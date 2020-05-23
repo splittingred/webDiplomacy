@@ -4,6 +4,7 @@ namespace Diplomacy\Controllers\Games\View;
 
 use Diplomacy\Controllers\Games\View\BaseController;
 use Diplomacy\Models\Collection;
+use Diplomacy\Models\Order;
 use Diplomacy\Services\Games\OrdersService;
 
 class OrdersController extends BaseController
@@ -15,7 +16,7 @@ class OrdersController extends BaseController
 
     public function setUp()
     {
-        $this->orders = new OrdersService($this->database);
+        $this->orders = new OrdersService();
         parent::setUp();
     }
 
@@ -37,17 +38,23 @@ class OrdersController extends BaseController
     private function sortOrdersAsIndex(Collection $orders) : array
     {
         $summary = [];
+        /** @var Order $order */
         foreach ($orders as $order) {
-            if (empty($summary[$order->turn])) {
-                $summary[$order->turn] = [
+            $turn = floatval($order->turn);
+            if ($order->isInBuildPhase()) $turn += .5;
+            $turn = strval($turn);
+
+            if (empty($summary[$turn])) {
+                $summary[$turn] = [
                     'countries' => [],
-                    'id' => $order->turn,
-                    'name' => $order->turnAsDate(),
+                    'id' => $turn,
+                    'name' => $order->getTurnAsDate(),
+                    'phase' => $order->getPhaseName(),
                 ];
             }
 
-            if (!array_key_exists($order->countryID, $summary[$order->turn]['countries'])) {
-                $summary[$order->turn]['countries'][$order->countryID] = $order->countryName();
+            if (!array_key_exists($order->countryID, $summary[$turn]['countries'])) {
+                $summary[$turn]['countries'][$order->countryID] = $order->getCountryName();
             }
         }
         return $summary;
@@ -56,24 +63,29 @@ class OrdersController extends BaseController
     private function structureOrders(Collection $orders) : array
     {
         $list = [];
+        /** @var Order $order */
         foreach ($orders as $order) {
-            if (empty($list[$order->turn])) {
-                $list[$order->turn] = [
-                    'id' => $order->turn,
-                    'name' => $order->turnAsDate(),
-                    'phase' => $order->phaseName(),
+            $turn = floatval($order->turn);
+            if ($order->isInBuildPhase()) $turn += .5;
+            $turn = strval($turn);
+
+            if (empty($list[$turn])) {
+                $list[$turn] = [
+                    'id' => $turn,
+                    'name' => $order->getTurnAsDate(),
+                    'phase' => $order->getPhaseName(),
                     'countries' => [],
                 ];
             }
 
-            if (!array_key_exists($order->countryID, $list[$order->turn]['countries'])) {
-                $list[$order->turn]['countries'][$order->countryID] = [
+            if (!array_key_exists($order->countryID, $list[$turn]['countries'])) {
+                $list[$turn]['countries'][$order->countryID] = [
                     'id' => $order->countryID,
-                    'name' => $order->countryName(),
+                    'name' => $order->getCountryName(),
                     'orders' => [],
                 ];
             }
-            $list[$order->turn]['countries'][$order->countryID]['orders'][] = $order;
+            $list[$turn]['countries'][$order->countryID]['orders'][] = $order;
         }
         return $list;
     }

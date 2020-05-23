@@ -1,0 +1,14 @@
+<tr class="replyalternate{{ cycle(["1", "2"], loop.index0) }} gameID{{ game.id }}countryID{{ message.fromCountryID }}">
+    <td class="left time" style="vertical-align: top">
+        {{ message.getTimeSentText()|raw }}
+        <i style="font-weight: normal">{{ game.datetxt(message.turn) }}</i>
+    </td>
+    <td class="right {% if not message.fromGameMaster() %}country{{ message.fromCountryID }}{% endif %}" style="padding: 5px 20px 20px">
+        <span>
+            (To <strong>{{ message.getCountryToText(member.countryID) }}</strong>, from <strong>{{ message.getCountryFromText(member.countryID) }})</strong>
+        </span>
+        <p style="margin: 3px 0 0 0">
+        {{ message.message|raw }}
+        </p>
+    </td>
+</tr>

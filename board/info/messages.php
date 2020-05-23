@@ -197,5 +197,3 @@ function printPageButton($pagenum, $currPage)
 		print '<input type="submit" name="pagenum" class="form-submit" value='.$pagenum.' /></form></div>';
 	}
 }
-
-?>

@@ -6,10 +6,10 @@
     <div class="gamePanelHome">
         <h3 class="tournamentCenter">{{ tournament.name }}</h3>
         <div class= "tournamentCenter">
-            {% if tournament.isRunning %}
+            {% if tournament.isRunning() %}
                 <a class="tournamentCenter" href="/tournamentScoring.php?tournamentID={{ tournament.id }}">Scoring and Participants</a>
                 <br />
-                {% if tournament.isRegistrationComplete %}
+                {% if tournament.isRegistrationComplete() %}
                     <br />
                     <a class="tournamentCenter" href="/gamelistings.php?gamelistType=Search&tournamentID={{ tournament.id }}">Tournament Games</a>
                     <br />

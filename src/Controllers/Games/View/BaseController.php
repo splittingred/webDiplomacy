@@ -12,6 +12,8 @@ abstract class BaseController extends Base
     protected $variant;
     /** @var \panelGameBoard */
     protected $game;
+    /** @var \userMember */
+    protected $member;
 
     public function beforeRender(): void
     {
@@ -36,6 +38,23 @@ abstract class BaseController extends Base
         \libVariant::setGlobals($this->variant);
         $this->game = $this->variant->panelGameBoard($gameId);
         $this->setPlaceholder('game', $this->game);
+        $this->loadCountries($this->variant);
+
+        if ($this->user && $this->user->isAuthenticated()) {
+            $this->member = $this->game->Members->ByUserID[$this->user->id];
+            $this->setPlaceholder('member', $this->member);
+        }
         return $this->game;
+    }
+
+    protected function loadCountries(\WDVariant $variant) : void
+    {
+        $idx = 1;
+        $countries = [];
+        foreach ($variant->countries as $countryName) {
+            $countries[] = ['id' => $idx, 'name' => $countryName];
+            $idx++;
+        }
+        $this->setPlaceholder('countries', $countries);
     }
 }

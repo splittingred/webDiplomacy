@@ -103,7 +103,6 @@ else
 	}
 }
 
-
 if ( isset($_REQUEST['viewArchive']) )
 {
 	// Start HTML with board gamepanel header
@@ -132,7 +131,6 @@ if ( isset($_REQUEST['viewArchive']) )
 	print '</div>';
 	libHTML::footer();
 }
-
 
 if ( $Game->watched() && isset($_REQUEST['unwatch'])) {
 	print '<div class="content-notice gameTimeRemaining">'

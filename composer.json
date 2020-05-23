@@ -7,6 +7,9 @@
   "require": {
     "php": "^7.0",
     "bramus/router": "^1.4",
+    "illuminate/database": "^7.12",
+    "illuminate/pagination": "^7.12",
+    "laravel/tinker": "^2.4",
     "twig/twig": "^3.0"
   },
   "require-dev": {

@@ -320,11 +320,19 @@ class Game
 				|| (!isset($this->pauseTimeRemaining) || is_null($this->pauseTimeRemaining) ))
 				trigger_error(l_t("Paused game timeout values incorrectly set."));
 		}
-		elseif( $this->processStatus!='Crashed' && (
-			( isset($this->pauseTimeRemaining)||!is_null($this->pauseTimeRemaining) )
-			|| ( !isset($this->processTime)||is_null($this->processTime) ) ) )
-			trigger_error(l_t("Not-paused game process-time values incorrectly set."));
+		elseif (!$this->isCrashed() && (
+		    $this->hasPauseTimeRemaining() || empty($this->processTime)) ) {
+            //trigger_error(l_t("Not-paused game process-time values incorrectly set."));
+        }
 	}
+
+    /**
+     * @return bool
+     */
+	public function hasPauseTimeRemaining() : bool
+    {
+        return !empty($this->pauseTimeRemaining);
+    }
 
 	/**
 	 * @return bool
@@ -333,6 +341,16 @@ class Game
 	{
 		return $this->phase == 'Pre-game';
 	}
+
+    /**
+     * Is the game crashed?
+     *
+     * @return bool
+     */
+	public function isCrashed() : bool
+    {
+        return $this->processStatus == 'Crashed';
+    }
 
 	/**
 	 * @return bool

@@ -7,13 +7,6 @@ use Diplomacy\Models\Order;
 
 class OrdersService
 {
-    protected $database;
-
-    public function __construct(\Database $database)
-    {
-        $this->database = $database;
-    }
-
     /**
      * @param int $gameId
      * @return Collection
@@ -26,24 +19,21 @@ class OrdersService
         $gameBoard = $variant->panelGameBoard($gameId);
         $variant->initialize();
 
-        $query = $this->database->sql_tabl("
-            SELECT 
-               moves.*,
-               LOWER(moves.unitType) AS unitType,
-               LOWER(moves.type) AS type,
-               games.variantID AS variantId
-		    FROM wD_MovesArchive AS moves 
-              INNER JOIN wD_Games AS games ON games.id = moves.gameID
-            WHERE gameID = $gameId 
-            ORDER BY turn DESC, countryID ASC
-        ");
+        $query = Order::join('wD_Games', 'wD_Games.id', '=', 'wD_MovesArchive.gameID')
+            ->where('gameID', $gameId);
 
-        $totalQuery = "SELECT COUNT(moves.turn) FROM wD_MovesArchive moves WHERE moves.gameID = $gameId";
-        list($total) = $this->database->sql_row($totalQuery);
+        $total = $query->count();
+        $query = $query->select(
+            'wD_MovesArchive.*',
+            Order::raw('LOWER(wD_MovesArchive.unitType) AS unitType'),
+            Order::raw('LOWER(wD_MovesArchive.type) AS type'),
+            Order::raw('wD_Games.variantID AS variantId'),
+        )
+            ->orderBy('turn', 'desc')
+            ->orderBy('countryID', 'ASC');
 
-        $orders = [];
-        while ($row = $this->database->tabl_hash($query)) {
-            $order = Order::fromRow($row);
+        $orders = $query->get();
+        foreach ($orders as $order) {
             $order->setVariant($variant);
             $order->setGameBoard($gameBoard);
             $orders[] = $order;

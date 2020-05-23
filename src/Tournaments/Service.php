@@ -26,16 +26,11 @@ class Service
      */
     public function getActive() : Collection
     {
-        $sqlCount = "SELECT COUNT(t.id) FROM wD_Tournaments t WHERE status != 'PreStart' AND status != 'Registration'";
-        $sql = "SELECT * FROM wD_Tournaments t WHERE status != 'PreStart' AND status != 'Registration' ORDER BY year DESC";
+        $query = Tournament::where('status', '!=', ['Pre-Start', 'Registration']);
+        $count = $query->count();
 
-        $result = $this->database->sql_tabl($sql);
-        list($count) = $this->database->sql_row($sqlCount);
-
-        $tournaments = [];
-        while ($row = $this->database->tabl_hash($result)) {
-            $tournaments[] = Tournament::fromRow($row);
-        }
+        $query = $query->orderBy('year', 'desc');
+        $tournaments = $query->get();
         return new Collection($tournaments, $count);
     }
 
@@ -45,18 +40,18 @@ class Service
      */
     public function findParticipatingForUser(int $userId) : Collection
     {
-        $sql = "SELECT DISTINCT t.* from wD_Tournaments t INNER JOIN wD_TournamentParticipants s on s.tournamentID = t.id 
-	where t.status <> 'Finished' and ( s.userID = " . $userId . " or t.directorID = " . $userId . " or t.coDirectorID = " . $userId . ")";
-        $sqlCounter = "select count(distinct t.id) from wD_Tournaments t INNER JOIN wD_TournamentParticipants s on s.tournamentID = t.id 
-	where t.status <> 'Finished' and ( s.userID =" . $userId . " or t.directorID = " . $userId . " or t.coDirectorID = " . $userId . ")";
+        $query = Tournament::select(Tournament::raw('DISTINCT wD_Tournaments.*'))
+            ->join('wD_TournamentParticipants', 'wD_Tournaments.id', '=', 'wD_TournamentParticipants.tournamentID')
+            ->where('wD_Tournaments.status', '!=', 'Finished')
+            ->where(function ($q) use ($userId) {
+                $q->where('wD_TournamentParticipants.userID', $userId)
+                  ->orWhere('wD_Tournaments.directorID', $userId)
+                  ->orWhere('wD_Tournaments.coDirectorID', $userId);
+            });
 
-        $tableChecked = $this->database->sql_tabl($sql);
-        list($count) = $this->database->sql_row($sqlCounter);
+        $count = $query->count();
+        $tournaments = $query->get();
 
-        $tournaments = [];
-        while ($row = $this->database->tabl_hash($tableChecked)) {
-            $tournaments[] = Tournament::fromRow($row);
-        }
         return new Collection($tournaments, $count);
     }
 
@@ -66,16 +61,12 @@ class Service
      */
     public function findSpectatingForUser(int $userId) : Collection
     {
-        $sql = "select t.id, t.name, t.status from wD_Tournaments t inner join wD_TournamentSpectators s on s.tournamentID = t.id where t.status <> 'Finished' and s.userID =".$userId;
-        $sqlCounter = "select count(1) from wD_Tournaments t inner join wD_TournamentSpectators s on s.tournamentID = t.id where t.status <> 'Finished' and s.userID =".$userId;
+        $query = Tournament::join('wD_TournamentSpectators', 'wD_Tournaments.id', '=', 'wD_TournamentSpectators.tournamentID')
+            ->where('wD_Tournaments.status', '<>', 'Finished')
+            ->where('wD_TournamentSpectators.userID', $userId);
+        $count = $query->count();
+        $tournaments = $query->get();
 
-        $tableChecked = $this->database->sql_tabl($sql);
-        list($count) = $this->database->sql_row($sqlCounter);
-
-        $tournaments = [];
-        while ($row = $this->database->tabl_hash($tableChecked)) {
-            $tournaments[] = Tournament::fromRow($row);
-        }
         return new Collection($tournaments, $count);
     }
 }

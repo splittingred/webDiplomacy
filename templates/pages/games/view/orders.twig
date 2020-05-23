@@ -5,7 +5,7 @@
     <ul>
     {% for turn in summary %}
         <li>
-            <h4><a href="/games/{{ game.id }}/orders#turn-{{ turn.id }}">{{ turn.name }}</a></h4>
+            <h4><a href="/games/{{ game.id }}/orders#turn-{{ turn.id }}">{{ turn.name }}: {{ turn.phase }}</a></h4>
             <ul>
             {% for country_id, country_name in turn.countries %}
                 <li><a href="/games/{{ game.id }}/orders#turn-{{ turn.id }}-{{ country_id }}">{{ country_name }}</a></li>

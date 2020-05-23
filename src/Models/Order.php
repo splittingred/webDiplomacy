@@ -8,8 +8,10 @@ use WDVariant;
 /**
  * @package Diplomacy\Models
  */
-class Order extends Base
+class Order extends EloquentBase
 {
+    protected $table = 'wD_MovesArchive';
+
     /** @var WDVariant $variant */
     protected $variant;
     /** @var panelGameBoard $gameBoard */
@@ -38,7 +40,7 @@ class Order extends Base
     /**
      * @return string
      */
-    public function countryName() : string
+    public function getCountryName() : string
     {
         return $this->variant->getCountryName($this->countryID);
     }
@@ -46,7 +48,7 @@ class Order extends Base
     /**
      * @return string
      */
-    public function phaseName() : string
+    public function getPhaseName() : string
     {
         switch (strtolower($this->type)) {
             case 'retreat':
@@ -66,7 +68,7 @@ class Order extends Base
      *
      * @return string
      */
-    public function territoryName() : string
+    public function getTerritoryName() : string
     {
         if (empty($this->territoryName) && $this->variant) {
             $this->territoryName = $this->variant->getTerritoryName($this->terrID);
@@ -79,7 +81,7 @@ class Order extends Base
      *
      * @return string
      */
-    public function toTerritoryName() : string
+    public function getToTerritoryName() : string
     {
         if (empty($this->toTerritoryName) && $this->variant) {
             $this->toTerritoryName = $this->variant->getTerritoryName($this->toTerrID);
@@ -88,41 +90,51 @@ class Order extends Base
     }
 
     /**
+     * Is this a build phase order?
+     *
+     * @return bool
+     */
+    public function isInBuildPhase() : bool
+    {
+        return in_array(strtolower($this->type), ['wait', 'build army', 'build fleet']);
+    }
+
+    /**
      * Get the order in a long-form text format
      *
      * @return string
      */
-    public function text() : string
+    public function getText() : string
     {
         switch(strtolower($this->type)) {
             case 'retreat':
-                $str = l_t('The %s at %s retreat to %s',$this->unitType, $this->territoryName(), $this->toTerritoryName());
+                $str = l_t('The %s at %s retreat to %s',$this->unitType, $this->getTerritoryName(), $this->getToTerritoryName());
                 break;
             case 'disband':
-                $str = l_t('The %s at %s disband', $this->unitType, $this->territoryName());
+                $str = l_t('The %s at %s disband', $this->unitType, $this->getTerritoryName());
                 break;
             case 'build army':
-                $str = l_t('Build army at %s', $this->territoryName());
+                $str = l_t('Build army at %s', $this->getTerritoryName());
                 break;
             case 'build fleet':
-                $str = l_t('Build fleet at %s', $this->territoryName());
+                $str = l_t('Build fleet at %s', $this->getTerritoryName());
                 break;
             case 'wait':
                 $str = l_t('Do not use build order');
                 break;
             case 'destroy':
-                $str = l_t('Destroy the unit at %s', $this->territoryName());
+                $str = l_t('Destroy the unit at %s', $this->getTerritoryName());
                 break;
             default:
-                $str = l_t("The %s at %s %s", $this->unitType, $this->territoryName(), $this->type);
-                if (!empty($this->toTerrID)) $str .= ' to ' . $this->toTerritoryName();
-                if (!empty($this->terrID)) $str .= ' from ' . $this->territoryName();
+                $str = l_t("The %s at %s %s", $this->unitType, $this->getTerritoryName(), $this->type);
+                if (!empty($this->toTerrID)) $str .= ' to ' . $this->getToTerritoryName();
+                if (!empty($this->terrID)) $str .= ' from ' . $this->getTerritoryName();
                 if ($this->isConvoy()) $str .= ' via convoy';
         }
 
-        if ($this->wasDislodged() || (!$this->successful() && !$this->isHold())) {
+        if ($this->wasDislodged() || (!$this->isSuccessful() && !$this->isHold())) {
             $str = "<u>$str";
-            if (!$this->successful() && !$this->isHold()) {
+            if (!$this->isSuccessful() && !$this->isHold()) {
                 $str .= '</u> (fail)';
             }
             if ($this->wasDislodged()) {
@@ -166,7 +178,7 @@ class Order extends Base
      * Get the turn in a friendly date format (e.g. Spring 1902)
      * @return string
      */
-    public function turnAsDate() : string
+    public function getTurnAsDate() : string
     {
         return $this->gameBoard ? $this->gameBoard->datetxt($this->turn) : '';
     }
@@ -176,7 +188,7 @@ class Order extends Base
      *
      * @return bool
      */
-    public function successful() : bool
+    public function isSuccessful() : bool
     {
         return $this->success == 'Yes';
     }
@@ -186,8 +198,8 @@ class Order extends Base
      *
      * @return bool
      */
-    public function failed() : bool
+    public function isFailed() : bool
     {
-        return !$this->successful();
+        return !$this->isSuccessful();
     }
 }

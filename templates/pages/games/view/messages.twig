@@ -1,0 +1,47 @@
+{% include 'pages/games/view/_header.twig' with { game: game } %}
+
+<a id="results"></a>
+<h2>Chat archive</h2>
+
+<div class="variant{{ game.Variant.name }}">
+    <br />
+
+    <div style="float:right;">
+        <form class="advancedSearch" method="get">
+			<label>
+                <strong>Country:</strong>
+                <select class="advancedSearch" name="filter">
+                    <option {% if filter == -1 %} selected="selected"{% endif %} value="-1">All</option>';
+                    <option {% if filter == -2 %} selected="selected"{% endif %} value="-2">Global</option>';
+                    {% for country in countries %}
+                        {% if member %}
+                            {% if member.countryID == country.id %}
+                                <option {% if filter == country.id %} selected="selected"{% endif %} value="{{ country.id }}">Notes</option>
+                            {% else %}
+                                <option {% if filter == country.id %} selected="selected"{% endif %} value="{{ country.id }}">{{ country.name }}</option>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </label>
+            <input type="submit" class="form-submit" value="Filter" />
+        </form>
+    </div>
+
+{% if messages is empty and filter == -1 %}
+    <strong>There are no messages for this game</strong>
+
+{% elseif messages is empty %}
+    <strong>There are no results for this country.</strong>
+
+{% else %}
+    <br />
+    <table class="archive-messages-table">
+        {% for message in messages %}
+            {% include 'pages/games/view/_message.twig' with { game: game, message: message } %}
+        {% endfor %}
+    </table>
+    <br />
+
+{% endif %}
+</div>
