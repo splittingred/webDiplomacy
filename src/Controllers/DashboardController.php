@@ -2,6 +2,8 @@
 
 namespace Diplomacy\Controllers;
 
+use Diplomacy\Models\Collection;
+use Diplomacy\Services\Games\GamesService;
 use Diplomacy\Services\Games\MembersService;
 use Diplomacy\Tournaments\Service as TournamentsService;
 use Diplomacy\Services\Request;
@@ -15,11 +17,14 @@ class DashboardController extends BaseController
     protected $tournamentsService;
     /** @var MembersService */
     protected $membersService;
+    /** @var GamesService */
+    protected $gamesService;
 
     protected function setUp()
     {
         $this->tournamentsService = new TournamentsService($this->database);
         $this->membersService = new MembersService();
+        $this->gamesService = new GamesService();
         \libHTML::$footerIncludes[] = l_j('home.js');
         \libHTML::$footerScript[] = l_jf('homeGameHighlighter').'();';
     }
@@ -38,9 +43,9 @@ class DashboardController extends BaseController
             'notices' => $this->renderPartial('pages/home/notices.twig',[
                 'notices' => libHome::Notice(),
             ]),
-            'game_notify_block' => libHome::gameNotifyBlock(),
-            'game_defeated_notify_block' => libHome::gameDefeatedNotifyBlock(),
-            'game_watch_block' => libHome::gameWatchBlock(),
+            'my_games' => $this->getMyGames(),
+            'defeated_games' => libHome::gameDefeatedNotifyBlock(),
+            'watched_games' => libHome::gameWatchBlock(),
         ];
 
         $result = $this->tournamentsService->findParticipatingForUser($this->user->id);
@@ -60,6 +65,14 @@ class DashboardController extends BaseController
         }
 
         return $variables;
+    }
+
+    /**
+     * @return Collection
+     */
+    protected function getMyGames()
+    {
+        return $this->gamesService->getActiveForUser($this->user->id);
     }
 
     /**

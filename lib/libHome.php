@@ -128,10 +128,9 @@ class libHome
 
         $output .= '<div class="hr"></div>';
 
+        /** @var \notice $pm */
         foreach($pms as $pm)
         {
-            $output .= $pm->viewedSplitter();
-
             $output .= $pm->html();
         }
         return $output;

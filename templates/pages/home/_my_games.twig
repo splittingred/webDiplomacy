@@ -1,0 +1,20 @@
+{% for game in games %}
+  {{ game.getSummary()|raw }}
+{% endfor %}
+
+{% if games is empty %}
+<div class="hr"></div>
+<div class="bottomborder">
+    <p class="notice">You're not joined to any games!
+        <br />
+        Access the <a href="/gamelistings.php?tab=">Games</a>
+        link above to find games you can join, or start a
+        <a href="/gamecreate.php">New game</a> yourself.</a>
+    </p>
+</div>
+{% elseif games|length == 1 %}
+<div class="hr"></div>
+<div class="bottomborder">
+    <p class="notice">You can join as many games as you have the points to join</p>
+</div>
+{% endif %}

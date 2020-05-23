@@ -15,13 +15,13 @@
                     My games
                     <a href="/gamelistings.php?page=1&gamelistType=My games">{% include 'common/link.twig' %}</a>
                 </div>
-                {{ game_notify_block|raw }}
+                {% include 'pages/home/_my_games.twig' with { games: my_games } %}
 
                 <div class="homeHeader">Defeated games</div>
-                {{ game_defeated_notify_block|raw }}
+                {{ defeated_games|raw }}
 
                 <div class="homeHeader">Spectated games</div>
-                {{ game_watch_block|raw }}
+                {{ watched_games|raw }}
 
                 {{ my_tournaments|raw }}
 
