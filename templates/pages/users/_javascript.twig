@@ -1,0 +1,14 @@
+
+<script type="text/javascript">
+    let coll = document.getElementsByClassName("profile_title");
+    let searchCounter;
+
+    for (searchCounter = 0; searchCounter < coll.length; searchCounter++) {
+        coll[searchCounter].addEventListener("click", function() {
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            if (content.style.display === "block") { content.style.display = "none"; }
+            else { content.style.display = "block"; }
+        });
+    }
+</script>

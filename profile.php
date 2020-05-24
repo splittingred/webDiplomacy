@@ -354,7 +354,7 @@ if ( isset($_REQUEST['detail']) )
 			break;
 
 		case 'reports':
-			if ( $User->type['Moderator'] )
+			if ( $User->isModerator() )
 			{
 				require_once(l_r('lib/modnotes.php'));
 				libModNotes::checkDeleteNote();

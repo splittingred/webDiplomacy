@@ -29,7 +29,7 @@ abstract class BaseController extends Base
     protected function loadUser() : User
     {
         $userId = $this->request->get('id');
-        $this->user = User::where('id', $userId);
+        $this->user = User::where('id', $userId)->first();
         return $this->user;
     }
 }
