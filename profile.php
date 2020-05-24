@@ -344,7 +344,7 @@ if ( isset($_REQUEST['detail']) )
 						if ($name != '')
 						{
 							$Variant=libVariant::loadFromGameID($gameID);
-							print '<td> <strong><a href="board.php?gameID='.$gameID.'">'.$name.'</a></strong></td>';
+							print '<td> <strong><a href="/games/'.$gameID.'">'.$name.'</a></strong></td>';
 							print '<td> <strong>'.$Variant->countries[$countryID-1].'</strong></td>';
 							print '<td> <strong>'.$Variant->turnAsDate($turn).'</strong></td>';
 							print '<td> <strong>'.$liveGame.'</strong></td>';

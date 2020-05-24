@@ -1,0 +1,22 @@
+{% include 'pages/games/view/_header.twig' with { game: game } %}
+
+<a id="results"></a>
+<h2>Graph</h2>
+
+<br />
+<div class="variant{{ variant.name }} boardGraph" style="width:auto">
+    {% for turn,ratio in ratios %}
+    <div class="boardGraphTurn" style="width:auto">
+        {% for country_id, sc_ratio in ratio %}
+            {% if sc_ratio < 1 %}{% set continue = true %}{% endif %}
+
+        <div class="boardGraphTurnCountry occupationBar{{ country_id }}"
+             style="text-align:center; font-size:10pt; font-weight:bold; overflow:hidden;float:left;width:{{ sc_ratio }}%"
+        >{{ sc_ratio }}%</div>
+        {% endfor %}
+
+        <div style="clear:both"></div>
+    </div>
+    {% endfor %}
+    </div>
+</div>

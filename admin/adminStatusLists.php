@@ -164,11 +164,11 @@ if( $User->type['Admin'] )
 	UNION SELECT 'Units',CONCAT(MAX(id),' / ',POW(2,31)-1,' = ',MAX(id)/(POW(2,31)-1)*100,'%') FROM wD_Units ");
 	*/
 
-adminStatusList(l_t('Crashed games'),"SELECT CONCAT('<a href=\"board.php?gameID=',id,'\" class=\"light\">',name,'</a>')
+adminStatusList(l_t('Crashed games'),"SELECT CONCAT('<a href=\"/games/',id,'\" class=\"light\">',name,'</a>')
 	FROM wD_Games WHERE processStatus = 'Crashed'");
-adminStatusList(l_t('Processing games'),"SELECT CONCAT('<a href=\"board.php?gameID=',id,'\" class=\"light\">',name,'</a>')
+adminStatusList(l_t('Processing games'),"SELECT CONCAT('<a href=\"/games/',id,'\" class=\"light\">',name,'</a>')
 	FROM wD_Games WHERE processStatus = 'Processing'");
-adminStatusList(l_t('Paused games'),"SELECT CONCAT('<a href=\"board.php?gameID=',id,'\" class=\"light\">',name,'</a>')
+adminStatusList(l_t('Paused games'),"SELECT CONCAT('<a href=\"/games/',id,'\" class=\"light\">',name,'</a>')
 	FROM wD_Games WHERE processStatus = 'Paused'");
 
 //require_once('gamemaster/game.php');

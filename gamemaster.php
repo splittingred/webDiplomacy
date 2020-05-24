@@ -111,7 +111,7 @@ while( (time() - $startTime)<30 && $gameRow=$DB->tabl_hash($tabl) )
 	$Variant=libVariant::loadFromVariantID($gameRow['variantID']);
 	$Game=$Variant->Game($gameRow);
 
-	print '<a href="board.php?gameID='.$Game->id.'">gameID='.$Game->id.': '.$Game->name.'</a>: ';
+	print '<a href="/games/'.$Game->id.'">gameID='.$Game->id.': '.$Game->name.'</a>: ';
 
 	try
 	{

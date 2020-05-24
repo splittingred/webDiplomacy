@@ -570,9 +570,9 @@ class processMembers extends Members
 	function joinedRedirect()
 	{
 		// We have successfully joined, now give a message to tell the user so
-		header('refresh: 4; url=board.php?gameID='.$this->Game->id);
+		header('refresh: 4; url=/games/'.$this->Game->id);
 
-		$message = '<p class="notice">'.l_t('You are being redirected to %s. Good luck!','<a href="board.php?gameID='.$this->Game->id.'">'.$this->Game->name.'</a>').'</p>';
+		$message = '<p class="notice">'.l_t('You are being redirected to %s. Good luck!','<a href="/games/'.$this->Game->id.'">'.$this->Game->name.'</a>').'</p>';
 
 		libHTML::notice(l_t("Joined %s",$this->Game->name), $message);
 	}

@@ -23,15 +23,28 @@ class Router
     private function configure() : void
     {
         $this->router->set404('IntroController@handle');
-        $this->router->get('games/{id}/orders', function($gameId) {
+
+        /* game view */
+        $this->router->get('games/(\d+)', function($gameId) {
+            \Diplomacy\Controllers\Games\View\GameController::handle(['id' => (int)$gameId]);
+        });
+        $this->router->get('games/(\d+)/orders', function($gameId) {
             \Diplomacy\Controllers\Games\View\OrdersController::handle(['id' => (int)$gameId]);
         });
-        $this->router->get('games/{id}/maps', function($gameId) {
+        $this->router->get('games/(\d+)/maps', function($gameId) {
             \Diplomacy\Controllers\Games\View\MapsController::handle(['id' => (int)$gameId]);
         });
-        $this->router->get('games/{id}/messages', function($gameId) {
+        $this->router->get('games/(\d+)/messages', function($gameId) {
             \Diplomacy\Controllers\Games\View\MessagesController::handle(['id' => (int)$gameId]);
         });
+        $this->router->get('games/(\d+)/graph', function($gameId) {
+            \Diplomacy\Controllers\Games\View\GraphController::handle(['id' => (int)$gameId]);
+        });
+        $this->router->get('games/(\d+)/moderator-notes', function($gameId) {
+            \Diplomacy\Controllers\Games\View\ModeratorNotesController::handle(['id' => (int)$gameId]);
+        });
+
+        /* help */
         $this->router->get('help', 'Help\HelpController@handle');
         $this->router->get('help/developers', 'Help\DevelopersController@handle');
         $this->router->get('help/donations', 'Help\DonationsController@handle');
@@ -39,6 +52,8 @@ class Router
         $this->router->get('help/points', 'Help\PointsController@handle');
         $this->router->get('help/rules', 'Help\RulesController@handle');
         $this->router->get('help/recent-changes', 'Help\RecentChangesController@handle');
+
+        /* misc */
         $this->router->get('intro', 'IntroController@handle');
         $this->router->get('stats/hall-of-fame', 'Stats\HallOfFameController@handle');
         $this->router->get('tournaments/info', 'Tournaments\InfoController@handle');

@@ -175,7 +175,7 @@ class processGame extends Game
 
 		$games = array();
 		while( list($id, $name, $liveID) = $DB->tabl_row($tabl) )
-			$games[]=array($id,($id==$liveID ? '<a href="board.php?gameID='.$id.'">'.$name.'</a>' : $name));
+			$games[]=array($id,($id==$liveID ? '<a href="/games/'.$id.'">'.$name.'</a>' : $name));
 
 		return $games;
 	}

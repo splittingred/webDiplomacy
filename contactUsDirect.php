@@ -220,11 +220,11 @@ while (list($gameID, $gameName, $gameOver, $processStatus, $password, $phaseMinu
     $myGame->phase = $phase;
     array_push($GamesData,$myGame);
 
-    $allGames = $allGames.'https://www.webdiplomacy.net/board.php?gameID='.$gameID.'<br>';
+    $allGames = $allGames.'https://www.webdiplomacy.net/games/'.$gameID.'<br>';
 
     if($processStatus != 'Paused' )
     {
-        $allRunningGames = $allRunningGames.'https://www.webdiplomacy.net/board.php?gameID='.$gameID.'<br>';
+        $allRunningGames = $allRunningGames.'https://www.webdiplomacy.net/games/'.$gameID.'<br>';
         $numberOfGames = $numberOfGames+1;
     }
     
@@ -249,7 +249,7 @@ if ($submitted == true)
     }
     else if ($gamesValid == true && $games > 1) 
     {
-        $userPickedGame = '<a href="https://www.webdiplomacy.net/board.php?gameID='.$games.'" class="contactUs"> '.$postedGameName.'</a>';
+        $userPickedGame = '<a href="https://www.webdiplomacy.net/games/'.$games.'" class="contactUs"> '.$postedGameName.'</a>';
     }
 
     $worked = true;

@@ -70,7 +70,7 @@ class libModNotes {
 		$html = '';
 		while($note=$DB->tabl_hash($tabl)) {
 			$html .= '<tr>
-				'.($linkIDType=='All'?'<td><a href="'.($note['linkIDType']=='User'?'profile.php?userID='.$note['linkID'].'">Go to user</a>':'board.php?gameID='.$note['linkID'].'">Go to game</a>').'</td>':'').'
+				'.($linkIDType=='All'?'<td><a href="'.($note['linkIDType']=='User'?'profile.php?userID='.$note['linkID'].'">Go to user</a>':'/games/'.$note['linkID'].'">Go to game</a>').'</td>':'').'
 				'.($User->type['Moderator']?'<td><a href="?modNoteDelete='.$note['linkIDType'].'_'.$note['linkID'].'_'.$note['timeSent'].'">Delete</a></td>':'').'
 				<td><a href="profile.php?userID='.$note['fromUserID'].'">'.$note['username'].'</a></td>
 				<td>'.libTime::text($note['timeSent']).'</td>

@@ -480,7 +480,7 @@ class adminActions extends adminActionsForms
 			// Check for additional requirements:
 			if ( $Game->minimumReliabilityRating > $SendToUser->reliabilityRating)
 			{
-				$ret .= '<b>Error:</b> The reliability of '.$SendToUser->username.' is not high enough to join the game <a href="board.php?gameID='.$Game->id.'">'.$Game->name.'</a>.<br>';
+				$ret .= '<b>Error:</b> The reliability of '.$SendToUser->username.' is not high enough to join the game <a href="/games/'.$Game->id.'">'.$Game->name.'</a>.<br>';
 			}
 
 			elseif ( array_key_exists ( $SendToUser->id , $Game->Members->ByUserID))
@@ -491,7 +491,7 @@ class adminActions extends adminActionsForms
 			else
 			{
 				$DB->sql_put("UPDATE wD_Members SET userID = ".$SendToUser->id." WHERE userID=".$SendFromUser->id." AND gameID=".$Game->id);
-				$ret.= 'In game <a href="board.php?gameID='.$Game->id.'">'.$Game->name.'</a> the user '.$SendFromUser->username.' was removed and replaced by '.$SendToUser->username.'.<br>';
+				$ret.= 'In game <a href="/games/'.$Game->id.'">'.$Game->name.'</a> the user '.$SendFromUser->username.' was removed and replaced by '.$SendToUser->username.'.<br>';
 			}
 		}
 		return $ret;

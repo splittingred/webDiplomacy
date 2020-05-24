@@ -1124,7 +1124,7 @@ $seeAnon, $seePressType, $seeDirector, $seeMinRR, $seeDrawType, $seeWatchedCount
 		{
 			$Variant=libVariant::loadFromGameID($values->gameID);
 
-			print '<TR><TD class= "advancedSearch"><a href="board.php?gameID='.$values->gameID.'">'.$values->gameID.'</a></TD>';
+			print '<TR><TD class= "advancedSearch"><a href="/games/'.$values->gameID.'">'.$values->gameID.'</a></TD>';
 			if ($seeVariant=='checked') {print '<TD class= "advancedSearch">'.$Variant->link().'</a></TD>'; }
 			if ($seeGamename=='checked') { print '<TD class= "advancedSearch">'.$values->gameName.'</TD>'; }
 			if ($seeGameOver=='checked') { print '<TD class= "advancedSearch">'.$values->gameOver.'</TD>'; }

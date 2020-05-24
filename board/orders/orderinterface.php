@@ -323,8 +323,7 @@ class OrderInterface
 
 	public function html()
 	{
-			global $Game;
-		//method="post" action="board.php?gameID='.$this->gameID.'#orders"
+		global $Game;
 		$html = $this->jsHTML();
 
 		$html .= '

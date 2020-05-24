@@ -1,0 +1,11 @@
+{% include 'pages/games/view/_header.twig' with { game: game } %}
+
+<a id="results"></a>
+<h2>Moderator Notes</h2>
+
+<div class="variant{{ game.Variant.name }}">
+{{ form|raw }}
+{{ notes|raw }}
+
+</div>
+</div>

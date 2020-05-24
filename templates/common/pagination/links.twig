@@ -1,0 +1,11 @@
+<div class="pagination-links">
+    <form method="get">
+    {% for page in pages %}
+        {% if page == current %}
+            <div class="{{ current_cls }}">{{ page }}</div>
+        {% else %}
+            <input type="submit" name="page" class="{{ cls }}" value="{{ page }}" />
+        {% endif %}
+    {% endfor %}
+    </form>
+</div>

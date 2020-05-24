@@ -43,7 +43,7 @@ if ( $User->type['User'] && ( isset($_REQUEST['join']) || isset($_REQUEST['leave
 		$Game = $Variant->processGame($gameID);
 
 		// If viewing an archive page make that the title, otherwise us the name of the game
-		libHTML::starthtml(isset($_REQUEST['viewArchive'])?$_REQUEST['viewArchive']:$Game->titleBarName());
+		libHTML::starthtml($Game->titleBarName());
 
 		if ( isset($_REQUEST['join']) )
 		{
@@ -81,7 +81,7 @@ else
 		$Game = $Variant->panelGameBoard($gameID);
 
 		// If viewing an archive page make that the title, otherwise us the name of the game
-		libHTML::starthtml(isset($_REQUEST['viewArchive'])?$_REQUEST['viewArchive']:$Game->titleBarName());
+		libHTML::starthtml($Game->titleBarName());
 
 		if ($Game->Members->isJoined() && !$Game->Members->isTempBanned())
 		{
@@ -101,35 +101,6 @@ else
 		libHTML::error(l_t("Couldn't load specified game; this probably means this game was cancelled or abandoned.")." ".
 			($User->type['User'] ? l_t("Check your <a href='index.php' class='light'>notices</a> for messages regarding this game."):''));
 	}
-}
-
-if ( isset($_REQUEST['viewArchive']) )
-{
-	// Start HTML with board gamepanel header
-	print '</div>';
-	print '<div class="content-bare content-board-header">';
-	print '<div class="boardHeader">'.$Game->contentHeader().'</div>';
-	print '</div>';
-	print '<div class="content content-follow-on">';
-
-	print '<p><a href="board.php?gameID='.$Game->id.'" class="light">'.l_t('&lt; Return').'</a></p>';
-
-	switch($_REQUEST['viewArchive'])
-	{
-		case 'Messages': require_once(l_r('board/info/messages.php')); break;
-		case 'Graph': require_once(l_r('board/info/graph.php')); break;
-		case 'Reports':
-			require_once(l_r('lib/modnotes.php'));
-			libModNotes::checkDeleteNote();
-			libModNotes::checkInsertNote();
-			print libModNotes::reportBoxHTML('Game',$Game->id);
-			print libModNotes::reportsDisplay('Game', $Game->id);
-			break;
-		default: libHTML::error(l_t("Invalid info parameter given."));
-	}
-
-	print '</div>';
-	libHTML::footer();
 }
 
 if ( $Game->watched() && isset($_REQUEST['unwatch'])) {

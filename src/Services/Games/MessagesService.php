@@ -4,6 +4,7 @@ namespace Diplomacy\Services\Games;
 
 use Diplomacy\Models\Collection;
 use Diplomacy\Models\GameMessage;
+use Illuminate\Database\Query\Builder;
 
 /**
  * Handles operations around in-game messages
@@ -28,7 +29,7 @@ class MessagesService
      */
     public function search(int $gameId, int $filter = self::FILTER_GLOBAL, int $memberCountryId = 0, int $perPage = 10)
     {
-        /** @var  $query */
+        /** @var Builder $query */
         $query = GameMessage::where('gameID', $gameId);
 
         if ($filter == self::FILTER_ALL)
@@ -61,9 +62,8 @@ class MessagesService
             $query->where('toCountryID', 0);
         }
 
-        $query->paginate($perPage);
-
         $count = $query->count();
+        $query->paginate($perPage);
         $query->orderBy('timeSent', 'desc');
         $messages = $query->get();
         return new Collection($messages, $count);

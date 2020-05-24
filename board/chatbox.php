@@ -239,14 +239,14 @@ class Chatbox
 				</form>
 				</DIV></div>'.
                 (($msgCountryID == 0) ? '' : '
-						<form method="post" name="markUnread" class="safeForm" action="board.php?gameID='.$Game->id.'&amp;msgCountryID='.$msgCountryID.'#chatboxanchor">
+						<form method="post" name="markUnread" class="safeForm" action="/games/'.$Game->id.'&amp;msgCountryID='.$msgCountryID.'#chatboxanchor">
 							<input type="hidden" tabindex="2" value="" name="MarkAsUnread" />
 						</form>
 					');
 		}
 		else if ($Game->pressType == 'RulebookPress' && $Game->phase != 'Diplomacy' && $msgCountryID != 0)  {
 				$chatbox .= '<div class="chatbox"><TABLE><TR class="barAlt2"><TD class="center">
-						<form method="post" name="markUnread" class="safeForm" action="board.php?gameID='.$Game->id.'&amp;msgCountryID='.$msgCountryID.'#chatboxanchor">
+						<form method="post" name="markUnread" class="safeForm" action="/games/'.$Game->id.'&amp;msgCountryID='.$msgCountryID.'#chatboxanchor">
 							<input type="hidden" tabindex="2" value="" name="MarkAsUnread" />
 							</form>
 							<a href="#" onclick="document.markUnread.submit(); return false;" tabindex="3">Mark unread</a>
@@ -293,7 +293,7 @@ class Chatbox
 			// Do not allow country specific tabs for restricted press games.
 			if (($Game->pressType != 'Regular' && $Game->pressType != 'RulebookPress') && $countryID != 0 && $countryID != $Member->countryID ) continue;
 
-			$tabs .= ' <a href="./board.php?gameID='.$Game->id.'&amp;msgCountryID='.$countryID.'&amp;rand='.rand(1,100000).'#chatboxanchor" '.
+			$tabs .= ' <a href="./games/'.$Game->id.'&amp;msgCountryID='.$countryID.'&amp;rand='.rand(1,100000).'#chatboxanchor" '.
 				'class="country'.$countryID.' '.( $msgCountryID == $countryID ? 'current"'
 					: '" title="'.l_t('Open %s chatbox tab"',( $countryID == 0 ? 'the global' : $this->countryName($countryID)."'s" )) ).'>';
 

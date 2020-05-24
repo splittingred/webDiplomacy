@@ -186,7 +186,7 @@ class adminActionsForms
 					require_once(l_r('objects/game.php'));
 					$Variant=libVariant::loadFromGameID((int)$paramValues['gameID']);
 					$Game = $Variant->Game((int)$paramValues['gameID']);
-					print '<p>'.l_t('Game link').': <a href="board.php?gameID='.$Game->id.'">'.$Game->name.'</a></p>';
+					print '<p>'.l_t('Game link').': <a href="/games/'.$Game->id.'">'.$Game->name.'</a></p>';
 				}
 
 				if( isset($paramValues['userID']) )
@@ -343,7 +343,7 @@ if( defined("INBOARD") )
 	// We're running in Director mode from within board.php
 
 	$adminActions = new adminActionsTD();
-	adminActionsForms::$target = "board.php?gameID=".$Game->id;
+	adminActionsForms::$target = "/games/".$Game->id;
 	$adminActions->actionsList = adminActionsTD::$actions;
 
 	print '<h3>'.l_t('Director action forms').'</h3>';

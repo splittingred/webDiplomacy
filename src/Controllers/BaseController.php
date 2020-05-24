@@ -25,6 +25,8 @@ abstract class BaseController
     protected $pageTitle = '';
     /** @var string */
     protected $pageDescription = '';
+    /** @var int */
+    protected $perPage = 10;
 
     /** @var array */
     protected $footerIncludes = [];
@@ -168,5 +170,25 @@ abstract class BaseController
             $output[] = $value;
         }
         return implode("\n", $output);
+    }
+
+    /**
+     * Get pagination links for any amount of items
+     *
+     * @param int $total
+     * @return string
+     */
+    protected function getPagination(int $total) : string
+    {
+        $totalPages = ceil($total / $this->perPage);
+        $current = (int)$this->request->get('page', 1, Request::TYPE_GET);
+        if ($current <= 1) $current = 1;
+
+        return $this->renderPartial('common/pagination/links.twig',[
+            'current' => $current,
+            'pages' => range(1, $totalPages),
+            'cls' => 'form-submit',
+            'current_cls' => 'curr-page',
+        ]);
     }
 }

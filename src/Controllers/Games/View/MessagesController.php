@@ -25,16 +25,19 @@ class MessagesController extends BaseController
         $filter = (int)$this->request->get('filter', -1, Request::TYPE_GET);
         if (empty($this->member)) $filter = 0;
 
+        $messages = $this->getMessages($filter);
+
         return [
             'filter' => $filter,
-            'messages' => $this->getMessages($filter),
+            'messages' => $messages,
+            'pagination' => $this->getPagination($messages->getTotal()),
         ];
     }
 
-    protected function getMessages(int $filter = -1)
+    protected function getMessages(int $filter)
     {
         $memberCountryId = $this->member ? $this->member->countryID : 0;
-        $messages = $this->gameMessagesService->search($this->game->id, $filter, $memberCountryId);
+        $messages = $this->gameMessagesService->search($this->game->id, $filter, $memberCountryId, $this->perPage);
         /** @var GameMessage $message */
         foreach ($messages as $message) {
             $message->setVariant($this->variant);

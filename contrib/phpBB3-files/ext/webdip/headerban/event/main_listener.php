@@ -250,7 +250,7 @@ class main_listener implements EventSubscriberInterface
 			}
 
 			$gameNotifyBlock .= '<span class="variant'.\Config::$variants[$notifyGame['variantID']].'">'.
-				'<a gameID="'.$notifyGame['id'].'" class="country'.$notifyGame['countryID'].'" href="' . $this->WEBDIPPATH . 'board.php?gameID='.$notifyGame['id'].'">'.
+				'<a gameID="'.$notifyGame['id'].'" class="country'.$notifyGame['countryID'].'" href="' . $this->WEBDIPPATH . '/games/'.$notifyGame['id'].'">'.
 				$notifyGame['name'];
 
 			if ( $notifyGame['processStatus'] == 'Paused' )

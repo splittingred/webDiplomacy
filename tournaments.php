@@ -301,7 +301,7 @@ while (list($id, $name, $description, $status, $minRR, $year, $totalRounds, $for
                 $Variant=libVariant::loadFromGameID($gameID);
                 $Game = $Variant->Game($gameID);
                 
-                print '<TR><td><a href="board.php?gameID='.$gameID.'">'.$gameName.'</a></TD>';
+                print '<TR><td><a href="/games/'.$gameID.'">'.$gameName.'</a></TD>';
                 print '<td>'.$Variant->turnAsDate($turn).'</td>';
                 print '<td>'.$phase.'</td>';
 
@@ -337,7 +337,7 @@ while (list($id, $name, $description, $status, $minRR, $year, $totalRounds, $for
             // Loop through every game in the rounds. 
             while (list($gameID, $gameName, $gameOver, $processTime) = $DB->tabl_row($tablRoundsFinishedGames))
             {
-                print '<TR><td><a href="board.php?gameID='.$gameID.'">'.$gameName.'</a></TD>';
+                print '<TR><td><a href="/games/'.$gameID.'">'.$gameName.'</a></TD>';
                 print '<td>'.$gameOver.'</td>';
 
                 // If the game was drawn we want to show a link to each of the winners, so group concat does a pivot on the multiple rows in wD_Members into a single column to display that. 

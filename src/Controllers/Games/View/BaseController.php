@@ -6,6 +6,7 @@ use Diplomacy\Controllers\BaseController as Base;
 
 abstract class BaseController extends Base
 {
+    /** @var string  */
     protected $template = 'pages/games/view.twig';
 
     /** @var \WDVariant */
@@ -35,6 +36,7 @@ abstract class BaseController extends Base
         require_once 'board/chatbox.php';
         require_once 'gamepanel/gameboard.php';
         $this->variant = \libVariant::loadFromGameID($gameId);
+        $this->setPlaceholder('variant', $this->variant);
         \libVariant::setGlobals($this->variant);
         $this->game = $this->variant->panelGameBoard($gameId);
         $this->setPlaceholder('game', $this->game);

@@ -264,7 +264,7 @@ if ($submitted == false)
 						$gameString = '';
 						while (list($curGameID, $curGamename) = $DB->tabl_row($gamesTabl) )
 						{
-								$gameString .= '<a href=/board.php?gameID='.$curGameID.'>'.$curGamename.' ('.$curGameID.')</a> ';
+								$gameString .= '<a href=/games/'.$curGameID.'>'.$curGamename.' ('.$curGameID.')</a> ';
 						}
 						if ($gameString == '') { $gameString = 'None'; }
 						print $gameString;
@@ -495,11 +495,11 @@ else
 										list($curGamename) = $DB->sql_row("SELECT name FROM wD_Games WHERE id=".$gameID);
 										if ($successAdd == '')
 										{
-												$successAdd = 'Succesfully Added: <a href=/board.php?gameID='.$gameID.'>'.$curGamename.' ('.$gameID.')</a>';
+												$successAdd = 'Succesfully Added: <a href=/games/'.$gameID.'>'.$curGamename.' ('.$gameID.')</a>';
 										}
 										else
 										{
-												$successAdd .= ', <a href=/board.php?gameID='.$gameID.'>'.$curGamename.' ('.$gameID.')</a>';
+												$successAdd .= ', <a href=/games/'.$gameID.'>'.$curGamename.' ('.$gameID.')</a>';
 										}
 								}
 								else
@@ -520,11 +520,11 @@ else
 												list($curGamename) = $DB->sql_row("SELECT name FROM wD_Games WHERE id=".$gameID);
 												if ($failedAdd == '')
 												{
-														$failedAdd = 'Failed To Add: </br><a href=/board.php?gameID='.$gameID.'>'.$curGamename.' ('.$gameID.')</a> - Already in a Tournament';
+														$failedAdd = 'Failed To Add: </br><a href=/games/'.$gameID.'>'.$curGamename.' ('.$gameID.')</a> - Already in a Tournament';
 												}
 												else
 												{
-														$failedAdd .= '</br><a href=/board.php?gameID='.$gameID.'>'.$curGamename.' ('.$gameID.')</a> - Already in a Tournament';
+														$failedAdd .= '</br><a href=/games/'.$gameID.'>'.$curGamename.' ('.$gameID.')</a> - Already in a Tournament';
 												}
 										}
 								}
@@ -558,11 +558,11 @@ else
 										list($curGamename) = $DB->sql_row("SELECT name FROM wD_Games WHERE id=".$gameID);
 										if ($successRemove == '')
 										{
-												$successRemove = 'Succesfully Removed: <a href=/board.php?gameID='.$gameID.'>'.$curGamename.' ('.$gameID.')</a>';
+												$successRemove = 'Succesfully Removed: <a href=/games/'.$gameID.'>'.$curGamename.' ('.$gameID.')</a>';
 										}
 										else
 										{
-												$successRemove .= ', <a href=/board.php?gameID='.$gameID.'>'.$curGamename.' ('.$gameID.')</a>';
+												$successRemove .= ', <a href=/games/'.$gameID.'>'.$curGamename.' ('.$gameID.')</a>';
 										}
 								}
 								else
@@ -583,11 +583,11 @@ else
 												list($curGamename) = $DB->sql_row("SELECT name FROM wD_Games WHERE id=".$gameID);
 												if ($failedRemove == '')
 												{
-														$failedRemove = 'Failed To Remove: </br><a href=/board.php?gameID='.$gameID.'>'.$curGamename.' ('.$gameID.')</a> - Not in Tournament';
+														$failedRemove = 'Failed To Remove: </br><a href=/games/'.$gameID.'>'.$curGamename.' ('.$gameID.')</a> - Not in Tournament';
 												}
 												else
 												{
-														$failedRemove .= '</br><a href=/board.php?gameID='.$gameID.'>'.$curGamename.' ('.$gameID.')</a> - Not in Tournament';
+														$failedRemove .= '</br><a href=/games/'.$gameID.'>'.$curGamename.' ('.$gameID.')</a> - Not in Tournament';
 												}
 										}
 								}
