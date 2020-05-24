@@ -352,6 +352,30 @@ class Game
         return $this->processStatus == 'Crashed';
     }
 
+    /**
+     * @return bool
+     */
+    public function isPaused() : bool
+    {
+        return $this->processStatus == 'Paused';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProcessing() : bool
+    {
+        return $this->processStatus == 'Processing';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInNotProcessing() : bool
+    {
+        return $this->processStatus == 'Not-processing';
+    }
+
 	/**
 	 * @return bool
 	 */
@@ -380,6 +404,14 @@ class Game
 	{
 		return count($this->civilDisorderInfo) > 0;
 	}
+
+    /**
+     * @return bool
+     */
+	public function isGameOver()
+    {
+        return $this->gameOver == 'Yes';
+    }
 
 	private $isMemberInfoHidden;
 

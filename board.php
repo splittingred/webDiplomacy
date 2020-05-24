@@ -21,7 +21,6 @@
 /**
  * @package Board
  */
-
 require_once('header.php');
 
 if ( ! isset($_REQUEST['gameID']) )
@@ -78,6 +77,7 @@ else
 
 		$Variant=libVariant::loadFromGameID($gameID);
 		libVariant::setGlobals($Variant);
+		/** @var panelGameBoard $Game */
 		$Game = $Variant->panelGameBoard($gameID);
 
 		// If viewing an archive page make that the title, otherwise us the name of the game
@@ -103,7 +103,7 @@ else
 	}
 }
 
-if ( $Game->watched() && isset($_REQUEST['unwatch'])) {
+if ($Game->watched() && isset($_REQUEST['unwatch'])) {
 	print '<div class="content-notice gameTimeRemaining">'
 		.'<form method="post" action="redirect.php">'
 		.'Are you sure you wish to remove this game from your spectated games list? '
@@ -114,7 +114,7 @@ if ( $Game->watched() && isset($_REQUEST['unwatch'])) {
 
 // Before HTML pre-generate everything and check input, so game summary header will be accurate
 
-if( isset($Member) && $Member->status == 'Playing' && $Game->phase!='Finished' )
+if (isset($Member) && $Member->status == 'Playing' && !$Game->isFinished())
 {
 	if( $Game->phase != 'Pre-game' )
 	{
@@ -128,7 +128,7 @@ if( isset($Member) && $Member->status == 'Playing' && $Game->phase!='Finished' )
 
 	$DB->sql_put("COMMIT");
 
-	if( $Game->processStatus!='Crashed' && $Game->processStatus!='Paused' && $Game->attempts > count($Game->Members->ByID)/2+4  )
+	if (!$Game->isCrashed() && !$Game->isPaused() && $Game->attempts > count($Game->Members->ByID)/2+4  )
 	{
 		require_once(l_r('gamemaster/game.php'));
 		$Game = $Game->Variant->processGame($Game->id);
@@ -137,7 +137,7 @@ if( isset($Member) && $Member->status == 'Playing' && $Game->phase!='Finished' )
 	}
 	else
 	{
-		if( $Game->Members->votesPassed() && $Game->phase!='Finished' )
+		if ($Game->Members->votesPassed() && !$Game->isFinished())
 		{
 			$DB->sql_put("UPDATE wD_Games SET attempts=attempts+1 WHERE id=".$Game->id);
 			$DB->sql_put("COMMIT");
@@ -196,14 +196,14 @@ if( isset($Member) && $Member->status == 'Playing' && $Game->phase!='Finished' )
 		}
 	}
 
-	if( $Game instanceof processGame )
+	if ($Game instanceof processGame)
 	{
 		$Game = $Game->Variant->panelGameBoard($Game->id);
 		$Game->Members->makeUserMember($User->id);
 		$Member = $Game->Members->ByUserID[$User->id];
 	}
 
-	if ( 'Pre-game' != $Game->phase && $Game->phase!='Finished' )
+	if ($Game->isInProgress())
 	{
 		$OI = OrderInterface::newBoard();
 		$OI->load();
@@ -213,7 +213,7 @@ if( isset($Member) && $Member->status == 'Playing' && $Game->phase!='Finished' )
 	}
 }
 
-if ( 'Pre-game' != $Game->phase )
+if (!$Game->isPreGame())
 {
 	$CB = $Game->Variant->Chatbox();
 
@@ -259,29 +259,30 @@ if (isset($Orders))
 echo $Game->summary(true);
 
 
-if($User->type['Moderator'])
+if ($User->isModerator())
 {
 	$modActions=array();
 
-	if($Game->gameOver=='No')
+	if (!$Game->isGameOver())
 	{
 		$modActions[] = libHTML::admincpType('Game',$Game->id);
 
 		$modActions[] = libHTML::admincp('resetMinimumBet',array('gameID'=>$Game->id), l_t('Reset Min Bet'));
 		$modActions[] = libHTML::admincp('togglePause',array('gameID'=>$Game->id), l_t('Toggle pause'));
-		if($Game->processStatus=='Not-processing')
+		if($Game->isInNotProcessing())
 		{
 			$modActions[] = libHTML::admincp('setProcessTimeToNow',array('gameID'=>$Game->id), l_t('Process now'));
 			$modActions[] = libHTML::admincp('setProcessTimeToPhase',array('gameID'=>$Game->id), l_t('Reset Phase'));
 		}
 
-		if($User->type['Admin'])
+		if ($User->isAdmin())
 		{
-			if($Game->processStatus == 'Crashed')
-				$modActions[] = libHTML::admincp('unCrashGames',array('excludeGameIDs'=>''), l_t('Un-crash all crashed games'));
+			if ($Game->isCrashed()) {
+                $modActions[] = libHTML::admincp('unCrashGames', array('excludeGameIDs' => ''), l_t('Un-crash all crashed games'));
+            }
 		}
 
-		if( $Game->phase!='Pre-game' && !$Game->isMemberInfoHidden() )
+		if (!$Game->isPreGame() && !$Game->isMemberInfoHidden())
 		{
 			$userIDs=implode('%2C',array_keys($Game->Members->ByUserID));
 			$modActions[] = '<br /></br>'.l_t('Multi-check:');
