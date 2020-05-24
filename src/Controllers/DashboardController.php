@@ -48,7 +48,7 @@ class DashboardController extends BaseController
             'watched_games' => libHome::gameWatchBlock(),
         ];
 
-        $result = $this->tournamentsService->findParticipatingForUser($this->user->id);
+        $result = $this->tournamentsService->findParticipatingForUser($this->currentUser->id);
         if ($result->any()) {
             $variables['my_tournaments'] = $this->renderPartial('pages/home/tournaments.twig', [
                 'title' => 'My Tournaments',
@@ -56,7 +56,7 @@ class DashboardController extends BaseController
             ]);
         }
 
-        $result = $this->tournamentsService->findSpectatingForUser($this->user->id);
+        $result = $this->tournamentsService->findSpectatingForUser($this->currentUser->id);
         if ($result->any()) {
             $variables['spectating_tournaments'] = $this->renderPartial('pages/home/tournaments.twig', [
                 'title' => 'Spectated Tournaments',
@@ -72,7 +72,7 @@ class DashboardController extends BaseController
      */
     protected function getMyGames()
     {
-        return $this->gamesService->getActiveForUser($this->user->id);
+        return $this->gamesService->getActiveForUser($this->currentUser->id);
     }
 
     /**
@@ -80,7 +80,7 @@ class DashboardController extends BaseController
      */
     protected function getMyDefeats()
     {
-        return $this->gamesService->getDefeatsForUser($this->user->id);
+        return $this->gamesService->getDefeatsForUser($this->currentUser->id);
     }
 
     /**
@@ -88,9 +88,9 @@ class DashboardController extends BaseController
      */
     private function updateLastSeenHome() : void
     {
-        if (!isset($_SESSION['lastSeenHome']) || $_SESSION['lastSeenHome'] < $this->user->timeLastSessionEnded)
+        if (!isset($_SESSION['lastSeenHome']) || $_SESSION['lastSeenHome'] < $this->currentUser->timeLastSessionEnded)
         {
-            $_SESSION['lastSeenHome'] = $this->user->timeLastSessionEnded;
+            $_SESSION['lastSeenHome'] = $this->currentUser->timeLastSessionEnded;
         }
     }
 
@@ -100,9 +100,9 @@ class DashboardController extends BaseController
     private function handleDisableNotices() : void
     {
         $gameToggleId = (int)$this->request->get('gameToggleName', 0, Request::TYPE_POST);
-        if (!$this->user->isAuthenticated() || empty($gameToggleId)) return;
+        if (!$this->currentUser->isAuthenticated() || empty($gameToggleId)) return;
 
-        $member = $this->membersService->findForGame($this->user->id, $gameToggleId);
+        $member = $this->membersService->findForGame($this->currentUser->id, $gameToggleId);
 
         $member->hideNotifications = $member->hideNotifications == 1 ? 0 : 1;
         $member->save();

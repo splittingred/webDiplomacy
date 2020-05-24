@@ -58,6 +58,14 @@ class Router
         $this->router->get('stats/hall-of-fame', 'Stats\HallOfFameController@handle');
         $this->router->get('tournaments/info', 'Tournaments\InfoController@handle');
         $this->router->get('variants/list', 'Variants\IndexController@handle');
+
+        /* users */
+        $this->router->get('users/(\d+)/civil-disorders', function($userId) {
+            \Diplomacy\Controllers\Users\CivilDisordersController::handle(['id' => (int)$userId]);
+        });
+        $this->router->get('users/(\d+)', function($userId) {
+            \Diplomacy\Controllers\Users\ProfileController::handle(['id' => (int)$userId]);
+        });
         $this->router->get('users/settings', 'Users\SettingsController@handle');
     }
 

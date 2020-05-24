@@ -42,8 +42,8 @@ abstract class BaseController extends Base
         $this->setPlaceholder('game', $this->game);
         $this->loadCountries($this->variant);
 
-        if ($this->user && $this->user->isAuthenticated()) {
-            $this->member = $this->game->Members->ByUserID[$this->user->id];
+        if ($this->currentUser && $this->currentUser->isAuthenticated()) {
+            $this->member = $this->game->Members->ByUserID[$this->currentUser->id];
             $this->setPlaceholder('member', $this->member);
         }
         return $this->game;

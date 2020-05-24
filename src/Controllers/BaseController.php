@@ -16,7 +16,7 @@ abstract class BaseController
     /** @var \Database */
     protected $database;
     /** @var \User */
-    protected $user;
+    protected $currentUser;
     /** @var Request */
     protected $request;
     /** @var string */
@@ -40,7 +40,7 @@ abstract class BaseController
         global $renderer, $DB, $User, $capsule;
         $this->renderer = $renderer;
         $this->database = $DB;
-        $this->user = $User;
+        $this->currentUser = $User;
         $this->request = new Request();
         $this->setUp();
     }
@@ -127,7 +127,7 @@ abstract class BaseController
      */
     protected function setDefaultPlaceholders() : void
     {
-        $this->setPlaceholder('user', $this->user);
+        $this->setPlaceholder('current_user', $this->currentUser);
         $this->setPlaceholder('moderator_email', \Config::$modEMail ? \Config::$modEMail : \Config::$adminEMail);
     }
 
@@ -166,7 +166,7 @@ abstract class BaseController
         $output = [];
         foreach ($notices as $noticeKey) {
             $value = array_key_exists($noticeKey, $this->noticeMappings) ? $this->noticeMappings[$noticeKey] : '';
-            $value = str_replace('{{ user.username }}', $this->user->username, $value);
+            $value = str_replace('{{ current_user.username }}', $this->currentUser->username, $value);
             $output[] = $value;
         }
         return implode("\n", $output);

@@ -11,11 +11,11 @@
         <strong>Hide e-mail address?</strong>
         <br />
         <label>
-            <input type="radio" name="userForm[hideEmail]" value="Yes"{% if user.hideEmail == 'Yes' %} checked{% endif %}>
+            <input type="radio" name="userForm[hideEmail]" value="Yes"{% if current_user.hideEmail == 'Yes' %} checked{% endif %}>
             Yes
         </label>
         <label>
-            <input type="radio" name="userForm[hideEmail]" value="No"{% if user.hideEmail == 'No' %} checked{% endif %}>
+            <input type="radio" name="userForm[hideEmail]" value="No"{% if current_user.hideEmail == 'No' %} checked{% endif %}>
             No
         </label>
     </p>

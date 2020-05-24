@@ -22,8 +22,7 @@ class HallOfFameController extends BaseController
     public function call()
     {
         return [
-            'user' => $this->user,
-            'user_ranking' => $this->user->rankingDetails(),
+            'current_user_ranking' => $this->currentUser->rankingDetails(),
             'hof_users' => $this->hallOfFame->getUsers(),
             'hof_active_users' => $this->hallOfFame->getActiveUsers(),
         ];

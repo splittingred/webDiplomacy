@@ -193,37 +193,9 @@ if ( isset($_REQUEST['detail']) )
 			}
 			break;
 
-		case 'replies':
-			/*	This had to be removed due to placing too heavy of a load on the server.
-			$dir=User::cacheDir($UserProfile->id);
-			if( file_exists($dir.'/profile_replies.html') )
-				print file_get_contents($dir.'/profile_replies.html');
-			else
-			{
-				libAuth::resourceLimiter('view replies',20);
-
-				$tabl = $DB->sql_tabl("SELECT f.id, a.id, a.subject, f.message, f.timeSent
-					FROM wD_ForumMessages f INNER JOIN wD_ForumMessages a ON ( f.toID = a.id )
-					WHERE f.fromUserID = ".$UserProfile->id." AND f.type='ThreadReply'
-					ORDER BY f.timeSent DESC");
-
-				$buf = '<h4>'.l_t('Replies:').'</h4>
-					<ul>';
-				while(list($id,$threadID,$subject, $message, $timeSent)=$DB->tabl_row($tabl))
-				{
-					$buf .= '<li><em>'.libTime::text($timeSent).'</em>: <a href="forum.php?threadID='.$threadID.'#'.$id.'">Re: '.$subject.'</a><br />'.
-						$message.'</li>';
-				}
-				$buf .= '</ul>';
-
-				file_put_contents($dir.'/profile_replies.html', $buf);
-				print $buf;
-			}*/
-			break;
-
 		case 'civilDisorders':
 			print '<div class = "rrInfo">';
-			if ( $User->type['Moderator'] || $User->id == $UserProfile->id )
+			if ( $User->isModerator() || $User->id == $UserProfile->id)
 			{
 				print '<h4>'.l_t('Reliability Explained:').'</h4>';
 

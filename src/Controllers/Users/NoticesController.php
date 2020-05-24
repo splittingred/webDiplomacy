@@ -11,7 +11,7 @@ class NoticesController extends BaseController
 
     public function call()
     {
-        $this->user->clearNotification('PrivateMessage');
+        $this->currentUser->clearNotification('PrivateMessage');
         \notice::$noticesPage = true;
 
         return [

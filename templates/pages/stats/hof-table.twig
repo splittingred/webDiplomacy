@@ -1,10 +1,10 @@
 
-{% if user.isAuthenticated and user.isRanked %}
+{% if current_user.isAuthenticated and current_user.isRanked %}
     <p class="hof">You are ranked
-        <a href="/stats/hall_of_fame#{{ type }}-row-rank-{{ type == 'active' ? user_ranking.active_position : user_ranking.position }}" class="light">#{{ type == 'active' ? user_ranking.active_position : user_ranking.position }}</a>
+        <a href="/stats/hall_of_fame#{{ type }}-row-rank-{{ type == 'active' ? current_user_ranking.active_position : current_user_ranking.position }}" class="light">#{{ type == 'active' ? current_user_ranking.active_position : current_user_ranking.position }}</a>
         out of {{ total_players }} {{ type }} players with over 100
         <img src="/images/icons/points.png" alt="D" title="webDiplomacy points" />
-        For more stats on your ranking, visit <a class="light" href="/profile.php?userID={{ user.id }}">your profile</a>
+        For more stats on your ranking, visit <a class="light" href="/profile.php?userID={{ current_user.id }}">your profile</a>
     </p>
 {% endif %}
 
@@ -24,23 +24,23 @@
                 <img src="/images/icons/points.png" alt="D" title="webDiplomacy points" /> - #{{  ranked_user.position }}
             </td>
             <td class="hof">
-                <a class="{% if user.username == ranked_user.username %}hof-self{% else %}hof{% endif %}" href="/profile.php?userID={{ ranked_user.id }}">{{ ranked_user.username }}</a>
+                <a class="{% if current_user.username == ranked_user.username %}hof-self{% else %}hof{% endif %}" href="/profile.php?userID={{ ranked_user.id }}">{{ ranked_user.username }}</a>
             </td>
         </tr>
     {% endfor %}
 
-    {% if user.isAuthenticate and not user_ranking.isTop100 %}
+    {% if current_user.isAuthenticate and not current_user_ranking.isTop100 %}
         <tr class="hof">
             <td class="hof">...</td>
             <td class="hof">...</td>
         </tr>
         <tr class="hof">
             <td class="hof">
-                {{ user.points }}
+                {{ current_user.points }}
                 <img src="/images/icons/points.png" alt="D" title="webDiplomacy points" />
-                - <a id="{{ type }}-me"></a>#{{ user_ranking.position }}
+                - <a id="{{ type }}-me"></a>#{{ current_user_ranking.position }}
             </td>
-            <td class="hof hof-self"><strong><em>{{ user.username }}</em></strong></td>
+            <td class="hof hof-self"><strong><em>{{ current_user.username }}</em></strong></td>
         </tr>
     {% endif %}
 </table>

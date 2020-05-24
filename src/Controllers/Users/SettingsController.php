@@ -28,7 +28,7 @@ class SettingsController extends BaseController
     public function call()
     {
         $variables = [
-            'user' => $this->user,
+            'user' => $this->currentUser,
             'user_options' => $this->getUserOptions(),
         ];
 
@@ -43,8 +43,8 @@ class SettingsController extends BaseController
             }
         } else {
             $variables['values'] = [
-                'email' => $this->user->email,
-                'comment' => $this->user->comment,
+                'email' => $this->currentUser->email,
+                'comment' => $this->currentUser->comment,
             ];
         }
         return $variables;
@@ -53,7 +53,7 @@ class SettingsController extends BaseController
     private function getUserOptions() : array
     {
         $options = [];
-        foreach ($this->user->options->value as $name => $val)
+        foreach ($this->currentUser->options->value as $name => $val)
         {
             $options[] = [
                 'title' => \UserOptions::$titles[$name],
@@ -81,8 +81,8 @@ class SettingsController extends BaseController
             'comment'
         ];
 
-        $this->user->options->set($values);
-        $this->user->options->load();
+        $this->currentUser->options->set($values);
+        $this->currentUser->options->load();
 
         $set = [];
         foreach ($allowed as $fieldName)
@@ -90,14 +90,14 @@ class SettingsController extends BaseController
             if (!array_key_exists($fieldName, $values)) continue;
 
             // handle email change
-            if ($fieldName == 'email' && $this->user->email != $values['email']) {
+            if ($fieldName == 'email' && $this->currentUser->email != $values['email']) {
                 $userId = \User::findEmail($values['email']);
                 if ($userId)
                     throw new \Exception(l_t("The e-mail address '%s', is already in use. Please choose another.",$values['email']));
 
                     $this->mailer->Send([
-                        $values['email'] => $this->user->username
-                    ], l_t('Changing your e-mail address'), l_t("Hello %s",$this->user->username).",<br><br>
+                        $values['email'] => $this->currentUser->username
+                    ], l_t('Changing your e-mail address'), l_t("Hello %s",$this->currentUser->username).",<br><br>
 
 					".l_t("You can use this link to change your account's e-mail address to this one:")."<br>
 					".\libAuth::email_validateURL($values['email'])."<br><br>
@@ -112,7 +112,7 @@ class SettingsController extends BaseController
                 }
             elseif ($fieldName == 'comment')
             {
-                if ($this->user->comment == $this->database->msg_escape($values['comment'])) continue;
+                if ($this->currentUser->comment == $this->database->msg_escape($values['comment'])) continue;
             }
 
             $set[] = $fieldName . " = '" . $values[$fieldName] . "'";
@@ -120,14 +120,14 @@ class SettingsController extends BaseController
 
         if (!empty($set))
         {
-            $sql = "UPDATE wD_Users SET ".join(', ', $set)." WHERE id = ".$this->user->id;
+            $sql = "UPDATE wD_Users SET ".join(', ', $set)." WHERE id = ".$this->currentUser->id;
             $this->database->sql_put($sql);
             $noticeCodes[] = 'updated';
         }
 
         if (!empty($values['password']))
         {
-            $this->database->sql_put("UPDATE wD_Users SET password = ".$values['password']." WHERE id = ".$this->user->id);
+            $this->database->sql_put("UPDATE wD_Users SET password = ".$values['password']." WHERE id = ".$this->currentUser->id);
 
             \libAuth::keyWipe();
             header('refresh: 3; url=logon.php');
