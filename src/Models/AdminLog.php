@@ -24,4 +24,17 @@ class AdminLog extends EloquentBase
     {
         return \libTime::text($this->time);
     }
+
+    /**
+     * @return array
+     */
+    public function paramsAsHash() : array
+    {
+        return $this->params ? unserialize($this->params) : [];
+    }
+
+    public function paramsAsString() : string
+    {
+        return print_r($this->paramsAsHash(), true);
+    }
 }

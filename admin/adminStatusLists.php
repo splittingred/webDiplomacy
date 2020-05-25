@@ -29,7 +29,7 @@ if( !isset($_REQUEST['full']) )
 	print '<p class = "modTools"> <a class="modTools" href="admincp.php?tab=Status Info&full=on">'.l_t('View all logs').'</a>
 	</br> Error logs, banned users, and donator lists are limited to 50 items, use this link to see full result set.</p>';
 
-if( $User->type['Admin'] )
+if ($User->isAdmin())
 {
 	//There may be sensitive info that would allow privilege escalation in these error logs
 

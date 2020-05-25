@@ -27,7 +27,7 @@ require_once('header.php');
 ini_set('memory_limit',"128M"); // 8M is the default
 ini_set('max_execution_time','240');
 
-if ( $User->type['Moderator'] && isset($_REQUEST['viewOrderLogGame']) && isset($_REQUEST['viewOrderLogCountryID']) )
+if ($User->isModerator() && isset($_REQUEST['viewOrderLogGame']) && isset($_REQUEST['viewOrderLogCountryID']))
 {
 	$gameID=(int)$_REQUEST['viewOrderLogGame'];
 	$countryID=(int)$_REQUEST['viewOrderLogCountryID'];
@@ -36,11 +36,24 @@ if ( $User->type['Moderator'] && isset($_REQUEST['viewOrderLogGame']) && isset($
 	$Variant=libVariant::loadFromGameID($gameID);
 	$Game=$Variant->Game($gameID);
 
-
-
-	if( !($data=file_get_contents(libCache::dirID(Config::orderlogDirectory(), $gameID, true).'/'.$countryID.'.txt')) )
+	$logFile = libCache::dirID(Config::orderlogDirectory(), $gameID, true).'/'.$countryID.'.txt';
+    $data = file_get_contents($logFile);
+	if(empty($data))
 	{
-		trigger_error(l_t("Couldn't open file %s.txt",$log));
+		trigger_error(l_t("Couldn't open file %s", $logFile));
+	}
+	header('Content-type:text/plain');
+	print $data;
+	die();
+}
+
+if ($User->isAdmin() && isset($_REQUEST['viewErrorLog']))
+{
+	$log = (int)$_REQUEST['viewErrorLog'];
+	$logFile = Config::errorlogDirectory().'/'.$log.'.txt';
+    $data = file_get_contents($logFile);
+	if (empty($data)) {
+		trigger_error(l_t("Couldn't open file %s.txt", $logFile));
 	}
 
 	header('Content-type:text/plain');
@@ -50,24 +63,9 @@ if ( $User->type['Moderator'] && isset($_REQUEST['viewOrderLogGame']) && isset($
 	die();
 }
 
-if ( $User->type['Admin'] && isset($_REQUEST['viewErrorLog']) )
+if ($User->isAdmin() && isset($_REQUEST['systemTask']))
 {
-	$log=(int)$_REQUEST['viewErrorLog'];
-	if( !($data=file_get_contents(Config::errorlogDirectory().'/'.$log.'.txt')) )
-	{
-		trigger_error(l_t("Couldn't open file %s.txt",$log));
-	}
-
-	header('Content-type:text/plain');
-
-	print $data;
-
-	die();
-}
-
-if ( $User->type['Admin'] && isset($_REQUEST['systemTask']) )
-{
-	if ( $Misc->Maintenance == 0 )
+	if ($Misc->Maintenance == 0)
 	{
 		$Misc->Maintenance = 1;
 		$Misc->write();
@@ -105,92 +103,46 @@ print '<div class="content">';
 function adminCPTabs()
 {
 	global $User;
-	
-	if ($User->type['Admin'])
-	{
-		$tabs = array(
-			'Control Panel'=>l_t('Perform admin tasks'),
-			// 'Mod notes'=>l_t('Notes/reports left for/by the mod team'),
-			'Status Info'=>l_t('View server status lists'),
-			'Logs'=>l_t('Log of recent admin tasks'),
-			'Multi-accounts'=>l_t('Multi-account detector'),
-			'Chatlogs'=>l_t('Check the ingame chat.'),
-			'AccessLog'=>l_t('Check the user-actions sort by IP and Username.'),
-			'Locales'=>l_t('Locale management')
-		);
-	}
-	else
-	{
-		$tabs = array(
-			'Control Panel'=>l_t('Perform admin tasks'),
-			// 'Mod notes'=>l_t('Notes/reports left for/by the mod team'),
-			'Status Info'=>l_t('View server status lists'),
-			'Logs'=>l_t('Log of recent admin tasks'),
-			'Multi-accounts'=>l_t('Multi-account detector'),
-			'Chatlogs'=>l_t('Check the ingame chat.'),
-			'AccessLog'=>l_t('Check the user-actions sort by IP and Username.')
-		);
-	}
 
-	$tab = 'Control Panel';
-	$tabNames = array_keys($tabs);
-
-	if( isset($_REQUEST['tab']) && in_array($_REQUEST['tab'], $tabNames) )
-	{
-		$tab = $_SESSION['adminCPTab'] = $_REQUEST['tab'];
-	}
-	elseif( isset($_SESSION['adminCPTab']) && in_array($_SESSION['adminCPTab'], $tabNames) )
-	{
-		$tab = $_SESSION['adminCPTab'];
-	}
-
-	print '<div class="topnav">';
-	foreach($tabs as $tabChoice=>$tabTitle)
-	{
-		print '<a title="'.$tabTitle.'" alt="'.l_t($tabChoice).'" href="admincp.php?tab='.$tabChoice;
-
-		if ( $tab == $tabChoice )
-			print '"class="topnavActive"';
-		else
-			print '"class="topnav"';
-
-		print '>'.l_t($tabChoice).'</a></li>';
-	}
-	print '</div>';
-
+	$tab = !empty($_REQUEST['tab']) ? $_REQUEST['tab'] : 'control-panel';
+	global $renderer;
+	echo $renderer->render('admin/_topnav.twig', [
+	    'current' => $tab,
+        'user' => $User,
+    ]);
 	return $tab;
 }
 
-$tab=adminCPTabs();
+$tab = adminCPTabs();
 
 switch($tab)
 {
-	case 'Control Panel':
+	case 'control-panel':
 		require_once(l_r('admin/adminActionsForms.php'));
 		break;
-	case 'Mod notes':
+	case 'moderator-notes':
 		require_once(l_r('lib/modnotes.php'));
 		libModNotes::checkDeleteNote();
 		libModNotes::checkInsertNote();
 		print libModNotes::reportsDisplay('All');
 		break;
-	case 'Status Info':
+	case 'status-info':
 		require_once(l_r('admin/adminStatusLists.php'));
 		break;
-	case 'Logs':
+	case 'logs':
 	    header('Location: '.Config::$url.'/admin/logs');
 	    exit();
 		break;
-	case 'Multi-accounts':
+	case 'multi-accounts':
 		require_once(l_r('admin/adminMultiFinder.php'));
 		break;
-	case 'Locales':
+	case 'locales':
 		require_once(l_r('admin/adminLocales.php'));
 		break;
-	case 'Chatlogs':
+	case 'chat-logs':
 		require_once(l_r('admin/adminChatAnalyser.php'));
 		break;
-	case 'AccessLog':
+	case 'access-logs':
 		require_once(l_r('admin/adminAdvancedAccessLog.php'));
 		break;
 	default:
@@ -199,5 +151,3 @@ switch($tab)
 print '</div>';
 
 libHTML::footer();
-
-?>

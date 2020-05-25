@@ -312,14 +312,14 @@ class adminActionsLayout
 		print '<div class="modTools" style="float:right; width:50%; text-align:left">';
 		for($i=$actionMidPoint; $i<$actionCount; $i++)
 		{
-			print '<a class="modTools" href="#'.$actionCodes[$i].'">'.l_t(adminActions::$actions[$actionCodes[$i]]['name']).'</a><br />';
+			print '<a class="modTools" href="/admincp.php#'.$actionCodes[$i].'">'.l_t(adminActions::$actions[$actionCodes[$i]]['name']).'</a><br />';
 		}
 		print '</div>';
 
 		print '<div style="width:45%">';
 		for($i=0; $i<$actionMidPoint; $i++)
 		{
-			print '<a class="modTools" href="#'.$actionCodes[$i].'">'.l_t(adminActions::$actions[$actionCodes[$i]]['name']).'</a><br />';
+			print '<a class="modTools" href="/admincp.php#'.$actionCodes[$i].'">'.l_t(adminActions::$actions[$actionCodes[$i]]['name']).'</a><br />';
 		}
 		print '</div>';
 		print '<div class="modTools" style="clear:both"></div>';

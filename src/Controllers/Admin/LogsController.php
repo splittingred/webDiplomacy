@@ -13,7 +13,7 @@ class LogsController extends BaseController
 
     public function call()
     {
-        $query = AdminLog::with('user');
+        $query = AdminLog::with('user')->orderBy('time', 'desc');
         $total = $query->count();
         $query->paginate($this->perPage);
         return [

@@ -20,7 +20,7 @@
             {{ log.user.username }}: <strong>{{ log.name }}</strong>:
             {{ log.details }}
             <br />
-            {{ log.params }}
+            <pre>{{ log.paramsAsString() }}</pre>
         </td>
     </tr>
     {% endfor %}

@@ -1,9 +1,11 @@
 <div class="topnav">
-    <a title="Perform admin tasks" alt="Control Panel" href="/admincp.php?tab=Control Panel" class="topnav{% if current == 'control-panel' %}Active{% endif %}">Control Panel</a>
-    <a title="View server status lists" alt="Status Info" href="/admincp.php?tab=Status Info" class="topnav{% if current == 'status-info' %}Active{% endif %}">Status Info</a>
+    <a title="Perform admin tasks" alt="Control Panel" href="/admincp.php?tab=control-panel" class="topnav{% if current == 'control-panel' %}Active{% endif %}">Control Panel</a>
+    <a title="View server status lists" alt="Status Info" href="/admincp.php?tab=status-info" class="topnav{% if current == 'status-info' %}Active{% endif %}">Status Info</a>
     <a title="Log of recent admin tasks" alt="Logs" href="/admin/logs" class="topnav{% if current == 'logs' %}Active{% endif %}">Logs</a>
-    <a title="Multi-account detector" alt="Multi-accounts" href="/admincp.php?tab=Multi-accounts" class="topnav{% if current == 'multi-accounts' %}Active{% endif %}">Multi-accounts</a>
-    <a title="Check the ingame chat." alt="Chatlogs" href="/admincp.php?tab=Chatlogs" class="topnav{% if current == 'chat-logs' %}Active{% endif %}">Chatlogs</a>
-    <a title="Check the user-actions sort by IP and Username." alt="AccessLog" href="/admincp.php?tab=AccessLog" class="topnav{% if current == 'access-logs' %}Active{% endif %}">AccessLog</a>
+    <a title="Multi-account detector" alt="Multi-accounts" href="/admincp.php?tab=multi-accounts" class="topnav{% if current == 'multi-accounts' %}Active{% endif %}">Multi-accounts</a>
+    <a title="Check the ingame chat." alt="Chatlogs" href="/admincp.php?tab=chat-logs" class="topnav{% if current == 'chat-logs' %}Active{% endif %}">Chatlogs</a>
+    <a title="Check the user-actions sort by IP and Username." alt="AccessLog" href="/admincp.php?tab=access-logs" class="topnav{% if current == 'access-logs' %}Active{% endif %}">AccessLog</a>
+    {% if user.isAdmin() %}
     <a title="Locale management" alt="Locales" href="/admincp.php?tab=Locales" class="topnav{% if current == 'locales' %}Active{% endif %}">Locales</a>
+    {% endif %}
 </div>
