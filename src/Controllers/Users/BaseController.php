@@ -30,6 +30,7 @@ abstract class BaseController extends Base
     {
         $userId = $this->request->get('id');
         $this->user = User::where('id', $userId)->first();
+        $this->setPlaceholder('user', $this->user);
         return $this->user;
     }
 }

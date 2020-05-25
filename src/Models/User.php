@@ -15,23 +15,11 @@ class User extends EloquentBase
         return $this->hasMany('Diplomacy\Models\MissedTurn', 'userID');
     }
 
-    public function nonLiveUnexcusedMissedTurns()
+    /**
+     * @return bool
+     */
+    public function canDoEmergencyPauses() : bool
     {
-        return $this->missedTurns()->nonLive()->unexcused();
-    }
-
-    public function nonLiveUnexcusedRecentMissedTurns()
-    {
-        return $this->missedTurns()->nonLive()->unexcused()->recent();
-    }
-
-    public function liveUnexcusedMissedTurns()
-    {
-        return $this->missedTurns()->live()->unexcused();
-    }
-
-    public function liveRecentUnExcusedMissedTurns()
-    {
-        return $this->missedTurns()->live()->unexcused()->recent();
+        return $this->emergencyPauseDate != 1;
     }
 }

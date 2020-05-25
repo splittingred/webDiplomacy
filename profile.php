@@ -193,166 +193,6 @@ if ( isset($_REQUEST['detail']) )
 			}
 			break;
 
-		case 'civilDisorders':
-			print '<div class = "rrInfo">';
-			if ( $User->isModerator() || $User->id == $UserProfile->id)
-			{
-				print '<h4>'.l_t('Reliability Explained:').'</h4>';
-
-				print '<div class = "profile_title">What is Reliability?</div>';
-				print '<div class = "profile_content">';
-				print '<p>Reliability is how consistently you avoid interrupting games. Any un-excused missed turns hurt your rating. If you have any un-excused
-				missed turns in the last 4 weeks you will receive an 11% penalty to your RR for <strong>each</strong> of those delays. It is very important
-				to everyone you are playing with to be reliable but we understand mistakes happen so this extra penalty will drop to 5% after 28 days. All of the un-excused
-				missed turns that negatively impact your rating are highlighted in red below. Excused delays will only negatively impact your base score, seen below. Mod excused
-				delays do not hurt your score in any way.
-				</br>
-				</br>
-				<strong>Live Game:</strong> If a game had phases 60 minutes long or less any excused missed turns will only impact your rating for 28 days total. The penalty is the same, 
-				5% long term and 6% short term, except the long term penalty is for 28 days and the short term is for 7 days.</br>
-				<strong>System Excused:</strong> If you had an "excused missed turn" left this will be yes and will not cause additional penalties against your rating.</br>
-				<strong>Mod Excused:</strong> If a moderator excused the missed turn this field will be yes and will not cause additional penalties against your rating.</br>
-				<strong>Same Period Excused:</strong> If you have multiple un-excused missed turns in a 24 hour period you are only penalized once with the exception of live games, 
-				if this field is yes it will not cause additional penalties against your rating.
-				</p></div>';
-				print '<div class = "profile_title">What happens if my rating is low?</div>';
-				print '<div class = "profile_content">';
-				print '<p>
-				Many games are made with a minimum rating requirement so this may impact the quality of games you can enter. If you have more then 3 non-live un-excused missed turns in a year
-				you will begin getting temporarily banned from making new games, joining existing games, or rejoining your own games.</br>
-				</br>
-				 <li>1-3 un-excused delays: warnings</li>
-				 <li>4 un-excused delays: 1-day temp ban</li>
-				 <li>5 un-excused delays: 3-day temp ban</li>
-				 <li>6 un-excused delays: 7-day temp ban</li>
-				 <li>7 un-excused delays: 14-day temp ban</li>
-				 <li>8 un-excused delays: 30-day temp ban</li>
-				 <li>9 or more un-excused delays: infinite, must contact mods for removal</li>
-				 Live game excused turns are penalized independently for temporary bans. 1-2 un-excused missed turns in live games will be a warning, and the 3rd, and any after that will 
-				 result in a 24 hour temp ban. The 2 warnings reset every 28 days resulting in significantly more yearly warnings for live game players then the normal system.
-				</p></div>';
-
-				$missedTurns = $UserProfile->getMissedTurns();
-				$liveMissedTurns = $UserProfile->getLiveMissedTurns();
-				$allMissedTurns = $missedTurns + $liveMissedTurns;
-
-				$recentUnExcusedMissedTurns = $UserProfile->getRecentUnExcusedMissedTurns();
-				$allUnExcusedMissedTurns = $UserProfile->getYearlyUnExcusedMissedTurns();
-
-				$recentLiveUnExcusedMissedTurns = $UserProfile->getLiveRecentUnExcusedMissedTurns();
-				$allLiveUnExcusedMissedTurns = $UserProfile->getLiveUnExcusedMissedTurns();
-
-				$basePercentage = (100*(1- ($allMissedTurns/max($UserProfile->yearlyPhaseCount,1))));
-				$yearlyPenalty = ($allUnExcusedMissedTurns*5);
-				$recentPenalty = ($recentUnExcusedMissedTurns*6);
-				$liveLongPenalty = ($allLiveUnExcusedMissedTurns*5);
-				$liveShortPenalty = ($recentLiveUnExcusedMissedTurns*6);
-
-				print '<h4>Factors Impacting RR:</h4>';
-				print '<p> <Strong>Yearly Turns:</Strong> '.$UserProfile->yearlyPhaseCount.'</br>';
-				
-				if ($allLiveUnExcusedMissedTurns > 0 ) 
-				{ 
-					print '<Strong>Yearly Missed Turns:</Strong> '.$missedTurns.'</br>
-					<Strong>Past Month Live Missed Turns:</Strong> '.$liveMissedTurns.'</br>'; 
-				}
-
-				print'<Strong>Total Counted Missed Turns:</Strong> '.$allMissedTurns.'</br>
-
-				</br><strong>Base Percentage:</strong> '.$basePercentage.'%</br>';
-				if ($allLiveUnExcusedMissedTurns > 0 ) { print'(100* (1 - (Yearly Missed Turns + Live Missed Turns)/Yearly Turns))'; }
-				else { print'(100* (1 - Yearly Missed Turns/Yearly Turns))'; }
-
-				print'<h4>Added Penalties:</h4>
-				<Strong>Yearly Unexcused Missed Turns:</Strong> '.$allUnExcusedMissedTurns.' for a penalty of '.$yearlyPenalty.'%</br>
-				<Strong>Recent Unexcused Missed Turns:</Strong> '.$recentUnExcusedMissedTurns.' for a penalty of '.$recentPenalty.'%</br>';
-
-				if ($allLiveUnExcusedMissedTurns > 0 )
-				{
-					print' <h4>Added Live Game Penalties:</h4>
-					<Strong>Last Month Live Unexcused Missed Turns:</Strong> '.$allLiveUnExcusedMissedTurns.' for a penalty of '.$liveLongPenalty.'%</br>
-					<Strong>Last Week Live Unexcused Missed Turns:</Strong> '.$recentLiveUnExcusedMissedTurns.' for a penalty of '.$liveShortPenalty.'%</br>';
-				}
-
-				print'<h4>Total:</h4>
-				<Strong>Reliability Rating:</Strong> '.max(($basePercentage - $recentPenalty - $yearlyPenalty - $liveShortPenalty - $liveLongPenalty),0) .'
-				</p>';
-
-				print '<h4>Missed Turns:</h4>
-				<p>Red = Unexcused</p>';
-				$tabl = $DB->sql_tabl("SELECT n.gameID, n.countryID, n.turn, 
-				( CASE WHEN n.liveGame = 1 THEN 'Yes' ELSE 'No' END ), 
-				g.name,
-				( CASE WHEN n.systemExcused = 1 THEN 'Yes' ELSE 'No' END ),
-				( CASE WHEN n.modExcused = 1 THEN 'Yes' ELSE 'No' END ),
-				( CASE WHEN n.samePeriodExcused = 1 THEN 'Yes' ELSE 'No' END ),
-				n.id,
-				n.turnDateTime
-				FROM wD_MissedTurns n
-				LEFT JOIN wD_Games g ON n.gameID = g.id
-				WHERE n.userID = ".$UserProfile->id. " and n.turnDateTime > ".(time() - 31536000));
-
-				if ($DB->last_affected() != 0)
-				{
-					print '<TABLE class="rrInfo">';
-					print '<tr>';
-					print '<th class= "rrInfo">ID:</th>';
-					print '<th class= "rrInfo">Game:</th>';
-					print '<th class= "rrInfo">Country</th>';
-					print '<th class= "rrInfo">Turn:</th>';
-					print '<th class= "rrInfo">LiveGame:</th>';
-					print '<th class= "rrInfo">System Excused:</th>';
-					print '<th class= "rrInfo">Mod Excused:</th>';
-					print '<th class= "rrInfo">Same Period Excused:</th>';
-					print '<th class= "rrInfo">Turn Date:</th>';
-					print '</tr>';
-
-					while(list($gameID, $countryID, $turn, $liveGame, $name, $systemExcused, $modExcused, $samePeriodExcused, $id, $turnDateTime)=$DB->tabl_row($tabl))
-					{
-						if ($systemExcused == 'No' && $modExcused == 'No' && $samePeriodExcused == 'No') { print '<tr style="background-color:#F08080;">'; }
-						else { print '<tr>'; }
-
-						print '<td> <strong>'.$id.'</strong></td>';
-						if ($name != '')
-						{
-							$Variant=libVariant::loadFromGameID($gameID);
-							print '<td> <strong><a href="/games/'.$gameID.'">'.$name.'</a></strong></td>';
-							print '<td> <strong>'.$Variant->countries[$countryID-1].'</strong></td>';
-							print '<td> <strong>'.$Variant->turnAsDate($turn).'</strong></td>';
-							print '<td> <strong>'.$liveGame.'</strong></td>';
-							print '<td> <strong>'.$systemExcused.'</strong></td>';
-							print '<td> <strong>'.$modExcused.'</strong></td>';
-							print '<td> <strong>'.$samePeriodExcused.'</strong></td>';
-							print '<td> <strong>'.libTime::detailedText($turnDateTime).'</strong></td>';
-						}
-						else
-						{
-							print '<td> <strong>Cancelled Game</strong></td>';
-							print '<td> <strong>'.$countryID.'</strong></td>';
-							print '<td> <strong>'.$turn.'</strong></td>';
-							print '<td> <strong>'.$liveGame.'</strong></td>';
-							print '<td> <strong>'.$systemExcused.'</strong></td>';
-							print '<td> <strong>'.$modExcused.'</strong></td>';
-							print '<td> <strong>'.$samePeriodExcused.'</strong></td>';
-							print '<td> <strong>'.libTime::detailedText($turnDateTime).'</strong></td>';
-						}
-						
-						print '</tr>';
-					}
-					print '</table>';
-				}
-				else
-				{
-					print l_t('No missed turns found for this profile.');
-				}
-			}
-			else
-			{
-                print l_t('You do not have permission to view this page.');
-			}
-			print '</div>';
-			break;
-
 		case 'reports':
 			if ( $User->isModerator() )
 			{
@@ -649,16 +489,16 @@ if( $total )
 	}
 
 	print '</br>';
-	if( $User->type['Moderator'] || $User->id == $UserProfile->id )
+	if ($User->isModerator() || $User->id == $UserProfile->id )
 	{
-		print '<li><strong>'.l_t('Reliability:').' (<a href="profile.php?detail=civilDisorders&userID='.$UserProfile->id.'">'.l_t('Reliability Explained').'</a>) </strong>';
+		print '<li><strong>'.l_t('Reliability:').' (<a href="/users/'.$UserProfile->id.'/civil-disorders">'.l_t('Reliability Explained').'</a>) </strong>';
 	}
 	else
 	{
 		print '<li><strong>'.l_t('Reliability:').'</strong>';
 	}
 
-	if ( $User->type['Moderator'] || $User->id == $UserProfile->id )
+	if ( $User->isModerator() || $User->id == $UserProfile->id )
 	{
 		$recentMissedTurns = $UserProfile->getRecentUnExcusedMissedTurns();
 		$allMissedTurns = $UserProfile->getYearlyUnExcusedMissedTurns();
@@ -682,15 +522,17 @@ print '</ul></div>';
 // Regular user info starts here:
 print '<div class="leftHalf" style="width:50%">';
 
-if( $UserProfile->type['Banned'] )
-	print '<p><strong>'.l_t('Banned').'</strong></p>';
+if($UserProfile->isBanned())
+{
+    print '<p><strong>' . l_t('Banned') . '</strong></p>';
+}
 
-if( $UserProfile->type['Bot'] )
+if( $UserProfile->isBot() )
 {
 	print '<p class="profileCommentURL">Bot User</p>';
 }
 
-if( $User->type['Moderator'] )
+if ($User->isModerator())
 {
 	$lastCheckedBy = $UserProfile->modLastCheckedBy();
 	$modLastCheckedOn = $UserProfile->modLastCheckedOn();
@@ -745,7 +587,7 @@ if ( $UserProfile->comment )
 
 print '<p><ul class="formlist">';
 
-if ( $UserProfile->type['Moderator'] ||  $UserProfile->type['ForumModerator'] || $UserProfile->type['Admin'] )
+if ( $UserProfile->isModerator() ||  $UserProfile->type['ForumModerator'] || $UserProfile->isAdmin() )
 {
 	print '<li><strong>'.l_t('Mod/Admin team').'</strong></li>';
 	print '<li>'.l_t('The best way to get moderator assistance is using our built in <a href="contactUsDirect.php">help page</a>. Please do not message
@@ -784,7 +626,7 @@ if (!isset(Config::$customForumURL))
 
 print '<li><strong>'.l_t('Joined:').'</strong> '.$UserProfile->timeJoinedtxt().'</li>';
 print '<li><strong>'.l_t('User ID#:').'</strong> '.$UserProfile->id.'</li>';
-if( $User->type['Moderator'] )
+if( $User->isModerator() )
 {
 	print '<li><strong>'.l_t('E-mail:').'</strong>
 			'.$UserProfile->email.($UserProfile->hideEmail == 'No' ? '' : ' <em>'.l_t('(hidden for non-mods)').'</em>').'</li>';
@@ -829,11 +671,11 @@ print '<div id="profile-separator"></div>';
 
 // Start interactive area:
 
-if ( $User->type['Moderator'] && $User->id != $UserProfile->id )
+if ( $User->isModerator() && $User->id != $UserProfile->id )
 {
-	$modActions=array();
+	$modActions = [];
 
-	if ( $User->type['Admin'] )
+	if ($User->isAdmin())
 		$modActions[] = '<a href="index.php?auid='.$UserProfile->id.'">'.l_t('Enter this user\'s account').'</a>';
 
 	$modActions[] = libHTML::admincpType('User',$UserProfile->id);

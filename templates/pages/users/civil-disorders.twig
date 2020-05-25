@@ -1,5 +1,7 @@
 <div class="content content-follow-on">
 
+<p>(<a href="/profile.php?userID={{ user.id }}">Back</a>)</p>
+
 <h4>Reliability Explained:</h4>
 
 <div class="profile_title">What is Reliability?</div>
@@ -45,19 +47,22 @@
 <h4>Factors Impacting RR:</h4>
 <p>
     <strong>Yearly Turns:</strong>
-    {{ user_profile.yearlyPhaseCount }}
+    {{ user.yearlyPhaseCount }}
 
     <br />
 
-    {% if all_live_unexcused_missed_turns %}
-        <strong>Yearly Missed Turns:</strong> {{ missed_turns }}</br>
-        <strong>Past Month Live Missed Turns:</strong> {{ live_missed_turns }}</br>
+    {% if all_live_unexcused_missed_turns > 0 %}
+        <strong>Yearly Live Missed Turns:</strong> {{ yearly_missed_turns }}
+        <br />
+        <strong>Past Month Live Missed Turns:</strong> {{ past_month_live_missed_turns }}
+        <br />
     {% endif %}
 
-    <strong>Total Counted Missed Turns:</strong> {{ all_missed_turns }}</br>
-    </br>
+    <strong>Total Counted Missed Turns:</strong> {{ all_missed_turns }}
+    <br />
+    <br />
 
-    <strong>Base Percentage:</strong> {{ base_percentage }}%</br>
+    <strong>Base Percentage:</strong> {{ base_percentage|round(2) }}%</br>
 
     {% if all_live_unexcused_missed_turns %}
         (100 * (1 - (Yearly Missed Turns + Live Missed Turns)/Yearly Turns))
@@ -66,17 +71,17 @@
     {% endif %}
 
     <h4>Added Penalties:</h4>
-    <strong>Yearly Unexcused Missed Turns:</strong> {{ all_unexcused_missed_turns }} for a penalty of {{ yearly_penalty }}%</br>
+    <strong>Yearly Unexcused Missed Turns:</strong> {{ yearly_unexcused_missed_turns }} for a penalty of {{ yearly_penalty }}%</br>
     <strong>Recent Unexcused Missed Turns:</strong> {{ recent_unexcused_missed_turns }} for a penalty of {{ recent_penalty }}%</br>
 
-    {% if all_live_unexcused_missed_turns %}
+    {% if all_live_unexcused_missed_turns > 0 %}
     <h4>Added Live Game Penalties:</h4>
-    <strong>Last Month Live Unexcused Missed Turns:</strong> {{ all_live_unexcused_missed_turns }} for a penalty of {{ live_long_penalty }}%</br>
-    <strong>Last Week Live Unexcused Missed Turns:</strong> {{ recent_live_unexcused_missed_turns }} for a penalty of {{ live_short_penalty }}%</br>
+    <strong>Last Month Live Unexcused Missed Turns:</strong> {{ all_live_unexcused_missed_turns }} for a penalty of {{ yearly_penalty }}%</br>
+    <strong>Last Week Live Unexcused Missed Turns:</strong> {{ recent_live_unexcused_missed_turns }} for a penalty of {{ recent_penalty }}%</br>
     {% endif %}
 
     <h4>Total:</h4>
-    <strong>Reliability Rating:</strong> {{ reliability_rating }}
+    <strong>Reliability Rating:</strong> {{ reliability_rating|round(2) }}
 </p>
 
 <h4>Missed Turns:</h4>
@@ -98,7 +103,7 @@
     </thead>
     <tbody>
     {% for turn in missed_turns %}
-
+        {% include 'pages/users/_missed_turn.twig' with { user: user, turn: turn } %}
     {% endfor %}
     </tbody>
 </table>

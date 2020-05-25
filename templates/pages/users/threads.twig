@@ -1,0 +1,20 @@
+<div class="content content-follow-on">
+
+    <p>(<a href="/profile.php?userID={{ user.id }}">Back</a>)</p>
+
+    <h2>Threads for {{  user.username }}:</h2>
+
+    <ul class="threads-list">
+        {% for thread in threads %}
+        <li>
+            <h3>
+                <a href="/forum.php?threadID={{ thread.id }}">{{ thread.subject }}</a>
+                <em class="ts">({{ thread.timeSentAsText()|raw }})</em>
+            </h3>
+
+            <p>{{ thread.message }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>

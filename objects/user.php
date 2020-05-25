@@ -1196,13 +1196,25 @@ class User {
 		return !empty($this->id) && $this->id != GUESTID;
 	}
 
-	public function isModerator() {
-		return $this->type['Moderator'];
+	public function isModerator()
+    {
+		return $this->type['Moderator'] || $this->type['Admin'];
 	}
 
-	public function isAdmin() {
+	public function isAdmin()
+    {
 		return $this->type['Admin'];
 	}
+
+	public function isBot()
+    {
+        return $this->type['Bot'];
+    }
+
+    public function isBanned()
+    {
+        return $this->type['Banned'];
+    }
 
 	public function toggleCountryMute($gameID,$muteCountryID) 
 	{

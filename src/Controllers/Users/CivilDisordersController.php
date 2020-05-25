@@ -19,6 +19,17 @@ class CivilDisordersController extends BaseController
 
     public function call()
     {
-        return $this->reliabilityService->forUser($this->user);
+        return array_merge($this->reliabilityService->forUser($this->user),[
+           'missed_turns' => $this->getMissedTurns(),
+        ]);
+    }
+
+    protected function getMissedTurns()
+    {
+        $turns = $this->user->missedTurns()->with('game')->get();
+        foreach ($turns as $turn) {
+            $turn->game->getVariant();
+        }
+        return $turns;
     }
 }

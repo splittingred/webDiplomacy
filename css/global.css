@@ -2160,3 +2160,29 @@ dl.stats dt {
 	text-decoration: none;
 	padding: 7px 7px 8px;
 }
+
+
+/* FORUM */
+ul.threads-list {
+	margin-left: 0;
+	padding: 0;
+}
+ul.threads-list li {
+	width: 100%;
+	padding: 10px 0;
+	margin-left: 0;
+	list-style: none;
+	border-bottom: 1px solid #aaa;
+}
+ul.threads-list h3 {
+	margin-left: 0;
+}
+ul.threads-list li em.ts {
+	display: inline;
+	font-size: 12px;
+	font-style: italic;
+	color: #aaaaaa
+}
+ul.threads-list li p {
+	margin: 10px 0;
+}

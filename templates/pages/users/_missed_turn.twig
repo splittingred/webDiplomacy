@@ -1,0 +1,11 @@
+<tr {% if turn.unexcused() %} style="background-color:#F08080;"{% endif %}>
+    <td>{{ turn.id }}</td>
+    <td><a href="/games/{{ turn.gameID }}">{{ turn.game.name }}</a></td>
+    <td>{{ turn.game.variant.getCountryName(turn.countryID) }}</td>
+    <td>{{ turn.game.variant.turnAsDate(turn.turn) }}</td>
+    <td>{{ turn.liveGame ? 'Yes' : 'No' }}</td>
+    <td>{{ turn.systemExcused ? 'Yes' : 'No' }}</td>
+    <td>{{ turn.modExcused ? 'Yes' : 'No' }}</td>
+    <td>{{ turn.samePeriodExcused ? 'Yes' : 'No' }}</td>
+    <td>{{ turn.getTimeText()|raw }}</td>
+</tr>
