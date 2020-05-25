@@ -1,0 +1,165 @@
+<div class="content content-follow-on">
+<div class="contactUs">
+    <p>Fill out the following form to get assistance from the moderator team. We will do our best to get to your problem as soon as possible.</p>
+
+    <p>If you have a question about how the game works, please read the <a href="/help/faq" class="contactUs">FAQ</a>
+        and the <a href="/help/intro" class="contactUs"> intro to webDiplomacy</a> before using this form.
+    </p>
+
+    <p> Need something else? Take a look at our <a href="/help/contact" class="contactUs">Contact Info</a>
+        page to learn how to contact an owner and see all the problems moderators can help with!
+    </p>
+
+</div>
+<div class="contactUsShow">
+    <form action="#" method="post">
+        <p><strong>What do you need to contact us about?</strong></p>
+
+        <ul>
+        <li>
+            <label>
+                Issue with game(s)
+                <input type="radio" value="gameIssue" onclick="javascript:gameIssueCheck();" name="issueType" id="gameIssue" required="required">
+            </label>
+        </li>
+        <li>
+            <label>
+                Other issue
+                <input type="radio" value="otherIssue" onclick="javascript:gameIssueCheck();" name="issueType" id="otherIssue">
+            </label>
+        </li>
+        {% if games is not empty and current_user.qualifiesForEmergency() %}
+        <li>
+            <label>
+                Personal Emergency (Automatic Pause)
+                <input type="radio" value="emergencyIssue" onclick="javascript:gameIssueCheck();" name="issueType" id="emergencyIssue">
+            </label>
+        </li>
+        {% else %}
+            <input type="hidden" id="emergencyIssue" />
+        {% endif %}
+
+            <div id="ifGames" style="display:none">
+            <li>
+                <label>
+                    Which game(s): <br />
+
+                    <select class="contactUs" name="games">
+                        <option selected="selected" value="0">None</option>
+                        <option value="1">All</option>
+                        {% for game in games %}
+                        <option value="{{ game.id }}">{{ game.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </li>
+
+            <li>
+                <label>
+                     What is the problem? <br />
+                    <select class="contactUs" name="gamesIssue">
+                        <option value="orders" selected="selected">Issue entering orders</option>
+                        <option value="pause">I need a Pause</option>
+                        <option value="unpause">Game is stuck paused</option>
+                        <option value="cheating">I think someone is cheating</option>
+                        <option value="replace">I need a replacement</option>
+                        <option value="stalemate">Game is stalemated</option>
+                        <option value="wfo">Game is stuck in Wait-for-Orders</option>
+                        <option value="crash">Game is crashed</option>
+                        <option value="other">Other</option>
+                    </select>
+                </label>
+            </li>
+            <p class="contact-us-desc">If you asked for a pause tell us for how long and why or your request will <strong>not</strong> be granted.</p>
+            </div>
+        </ul>
+
+        <div id="ifOther" style="display:none">
+            <p>
+                <label>
+                    What is the problem?
+                    <select class="contactUs" name="otherIssue">
+                        <option value="rules" selected="selected">Rules violation</option>
+                        <option value="otherGame">Issue with game I am not in</option>
+                        <option value="finishedGame">Issue with a finished game</option>
+                        <option value="bug">Report bug</option>
+                        <option value="other">Other</option>
+                    </select>
+                </label>
+            </p>
+        </div>
+
+        <div id="ifEmergency" style="display:none">
+            <p class="contact-us-desc">This is for personal emergencies only and will instantly pause all of your running games that you are not defeated in. The
+                moderator team will give you 7 days to let us know when you expect to be back. If we do not hear back in 7 days we will look for a replacement.
+
+            </p>
+            <p class="contact-us-desc">
+                <u>Vacations, business trips, or any other absence you know of ahead of time do not count as a personal emergency.</u>
+                This tool is intended for unexpected absences, such as a family emergency, widespread power outage, natural disaster, or other circumstance you cannot plan for.
+                If you can plan for your pause ahead of time, it is not an emergency. You should inform others in your game in advance that you will need a pause,
+                and if you cannot do so instead contact the moderators at {{ moderator_email }}.
+            </p>
+
+            <p class="contact-us-desc">
+                Abuse of the emergency pause will be punished with a 50% point dock and removal of your emergency pause privilege at minimum.
+            </p>
+
+            <p>Using your emergency pause will instantly pause the following games:</p>
+
+            <ul>
+            {% for game in games %}
+                {% if game.isPaused() %}{% set continue = true %}{% endif %}
+                <li>{{ game.name }}</li>
+            {% endfor %}
+            </ul>
+
+            <p>To prevent abuse we need to know the reason for the emergency pause. We will follow up with this request later at {{ current_user.email }} to find
+            out how long you need your games to be paused.</p>
+
+            <label>
+                Reason:
+                <select class="contactUs" name="emergencyIssue">
+                    <option value="medical" selected="selected">Illness or injury to yourself/family</option>
+                    <option value="naturalDisaster">Natural Disaster</option>
+                    <option value="powerOutage">Power Outage</option>
+                </select>
+            </label>
+        </div>
+
+        <p class="contact-us-desc">
+            <label>
+                Please give us any additional details below.
+                <textarea name="additionalInfo" class="contactUs" rows="5"></textarea>
+            </label>
+        </p>
+
+        <p><input type="submit" class="green-Submit" name="submit" /></p>
+    </form>
+</div>
+</div>
+
+
+<script type="text/javascript">
+    function gameIssueCheck()
+    {
+        if (document.getElementById('gameIssue').checked)
+        {
+            document.getElementById('ifGames').style.display = 'block';
+            document.getElementById('ifOther').style.display = 'none';
+            document.getElementById('ifEmergency').style.display = 'none';
+        }
+        else if (document.getElementById('emergencyIssue').checked)
+        {
+            document.getElementById('ifGames').style.display = 'none';
+            document.getElementById('ifOther').style.display = 'none';
+            document.getElementById('ifEmergency').style.display = 'block';
+        }
+        else
+        {
+            document.getElementById('ifGames').style.display = 'none';
+            document.getElementById('ifOther').style.display = 'block';
+            document.getElementById('ifEmergency').style.display = 'none';
+        }
+    }
+</script>

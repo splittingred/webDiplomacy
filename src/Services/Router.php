@@ -52,6 +52,8 @@ class Router
         $this->router->get('help/points', 'Help\PointsController@handle');
         $this->router->get('help/rules', 'Help\RulesController@handle');
         $this->router->get('help/recent-changes', 'Help\RecentChangesController@handle');
+        $this->router->get('help/contact', 'Help\ContactController@handle');
+        $this->router->get('help/contact-direct', 'Help\ContactDirectController@handle');
 
         /* misc */
         $this->router->get('intro', 'IntroController@handle');

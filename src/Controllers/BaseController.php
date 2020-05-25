@@ -129,6 +129,7 @@ abstract class BaseController
     {
         $this->setPlaceholder('current_user', $this->currentUser);
         $this->setPlaceholder('moderator_email', \Config::$modEMail ? \Config::$modEMail : \Config::$adminEMail);
+        $this->setPlaceholder('admin_email', \Config::$adminEMail);
     }
 
     /**

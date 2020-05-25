@@ -2,6 +2,7 @@
 
 namespace Diplomacy\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use panelGameHome;
 use WDVariant;
@@ -17,12 +18,17 @@ class Game extends EloquentBase
     /** @var panelGameHome */
     protected $homeGamePanel;
 
+    public function scopeJoinMembers(Builder $query) : Builder
+    {
+        return $query->join('wD_Members', 'wD_Members.gameID', '=', 'wD_Games.id');
+    }
+
     /**
      * @return HasMany
      */
     public function members()
     {
-        return $this->hasMany(Member::class, 'gameID');
+        return $this->hasMany(\Diplomacy\Models\Member::class, 'gameID', 'id');
     }
 
     /**
@@ -41,6 +47,21 @@ class Game extends EloquentBase
     {
         if (!$this->homeGamePanel) $this->homeGamePanel = $this->getVariant()->panelGameHome($this->toArray());
         return $this->homeGamePanel;
+    }
+
+    public function scopeGameOver(Builder $query) : Builder
+    {
+        return $query->where('gameOver', 'Yes');
+    }
+
+    public function scopeGameNotOver(Builder $query) : Builder
+    {
+        return $query->where('gameOver', 'No');
+    }
+
+    public function scopeNotPreGame(Builder $query) : Builder
+    {
+        return $query->where('phase', '!=' , 'Pre-Game');
     }
 
     /**
