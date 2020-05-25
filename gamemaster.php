@@ -108,14 +108,16 @@ $tabl = $DB->sql_tabl("SELECT * FROM wD_Games
 
 while( (time() - $startTime)<30 && $gameRow=$DB->tabl_hash($tabl) )
 {
+	/** @var \WDVariant $Variant */
 	$Variant=libVariant::loadFromVariantID($gameRow['variantID']);
+	/** @var \Game $Game */
 	$Game=$Variant->Game($gameRow);
 
 	print '<a href="/games/'.$Game->id.'">gameID='.$Game->id.': '.$Game->name.'</a>: ';
 
 	try
 	{
-		if( $Game->processStatus!='Crashed' && $Game->attempts > count($Game->Members->ByID)*2 )
+		if (!$Game->isCrashed() && $Game->attempts > count($Game->Members->ByID)*2 )
 		{
 			$Game = $Variant->processGame($Game->id);
 			$Game->crashed();
@@ -175,5 +177,3 @@ else
 
 print '</div>';
 libHTML::footer();
-
-?>

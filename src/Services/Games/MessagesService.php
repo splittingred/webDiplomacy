@@ -4,6 +4,7 @@ namespace Diplomacy\Services\Games;
 
 use Diplomacy\Models\Collection;
 use Diplomacy\Models\GameMessage;
+use Diplomacy\Models\Member;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -18,6 +19,10 @@ class MessagesService
     /** @var int Show only messages target for Global consumption */
     const FILTER_GLOBAL = -2;
 
+    public function totalForUser(int $userId) : int
+    {
+        return Member::select(Member::raw('SUM(gameMessagesSent)'))->forUser($userId)->count();
+    }
     /**
      * Search in-game messages
      *

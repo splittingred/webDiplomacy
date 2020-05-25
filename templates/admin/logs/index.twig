@@ -1,0 +1,28 @@
+<div class="content content-follow-on">
+{% include 'admin/_topnav.twig' with { current: 'logs' } %}
+
+<br />
+
+{{ pagination|raw }}
+
+<table class= "modTools">
+    <thead>
+    <tr>
+        <th class="modTools">Time</th>
+        <th class="modTools">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for log in logs %}
+    <tr>
+        <td class="modTools" style="vertical-align: top">{{ log.timeAsText()|raw }}</td>
+        <td class="modTools" style="vertical-align: top">
+            {{ log.user.username }}: <strong>{{ log.name }}</strong>:
+            {{ log.details }}
+            <br />
+            {{ log.params }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>

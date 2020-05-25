@@ -22,6 +22,8 @@
  * @package Base
  */
 
+use Diplomacy\Services\Games\MessagesService as GameMessagesService;
+
 require_once('header.php');
 
 require_once(l_r('objects/game.php'));
@@ -134,7 +136,7 @@ else
 	}
 }
 
-if ( ! $UserProfile->type['User'] && !$UserProfile->type['Banned'] )
+if ( ! $UserProfile->type['User'] && !$UserProfile->isBanned() )
 {
 	$message = l_t('Cannot display profile: The specified account #%s is not an active user;',$userID).' ';
 	if( $UserProfile->type['Guest'] )
@@ -166,33 +168,6 @@ if ( isset($_REQUEST['detail']) )
 
 	switch($_REQUEST['detail'])
 	{
-		case 'threads':
-			$dir=User::cacheDir($UserProfile->id);
-			if( file_exists($dir.'/profile_threads.html') )
-				print file_get_contents($dir.'/profile_threads.html');
-			else
-			{
-				libAuth::resourceLimiter('view threads',20);
-
-				$tabl = $DB->sql_tabl("SELECT id, subject, message, timeSent FROM wD_ForumMessages
-					WHERE fromUserID = ".$UserProfile->id." AND type='ThreadStart'
-					ORDER BY timeSent DESC");
-
-				$buf = '<h4>'.l_t('Threads posted:').'</h4>
-					<ul>';
-				while(list($id,$subject,$message, $timeSent)=$DB->tabl_row($tabl))
-				{
-					$buf .= '<li><em>'.libTime::text($timeSent).'</em>:
-						<a href="forum.php?threadID='.$id.'">'.$subject.'</a><br />'.
-						$message.'</li>';
-				}
-				$buf .= '</ul>';
-
-				file_put_contents($dir.'/profile_threads.html', $buf);
-				print $buf;
-			}
-			break;
-
 		case 'reports':
 			if ( $User->isModerator() )
 			{
@@ -287,10 +262,8 @@ if( $donatorMarker )
 
 print '<li>&nbsp;</li>';
 
-list($posts) = $DB->sql_row(
-	"SELECT SUM(gameMessagesSent) FROM wD_Members m
-	WHERE m.userID = ".$UserProfile->id);
-if( is_null($posts) ) $posts=0;
+$messagesService = new GameMessagesService();
+$posts = $messagesService->totalForUser($UserProfile->id);
 print '<li><strong>'.l_t('Game messages:').'</strong> '.number_format($posts).'</li>';
 
 print '<li>&nbsp;</li>';
@@ -545,7 +518,7 @@ if ($User->isModerator())
 
 	if($UserProfile->modLastCheckedOn() > 0 && $lastCheckedBy > 0)
 	{
-		list($modUsername) = $DB->sql_row("SELECT username FROM `wD_Users` WHERE id = ".$lastCheckedBy);
+		$modUsername = \Diplomacy\Models\User::where('id', '=', $lastCheckedBy)->pluck('username')[0];
 		print '<p class="profileCommentURL">Investigated: '.libTime::text($modLastCheckedOn).', by: <a href="/profile.php?userID='.$lastCheckedBy.'">'.$modUsername.'</a></p>';
 	}
 	else

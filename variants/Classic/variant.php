@@ -57,5 +57,3 @@ class ClassicVariant extends WDVariant {
 		};';
 	}
 }
-
-?>

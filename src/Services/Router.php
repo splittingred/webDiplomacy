@@ -70,6 +70,9 @@ class Router
             \Diplomacy\Controllers\Users\ThreadsController::handle(['id' => (int)$userId]);
         });
         $this->router->get('users/settings', 'Users\SettingsController@handle');
+
+        /* admin */
+        $this->router->get('admin/logs', 'Admin\LogsController@handle');
     }
 
     /**

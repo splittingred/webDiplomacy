@@ -13,7 +13,7 @@ class MissedTurn extends EloquentBase
     const YEARLY_THRESHOLD = 31536000;
 
     protected $table = 'wD_MissedTurns';
-    protected $hidden = [''];
+    protected $hidden = [];
 
     /**
      * @return string
