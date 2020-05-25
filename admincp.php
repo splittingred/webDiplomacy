@@ -178,7 +178,8 @@ switch($tab)
 		require_once(l_r('admin/adminStatusLists.php'));
 		break;
 	case 'Logs':
-		require_once(l_r('admin/adminLog.php'));
+	    header('Location: '.Config::$url.'/admin/logs');
+	    exit();
 		break;
 	case 'Multi-accounts':
 		require_once(l_r('admin/adminMultiFinder.php'));
