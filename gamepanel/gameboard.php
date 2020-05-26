@@ -143,7 +143,7 @@ class panelGameBoard extends panelGame
 			}			
 		}
 
-		$buf = '<div style="width: 300px; margin: 0 auto; text-align:center;"><a href="contactUsDirect.php" align="center";>Need help?</a></div>
+		$buf = '<div style="width: 300px; margin: 0 auto; text-align:center;"><a href="/help/contact-direct" align="center";>Need help?</a></div>
 		<div class="bar membersList memberVotePanel"><a name="votebar"></a>
 		<table><tr class="member">
 			<td class="memberLeftSide">

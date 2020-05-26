@@ -12,7 +12,11 @@
 
 </div>
 <div class="contactUsShow">
-    <form action="#" method="post">
+    <form action="/help/contact-direct" method="post">
+        {% if notice %}
+            <p class="error">{{ notice }}</p>
+        {% endif %}
+
         <p><strong>What do you need to contact us about?</strong></p>
 
         <ul>
@@ -110,7 +114,12 @@
             <ul>
             {% for game in games %}
                 {% if game.isPaused() %}{% set continue = true %}{% endif %}
-                <li>{{ game.name }}</li>
+                <li>
+                    <label>
+                        {{ game.name }}
+                        <input type="checkbox" name="games" value="{{ game.id }}" style="display: none" />
+                    </label>
+                </li>
             {% endfor %}
             </ul>
 

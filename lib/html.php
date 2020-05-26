@@ -661,8 +661,8 @@ class libHTML
 		// Items not displayed on the menu
 		$links['map.php']=array('name'=>'Map', 'inmenu'=>FALSE);
 		$links['help/faq']=array('name'=>'FAQ', 'inmenu'=>FALSE);
-		$links['contactUs.php']=array('name'=>'Contact Info', 'inmenu'=>FALSE);
-		$links['contactUsDirect.php']=array('name'=>'Contact Us', 'inmenu'=>FALSE);
+		$links['help/contact']=array('name'=>'Contact Info', 'inmenu'=>FALSE);
+		$links['help/contact-direct']=array('name'=>'Contact Us', 'inmenu'=>FALSE);
 		$links['help/donations']=array('name'=>'Donations', 'inmenu'=>FALSE);
 		$links['tournaments.php']=array('name'=>'Tournaments', 'inmenu'=>FALSE);
 		$links['tournamentManagement.php']=array('name'=>'Manage Tournaments', 'inmenu'=>FALSE);

@@ -23,4 +23,14 @@ class Member extends EloquentBase
     {
         return $query->where('userID', $userId);
     }
+
+    /**
+     * @param Builder $query
+     * @param integer $gameId
+     * @return Builder
+     */
+    public function scopeForGame(Builder $query, int $gameId) : Builder
+    {
+        return $query->where('gameID', $gameId);
+    }
 }

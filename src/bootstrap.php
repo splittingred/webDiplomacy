@@ -18,6 +18,7 @@ require_once ROOT_PATH . 'vendor/autoload.php';
 require_once ROOT_PATH . 'config.php';
 require_once ROOT_PATH . 'src/bootstrap_legacy.php';
 require_once ROOT_PATH . 'global/definitions.php';
+require_once ROOT_PATH . 'objects/mailer.php';
 
 $app = new Container();
 $app->singleton('app', 'Illuminate\Container\Container');

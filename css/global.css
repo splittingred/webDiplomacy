@@ -2186,3 +2186,8 @@ ul.threads-list li em.ts {
 ul.threads-list li p {
 	margin: 10px 0;
 }
+
+/* form errors */
+.error, p.error {
+	color: red;
+}

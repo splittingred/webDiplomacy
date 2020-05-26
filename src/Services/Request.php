@@ -55,7 +55,7 @@ class Request
     public function isEmpty(string $k, string $type = self::TYPE_REQUEST) : bool
     {
         $vars = $this->getParameters($type);
-        return !empty($vars[$k]);
+        return empty($vars[$k]);
     }
 
     /**
