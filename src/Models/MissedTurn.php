@@ -3,6 +3,7 @@
 namespace Diplomacy\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @package Diplomacy\Models
@@ -24,19 +25,19 @@ class MissedTurn extends EloquentBase
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user()
+    public function user() : BelongsTo
     {
-        return $this->belongsTo('\Diplomacy\Models\User', 'userID');
+        return $this->belongsTo(User::class, 'userID');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function game()
+    public function game() : BelongsTo
     {
-        return $this->belongsTo('\Diplomacy\Models\Game', 'gameID');
+        return $this->belongsTo(Game::class, 'gameID');
     }
 
     /**

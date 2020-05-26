@@ -2,23 +2,13 @@
 
 namespace Diplomacy\Tournaments;
 
-use Database;
 use Diplomacy\Models\Collection;
 use Diplomacy\Models\Tournament;
+use Diplomacy\Models\TournamentScore;
+use Illuminate\Database\Eloquent\Builder;
 
 class Service
 {
-    /** @var Database $database */
-    protected $database;
-
-    /**
-     * @param Database $database
-     */
-    public function __construct(Database $database)
-    {
-        $this->database = $database;
-    }
-
     /**
      * Get all active tournaments
      *
@@ -68,5 +58,41 @@ class Service
         $tournaments = $query->get();
 
         return new Collection($tournaments, $count);
+    }
+
+    /**
+     * @param int $tournamentId
+     * @param int $userId
+     * @param int $round
+     * @return TournamentScore
+     */
+    public function findScoreOrNew(int $tournamentId, int $userId, int $round) : TournamentScore
+    {
+        return TournamentScore::query()
+            ->forTournament($tournamentId)
+            ->forUser($userId)
+            ->forRound($round)->firstOrNew();
+    }
+
+    /**
+     * @param int $tournamentId
+     * @param int $userId
+     * @param int $round
+     * @param int $score
+     * @return bool
+     */
+    public function updateScore(int $tournamentId, int $userId, int $round, int $score)
+    {
+        $tournamentScore = $this->findScoreOrNew($tournamentId, $userId, $round);
+        $tournamentScore->tournamentID = $tournamentId;
+        $tournamentScore->userID = $userId;
+        $tournamentScore->score = $score;
+        try {
+            $tournamentScore->save();
+            return true;
+        } catch (\Exception $e) {
+            // TODO: proper logging
+            return false;
+        }
     }
 }

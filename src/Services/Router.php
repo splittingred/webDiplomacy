@@ -59,7 +59,6 @@ class Router
         /* misc */
         $this->router->get('intro', 'IntroController@handle');
         $this->router->get('stats/hall-of-fame', 'Stats\HallOfFameController@handle');
-        $this->router->get('tournaments/info', 'Tournaments\InfoController@handle');
         $this->router->get('variants/list', 'Variants\IndexController@handle');
 
         /* users */
@@ -73,6 +72,16 @@ class Router
             \Diplomacy\Controllers\Users\ThreadsController::handle(['id' => (int)$userId]);
         });
         $this->router->get('users/settings', 'Users\SettingsController@handle');
+
+        /* tournaments */
+        $this->router->get('tournaments/info', 'Tournaments\InfoController@handle');
+        $this->router->get('tournaments/', 'Tournaments\IndexController@handle');
+        $this->router->get('tournaments/(\d+)', function($id) {
+            \Diplomacy\Controllers\Tournaments\ViewController::handle(['id' => (int)$id]);
+        });
+        $this->router->post('tournaments/(\d+)', function($id) {
+            \Diplomacy\Controllers\Tournaments\ViewController::handle(['id' => (int)$id]);
+        });
 
         /* admin */
         $this->router->get('admin/logs', 'Admin\LogsController@handle');

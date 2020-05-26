@@ -2,7 +2,7 @@
 
 <div class="content content-follow-on">
     <div class="gameCreateShow">
-        <form class="gameCreate" method="get" action="/tournamentScoring.php#tableLocation">
+        <form class="gameCreate" method="get" action="/tournaments">
             <p>
                 <label for="tournamentID">
                 <strong>
@@ -10,7 +10,7 @@
                 </strong>
                 </label>
                 <br/>
-                <select class="gameCreate" name="tournamentID">
+                <select class="gameCreate" name="id">
                     {% for tournament in tournaments %}
                         <option value="{{ tournament.id }}">{{ tournament.name }} ({{ tournament.year }})</option>
                     {% endfor %}

@@ -1,0 +1,48 @@
+<style>
+    .tournament-scores thead th {
+        background-color: #006699;
+    }
+</style>
+<div class="content content-follow-on">
+    {% if editor %}
+        <form action="/tournaments/{{ tournament.id }}" method="post">
+        {% if notice %}<p class="notice">{{ notice }}</p>{% endif %}
+    {% endif %}
+    <table class="tournament-scores advancedSearch">
+        <thead>
+        <tr>
+            <th>Name</th>
+            {% set i = tournament.totalRounds %}
+            {% for round in range(1, i) %}
+            <th>Round {{ round }}</th>
+            {% endfor %}
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for participant in participants %}
+            <tr>
+                <td><a href="/profile.php?userID={{ participant.user_id }}">{{ participant.username }}</a></td>
+                {% for round,score in participant.rounds %}
+                <td id="t{{ tournament.id }}-u{{ participant.user_id }}-r{{ round }}">
+                    {% if editor %}
+                    <label>
+                        <input type="text" name="user[u{{ participant.user_id }}][r{{ round }}]" value="{{ score }}" />
+                    </label>
+                    {% else %}
+                    {{ score }}
+                    {% endif %}
+                </td>
+                {% endfor %}
+                <td>{{ participant.total }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if editor %}
+        <br />
+        <input type="submit" value="Update" name="submit" class="green-Submit" />
+    </form>
+    {% endif %}
+</div>

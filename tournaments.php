@@ -227,7 +227,7 @@ while (list($id, $name, $description, $status, $minRR, $year, $totalRounds, $for
         }
         else
         {
-            print '<a href="tournamentScoring.php?tournamentID='.$id.'">Scoring and Participants</a></br>';
+            print '<a href="/tournaments/'.$id.'">Scoring and Participants</a></br>';
             print '<a href="gamelistings.php?gamelistType=Search&tournamentID='.$id.'">Tournament Games</a></br>';
         }
     }

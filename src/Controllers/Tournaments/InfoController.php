@@ -13,5 +13,6 @@ class InfoController extends BaseController
 
     public function call()
     {
+        return [];
     }
 }

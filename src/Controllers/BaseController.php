@@ -92,8 +92,8 @@ abstract class BaseController
 
             if (!empty($this->pageTitle)) {
                 $pageHeader = $this->renderer->render('common/page_title.twig', [
-                    'title' => $this->pageTitle,
-                    'description' => $this->pageDescription,
+                    'title' => $this->getPageTitle(),
+                    'description' => $this->getPageDescription(),
                 ]);
             } else {
                 $pageHeader = '';
@@ -118,6 +118,19 @@ abstract class BaseController
         } catch (TwigError $e) {
             return $e->getMessage();
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPageTitle() : string
+    {
+        return $this->pageTitle;
+    }
+
+    protected function getPageDescription() : string
+    {
+        return $this->pageDescription;
     }
 
     /**

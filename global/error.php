@@ -79,35 +79,34 @@ function error_handler($errno, $errstr, $errfile=false, $errline=false, $errcont
 			$error .= ', gameID = '.$Game->id;
 	}
 
-	// PHP's print_r() is terrible, heap corruption errors all the time
-	function recursiveprint ( &$array, $depth )
-	{
-		$tab = '';
-		$tracetxt = '';
-		for ( $i=1; $i<$depth; $i++ )
-			$tab .= "\t";
-
-		if ( $depth == 7 ) return $tab."*Max depth reached*\n";
-
-		foreach ( $array as $name => $sub )
+	if (!function_exists('recursiveprint')) {
+		// PHP's print_r() is terrible, heap corruption errors all the time
+		function recursiveprint(&$array, $depth)
 		{
-			if ( $name === "_REQUEST" or $name === "defined_vars" or $name === "_SERVER" ) continue;
+			$tab = '';
+			$tracetxt = '';
+			for ($i = 1; $i < $depth; $i++)
+				$tab .= "\t";
 
-			$tracetxt .= $tab.$name.' => ';
+			if ($depth == 7) return $tab . "*Max depth reached*\n";
 
-			if ( is_object($sub) or is_array ( $sub ) )
-			{
-				$tracetxt .= "Array: (\n";
-				$depth++;
-				$tracetxt .= recursiveprint ( $sub, $depth );
-				$depth--;
-				$tracetxt .= $tab.")\n";
+			foreach ($array as $name => $sub) {
+				if ($name === "_REQUEST" or $name === "defined_vars" or $name === "_SERVER") continue;
+
+				$tracetxt .= $tab . $name . ' => ';
+
+				if (is_object($sub) or is_array($sub)) {
+					$tracetxt .= "Array: (\n";
+					$depth++;
+					$tracetxt .= recursiveprint($sub, $depth);
+					$depth--;
+					$tracetxt .= $tab . ")\n";
+				} else
+					$tracetxt .= $sub . "\n";
 			}
-			else
-				$tracetxt .= $sub."\n";
-		}
 
-		return $tracetxt;
+			return $tracetxt;
+		}
 	}
 
 	$error .= ($errcontext ? 'Variable dump: '.recursiveprint($errcontext, 1)."\n\n" : '');
@@ -290,5 +289,3 @@ class libError
 		$Misc->ErrorLogs = 0;
 	}
 }
-
-?>

@@ -679,13 +679,13 @@ class libHTML
 		$links['variants/list']=array('name'=>'Variants', 'inmenu'=>FALSE);
 		$links['adminInfo.php']=array('name'=>'Admin Info', 'inmenu'=>FALSE);
 		$links['tournaments/info']=array('name'=>'Tournament Info', 'inmenu'=>FALSE);
-		$links['tournamentScoring.php']=array('name'=>'Tournament Scoring', 'inmenu'=>FALSE);
+		$links['/tournaments/{:id}']=array('name'=>'Tournament Scoring', 'inmenu'=>FALSE);
 		$links['tournamentRegistration.php']=array('name'=>'Tournament Registration', 'inmenu'=>FALSE);
 		$links['botgamecreate.php']=array('name'=>'New Bot Game', 'inmenu'=>TRUE, 'title'=>"Start up a new bot game");
 
 		if ( is_object($User) )
 		{
-			if ( $User->type['Admin'] or $User->type['Moderator'] )
+			if ($User->isAdmin() or $User->isModerator())
 			{
 				$links['profile.php']=array('name'=>'Find user', 'inmenu'=>true);  // Overrides the previous one with one that appears in the menu
 				$links['admincp.php']=array('name'=>'Admin CP', 'inmenu'=>true);

@@ -38,7 +38,7 @@ class Game extends EloquentBase
      */
     public function members()
     {
-        return $this->hasMany(\Diplomacy\Models\Member::class, 'gameID', 'id');
+        return $this->hasMany(Member::class, 'gameID', 'id');
     }
 
     /**

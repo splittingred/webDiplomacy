@@ -10,7 +10,7 @@
     <h3 class="tournamentCenter">{{ tournament.name }}</h3>
     <div class= "tournamentCenter">
         {% if tournament.isRunning() %}
-            <a class="tournamentCenter" href="/tournamentScoring.php?tournamentID={{ tournament.id }}">Scoring and Participants</a>
+            <a class="tournamentCenter" href="/tournaments/{{ tournament.id }}">Scoring and Participants</a>
             <br />
             {% if tournament.isRegistrationComplete() %}
                 <br />

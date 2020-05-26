@@ -219,7 +219,7 @@ if ($tournamentID > 0)
 		print '<h2 class = "tournamentCenter">'.$name.'</h2>';
 		if ($status != 'PreStart' && $status != 'Registration')
 		{
-			print '<a href="tournamentScoring.php?tournamentID='.$id.'">Tournament Scoring</a></br>';
+			print '<a href="/tournaments/'.$id.'">Tournament Scoring</a></br>';
 			if($status != 'Registration')
 			{
 				print '<a href="gamelistings.php?gamelistType=Search&tournamentID='.$id.'">Tournament Games</a></br>';
