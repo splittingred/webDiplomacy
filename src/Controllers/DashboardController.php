@@ -3,6 +3,8 @@
 namespace Diplomacy\Controllers;
 
 use Diplomacy\Models\Collection;
+use Diplomacy\Models\Game;
+use Diplomacy\Models\WatchedGame;
 use Diplomacy\Services\Games\GamesService;
 use Diplomacy\Services\Games\MembersService;
 use Diplomacy\Tournaments\Service as TournamentsService;
@@ -45,7 +47,7 @@ class DashboardController extends BaseController
             ]),
             'my_games' => $this->getMyGames(),
             'my_defeats' => $this->getMyDefeats(),
-            'watched_games' => libHome::gameWatchBlock(),
+            'my_watched' => $this->getMyWatched(),
         ];
 
         $result = $this->tournamentsService->findParticipatingForUser($this->currentUser->id);
@@ -70,7 +72,7 @@ class DashboardController extends BaseController
     /**
      * @return Collection
      */
-    protected function getMyGames()
+    protected function getMyGames() : Collection
     {
         return $this->gamesService->getActiveForUser($this->currentUser->id);
     }
@@ -78,9 +80,17 @@ class DashboardController extends BaseController
     /**
      * @return Collection
      */
-    protected function getMyDefeats()
+    protected function getMyDefeats() : Collection
     {
         return $this->gamesService->getDefeatsForUser($this->currentUser->id);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getMyWatched() : Collection
+    {
+        return $this->gamesService->getWatchedForUser($this->currentUser->id);
     }
 
     /**

@@ -1,0 +1,18 @@
+{% include 'pages/games/list/_header.twig' with { tab: 'new' } %}
+
+<div class="content">
+    {% if games is empty %}
+        <p>
+            You are not in any active games, <a href="/gamelistings.php?gamelistType=New">join a new game</a>
+            or <a href="/gamecreate.php">create your own new game.</a>
+        </p>
+    {% else %}
+        {% if total_pages > 1 %}{{ pagination|raw }}{% endif %}
+
+        <div class="gamesList">
+            {% for game in games %}
+                {{ game.getSummary()|raw }}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

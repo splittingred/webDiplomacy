@@ -8,6 +8,12 @@ use libHome;
 class NoticesController extends BaseController
 {
     protected $template = 'pages/users/notices.twig';
+    protected $footerScripts = [
+        'homeGameHighlighter();'
+    ];
+    protected $footerIncludes = [
+        'home.js'
+    ];
 
     public function call()
     {

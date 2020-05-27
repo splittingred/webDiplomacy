@@ -4,6 +4,6 @@
     <p class="notice"> You are not defeated in any active games, good job!</p>
 {% else %}
     {% for game in my_defeats %}
-        {{ game.getSummary()|raw }}
+        {{ game.getHomeSummary()|raw }}
     {% endfor %}
 {% endif %}

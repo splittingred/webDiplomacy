@@ -1,0 +1,13 @@
+<div class="homeHeader">Spectated games</div>
+<div class="hr"></div>
+
+{% if games is empty %}
+    <div class="bottomborder">
+        <p class="notice">You're not spectating any games.</p>
+        <p>Click the 'spectate' button on an existing game to add games to your list of spectated games.</p>
+    </div>
+{% else %}
+    {% for game in games %}
+        {{ game.getHomeSummary()|raw }}
+    {% endfor %}
+{% endif %}

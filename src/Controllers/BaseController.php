@@ -143,6 +143,7 @@ abstract class BaseController
         $this->setPlaceholder('current_user', $this->currentUser);
         $this->setPlaceholder('moderator_email', \Config::$modEMail ? \Config::$modEMail : \Config::$adminEMail);
         $this->setPlaceholder('admin_email', \Config::$adminEMail);
+        $this->setPlaceholder('current_page', $this->getCurrentPage());
     }
 
     /**
@@ -194,8 +195,8 @@ abstract class BaseController
      */
     protected function getPagination(int $total) : string
     {
-        $totalPages = ceil($total / $this->perPage);
-        $current = (int)$this->request->get('page', 1, Request::TYPE_GET);
+        $totalPages = $this->getTotalPages($total);
+        $current = $this->getCurrentPage();
         if ($current <= 1) $current = 1;
 
         return $this->renderPartial('common/pagination/links.twig',[
@@ -204,5 +205,22 @@ abstract class BaseController
             'cls' => 'form-submit',
             'current_cls' => 'curr-page',
         ]);
+    }
+
+    /**
+     * @param int $total
+     * @return int
+     */
+    public function getTotalPages(int $total) : int
+    {
+        return ceil($total / $this->perPage);
+    }
+
+    /**
+     * @return int
+     */
+    public function getCurrentPage() : int
+    {
+        return (int)$this->request->get('page', 1, Request::TYPE_GET);
     }
 }

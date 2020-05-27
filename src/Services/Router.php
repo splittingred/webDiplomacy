@@ -18,7 +18,7 @@ class Router
     }
 
     /**
-     *
+     * Configure our router
      */
     private function configure() : void
     {
@@ -43,6 +43,8 @@ class Router
         $this->router->get('games/(\d+)/moderator-notes', function($gameId) {
             \Diplomacy\Controllers\Games\View\ModeratorNotesController::handle(['id' => (int)$gameId]);
         });
+        $this->router->get('games/mine', 'Games\Search\MineController@handle');
+        $this->router->get('games/search/new', 'Games\Search\NewController@handle');
 
         /* help */
         $this->router->get('help', 'Help\HelpController@handle');
@@ -72,6 +74,7 @@ class Router
             \Diplomacy\Controllers\Users\ThreadsController::handle(['id' => (int)$userId]);
         });
         $this->router->get('users/settings', 'Users\SettingsController@handle');
+        $this->router->get('users/notices', 'Users\NoticesController@handle');
 
         /* tournaments */
         $this->router->get('tournaments/info', 'Tournaments\InfoController@handle');

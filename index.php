@@ -42,16 +42,7 @@ else
 {
     if (!$User->isAuthenticated())
     {
-        libHTML::$footerScript[] = l_jf('homeGameHighlighter').'();';
-        libHTML::$footerIncludes[] = l_j('home.js');
         $controller = new IntroController();
-        echo $controller->render();
-    }
-    elseif (isset($_REQUEST['notices']))
-    {
-        libHTML::$footerScript[] = l_jf('homeGameHighlighter').'();';
-        libHTML::$footerIncludes[] = l_j('home.js');
-        $controller = new NoticesController();
         echo $controller->render();
     }
     else

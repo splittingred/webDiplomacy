@@ -17,8 +17,7 @@
                 {% include 'pages/home/_my_defeats.twig' with { games: my_defeats } %}
                 <div class="hr"></div>
 
-                <div class="homeHeader">Spectated games</div>
-                {{ watched_games|raw }}
+                {% include 'pages/home/_my_watched.twig' with { games: my_watched } %}
 
                 {{ my_tournaments|raw }}
 

@@ -4,6 +4,9 @@ namespace Diplomacy\Services\Games;
 
 use Diplomacy\Models\Collection;
 use Diplomacy\Models\Game;
+use Diplomacy\Models\Member;
+use Diplomacy\Models\WatchedGame;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 
 /**
@@ -19,18 +22,20 @@ class GamesService
      */
     public function getActiveForUser(int $userId) : Collection
     {
+        $gameTable = Game::getTableName();
+        $membersTable = Member::getTableName();
         $query = Game::query();
-        $query->select('wD_Games.*')
-            ->join('wD_Members', function($join) use ($userId) {
+        $query->select($gameTable . '.*')
+            ->join('wD_Members', function($join) use ($userId, $gameTable, $membersTable) {
             /** @var $join JoinClause */
             $join
-                ->on('wD_Members.userID', '=', Game::raw($userId))
-                ->on('wD_Members.gameID', '=', 'wD_Games.id');
+                ->on($membersTable . '.userID', '=', Game::raw($userId))
+                ->on($membersTable . '.gameID', '=', $gameTable . '.id');
         })
-            ->where('wD_Games.phase', '!=', 'Finished')
-            ->where('wD_Members.status', '!=', 'Defeated')
-            ->orderBy('wD_Games.processStatus', 'asc')
-            ->orderBy('wD_Games.processTime', 'asc');
+            ->where($gameTable . '.phase', '!=', 'Finished')
+            ->where($membersTable . '.status', '!=', 'Defeated')
+            ->orderBy($gameTable . '.processStatus', 'asc')
+            ->orderBy($gameTable . '.processTime', 'asc');
 
         $count = $query->count();
         $games = $query->get();
@@ -46,18 +51,41 @@ class GamesService
      */
     public function getDefeatsForUser(int $userId) : Collection
     {
+        $gameTable = Game::getTableName();
+        $membersTable = Member::getTableName();
         $query = Game::query();
-        $query->select('wD_Games.*')
-            ->join('wD_Members', function($join) use ($userId) {
+        $query->select($gameTable.'.*')
+            ->join('wD_Members', function($join) use ($userId, $gameTable, $membersTable) {
                 /** @var $join JoinClause */
                 $join
-                    ->on('wD_Members.userID', '=', Game::raw($userId))
-                    ->on('wD_Members.gameID', '=', 'wD_Games.id');
+                    ->on($membersTable . '.userID', '=', Game::raw($userId))
+                    ->on($membersTable . '.gameID', '=', $gameTable . '.id');
             })
-            ->where('wD_Games.phase', '=', 'Finished')
-            ->whereIn('wD_Members.status', ['Resigned', 'Defeated'])
-            ->orderBy('wD_Games.processStatus', 'asc')
-            ->orderBy('wD_Games.processTime', 'asc');
+            ->where($gameTable . '.phase', '=', 'Finished')
+            ->whereIn($membersTable . '.status', ['Resigned', 'Defeated'])
+            ->orderBy($gameTable . '.processStatus', 'asc')
+            ->orderBy($gameTable . '.processTime', 'asc');
+
+        $count = $query->count();
+        $games = $query->get();
+
+        return new Collection($games, $count);
+    }
+
+    /**
+     * @param int $userId
+     * @return Collection
+     */
+    public function getWatchedForUser(int $userId) : Collection
+    {
+        $watchedGameTable = WatchedGame::getTableName();
+        $gameTable = Game::getTableName();
+        $query = Game::query();
+        $query->notFinished()
+            ->join($watchedGameTable, $watchedGameTable.'.gameID', '=', $gameTable.'.id')
+            ->where($watchedGameTable.'.userID','=',$userId)
+            ->orderBy('processStatus', 'asc')
+            ->orderBy('processTime','ASC');
 
         $count = $query->count();
         $games = $query->get();

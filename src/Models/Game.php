@@ -4,6 +4,7 @@ namespace Diplomacy\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use panelGame;
 use panelGameHome;
 use WDVariant;
 
@@ -17,6 +18,12 @@ class Game extends EloquentBase
     protected $variant;
     /** @var panelGameHome */
     protected $homeGamePanel;
+    /** @var panelGame */
+    protected $gamePanel;
+
+    /*****************************************************************************************************************
+     * RELATIONSHIPS
+     ****************************************************************************************************************/
 
     /**
      * @return HasMany
@@ -42,14 +49,88 @@ class Game extends EloquentBase
         return $this->hasMany(TurnDate::class, 'gameID');
     }
 
+    /*****************************************************************************************************************
+     * SCOPES
+     ****************************************************************************************************************/
+
     /**
      * @param Builder $query
      * @return Builder
      */
     public function scopeJoinMembers(Builder $query) : Builder
     {
-        return $query->join('wD_Members', 'wD_Members.gameID', '=', 'wD_Games.id');
+        $membersTable = Member::getTableName();
+        return $query->join($membersTable, $membersTable . '.gameID', '=', static::getTableName() . '.id');
     }
+
+    /**
+     * @param Builder $query
+     * @param int $userId
+     * @return Builder
+     */
+    public function scopeWithUser(Builder $query, int $userId) : Builder
+    {
+        $membersTable = Member::getTableName();
+        return $this->scopeJoinMembers($query)->where($membersTable . '.userID', '=', $userId);
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeFinished(Builder $query) : Builder
+    {
+        return $query->where('phase', '=', 'Finished');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNotFinished(Builder $query) : Builder
+    {
+        return $query->where('phase', '!=', 'Finished');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeGameOver(Builder $query) : Builder
+    {
+        return $query->where('gameOver', 'Yes');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeGameNotOver(Builder $query) : Builder
+    {
+        return $query->where('gameOver', 'No');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopePreGame(Builder $query) : Builder
+    {
+        return $query->where('phase', '=' , 'Pre-Game');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNotPreGame(Builder $query) : Builder
+    {
+        return $query->where('phase', '!=' , 'Pre-Game');
+    }
+
+    /*****************************************************************************************************************
+     * INSTANCE METHODS
+     ****************************************************************************************************************/
 
     /**
      * @param int $gameId
@@ -79,27 +160,35 @@ class Game extends EloquentBase
         return $this->homeGamePanel;
     }
 
-    public function scopeGameOver(Builder $query) : Builder
+    /**
+     * Get the home panel summary
+     *
+     * @return string
+     */
+    public function getHomeSummary() : string
     {
-        return $query->where('gameOver', 'Yes');
-    }
-
-    public function scopeGameNotOver(Builder $query) : Builder
-    {
-        return $query->where('gameOver', 'No');
-    }
-
-    public function scopeNotPreGame(Builder $query) : Builder
-    {
-        return $query->where('phase', '!=' , 'Pre-Game');
+        return $this->getHomeGamePanel()->summary();
     }
 
     /**
+     * Get the main game panel
+     *
+     * @return panelGame
+     */
+    public function getGamePanel() : panelGame
+    {
+        if (!$this->gamePanel) $this->gamePanel = $this->getVariant()->panelGame($this->toArray());
+        return $this->gamePanel;
+    }
+
+    /**
+     * Get the main summary
+     *
      * @return string
      */
     public function getSummary() : string
     {
-        return $this->getHomeGamePanel()->summary();
+        return $this->getGamePanel()->summary();
     }
 
     /**

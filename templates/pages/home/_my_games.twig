@@ -5,7 +5,7 @@
 <div class="hr"></div>
 {% if games is empty %}
 <div class="bottomborder">
-    <p class="notice">You're not joined to any games!
+    <p class="notice">You've not joined any games!
         <br />
         Access the <a href="/gamelistings.php?tab=">Games</a>
         link above to find games you can join, or start a
@@ -13,7 +13,7 @@
     </p>
 </div>
 {% else %}
-{% for game in games %}
-    {{ game.getSummary()|raw }}
-{% endfor %}
+    {% for game in games %}
+        {{ game.getHomeSummary()|raw }}
+    {% endfor %}
 {% endif %}
