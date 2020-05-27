@@ -101,7 +101,7 @@ if( !defined('AJAX') )
 	global $User;
 	$User = libAuth::auth();
 
-	if ( $User->type['Admin'] )
+	if ($User->isAdmin())
 	{
 		Config::$debug=true;
 
@@ -112,7 +112,7 @@ if( !defined('AJAX') )
 	}
 	elseif ( $Misc->Maintenance )
 	{
-		list($contents) = $DB->sql_row("SELECT message FROM wD_Config WHERE name = 'Maintenance'");
+	    $contents = \Diplomacy\Models\Config::forName('Maintenance')->pluck('message')[0];
 		unset($DB); // This lets libHTML know there's a problem
 		libHTML::error($contents);
 

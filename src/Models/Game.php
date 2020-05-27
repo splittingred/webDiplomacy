@@ -18,6 +18,34 @@ class Game extends EloquentBase
     /** @var panelGameHome */
     protected $homeGamePanel;
 
+    /**
+     * @return HasMany
+     */
+    public function members() : HasMany
+    {
+        return $this->hasMany(Member::class, 'gameID', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function units() : HasMany
+    {
+        return $this->hasMany(Unit::class, 'gameID');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function turnDates() : HasMany
+    {
+        return $this->hasMany(TurnDate::class, 'gameID');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
     public function scopeJoinMembers(Builder $query) : Builder
     {
         return $query->join('wD_Members', 'wD_Members.gameID', '=', 'wD_Games.id');
@@ -31,14 +59,6 @@ class Game extends EloquentBase
     public static function isMember(int $gameId, int $userId) : bool
     {
         return Member::forGame($gameId)->forUser($userId)->exists();
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function members()
-    {
-        return $this->hasMany(Member::class, 'gameID', 'id');
     }
 
     /**

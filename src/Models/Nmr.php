@@ -3,20 +3,34 @@
 namespace Diplomacy\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Member extends EloquentBase
+/**
+ * @package Diplomacy\Models
+ */
+class Nmr extends EloquentBase
 {
-    protected $table = 'wD_Members';
-    protected $hidden = [];
+    protected $table = 'wD_NMRs';
 
-    public function game()
+    /**
+     * @return BelongsTo
+     */
+    public function game() : BelongsTo
     {
         return $this->belongsTo(Game::class, 'gameID');
     }
 
     /**
+     * @return BelongsTo
+     */
+    public function user() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'userID');
+    }
+
+    /**
      * @param Builder $query
-     * @param integer $userId
+     * @param int $userId
      * @return Builder
      */
     public function scopeForUser(Builder $query, int $userId) : Builder
@@ -26,7 +40,7 @@ class Member extends EloquentBase
 
     /**
      * @param Builder $query
-     * @param integer $gameId
+     * @param int $gameId
      * @return Builder
      */
     public function scopeForGame(Builder $query, int $gameId) : Builder
