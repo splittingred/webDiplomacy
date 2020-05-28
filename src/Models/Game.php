@@ -76,6 +76,18 @@ class Game extends EloquentBase
 
     /**
      * @param Builder $query
+     * @param int $userId
+     * @return Builder
+     */
+    public function scopeWithoutUser(Builder $query, int $userId) : Builder
+    {
+        $membersTable = Member::getTableName();
+        $gamesTable = Game::getTableName();
+        return $this->scopeJoinMembers($query)->distinct($gamesTable . '.id')->where($membersTable . '.userID', '!=', $userId);
+    }
+
+    /**
+     * @param Builder $query
      * @return Builder
      */
     public function scopeFinished(Builder $query) : Builder
@@ -126,6 +138,50 @@ class Game extends EloquentBase
     public function scopeNotPreGame(Builder $query) : Builder
     {
         return $query->where('phase', '!=' , 'Pre-Game');
+    }
+
+    /**
+     * Get all joinable games for a user, based on passed available points and RR
+     *
+     * @param Builder $query
+     * @param int $userId
+     * @param int $points
+     * @param int $reliabilityRating
+     * @return Builder
+     */
+    public function scopeJoinableForUser(Builder $query, int $userId, int $points, int $reliabilityRating) : Builder
+    {
+        return $this->scopeWithoutUser($query, $userId)
+            ->whereNotNull('minimumBet')
+            ->whereNull('password')
+            ->gameNotOver()
+            ->notFinished()
+            ->notPreGame()
+            ->where('minimumBet', '<=', $points)
+            ->where('minimumReliabilityRating', '<=', $reliabilityRating);
+    }
+
+    /**
+     * Return all active games
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeActive(Builder $query) : Builder
+    {
+        return $query->notPreGame()->notFinished();
+    }
+
+    /**
+     * Get all active games for a given user
+     *
+     * @param Builder $query
+     * @param int $userId
+     * @return Builder
+     */
+    public function scopeActiveForUser(Builder $query, int $userId) : Builder
+    {
+        return $query->withUser($userId)->notFinished();
     }
 
     /*****************************************************************************************************************

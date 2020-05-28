@@ -1,4 +1,4 @@
-{% include 'pages/games/list/_header.twig' with { tab: 'new' } %}
+{{ tabs|raw }}
 
 <div class="content">
     {% if games is empty %}
