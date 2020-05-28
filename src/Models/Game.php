@@ -83,7 +83,12 @@ class Game extends EloquentBase
     {
         $membersTable = Member::getTableName();
         $gamesTable = Game::getTableName();
-        return $this->scopeJoinMembers($query)->distinct($gamesTable . '.id')->where($membersTable . '.userID', '!=', $userId);
+        return $query
+            ->leftJoin($membersTable , function($join) use ($gamesTable, $membersTable, $userId) {
+                $join->where($membersTable . '.gameID', '=', Game::raw($gamesTable . '.id'))
+                    ->where($membersTable . '.userID', '=', Game::raw($userId));
+            })
+            ->whereNull($membersTable . '.id');
     }
 
     /**
@@ -155,8 +160,7 @@ class Game extends EloquentBase
             ->whereNotNull('minimumBet')
             ->whereNull('password')
             ->gameNotOver()
-            ->notFinished()
-            ->notPreGame()
+            ->active()
             ->where('minimumBet', '<=', $points)
             ->where('minimumReliabilityRating', '<=', $reliabilityRating);
     }
