@@ -46,6 +46,8 @@ class Router
         $this->router->get('games/mine', 'Games\Search\MineController@handle');
         $this->router->get('games/search/new', 'Games\Search\NewController@handle');
         $this->router->get('games/open', 'Games\Search\OpenController@handle');
+        $this->router->get('games/active', 'Games\Search\ActiveController@handle');
+        $this->router->get('games/finished', 'Games\Search\FinishedController@handle');
 
         /* help */
         $this->router->get('help', 'Help\HelpController@handle');

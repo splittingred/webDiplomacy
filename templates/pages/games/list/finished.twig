@@ -1,0 +1,17 @@
+{{ tabs|raw }}
+
+<div class="content">
+    {% if games is empty %}
+        <p>
+            There are currently no finished games.
+        </p>
+    {% else %}
+        {% if total_pages > 1 %}{{ pagination|raw }}{% endif %}
+
+        <div class="gamesList">
+            {% for game in games %}
+                {{ game.getSummary()|raw }}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
