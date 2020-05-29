@@ -3,13 +3,14 @@
 namespace Diplomacy\Controllers;
 
 use Diplomacy\Services\Request;
+use Diplomacy\Utilities\HasPlaceholders;
 use libHTML;
 use Twig\Environment as Twig;
 use Twig\Error\Error as TwigError;
 
 abstract class BaseController
 {
-    use Placeholders;
+    use HasPlaceholders;
 
     /** @var Twig */
     protected $renderer;
@@ -37,7 +38,7 @@ abstract class BaseController
 
     public function __construct()
     {
-        global $renderer, $DB, $User, $capsule;
+        global $renderer, $DB, $User;
         $this->renderer = $renderer;
         $this->database = $DB;
         $this->currentUser = $User;

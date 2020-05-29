@@ -12,7 +12,7 @@ class NewController extends BaseController
 
     public function call()
     {
-        $query = Game::preGame();
+        $query = Game::preGame()->orderBy('id', 'desc');
         $total = $query->count();
 
         return [

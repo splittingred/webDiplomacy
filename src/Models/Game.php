@@ -75,6 +75,25 @@ class Game extends EloquentBase
     }
 
     /**
+     * Filter by Tournament, and optionally, Tournament Round
+     *
+     * @param Builder $query
+     * @param int $tournamentId
+     * @return Builder
+     */
+    public function scopeForTournament(Builder $query, int $tournamentId, int $rountId = 0) : Builder
+    {
+        $gameTable = static::getTableName();
+        $tgTable = TournamentGame::getTableName();
+        $query = $query->join($tgTable, $tgTable . '.gameID', '=', static::raw($gameTable . '.id'))
+                       ->where($tgTable . 'tournamentID', '=', $tournamentId);
+        if (!empty($roundId)) {
+            $query->where($tgTable.'.round', '=', static::raw($roundId));
+        }
+        return $query;
+    }
+
+    /**
      * @param Builder $query
      * @param int $userId
      * @return Builder
@@ -82,13 +101,31 @@ class Game extends EloquentBase
     public function scopeWithoutUser(Builder $query, int $userId) : Builder
     {
         $membersTable = Member::getTableName();
-        $gamesTable = Game::getTableName();
+        $gamesTable = static::getTableName();
         return $query
             ->leftJoin($membersTable , function($join) use ($gamesTable, $membersTable, $userId) {
                 $join->where($membersTable . '.gameID', '=', Game::raw($gamesTable . '.id'))
                     ->where($membersTable . '.userID', '=', Game::raw($userId));
             })
             ->whereNull($membersTable . '.id');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeAnonymous(Builder $query) : Builder
+    {
+        return $query->where('anon', '=', 'Yes');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNotAnonymous(Builder $query) : Builder
+    {
+        return $query->where('anon', '=', 'No');
     }
 
     /**
@@ -125,6 +162,24 @@ class Game extends EloquentBase
     public function scopeGameNotOver(Builder $query) : Builder
     {
         return $query->where('gameOver', 'No');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeWon(Builder $query) : Builder
+    {
+        return $query->where('gameOver', '=', 'Won');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeDrawn(Builder $query) : Builder
+    {
+        return $query->where('gameOver', '=', 'Drawn');
     }
 
     /**
@@ -177,6 +232,17 @@ class Game extends EloquentBase
     }
 
     /**
+     * Return all new (not game over and in Pre-Game) games
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNew(Builder $query) : Builder
+    {
+        return $query->preGame()->notGameOver();
+    }
+
+    /**
      * Get all active games for a given user
      *
      * @param Builder $query
@@ -186,6 +252,24 @@ class Game extends EloquentBase
     public function scopeActiveForUser(Builder $query, int $userId) : Builder
     {
         return $query->withUser($userId)->notFinished();
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopePaused(Builder $query) : Builder
+    {
+        return $query->notPreGame()->notFinished()->where('processStatus', '=', 'Paused');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeRunning(Builder $query) : Builder
+    {
+        return $query->notPreGame()->notFinished()->where('processStatus', '!=', 'Paused');
     }
 
     /*****************************************************************************************************************

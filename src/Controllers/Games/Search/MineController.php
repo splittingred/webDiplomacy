@@ -14,7 +14,7 @@ class MineController extends BaseController
     {
         if (!$this->currentUser->isAuthenticated()) { $this->redirectRelative('/'); exit(); }
 
-        $query = Game::activeForUser($this->currentUser->id);
+        $query = Game::activeForUser($this->currentUser->id)->orderBy('id', 'desc');
         $total = $query->count();
 
         return [

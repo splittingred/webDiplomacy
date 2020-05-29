@@ -82,7 +82,7 @@ if (ini_get('register_globals') or get_magic_quotes_gpc())
     unset($defined_vars);
 }
 
-ini_set('memory_limit',"8M"); // 8M is the default
+ini_set('memory_limit','256M'); // 8M is the default
 ini_set('max_execution_time','8');
 //ini_set('session.cache_limiter','public');
 ignore_user_abort(TRUE); // Carry on if the user exits before the script gets printed.

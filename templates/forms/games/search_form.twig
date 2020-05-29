@@ -1,0 +1,188 @@
+<div class="gameCreateShow search-form">
+    <form class="advancedSearch" method="get" action="/games/search#results">
+        <div class="form-group">
+            <label for="sf-status">Game Status:</label>
+            <select name="status" id="sf-status" class="gameCreate form-control">
+                {% for opt, text in game_statuses %}
+                    <option value="{{ opt }}"{% if opt == values.status %} selected="selected"{% endif %}>{{ text }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sf-user-games">My Games:</label>
+            <select name="user_games" id="sf-user-games" class="gameCreate form-control">
+                <option{% if user_games == 'all' %} selected="selected"{% endif %} value="all">All Games</option>
+                <option{% if user_games == 'include' %} selected="selected"{% endif %} value="include">My Games</option>
+            </select>
+        </div>
+
+        {% if values.tournament_id > 0 %}
+            <div class="form-group">
+                <label for="sf-round">Round:</label>
+                <select name="round" id="sf-round" class="gameCreate form-control">
+                <option value="all" {% if values.round == 'all' %} selected="selected"{% endif %}>All</option>
+                {% for i in range(1, tournament_rounds) %}
+                    <option value="{{ i }}"{% if values.round == i %} selected="selected"{% endif%}>
+                        {{ i }}
+                    </option>
+                {% endfor %}
+                </select>
+            </div>
+        {% else %}
+            <div class="form-group">
+                <label for="sf-joinable">Joinable Games:</label>
+                <select name="joinable" id="sf-joinable" class="gameCreate form-control">
+                    {% for opt, text in joinable_options %}
+                        <option value="{{ opt }}"{% if opt == values.joinable %} selected="selected"{% endif %}>{{ text }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="sf-privacy">Privacy:</label>
+            <select name="privacy" id="sf-privacy" class="gameCreate form-control">
+                {% for opt, text in privacy_options %}
+                    <option value="{{ opt }}"{% if opt == values.privacy %} selected="selected"{% endif %}>{{ text }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sf-pot-type">Scoring:</label>
+            <select name="pot_type" id="sf-pot-type" class="gameCreate form-control">
+                {% for opt, text in pot_types %}
+                    <option value="{{ opt }}"{% if opt == values.draw_votes %} selected="selected"{% endif %}>{{ text }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sf-draw-votes">Draw Votes:</label>
+            <select name="draw_votes" id="sf-draw-votes" class="gameCreate">
+                {% for opt, text in draw_vote_options %}
+                    <option value="{{ opt }}"{% if opt == values.draw_votes %} selected="selected"{% endif %}>{{ text }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sf-variant">Variant:</label>
+            <select name="variant" id="sf-variant" class="gameCreate form-control">
+                <option value="all"{% if values.variant == 'all' %} selected="selected"{% endif %}>All</option>
+                {% for variant in variants %}
+                    <option value="{{ variant }}"{% if values.variant == variant %} selected="selected"{% endif %}>{{ variant }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sf-excused-turns">Excused Missing Turns:</label>
+            <select name="excused_turns" id="sf-excused-turns" class="gameCreate form-control">
+                {% for i in -1..5 %}
+                <option value="{{ i }}"{% if values.excused_turns == i %} selected="selected"{% endif%}>
+                    {% if i == -1 %}All{% else %}{{ i }}{% endif %}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sf-anonymity">Anonymity:</label>
+            <select name="anonymity" id="sf-anonymity" class="gameCreate form-control">
+                {% for level, text in anonymity_levels %}
+                <option value="{{ level }}"{% if level == values.anonymity %} selected="selected"{% endif %}>{{ text }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sf-phase-length-min">Phase Length From</label>
+            <select name="phase_length_min" id="sf-phase-length-min" class="gameCreate form-control">
+                {% for minutes, text in phase_lengths %}
+                    <option value="{{ phase }}"{% if values.phase_length_min == minutes %} selected="selected"{% endif %}>{{ text }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="sf-phase-length-max">Phase Length To</label>
+            <select name="phase_length_max" id="sf-phase-length-max" class="gameCreate form-control">
+                {% for minutes, text in phase_lengths %}
+                <option value="{{ phase }}"{% if values.phase_length_max == minutes %} selected="selected"{% endif %}>{{ text }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sf-rr-min">Reliability Rating From</label>
+            <select name="rr_min" id="sf-rr-min" class="gameCreate form-control">
+                {% for i in 0..10 %}
+                    <option {% if values.rr_min == (i * 10) %} selected="selected"{% endif %} value="{{ i * 10 }}">
+                        {{ i * 10 }}%
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sf-rr-max">To</label>
+            <select name="rr_max" id="sf-rr-max" class="gameCreate form-control">
+                {% for i in 0..10 %}
+                <option {% if values.rr_max == (i * 10) %} selected="selected"{% endif %} value="{{ i * 10 }}">
+                    {{ i * 10 }}%
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sf-bet-min">Bet Size From</label>
+            <input type="number"
+                   class="gameCreate form-control"
+                   name="bet_min"
+                   id="sf-bet-min"
+                   onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                   value="{{ values.bet_min }}"/>
+            <label for="sf-bet-max">Bet Size To</label>
+            <input type="number"
+                   class="gameCreate form-control"
+                   name="bet_max"
+                   id="sf-bet-max"
+                   onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                   value="{{ values.bet_max }}" />
+        </div>
+
+        <div class="form-group">
+            <label>Messaging Type:</label>
+            {% for value, text in messaging_types %}
+                <input type="checkbox"
+                       class="form-check-input gameCreate"
+                       name="messaging_types[{{ value }}]"
+                       id="sf-messaging-type-{{ loop.index }}"
+                       value="Yes"
+                       {% if value in values.messaging_types.keys %} checked="checked"{% endif %}
+                >
+                <label class="form-check-label" for="sf-messaging-type-{{ loop.index }}">{{ text }}</label>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="sf-sort-by">Sort By:</label>
+            <select class="gameCreate form-control" name="sort_by" id="sf-sort-by">
+                {% for value, text in sort_columns %}
+                    <option{% if value == values.sort_by %} selected="selected"{% endif %} value="{{ value }}">{{ text }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sf-sort-dir">Sort Direction:</label>
+            <select class="gameCreate form-control" name="sort_dir" id="sf-sort-dir">
+                <option{% if sort_dir == 'asc' %} selected="selected"{% endif %} value="asc">Ascending</option>
+                <option{% if sort_dir == 'desc' %} selected="selected"{% endif %} value="desc">Descending</option>
+            </select>
+        </div>
+
+        <input type="submit" name="submit" class="green-Submit" value="Search" />
+    </form>
+</div>

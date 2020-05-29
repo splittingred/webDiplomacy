@@ -2191,3 +2191,27 @@ ul.threads-list li p {
 .error, p.error {
 	color: red;
 }
+
+
+.search-form .form-group {
+	display: block;
+}
+.search-form input { margin: 0; }
+.search-form label {
+	display: inline-block;
+	font-size: 14px;
+	font-weight: bold;
+	margin: 10px 5px;
+}
+.search-form input[type=checkbox], .search-form input[type=radio] {
+	 box-sizing: border-box;
+	 padding: 0;
+}
+.form-check {
+	position: relative;
+	display: block;
+	padding-left: 1.25rem;
+}
+.form-check-label, .search-form .form-check-label {
+	font-weight: normal;
+}

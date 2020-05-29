@@ -12,7 +12,8 @@ class OpenController extends BaseController
 
     public function call()
     {
-        $query = Game::joinableForUser($this->currentUser->id, $this->currentUser->points, $this->currentUser->reliabilityRating);
+        $query = Game::joinableForUser($this->currentUser->id, $this->currentUser->points, $this->currentUser->reliabilityRating)
+            ->orderBy('id', 'desc');
         $total = $query->count();
 
         return [

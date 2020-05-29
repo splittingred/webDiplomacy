@@ -1,0 +1,21 @@
+{{ tabs|raw }}
+
+<div class="content">
+    {{ search_form|raw }}
+
+    <hr />
+
+    {% if games is empty %}
+        <p>
+            No games found with current search.
+        </p>
+    {% else %}
+        {% if total_pages > 1 %}{{ pagination|raw }}{% endif %}
+
+        <div class="gamesList">
+            {% for game in games %}
+                {{ game.getSummary()|raw }}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

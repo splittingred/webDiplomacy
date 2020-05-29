@@ -12,7 +12,7 @@ class ActiveController extends BaseController
 
     public function call()
     {
-        $query = Game::active();
+        $query = Game::active()->orderBy('id', 'desc');
         $total = $query->count();
 
         return [

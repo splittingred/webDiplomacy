@@ -12,7 +12,7 @@ class FinishedController extends BaseController
 
     public function call()
     {
-        $query = Game::finished();
+        $query = Game::finished()->orderBy('id', 'desc');
         $total = $query->count();
 
         return [

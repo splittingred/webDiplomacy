@@ -1,7 +1,9 @@
 <?php
-namespace Diplomacy\Controllers;
 
-trait Placeholders {
+namespace Diplomacy\Utilities;
+
+trait HasPlaceholders
+{
     /** @var array */
     protected $placeholders = [];
 
