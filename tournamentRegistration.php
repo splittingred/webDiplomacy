@@ -222,7 +222,7 @@ if ($tournamentID > 0)
 			print '<a href="/tournaments/'.$id.'">Tournament Scoring</a></br>';
 			if($status != 'Registration')
 			{
-				print '<a href="gamelistings.php?gamelistType=Search&tournamentID='.$id.'">Tournament Games</a></br>';
+				print '<a href="/games/search/?tournament_id='.$id.'">Tournament Games</a></br>';
 			}
 		}
 		if ($userType != 'Normal')

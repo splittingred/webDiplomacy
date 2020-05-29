@@ -14,7 +14,7 @@
             <br />
             {% if tournament.isRegistrationComplete() %}
                 <br />
-                <a class="tournamentCenter" href="/gamelistings.php?gamelistType=Search&tournamentID={{ tournament.id }}">Tournament Games</a>
+                <a class="tournamentCenter" href="/games/search?tournament_id={{ tournament.id }}">Tournament Games</a>
                 <br />
             {% endif %}
         {% endif %}

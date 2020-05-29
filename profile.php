@@ -780,7 +780,7 @@ print '</div>';
 
 libHTML::pagebreak();
 
-print '<h3>'.l_t('%s\'s games',$UserProfile->username).' '.( $User->type['User'] ? '(<a href="gamelistings.php?userID='.$UserProfile->id.'&gamelistType=Search">'.l_t('Search').'</a>)' : '' ).'</h3>';
+print '<h3>'.l_t('%s\'s games',$UserProfile->username).' '.( $User->type['User'] ? '(<a href="/games/search/?user_id='.$UserProfile->id.'">'.l_t('Search').'</a>)' : '' ).'</h3>';
 
 $pagenum = 1;
 $resultsPerPage = 20;

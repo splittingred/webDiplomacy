@@ -14,7 +14,8 @@
 
         <div class="gamesList">
             {% for game in games %}
-                {{ game.getSummary()|raw }}
+                {{ game.getGamePanel().summary()|raw }}
+                <br /><hr /><br />
             {% endfor %}
         </div>
     {% endif %}

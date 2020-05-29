@@ -1,7 +1,7 @@
 {% if live_games %}
     <div class="homeHeader">
         Joinable live games
-        <a href="/gamelistings.php?gamelistType=Search&phaseLengthMax=30m&messageNorm=Yes&messagePub=Yes&messageNon=Yes&messageRule=Yes&Submit=Search#results">
+        <a href="/games/search?phase_length_max=30&messaging_types%5Bnorm%5B=yes&messaging_types%5Bnorm%5D=Yes&messaging_types%5Bpub%5D=Yes&messaging_types%5Bnone%5D=Yes&messaging_types%5Brule%5D=Yes#results">
             {% include 'common/link.twig' %}
         </a>
     </div>

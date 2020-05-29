@@ -11,7 +11,7 @@ class SearchForm extends BaseForm
     protected $template = 'forms/games/search_form.twig';
     protected $requestType = Request::TYPE_GET;
     protected $fields = [
-        'game_status'       => 'all',
+        'status'            => 'all',
         'user_games'        => 'all',
         'round'             => 'all',
         'joinable'          => 'all',
@@ -28,11 +28,11 @@ class SearchForm extends BaseForm
         'bet_min'           => '',
         'bet_max'           => '',
         'messaging_types'   => ['norm', 'pub', 'none', 'rule'],
-        'sort_by'           => 'id',
-        'sort_dir'          => 'desc',
         'tournament_id'     => 1,
         'tournament_rounds' => 5,
         'user_id'           => 0,
+        'sort_by'           => 'id',
+        'sort_dir'          => 'desc',
     ];
 
     protected $sortColumns = [

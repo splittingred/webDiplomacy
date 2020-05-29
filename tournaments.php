@@ -228,7 +228,7 @@ while (list($id, $name, $description, $status, $minRR, $year, $totalRounds, $for
         else
         {
             print '<a href="/tournaments/'.$id.'">Scoring and Participants</a></br>';
-            print '<a href="gamelistings.php?gamelistType=Search&tournamentID='.$id.'">Tournament Games</a></br>';
+            print '<a href="/games/search/?tournament_id='.$id.'">Tournament Games</a></br>';
         }
     }
     if (($tab == 'Moderating' || $tab == 'Finished') && ($User->type['User']))
@@ -277,7 +277,7 @@ while (list($id, $name, $description, $status, $minRR, $year, $totalRounds, $for
         
         print '<div class = "tournament_round"> Round '.$round.'</div>';
         print '<div class = "tournament_games">';
-        print '<a href="gamelistings.php?gamelistType=Search&tournamentID='.$id.'&round='.$round.'&Submit=Search#results">Search Round '.$round.' games</a></br></br>';
+        print '<a href="/games/search/?tournament_id='.$id.'&round='.$round.'&Submit=Search#results">Search Round '.$round.' games</a></br></br>';
 
         if ($ongoingGameCount > 0)
         {

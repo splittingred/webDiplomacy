@@ -1,13 +1,13 @@
 <div class="homeHeader">
     My games
-    <a href="/gamelistings.php?page=1&gamelistType=My games">{% include 'common/link.twig' %}</a>
+    <a href="/games/mine">{% include 'common/link.twig' %}</a>
 </div>
 <div class="hr"></div>
 {% if games is empty %}
 <div class="bottomborder">
     <p class="notice">You've not joined any games!
         <br />
-        Access the <a href="/gamelistings.php?tab=">Games</a>
+        Access the <a href="/games/new">Games</a>
         link above to find games you can join, or start a
         <a href="/gamecreate.php">New game</a> yourself.
     </p>

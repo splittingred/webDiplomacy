@@ -62,6 +62,15 @@ class VariantsService
 
     /**
      * @param string $variantName
+     * @return int
+     */
+    public static function variantIdFromName(string $variantName) : int
+    {
+        return array_search($variantName, \Config::$variants);
+    }
+
+    /**
+     * @param string $variantName
      * @return bool
      */
     public function isActive(string $variantName) : bool

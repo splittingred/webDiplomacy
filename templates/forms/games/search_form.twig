@@ -101,14 +101,14 @@
             <label for="sf-phase-length-min">Phase Length From</label>
             <select name="phase_length_min" id="sf-phase-length-min" class="gameCreate form-control">
                 {% for minutes, text in phase_lengths %}
-                    <option value="{{ phase }}"{% if values.phase_length_min == minutes %} selected="selected"{% endif %}>{{ text }}</option>
+                    <option value="{{ minutes }}"{% if values.phase_length_min == minutes %} selected="selected"{% endif %}>{{ text }}</option>
                 {% endfor %}
             </select>
 
             <label for="sf-phase-length-max">Phase Length To</label>
             <select name="phase_length_max" id="sf-phase-length-max" class="gameCreate form-control">
                 {% for minutes, text in phase_lengths %}
-                <option value="{{ phase }}"{% if values.phase_length_max == minutes %} selected="selected"{% endif %}>{{ text }}</option>
+                <option value="{{ minutes }}"{% if values.phase_length_max == minutes %} selected="selected"{% endif %}>{{ text }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -137,19 +137,9 @@
 
         <div class="form-group">
             <label for="sf-bet-min">Bet Size From</label>
-            <input type="number"
-                   class="gameCreate form-control"
-                   name="bet_min"
-                   id="sf-bet-min"
-                   onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                   value="{{ values.bet_min }}"/>
+            <input type="number" class="gameCreate form-control" name="bet_min" id="sf-bet-min" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="{{ values.bet_min }}"/>
             <label for="sf-bet-max">Bet Size To</label>
-            <input type="number"
-                   class="gameCreate form-control"
-                   name="bet_max"
-                   id="sf-bet-max"
-                   onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                   value="{{ values.bet_max }}" />
+            <input type="number" class="gameCreate form-control" name="bet_max" id="sf-bet-max" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="{{ values.bet_max }}" />
         </div>
 
         <div class="form-group">
@@ -157,10 +147,10 @@
             {% for value, text in messaging_types %}
                 <input type="checkbox"
                        class="form-check-input gameCreate"
-                       name="messaging_types[{{ value }}]"
+                       name="messaging_types[{{ loop.index }}]"
                        id="sf-messaging-type-{{ loop.index }}"
-                       value="Yes"
-                       {% if value in values.messaging_types.keys %} checked="checked"{% endif %}
+                       value="{{ value }}"
+                       {% if value in values.messaging_types %} checked="checked"{% endif %}
                 >
                 <label class="form-check-label" for="sf-messaging-type-{{ loop.index }}">{{ text }}</label>
             {% endfor %}
@@ -178,11 +168,14 @@
         <div class="form-group">
             <label for="sf-sort-dir">Sort Direction:</label>
             <select class="gameCreate form-control" name="sort_dir" id="sf-sort-dir">
-                <option{% if sort_dir == 'asc' %} selected="selected"{% endif %} value="asc">Ascending</option>
-                <option{% if sort_dir == 'desc' %} selected="selected"{% endif %} value="desc">Descending</option>
+                <option{% if values.sort_dir == 'asc' %} selected="selected"{% endif %} value="asc">Ascending</option>
+                <option{% if values.sort_dir == 'desc' %} selected="selected"{% endif %} value="desc">Descending</option>
             </select>
         </div>
 
-        <input type="submit" name="submit" class="green-Submit" value="Search" />
+        <div class="form-group">
+            <br />
+            <input type="submit" name="submit" class="btn btn-primary green-Submit" value="Search" />
+        </div>
     </form>
 </div>

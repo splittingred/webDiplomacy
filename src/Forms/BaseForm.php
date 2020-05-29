@@ -38,12 +38,16 @@ abstract class BaseForm
         $this->renderer = $renderer;
     }
 
+    /**
+     * @param callable $callback
+     */
     public function onSubmit(callable $callback)
     {
         $this->onSubmissionCallbacks[] = $callback;
     }
 
     public function beforeRender() { }
+    public function afterRender() { }
 
     /**
      * @return string
@@ -58,7 +62,9 @@ abstract class BaseForm
 
         $this->beforeRender();
         $this->setPlaceholder('values', $this->getValues());
-        return $this->renderer->render($this->template, $this->placeholders);
+        $output = $this->renderer->render($this->template, $this->placeholders);
+        $this->afterRender();
+        return $output;
     }
 
     /**

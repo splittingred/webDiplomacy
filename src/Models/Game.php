@@ -2,6 +2,7 @@
 
 namespace Diplomacy\Models;
 
+use Diplomacy\Services\Variants\VariantsService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use panelGame;
@@ -86,7 +87,7 @@ class Game extends EloquentBase
         $gameTable = static::getTableName();
         $tgTable = TournamentGame::getTableName();
         $query = $query->join($tgTable, $tgTable . '.gameID', '=', static::raw($gameTable . '.id'))
-                       ->where($tgTable . 'tournamentID', '=', $tournamentId);
+                       ->where($tgTable . '.tournamentID', '=', $tournamentId);
         if (!empty($roundId)) {
             $query->where($tgTable.'.round', '=', static::raw($roundId));
         }
@@ -201,6 +202,16 @@ class Game extends EloquentBase
     }
 
     /**
+     * @param Builder $query
+     * @param int $turns
+     * @return Builder
+     */
+    public function scopeWithExcusedMissedTurnsOf(Builder $query, int $turns) : Builder
+    {
+        return $query->where(static::getTableName() . '.excusedMissedTurns', '=', $turns);
+    }
+
+    /**
      * Get all joinable games for a user, based on passed available points and RR
      *
      * @param Builder $query
@@ -243,6 +254,24 @@ class Game extends EloquentBase
     }
 
     /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopePublic(Builder $query) : Builder
+    {
+        return $query->whereNull('password');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopePrivate(Builder $query) : Builder
+    {
+        return $query->whereNotNull('password');
+    }
+
+    /**
      * Get all active games for a given user
      *
      * @param Builder $query
@@ -270,6 +299,17 @@ class Game extends EloquentBase
     public function scopeRunning(Builder $query) : Builder
     {
         return $query->notPreGame()->notFinished()->where('processStatus', '!=', 'Paused');
+    }
+
+    /**
+     * @param Builder $query
+     * @param string|int $variant Either the ID or name of the variant
+     * @return Builder
+     */
+    public function scopeForVariant(Builder $query, $variant) : Builder
+    {
+        $variantId = intval($variant) > 0 ? $variant : VariantsService::variantIdFromName($variant);
+        return !empty($variant) ? $query->where('variantID', '=', $variantId) : $query;
     }
 
     /*****************************************************************************************************************

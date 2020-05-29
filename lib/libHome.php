@@ -86,7 +86,7 @@ class libHome
         if(!count($pms))
         {
             $output .= '<div class="hr"></div>';
-            $output .= '<p class="notice">'.l_t('No game notices found; try browsing the <a href="gamelistings.php">game listings</a>, '.
+            $output .= '<p class="notice">'.l_t('No game notices found; try browsing the <a href="/games/search">game listings</a>, '.
                     'or <a href="gamecreate.php">create your own</a> game.').'</p>';
             return $output;
         }
