@@ -36,4 +36,3 @@ if ( $Misc->Maintenance )
 
 require_once(l_r('locales/English/datc.php'));
 
-?>

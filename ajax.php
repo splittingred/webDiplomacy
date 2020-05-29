@@ -22,28 +22,6 @@ define('AJAX', true); // Makes header.php ignore some of the unneeded stuff, mai
 
 require_once('header.php');
 
-/*
- * This function logs a huge amount of javascript errors, sent from javascript/utility.js on error,
- * but it seems to log trivial errors in lots of different languages, and isn't very useful except
- * perhaps for development.
-function logJavaScriptError() {
-	$errorVars=array('Location','Message','URL','Line');
-	$errorVals=array();
-	foreach($errorVars as $varName)
-	{
-		if( !isset($_REQUEST['error'.$varName]) ) return;
-
-		$errorVals[$varName] = $_REQUEST['error'.$varName];
-	}
-
-	if( isset($_SERVER['HTTP_USER_AGENT']) )
-		$errorVars['UserAgent'] = $_SERVER['HTTP_USER_AGENT'];
-
-	trigger_error('JavaScript error logged');
-}
-logJavaScriptError();
-*/
-
 $results = array('status'=>'Invalid', 'notice'=>'No valid action specified');
 
 if( isset($_GET['likeMessageToggleToken']) ) {
@@ -146,5 +124,3 @@ elseif( isset($_REQUEST['context']) && isset($_REQUEST['contextKey']) && isset($
 header('X-JSON: ('.json_encode($results).')');
 
 close();
-
-?>

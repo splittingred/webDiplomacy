@@ -34,7 +34,7 @@ if ( $Misc->Panic )
 		"unexpected problem. Please try again later, sorry for the inconvenience."));
 }
 
-if ( !( $User->type['Moderator']
+if ( !( $User->isModerator()
 	|| ( isset($_REQUEST['gameMasterSecret']) and $_REQUEST['gameMasterSecret'] == Config::$gameMasterSecret )
 	|| ( isset($_REQUEST['gameMasterToken']) and libAuth::gamemasterToken_Valid($_REQUEST['gameMasterToken']) )
 	) )
@@ -42,7 +42,7 @@ if ( !( $User->type['Moderator']
 	libHTML::notice(l_t('Denied'), l_t('Only the cron script and moderators can run the gamemaster script.'));
 }
 
-if ( isset($_REQUEST['gameMasterSecret']) && $User->type['User'] && !$User->type['Moderator'] && $Misc->LastProcessTime == 0 )
+if ( isset($_REQUEST['gameMasterSecret']) && $User->isAuthenticated() && !$User->isModerator() && $Misc->LastProcessTime == 0 )
 {
 	// The server has just been installed; make this user the admin now.
 	$DB->sql_put("UPDATE wD_Users SET type = CONCAT(type,',Moderator,Admin') WHERE id = ".$User->id);
@@ -159,7 +159,7 @@ while( (time() - $startTime)<30 && $gameRow=$DB->tabl_hash($tabl) )
 }
 
 // If it took over 30 secs there may still be games to process
-if( (time() - $startTime)>=30 )
+if ((time() - $startTime) >= 30)
 {
 	/*
 	 * For when you're developing and just reloaded the DB from a backup,
@@ -169,11 +169,5 @@ if( (time() - $startTime)>=30 )
 	header('refresh: 4; url=gamemaster.php');
 	print '<p class="notice">'.l_t('Timed-out; re-running').'</p>';
 }
-else
-{
-	// Finished all remaining games with time to spare; update the civil disorder and NMR counts
-	//libGameMaster::updateCDNMRCounts();
-}
-
 print '</div>';
 libHTML::footer();

@@ -18,6 +18,9 @@
     along with webDiplomacy.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Diplomacy\Models\TerritoryStatus;
+use Diplomacy\Models\Unit;
+
 /**
  * Generates the JSON data used to generate orders for a certain game, used by OrderInterface.
  *
@@ -29,33 +32,30 @@ class jsonBoardData
 		return "function loadBoardTurnData() {\n".self::getUnits($gameID)."\n\n".self::getTerrStatus($gameID)."\n}\n";
 	}
 
-	protected static function getUnits($gameID)
+	protected static function getUnits($gameID) : string
 	{
-		global $DB;
+		$units = Unit::query()->select(['id', 'terrID', 'countryID', 'type'])->forGame($gameID);
 
-		$units = array();
-		$tabl=$DB->sql_tabl("SELECT id, terrID, countryID, type FROM wD_Units WHERE gameID = ".$gameID);
-		while($row=$DB->tabl_hash($tabl))
+        $unitRows = [];
+		foreach ($units as $unit)
 		{
-			$units[$row['id']] = $row;
+			$unitRows[$unit->id] = $unit->toArray();
 		}
 
-		return 'Units = $H('.json_encode($units).');';
+		return 'Units = $H('.json_encode($unitRows).');';
 	}
-	protected static function getTerrStatus($gameID)
+
+	protected static function getTerrStatus($gameID) : string
 	{
-		global $DB;
+		$territoryStatuses = [];
+		$statuses = TerritoryStatus::query()
+            ->select(['terrID as id', 'standoff', 'occupiedFromTerrID', 'occupyingUnitID as unitID', 'countryID as ownerCountryID'])
+            ->forGame($gameID);
 
-		$terrstatus=array();
-		$tabl=$DB->sql_tabl("SELECT terrID as id, standoff, occupiedFromTerrID, occupyingUnitID as unitID, countryID as ownerCountryID
-			FROM wD_TerrStatus WHERE gameID = ".$gameID);
-		while($row=$DB->tabl_hash($tabl)) {
-			$row['standoff'] = ($row['standoff']=='Yes');
-			$terrstatus[] = $row;
-		}
+		foreach ($statuses as $status) {
+            $territoryStatuses[] = $status->toArray();
+        }
 
-		return 'TerrStatus = '.json_encode($terrstatus).';';
+		return 'TerrStatus = '.json_encode($territoryStatuses).';';
 	}
 }
-
-?>

@@ -314,16 +314,17 @@ class Game
 		//if( !( defined("DATC") or $this->phase != "Diplomacy" or count($this->Members->ByID) == count($this->Variant->countries) ) )
 		//	trigger_error("Game loaded incorrectly");
 
-		if( $this->processStatus=='Paused' )
-		{
-			if( (isset($this->processTime)||!is_null($this->processTime))
-				|| (!isset($this->pauseTimeRemaining) || is_null($this->pauseTimeRemaining) ))
-				trigger_error(l_t("Paused game timeout values incorrectly set."));
-		}
-		elseif (!$this->isCrashed() && (
-		    $this->hasPauseTimeRemaining() || empty($this->processTime)) ) {
-            //trigger_error(l_t("Not-paused game process-time values incorrectly set."));
-        }
+        // this is dumb and should be removed and fixed properly.
+//		if( $this->processStatus=='Paused' )
+//		{
+//			if( (isset($this->processTime)||!is_null($this->processTime))
+//				|| (!isset($this->pauseTimeRemaining) || is_null($this->pauseTimeRemaining) ))
+//				//trigger_error(l_t("Paused game timeout values incorrectly set."));
+//		}
+//		elseif (!$this->isCrashed() && (
+//		    $this->hasPauseTimeRemaining() || empty($this->processTime)) ) {
+//            //trigger_error(l_t("Not-paused game process-time values incorrectly set."));
+//        }
 	}
 
     /**

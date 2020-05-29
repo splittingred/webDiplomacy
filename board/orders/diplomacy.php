@@ -385,5 +385,3 @@ class userOrderDiplomacy extends userOrder
 		return $this->checkConvoyPath($this->fromTerrID, $this->toTerrID, $this->Unit->terrID, false);
 	}
 }
-
-?>

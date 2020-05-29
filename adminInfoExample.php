@@ -33,4 +33,3 @@ print '</div>';
 
 
 libHTML::footer();
-?>

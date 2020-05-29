@@ -116,7 +116,7 @@ if ($Game->watched() && isset($_REQUEST['unwatch'])) {
 
 if (isset($Member) && $Member->status == 'Playing' && !$Game->isFinished())
 {
-	if( $Game->phase != 'Pre-game' )
+	if(!$Game->isPreGame())
 	{
 		if(isset($_REQUEST['Unpause'])) $_REQUEST['Pause']='on'; // Hack because Unpause = toggle Pause
 
@@ -139,22 +139,25 @@ if (isset($Member) && $Member->status == 'Playing' && !$Game->isFinished())
 	{
 		if ($Game->Members->votesPassed() && !$Game->isFinished())
 		{
-			$DB->sql_put("UPDATE wD_Games SET attempts=attempts+1 WHERE id=".$Game->id);
-			$DB->sql_put("COMMIT");
+		    $g = \Diplomacy\Models\Game::find($Game->id);
+		    $g->attempts = $g->attempts + 1;
+		    $g->save();
 
 			require_once(l_r('gamemaster/game.php'));
 			$Game = $Game->Variant->processGame($Game->id);
 			try
 			{
 				$Game->applyVotes(); // Will requery votesPassed()
-				$DB->sql_put("UPDATE wD_Games SET attempts=0 WHERE id=".$Game->id);
-				$DB->sql_put("COMMIT");
+
+                $g = \Diplomacy\Models\Game::find($Game->id);
+                $g->attempts = 0;
+                $g->save();
 			}
 			catch(Exception $e)
 			{
 				if( $e->getMessage() == "Abandoned" || $e->getMessage() == "Cancelled" )
 				{
-					assert($Game->phase == 'Pre-game' || $e->getMessage() == 'Cancelled');
+					assert($Game->isPreGame() || $e->getMessage() == 'Cancelled');
 					$DB->sql_put("COMMIT");
 					libHTML::notice(l_t('Cancelled'), l_t("Game was cancelled or didn't have enough players to start."));
 				}
@@ -166,8 +169,9 @@ if (isset($Member) && $Member->status == 'Playing' && !$Game->isFinished())
 		}
 		else if( $Game->needsProcess() )
 		{
-			$DB->sql_put("UPDATE wD_Games SET attempts=attempts+1 WHERE id=".$Game->id);
-			$DB->sql_put("COMMIT");
+            $g = \Diplomacy\Models\Game::find($Game->id);
+            $g->attempts = $g->attempts + 1;
+            $g->save();
 
 			require_once(l_r('gamemaster/game.php'));
 			$Game = $Game->Variant->processGame($Game->id);
@@ -176,14 +180,15 @@ if (isset($Member) && $Member->status == 'Playing' && !$Game->isFinished())
 				try
 				{
 					$Game->process();
-					$DB->sql_put("UPDATE wD_Games SET attempts=0 WHERE id=".$Game->id);
-					$DB->sql_put("COMMIT");
+                    $g = \Diplomacy\Models\Game::find($Game->id);
+                    $g->attempts = 0;
+                    $g->save();
 				}
 				catch(Exception $e)
 				{
 					if( $e->getMessage() == "Abandoned" || $e->getMessage() == "Cancelled" )
 					{
-						assert($Game->phase == 'Pre-game' || $e->getMessage() == 'Cancelled');
+						assert($Game->isPreGame() || $e->getMessage() == 'Cancelled');
 						$DB->sql_put("COMMIT");
 						libHTML::notice(l_t('Cancelled'), l_t("Game was cancelled or didn't have enough players to start."));
 					}
@@ -256,7 +261,7 @@ if (isset($Orders))
 	print $Orders.'<div class="hr"></div>';
 }
 
-echo $Game->summary(true);
+echo $Game->summary();
 
 
 if ($User->isModerator())
