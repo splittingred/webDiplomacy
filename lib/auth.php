@@ -151,8 +151,8 @@ class libAuth
 	 */
 	public static function auth()
 	{
-		if (isset($_REQUEST['loginuser']) && isset($_REQUEST['loginpass'])) {
-			$key = self::userPass_Key($_REQUEST['loginuser'], $_REQUEST['loginpass'], isset($_REQUEST['loginsession']));
+		if (isset($_REQUEST['username']) && isset($_REQUEST['password'])) {
+			$key = self::userPass_Key($_REQUEST['username'], $_REQUEST['password']);
 		} elseif (isset($_COOKIE['wD-Key']) && $_COOKIE['wD-Key']) {
 			$key = $_COOKIE['wD-Key'];
 		} else {

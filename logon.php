@@ -96,7 +96,7 @@ if( isset($_REQUEST['forgotPassword']) and $User->type['Guest'] )
 	libHTML::footer();
 }
 
-if( ! $User->type['User'] ) 
+if(!$User->isAuthenticated())
 {
 	print libHTML::pageTitle(l_t('Log on'),l_t('Enter your webDiplomacy account username and password to log into your account.'));
 	print '
@@ -130,4 +130,3 @@ else
 
 print '</div>';
 libHTML::footer();
-?>

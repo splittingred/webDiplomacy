@@ -79,6 +79,8 @@ class Router
         });
         $this->router->get('users/settings', 'Users\SettingsController@handle');
         $this->router->get('users/notices', 'Users\NoticesController@handle');
+        $this->router->get('users/login', 'Users\LoginController@handle');
+        $this->router->post('users/login', 'Users\LoginController@handle');
 
         /* tournaments */
         $this->router->get('tournaments/info', 'Tournaments\InfoController@handle');

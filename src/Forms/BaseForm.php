@@ -55,9 +55,7 @@ abstract class BaseForm
     public function render() : string
     {
         if ($this->isSubmitted()) {
-            foreach ($this->onSubmissionCallbacks as $callback) {
-                $callback($this);
-            }
+            $this->handleSubmit();
         }
 
         $this->beforeRender();
@@ -65,6 +63,16 @@ abstract class BaseForm
         $output = $this->renderer->render($this->template, $this->placeholders);
         $this->afterRender();
         return $output;
+    }
+
+    /**
+     * Handle form submissions. You may override this in extended classes.
+     */
+    protected function handleSubmit()
+    {
+        foreach ($this->onSubmissionCallbacks as $callback) {
+            $callback($this);
+        }
     }
 
     /**
