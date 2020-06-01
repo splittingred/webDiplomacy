@@ -20,6 +20,7 @@ require_once ROOT_PATH . 'src/bootstrap_legacy.php';
 require_once ROOT_PATH . 'global/definitions.php';
 require_once ROOT_PATH . 'objects/mailer.php';
 
+global $app;
 $app = new Container();
 $app->singleton('app', 'Illuminate\Container\Container');
 Facade::setFacadeApplication($app);

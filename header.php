@@ -94,7 +94,7 @@ if( !defined('AJAX') )
 	{
 		$success=libAuth::keyWipe();
 		$User = new User(GUESTID); // Give him a guest $User
-		header('refresh: 4; url=logon.php?noRefresh=on');
+		header('refresh: 4; url=/users/login.php?noRefresh=on');
 		libHTML::notice(l_t("Logged out"),l_t("You have been logged out, and are being redirected to the logon page."));
 	}
 

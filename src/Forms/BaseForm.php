@@ -123,4 +123,14 @@ abstract class BaseForm
     {
         return array_keys($this->getFields());
     }
+
+    /**
+     * @param string $path
+     */
+    public function redirectRelative(string $path = '/') : void
+    {
+        $baseUrl = rtrim(\Config::$url, '/');
+        $path = ltrim($path, '/');
+        header("Location: {$baseUrl}/{$path}");
+    }
 }

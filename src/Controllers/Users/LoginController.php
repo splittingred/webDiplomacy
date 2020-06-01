@@ -16,7 +16,7 @@ class LoginController extends BaseController
     public function setUp()
     {
         $this->loginForm = new LoginForm($this->request, $this->renderer);
-        parent::setUp();;
+        parent::setUp();
     }
 
     public function call()

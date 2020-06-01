@@ -2,6 +2,7 @@
 
 namespace Diplomacy\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -11,6 +12,10 @@ class User extends EloquentBase
 {
     protected $table = 'wD_Users';
     protected $hidden = ['password'];
+
+    /*****************************************************************************************************************
+     * RELATIONSHIPS
+     ****************************************************************************************************************/
 
     /**
      * @return HasMany
@@ -50,6 +55,58 @@ class User extends EloquentBase
     public function turnDates() : HasMany
     {
         return $this->hasMany(TurnDate::class, 'userID');
+    }
+
+    /*****************************************************************************************************************
+     * SCOPES
+     ****************************************************************************************************************/
+
+    /**
+     * @param Builder $query
+     * @param string $username
+     * @return Builder
+     */
+    public function scopeWithUsername(Builder $query, string $username) : Builder
+    {
+        return $query->where('username', '=', $username);
+    }
+
+    /*****************************************************************************************************************
+     * Methods
+     ****************************************************************************************************************/
+
+    /**
+     * @param string $password
+     * @return string
+     */
+    public static function hashPassword(string $password) : string
+    {
+        return md5(\Config::$salt . md5($password));
+    }
+
+    /**
+     * @return string
+     */
+    public function generateSessionKey()
+    {
+        return $this->id . '_' . md5(md5(\Config::$secret). $this->id . $this->getPasswordHash() . sha1(\Config::$secret));
+    }
+
+    /**
+     * @return string
+     */
+    public function getPasswordHash()
+    {
+        return strtolower(bin2hex($this->password));
+    }
+
+    /**
+     * @param string $password
+     * @return string
+     */
+    public function passwordMatches(string $password) : string
+    {
+        return 0 == strcasecmp($this->getPasswordHash(), static::hashPassword($password));
     }
 
     /**

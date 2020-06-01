@@ -130,7 +130,7 @@ class SettingsController extends BaseController
             $this->database->sql_put("UPDATE wD_Users SET password = ".$values['password']." WHERE id = ".$this->currentUser->id);
 
             \libAuth::keyWipe();
-            header('refresh: 3; url=logon.php');
+            header('refresh: 3; url=/users/login');
 
             $noticeCodes[] = 'passwordUpdated';
         }

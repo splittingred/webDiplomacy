@@ -43,7 +43,7 @@ if( isset($_REQUEST['forgotPassword']) and $User->type['Guest'] )
 			<p><strong>Forgot your password?</strong></br> Enter your username below and an e-mail will be sent to the email you registered containing an '.
 			'activation link that will set a new password. If you no longer have access to that email account email the moderator team at '.Config::$modEMail.'</p>
 
-			<form action="./logon.php?forgotPassword=2" method="post">
+			<form action="./users/forgot-password" method="post">
 				<strong>'.l_t('Username').'</strong>
 				<input type="text" tabindex="1" maxlength=30 size=15 class="login" name="forgotUsername"></br></br>
 				<input type="submit" class="green-Submit" value="Reset Password">
@@ -55,7 +55,7 @@ if( isset($_REQUEST['forgotPassword']) and $User->type['Guest'] )
 				$forgottenUser = new User(0,$DB->escape($_REQUEST['forgotUsername']));
 			} catch(Exception $e) {
 				throw new Exception(l_t("Cannot find an account for the given username, please ".
-					"<a href='logon.php?forgotPassword=1' class='light'>go back</a> and check your spelling."));
+					"<a href='/users/forgot-password' class='light'>go back</a> and check your spelling."));
 			}
 
 			require_once(l_r('objects/mailer.php'));
@@ -84,7 +84,7 @@ if( isset($_REQUEST['forgotPassword']) and $User->type['Guest'] )
 
 				<strong>'.$newPassword.'</strong></p>
 
-				<p><a href="logon.php" class="light">'.l_t('Back to log-on prompt').'</a></p>';
+				<p><a href="/users/login" class="light">'.l_t('Back to log-on prompt').'</a></p>';
 		}
 	}
 	catch(Exception $e)
@@ -115,15 +115,15 @@ if(!$User->isAuthenticated())
 
 			<input type="submit" class="green-Submit" value="Log on">
 		</form>
-		<p><a href="logon.php?forgotPassword=1" class="light">Forgot your username or password?</a></p>
-		<p><a href="register.php" class="light">Not a member? Register!</a></p>
+		<p><a href="/users/forgot-password" class="light">Forgot your username or password?</a></p>
+		<p><a href="/users/register" class="light">Not a member? Register!</a></p>
 		</div>';
 } 
 else 
 {
 	print libHTML::pageTitle('Log off','Log out of your webDiplomacy account, to prevent other users of this computer accessing it.');
-	print '<form action="./logon.php" method="get">
-		<p class="notice"><input type="hidden" name="logoff" value="on">
+	print '<form action="/users/logout" method="get">
+		<p class="notice">
 		<input type="submit" class="form-submit" value="'.l_t('Log off').'"></p>
 		</form>';
 }

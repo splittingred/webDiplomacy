@@ -751,33 +751,6 @@ class User {
 		if($this->type['Banned'])
 			libHTML::notice(l_t('Banned'), l_t('You have been banned from this server. If you think there has been a mistake contact the moderator team at %s , and if you still aren\'t satisfied contact the admin at %s (with details of what happened).',Config::$modEMail, Config::$adminEMail));
 
-		/*
-		$bans=array();
-		$tabl = $DB->sql_tabl("SELECT numberType, number, userID FROM wD_BannedNumbers
-			WHERE ( number = INET_ATON('".$_SERVER['REMOTE_ADDR']."') AND numberType='IP')
-				OR ( number = ".$cookieCode." AND numberType='CookieCode')
-				OR ( userID=".$this->id.")");
-		while(list($banType,$banNum)=$DB->tabl_row($tabl))
-			$bans[$banType]=$banNum;
-
-		if($this->type['Banned'])
-		{
-			//if( isset($bans['IP']) and $cookieCode!=$bans['CookieCode'] )
-				//setcookie('wD_Code', $bans['CookieCode'],time()+365*7*24*60*60);
-
-			if(!isset($bans['IP']) || ip2long($_SERVER['REMOTE_ADDR'])!=$bans['IP'])
-				self::banIP(ip2long($_SERVER['REMOTE_ADDR']), $this->id);
-
-			libHTML::notice('Banned', 'You have been banned from this server. If you think there has been
-					a mistake contact '.Config::$adminEMail.' .');
-		}
-		elseif( isset($bans['IP']) )
-		{
-			self::banUser($this->id,"You share an IP with a banned user account.", $_SERVER['REMOTE_ADDR']);
-			libHTML::notice('Banned', 'You have been banned from this server. If you think there has been
-				a mistake contact '.Config::$adminEMail.' .');
-		}*/
-
 		$DB->sql_put("INSERT INTO wD_Sessions (userID, lastRequest, hits, ip, userAgent, cookieCode)
 					VALUES (".$this->id.",CURRENT_TIMESTAMP,1, INET_ATON('".$_SERVER['REMOTE_ADDR']."'),
 							UNHEX('".$userAgentHash."'), ".$cookieCode." )

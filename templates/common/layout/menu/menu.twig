@@ -8,14 +8,14 @@
                 {% if authenticated %}
                 Welcome, {{ user_profile_link|raw }}
                 <span class="logon">
-                    <a href="/logon.php?logoff=on" class="light">Log off</a>
+                    <a href="/users/logout" class="light">Logout</a>
                     {% if admin_user_switch %}
                         - <a href="/index.php?auid=0" class="light">Switch back</a>
                     {% endif %}
                 </span>
                 {% else %}
                     Welcome, Guest
-                    <a href="/logon.php" class="light">Log on</a>
+                    <a href="/users/login" class="light">Log in</a>
                 {% endif %}
             </div>
 

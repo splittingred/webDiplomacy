@@ -33,7 +33,7 @@ if ( $Misc->Panic )
 
 if( !$User->type['User'] )
 {
-	libHTML::notice(l_t('Not logged on'),l_t("Only a logged on user can create games. Please <a href='logon.php' class='light'>log on</a> to create your own games."));
+	libHTML::notice(l_t('Not logged on'),l_t("Only a logged on user can create games. Please <a href='/users/login' class='light'>log on</a> to create your own games."));
 }
 
 libHTML::starthtml();

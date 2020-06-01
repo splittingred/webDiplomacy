@@ -95,7 +95,7 @@ if ( isset($_COOKIE['imageToken']) && isset($_REQUEST['imageText']) && isset($_R
 
 			".l_t("Join the webDiplomacy community on Discord at https://discord.gg/dPm4QnY")."<br><br>
 
-			".l_t("If you forgot your password, use the lost password finder here: http://www.webdiplomacy.net/logon.php?forgotPassword=1")."<br><br>
+			".l_t("If you forgot your password, use the lost password finder here: http://www.webdiplomacy.net/users/forgot-password")."<br><br>
 			".l_t("If you have any further problems contact the server's admin at %s.",Config::$adminEMail)."<br><br>
 
 			".l_t("Enjoy your new account!")."<br>"

@@ -372,7 +372,7 @@ class libAuth
 			else
 			{
 				self::keyWipe();
-				header('refresh: 3; url=logon.php?logoff=on');
+				header('refresh: 3; url=/users/logout');
 				libHTML::error(l_t("You have been logged out. ".
 					"You are being redirected to the log-on page.")."<br /><br />".
 					l_t("Inform the moderators at %s if the problem persists, or you can't log on.",Config::$modEMail));
@@ -391,7 +391,7 @@ class libAuth
 		catch (Exception $e)
 		{
 			self::keyWipe();
-			header('refresh: 3; url=logon.php?logoff=on');
+			header('refresh: 3; url=/users/logout');
 			libHTML::error(l_t("You are using an invalid log on cookie, which has been wiped. Please try logging on again."));
 		}
 

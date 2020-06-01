@@ -1,4 +1,6 @@
 <form action="/users/login" method="post">
+    {% include 'common/notice.twig' with { notice: notice } %}
+
     <div class="form-group">
         <label for="login-username">Username</label>
         <input type="text" tabindex="1" maxlength="30" class="form-control" name="username" id="login-username" value="{{ values.username }}"/>
