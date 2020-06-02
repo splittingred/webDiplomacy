@@ -31,8 +31,6 @@ class adminActionsForum extends adminActions
 {
 	public function __construct()
 	{
-		parent::__construct();
-
 		$forumActions = array(
 			'disableSilence' => array(
 				'name' => 'Unsilence something',

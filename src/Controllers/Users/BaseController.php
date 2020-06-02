@@ -26,7 +26,7 @@ abstract class BaseController extends Base
     /**
      * @return User
      */
-    protected function loadUser() : User
+    protected function loadUser()
     {
         $userId = $this->request->get('id');
         $this->user = User::where('id', $userId)->first();

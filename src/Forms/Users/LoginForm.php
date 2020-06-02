@@ -16,6 +16,7 @@ class LoginForm extends BaseForm
         'username' => '',
         'password' => '',
     ];
+    /** @var Service */
     protected $authService;
 
     public function setUp(): void

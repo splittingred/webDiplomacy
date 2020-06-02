@@ -23,6 +23,8 @@
  * @package Base
  */
 
+use Diplomacy\Services\Authorization\Service as AuthorizationService;
+
 if( strpos($_SERVER['PHP_SELF'], 'header.php') )
 {
 	die("You can't view this document by itself.");
@@ -79,8 +81,9 @@ global $Misc;
 $Misc = new Misc();
 $app->instance('Misc', $Misc);
 
-if ( $Misc->Version != VERSION )
+if ($Misc->Version != VERSION)
 {
+    // auto-upgrades
 	require_once 'install/install.php';
 }
 
@@ -94,30 +97,20 @@ require_once 'lib/auth.php';
 if( !defined('AJAX') )
 {
     global $User;
-//    var_dump($_COOKIE); die();
-	if( isset($_REQUEST['logoff']) )
-	{
-		$success=libAuth::keyWipe();
-		$User = new User(GUESTID); // Give him a guest $User
-		header('refresh: 4; url=/users/login.php?noRefresh=on');
-		libHTML::notice(l_t("Logged out"),l_t("You have been logged out, and are being redirected to the logon page."));
-	}
-
-//	$User = libAuth::auth();
-    $authService = new \Diplomacy\Services\Authorization\Service();
+    $authService = new AuthorizationService();
     $User = $authService->getCurrentLegacyUser();
     $app->instance('user', $User);
 
     if ($User->isAdmin())
 	{
-		Config::$debug=true;
+		Config::$debug = true;
 
 		if ( isset($_REQUEST['auid']) || isset($_SESSION['auid']) )
 			$User = libAuth::adminUserSwitch($User);
-		else
-			define('AdminUserSwitch',$User->id);
+//		else
+			//define('AdminUserSwitch', $User->id);
 	}
-	elseif ( $Misc->Maintenance )
+	elseif ($Misc->Maintenance)
 	{
 	    $contents = \Diplomacy\Models\Config::forName('Maintenance')->pluck('message')[0];
 		unset($DB); // This lets libHTML know there's a problem
@@ -137,10 +130,7 @@ function close()
 	if ( is_object($DB) )
 	{
 		$Misc->write();
-
-		if( !defined('ERROR'))
-			$DB->sql_put("COMMIT");
-
+		if (!defined('ERROR')) $DB->sql_put("COMMIT");
 		unset($DB);
 	}
 
@@ -151,6 +141,5 @@ function close()
     }
 
 	ob_end_flush();
-
 	die();
 }

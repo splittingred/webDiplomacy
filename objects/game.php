@@ -610,7 +610,7 @@ class Game
 	 */
     public function gameovertxt($map=FALSE) : string
 	{
-		assert ('$this->gameOver != "No"');
+		assert ($this->gameOver != "No");
 
 		switch($this->gameOver)
 		{
