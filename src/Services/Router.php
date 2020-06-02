@@ -79,9 +79,11 @@ class Router
         });
         $this->router->get('users/settings', 'Users\SettingsController@handle');
         $this->router->get('users/notices', 'Users\NoticesController@handle');
-        $this->router->get('users/login', 'Users\LoginController@handle');
-        $this->router->post('users/login', 'Users\LoginController@handle');
+        $this->router->all('users/login', 'Users\LoginController@handle');
         $this->router->get('users/logout', 'Users\LogoutController@handle');
+        $this->router->all('users/forgot', 'Users\ForgotPasswordController@handle');
+        $this->router->all('users/forgot', 'Users\ForgotPasswordController@handle');
+        $this->router->all('users/forgot-confirmation', 'Users\ForgotPasswordConfirmationController@handle');
 
         /* tournaments */
         $this->router->get('tournaments/info', 'Tournaments\InfoController@handle');

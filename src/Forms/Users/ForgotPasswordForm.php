@@ -5,17 +5,16 @@ namespace Diplomacy\Forms\Users;
 use Diplomacy\Forms\BaseForm;
 use Diplomacy\Services\Authorization\Service;
 use Diplomacy\Services\Request;
-use Diplomacy\Views\Renderer;
 
-class LoginForm extends BaseForm
+class ForgotPasswordForm extends BaseForm
 {
-    protected $template = 'forms/users/login.twig';
+    protected $template = 'forms/users/forgot-password.twig';
     protected $requestType = Request::TYPE_POST;
     protected $submitFieldName = 'username';
     protected $fields = [
         'username' => '',
-        'password' => '',
     ];
+    /** @var Service $authService */
     protected $authService;
 
     public function setUp(): void
@@ -26,12 +25,11 @@ class LoginForm extends BaseForm
 
     public function handleSubmit()
     {
-        $result = $this->authService->login(
-            $this->request->get('username', '', Request::TYPE_POST),
-            $this->request->get('password', '', Request::TYPE_POST)
+        $result = $this->authService->sendForgotPasswordConfirmation(
+            $this->request->get('username', '', Request::TYPE_POST)
         );
         if ($result->successful()) {
-            $this->redirectRelative('/');
+            $this->redirectRelative('/users/forgot?notice=sent');
             close();
         } else {
             $this->setPlaceholder('notice', $result->getValue()->getMessage());

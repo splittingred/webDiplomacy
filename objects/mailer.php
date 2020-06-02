@@ -36,8 +36,7 @@ class Mailer
 
 	public function __construct()
 	{
-		if ( Config::$mailerConfig["UseDebug"] )
-			$this->useDebug=true;
+		if (Config::$mailerConfig["UseDebug"]) $this->useDebug = true;
 
 		$this->PHPMailer = new PHPMailer();
 
@@ -52,19 +51,22 @@ class Mailer
 				$this->PHPMailer->{$name} = $value;
 			$this->PHPMailer->IsSendmail();
 		}
-		elseif ( Config::$mailerConfig["UseSMTP"] )
+		elseif (\Config::$mailerConfig['UseSMTP'])
 		{
-			$this->PHPMailer->IsSMTP();
+		    $this->PHPMailer->IsSMTP();
 
-			$SMTPSettings = array('Host','Port','SMTPAuth','Username','Password','SMTPSecure', 'SMTPOptions');
+			$SMTPSettings = ['Host','Port','SMTPAuth','Username','Password','SMTPSecure', 'SMTPOptions'];
 			foreach($SMTPSettings as $SMTPSetting)
 			{
-				if ( isset(Config::$mailerConfig['SMTPSettings'][$SMTPSetting]) )
-					$this->PHPMailer->{$SMTPSetting} = Config::$mailerConfig['SMTPSettings'][$SMTPSetting];
+				if (isset(\Config::$mailerConfig['SMTPSettings'][$SMTPSetting])) {
+                    $this->PHPMailer->{$SMTPSetting} = \Config::$mailerConfig['SMTPSettings'][$SMTPSetting];
+                }
 			}
 		}
-		elseif ( !Config::$mailerConfig["UseMail"] )
-			trigger_error(l_t("No mailer type chosen; either sendmail, smtp, or mail need to be selected for e-mailing."));
+		elseif (!Config::$mailerConfig["UseMail"])
+        {
+            trigger_error(l_t("No mailer type chosen; either sendmail, smtp, or mail need to be selected for e-mailing."));
+        }
 	}
 
 	private function Clear()

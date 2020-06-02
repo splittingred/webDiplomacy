@@ -36,6 +36,12 @@ abstract class BaseForm
     {
         $this->request = $request;
         $this->renderer = $renderer;
+        $this->setUp();
+    }
+
+    public function setUp() : void
+    {
+
     }
 
     /**

@@ -20,7 +20,7 @@ class User extends EloquentBase
     /**
      * @return HasMany
      */
-    public function missedTurns() : HasMany
+    public function missedTurns(): HasMany
     {
         return $this->hasMany(MissedTurn::class, 'userID');
     }
@@ -28,7 +28,7 @@ class User extends EloquentBase
     /**
      * @return HasMany
      */
-    public function watchedGames() : HasMany
+    public function watchedGames(): HasMany
     {
         return $this->hasMany(WatchedGame::class, 'userID');
     }
@@ -36,7 +36,7 @@ class User extends EloquentBase
     /**
      * @return HasMany
      */
-    public function options() : HasMany
+    public function options(): HasMany
     {
         return $this->hasMany(UserOption::class, 'userID');
     }
@@ -44,7 +44,7 @@ class User extends EloquentBase
     /**
      * @return HasMany
      */
-    public function connections() : HasMany
+    public function connections(): HasMany
     {
         return $this->hasMany(UserConnection::class, 'userID');
     }
@@ -52,7 +52,7 @@ class User extends EloquentBase
     /**
      * @return HasMany
      */
-    public function turnDates() : HasMany
+    public function turnDates(): HasMany
     {
         return $this->hasMany(TurnDate::class, 'userID');
     }
@@ -66,9 +66,19 @@ class User extends EloquentBase
      * @param string $username
      * @return Builder
      */
-    public function scopeWithUsername(Builder $query, string $username) : Builder
+    public function scopeWithUsername(Builder $query, string $username): Builder
     {
         return $query->where('username', '=', $username);
+    }
+
+    /**
+     * @param Builder $query
+     * @param string $email
+     * @return Builder
+     */
+    public function scopeWithEmail(Builder $query, string $email): Builder
+    {
+        return $query->where('email', '=', $email);
     }
 
     /*****************************************************************************************************************
@@ -79,7 +89,7 @@ class User extends EloquentBase
      * @param string $password
      * @return string
      */
-    public static function hashPassword(string $password) : string
+    public static function hashPassword(string $password): string
     {
         return md5(\Config::$salt . md5($password));
     }
@@ -89,7 +99,7 @@ class User extends EloquentBase
      */
     public function generateSessionKey()
     {
-        return $this->id . '_' . md5(md5(\Config::$secret). $this->id . $this->getPasswordHash() . sha1(\Config::$secret));
+        return $this->id . '_' . md5(md5(\Config::$secret) . $this->id . $this->getPasswordHash() . sha1(\Config::$secret));
     }
 
     /**
@@ -104,7 +114,7 @@ class User extends EloquentBase
      * @param string $password
      * @return string
      */
-    public function passwordMatches(string $password) : string
+    public function passwordMatches(string $password): string
     {
         return 0 == strcasecmp($this->getPasswordHash(), static::hashPassword($password));
     }
@@ -112,8 +122,27 @@ class User extends EloquentBase
     /**
      * @return bool
      */
-    public function canDoEmergencyPauses() : bool
+    public function canDoEmergencyPauses(): bool
     {
         return $this->emergencyPauseDate != 1;
+    }
+
+    /**
+     * @return string
+     */
+    public function forgotPasswordToken(): string
+    {
+        return base64_encode(substr(md5(\Config::$secret . $this->email), 0, 8) . '%7C' . time() . '%7C' . urlencode($this->email));
+    }
+
+    /**
+     * @param string $password
+     * @return bool
+     */
+    public function setPassword(string $password) : bool
+    {
+        $hash = md5(\Config::$salt . md5($password));
+        $this->password = hex2bin($hash);
+        return true;
     }
 }

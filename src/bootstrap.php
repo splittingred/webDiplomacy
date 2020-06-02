@@ -33,6 +33,7 @@ $app->singleton('renderer', function($app) {
     $env->addGlobal('current_user', $app->make('user'));
     return $env;
 });
+$app->instance('mailer', new \Mailer());
 Facade::setFacadeApplication($app);
 
 Paginator::currentPageResolver(function ($pageName) {

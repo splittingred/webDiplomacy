@@ -11,7 +11,12 @@ class LoginController extends BaseController
     protected $pageTitle = 'Log on';
     protected $pageDescription = 'Enter your webDiplomacy account username and password to log into your account.';
 
+    /** @var LoginForm $loginForm */
     protected $loginForm;
+
+    protected $noticeMappings = [
+        'password_changed' => 'Your password has successfully been changed. Please login again.',
+    ];
 
     public function setUp()
     {
