@@ -34,6 +34,7 @@ if( !defined('IN_CODE') )
 	define('IN_CODE', 1); // A flag to tell scripts they aren't being executed by themselves
 
 require_once 'src/bootstrap.php';
+global $app;
 
 ob_start(); // Buffer output. libHTML::footer() flushes.
 
@@ -43,7 +44,7 @@ if ( isset($_REQUEST['uid']) ) $_REQUEST['userID'] = $_REQUEST['uid'];
 
 // Reset globals
 // FIXME: Resetting this means $GLOBALS['asdf'] is no longer kept in sync with global $asdf. This causes problems during construction
-$GLOBALS = array();
+$GLOBALS = [];
 $GLOBALS['scriptStartTime'] = microtime(true);
 
 // All the standard includes.
@@ -56,9 +57,9 @@ global $Locale;
 require_once('locales/'.Config::$locale.'/layer.php'); // This will set $Locale
 $Locale->initialize();
 
-require_once(l_r('objects/silence.php'));
-require_once(l_r('objects/user.php'));
-require_once(l_r('objects/game.php'));
+require_once 'objects/silence.php';
+require_once 'objects/user.php';
+require_once 'objects/game.php';
 
 if (!defined('libError')) {
     require_once 'global/error.php';
@@ -68,28 +69,32 @@ if (!defined('libError')) {
 date_default_timezone_set('UTC');
 
 // Create database object
-require_once(l_r('objects/database.php'));
+require_once 'objects/database.php';
 $DB = new Database();
+$app->instance('DB', $DB);
 
 // Set up the misc values object
-require_once(l_r('objects/misc.php'));
+require_once 'objects/misc.php';
 global $Misc;
 $Misc = new Misc();
+$app->instance('Misc', $Misc);
 
 if ( $Misc->Version != VERSION )
 {
-	require_once(l_r('install/install.php'));
+	require_once 'install/install.php';
 }
 
-// Taken from the php manual to disable cacheing.
+// Taken from the php manual to disable caching
 header("Last-Modified: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 
-require_once(l_r('lib/auth.php'));
+require_once 'lib/auth.php';
 
 if( !defined('AJAX') )
 {
+    global $User;
+//    var_dump($_COOKIE); die();
 	if( isset($_REQUEST['logoff']) )
 	{
 		$success=libAuth::keyWipe();
@@ -98,10 +103,12 @@ if( !defined('AJAX') )
 		libHTML::notice(l_t("Logged out"),l_t("You have been logged out, and are being redirected to the logon page."));
 	}
 
-	global $User;
-	$User = libAuth::auth();
+//	$User = libAuth::auth();
+    $authService = new \Diplomacy\Services\Authorization\Service();
+    $User = $authService->getCurrentLegacyUser();
+    $app->instance('user', $User);
 
-	if ($User->isAdmin())
+    if ($User->isAdmin())
 	{
 		Config::$debug=true;
 
@@ -115,14 +122,15 @@ if( !defined('AJAX') )
 	    $contents = \Diplomacy\Models\Config::forName('Maintenance')->pluck('message')[0];
 		unset($DB); // This lets libHTML know there's a problem
 		libHTML::error($contents);
-
 	}
 }
 
 // This gets called by libHTML::footer
 function close()
 {
-	global $DB, $Misc;
+    global $app;
+    $DB = $app->make('DB');
+    $Misc = $app->make('Misc');
 
 	// This isn't put into the database destructor in case of dieing due to an error
 
@@ -135,6 +143,12 @@ function close()
 
 		unset($DB);
 	}
+
+	$sessionHandler = new \Diplomacy\Services\Authorization\SessionHandler();
+	$session = $sessionHandler->get();
+	if ($session) {
+        $session->commit();
+    }
 
 	ob_end_flush();
 

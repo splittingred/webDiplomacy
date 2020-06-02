@@ -46,7 +46,8 @@ class User {
 	}
 	
 	public function getSilences() {
-		global $DB;
+		global $app;
+        $DB = $app->make('DB');
 		
 		$tabl = $DB->sql_tabl("SELECT 
 			silence.id as silenceID,
@@ -242,8 +243,6 @@ class User {
 	 */
 	public static function pointsSupplement($userID, $pointsWon, $bet, $gameID, $points)
 	{
-		global $DB;
-
 		$userPassed = new User($userID);
 
 		// If the user is winning points, and there is a chance they are winning fewer than they bet,
@@ -269,7 +268,8 @@ class User {
 
 	public static function pointsTransfer($userID, $transferType, $points, $gameID='NULL', $memberID='NULL')
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		assert($points >= 0);
 
@@ -346,9 +346,10 @@ class User {
 	 */
 	public static function findEmail($email)
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
-		list($id) = $DB->sql_row("SELECT id FROM wD_Users WHERE email='".$email."'");
+        list($id) = $DB->sql_row("SELECT id FROM wD_Users WHERE email='".$email."'");
 
 		if ( isset($id) and $id ) return $id;
 		else return 0;
@@ -363,7 +364,8 @@ class User {
 	 */
 	public static function findUsername($username)
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		list($id) = $DB->sql_row("SELECT id FROM wD_Users WHERE username='".$username."'");
 
@@ -380,7 +382,8 @@ class User {
 	 */
 	public static function processForm($input, &$errors)
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		$SQLVars = array();
 
@@ -465,14 +468,23 @@ class User {
 		return $SQLVars;
 	}
 
-	/**
-	 * Initialize a user object
-	 *
-	 * @param int $id User ID
-	 * @param string|bool[optional] $username Look the user up based on username instead of user ID
-	 */
-	function __construct($id, $username=false)
+	/** @var \Database $DB */
+	protected $DB;
+	/** @var \Misc $Misc */
+	protected $Misc;
+
+    /**
+     * Initialize a user object
+     *
+     * @param int $id User ID
+     * @param string|bool[optional] $username Look the user up based on username instead of user ID
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+	function __construct($id = 1, $username=false)
 	{
+        global $app;
+        $this->DB = $app->make('DB');
+        $this->Misc = $app->make('Misc');
 		if ( $username )
 		{
 			$this->load($username);
@@ -491,9 +503,7 @@ class User {
 	 */
 	function load($username = false)
 	{
-		global $DB;
-
-		$row = $DB->sql_hash("SELECT
+		$row = $this->DB->sql_hash("SELECT
 			u.id,
 			u.username,
 			LOWER(HEX(u.password)) as password,
@@ -600,7 +610,8 @@ class User {
 		}
 		$buf='';
 
-		global $User;
+        global $app;
+        $User = $app->make('user');
 
 		if( strstr($type,'Moderator') )
 		{
@@ -629,11 +640,9 @@ class User {
 		return $buf;
 	}
 
-	function sendNotice($keep, $private, $message)
+	public function sendNotice($keep, $private, $message)
 	{
-		global $DB;
-
-		$message=$DB->escape($message,true);
+		$message = $this->DB->escape($message,true);
 
 		notice::send($this->id, 1, 'User', $keep,$private, $message, 'GameMaster');
 	}
@@ -678,28 +687,24 @@ class User {
 	 **/
 	function setNotification($notification)
 	{
-		global $DB;
-
 		$this->notifications->$notification = true;
 		if ($this->notifications->updated)
 		{
-			$DB->sql_put("UPDATE wD_Users SET notifications = CONCAT_WS(',',notifications,'".$notification."') WHERE id = ".$this->id);
+			$this->DB->sql_put("UPDATE wD_Users SET notifications = CONCAT_WS(',',notifications,'".$notification."') WHERE id = ".$this->id);
 			$this->notifications->updated = false;
 		}
 	}
 
-        /**
+    /**
 	 * This will clear a notification value in both the object and the wd_users table if not already cleared.
 	 * @param notification notification value to clear, must be 'PrivateMessage', 'GameMessage', 'Unfinalized', or 'GameUpdate'.
 	 **/
-	function clearNotification($notification)
+	public function clearNotification($notification)
 	{
-		global $DB;
-
 		$this->notifications->$notification = false;
 		if ($this->notifications->updated)
 		{
-			$DB->sql_put("UPDATE wD_Users SET notifications = REPLACE(notifications,'".$notification."','') WHERE id = ".$this->id);
+			$this->DB->sql_put("UPDATE wD_Users SET notifications = REPLACE(notifications,'".$notification."','') WHERE id = ".$this->id);
 			$this->notifications->updated = false;
 		}
 	}
@@ -708,7 +713,7 @@ class User {
 	 * The time this user joined
 	 * @return string Date joined
 	 */
-	function timeJoinedtxt()
+	public function timeJoinedtxt()
 	{
 		return libTime::text($this->timeJoined);
 	}
@@ -716,17 +721,9 @@ class User {
 	/**
 	 * Log-on, create/update a session record, and take information for user access logging for meta-gamers
 	 */
-	function logon()
+	public function logon()
 	{
-		global $DB;
-
 		session_name('wD_Sess_User-'.$this->id);
-
-		/*if( $this->type['User'] )
-			session_cache_limiter('private_no_expire');
-		else
-			session_cache_limiter('public');*/
-
 		session_start();
 
 		// Non-users can't get banned
@@ -748,10 +745,10 @@ class User {
 			$cookieCode = (int) $_COOKIE['wD_Code'];
 		}
 
-		if($this->type['Banned'])
+		if ($this->type['Banned'])
 			libHTML::notice(l_t('Banned'), l_t('You have been banned from this server. If you think there has been a mistake contact the moderator team at %s , and if you still aren\'t satisfied contact the admin at %s (with details of what happened).',Config::$modEMail, Config::$adminEMail));
 
-		$DB->sql_put("INSERT INTO wD_Sessions (userID, lastRequest, hits, ip, userAgent, cookieCode)
+		$this->DB->sql_put("INSERT INTO wD_Sessions (userID, lastRequest, hits, ip, userAgent, cookieCode)
 					VALUES (".$this->id.",CURRENT_TIMESTAMP,1, INET_ATON('".$_SERVER['REMOTE_ADDR']."'),
 							UNHEX('".$userAgentHash."'), ".$cookieCode." )
 					ON DUPLICATE KEY UPDATE hits=hits+1");
@@ -761,7 +758,8 @@ class User {
 
 	public static function banIP($ip, $userID=-1)
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		if($userID<=0) $userID="NULL";
 
@@ -771,7 +769,8 @@ class User {
 
 	public static function banUser($userID, $reason=null, $ip=0)
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		if( $reason )
 		{
@@ -799,7 +798,8 @@ class User {
 	 */
 	public static function tempBanUser($userID, $days, $reason, $overwrite = true)
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 		
 		$banUser = new User($userID);
 		
@@ -822,49 +822,47 @@ class User {
 
 	public function rankingDetails()
 	{
-		global $DB, $Misc;
-
 		$rankingDetails = array();
 
-		list($rankingDetails['position']) = $DB->sql_row("SELECT COUNT(id)+1
+		list($rankingDetails['position']) = $this->DB->sql_row("SELECT COUNT(id)+1
 			FROM wD_Users WHERE points > ".$this->points);
 
 		$sixMonths = time() - 15552000;
-        list($rankingDetails['active_position']) = $DB->sql_row("SELECT COUNT(id)+1
+        list($rankingDetails['active_position']) = $this->DB->sql_row("SELECT COUNT(id)+1
 			FROM wD_Users WHERE points > ".$this->points." AND timeLastSessionEnded > ".$sixMonths);
 
-		list($rankingDetails['worth']) = $DB->sql_row(
+		list($rankingDetails['worth']) = $this->DB->sql_row(
 			"SELECT SUM(bet) FROM wD_Members WHERE userID = ".$this->id." AND status = 'Playing'");
 
 		$rankingDetails['worth'] += $this->points;
 
-		$tabl = $DB->sql_tabl(
+		$tabl = $this->DB->sql_tabl(
 				"SELECT COUNT(id), status FROM wD_Members WHERE userID = ".$this->id." GROUP BY status"
 			);
 
 		$rankingDetails['stats'] = array();
-		while ( list($number, $status) = $DB->tabl_row($tabl) )
+		while ( list($number, $status) = $this->DB->tabl_row($tabl) )
 		{
 			$rankingDetails['stats'][$status] = $number;
 		}
 		$rankingDetails['stats']['Civil disorder'] = $this->cdCount;
 		$rankingDetails['stats']['Civil disorders taken over'] = $this->cdTakenCount;
 
-		$tabl = $DB->sql_tabl( "SELECT COUNT(m.id), m.status, SUM(m.bet) FROM wD_Members AS m
+		$tabl = $this->DB->sql_tabl( "SELECT COUNT(m.id), m.status, SUM(m.bet) FROM wD_Members AS m
 					INNER JOIN wD_Games AS g ON m.gameID = g.id
 					WHERE m.userID = ".$this->id."
 						AND g.phase != 'Finished'
 						AND g.anon = 'Yes'
 					GROUP BY status");
 		$points=0;
-		while ( list($number, $status, $bets) = $DB->tabl_row($tabl) )
+		while ( list($number, $status, $bets) = $this->DB->tabl_row($tabl) )
 		{
 			$points += $bets;
 			$rankingDetails['anon'][$status] = $number;
 		}
 		$rankingDetails['anon']['points'] = $points;
 
-		list($rankingDetails['takenOver']) = $DB->sql_row(
+		list($rankingDetails['takenOver']) = $this->DB->sql_row(
 			"SELECT COUNT(c.userID) FROM wD_CivilDisorders c
 			INNER JOIN wD_Games g ON ( g.id = c.gameID )
 			LEFT JOIN wD_Members m ON ( c.gameID = m.gameID and c.userID = ".$this->id." )
@@ -872,7 +870,7 @@ class User {
 			);
 
 
-		$rankingDetails['rankingPlayers'] = $Misc->RankingPlayers;
+		$rankingDetails['rankingPlayers'] = $this->Misc->RankingPlayers;
 
 		// Prevent division by 0 when server is new
 		$rankingPlayers = ( $rankingDetails['rankingPlayers'] == 0 ? 1 : $rankingDetails['rankingPlayers'] );
@@ -907,18 +905,16 @@ class User {
 	 */
 	public function rankingDetailsVariants()
 	{
-		global $DB;
+        $rankingDetailsVariants = [];
 
-		$rankingDetailsVariants = array();
-
-		$tabl = $DB->sql_tabl(
+		$tabl = $this->DB->sql_tabl(
 			"SELECT COUNT(m.id), m.status FROM wD_Members m 
 			 inner join wD_Games g on g.id = m.gameID WHERE m.userID = ".$this->id." AND g.variantID <> 1 and g.gameOver <> 'No' and g.playerTypes = 'Members'
 			 GROUP BY m.status"
 		);
 
 		$rankingDetailsVariants['stats'] = array();
-		while ( list($number, $status) = $DB->tabl_row($tabl) )
+		while ( list($number, $status) = $this->DB->tabl_row($tabl) )
 		{
 			if ($status != "Playing") {	$rankingDetailsVariants['stats'][$status] = $number; }
 		}
@@ -931,18 +927,16 @@ class User {
 	 */
 	public function rankingDetailsClassic()
 	{
-		global $DB;
+		$rankingDetailsClassic = [];
 
-		$rankingDetailsClassic = array();
-
-		$tabl = $DB->sql_tabl(
+		$tabl = $this->DB->sql_tabl(
 				"SELECT COUNT(m.id), m.status FROM wD_Members m 
 				 inner join wD_Games g on g.id = m.gameID WHERE m.userID = ".$this->id." AND g.variantID = 1 and g.gameOver <> 'No' and g.playerTypes = 'Members'
 				 GROUP BY m.status"
 			);
 
-		$rankingDetailsClassic['stats'] = array();
-		while ( list($number, $status) = $DB->tabl_row($tabl) )
+		$rankingDetailsClassic['stats'] = [];
+		while ( list($number, $status) = $this->DB->tabl_row($tabl) )
 		{
 			if ($status != "Playing") {	$rankingDetailsClassic['stats'][$status] = $number; }
 		}
@@ -955,19 +949,17 @@ class User {
 	 */
 	public function rankingDetailsClassicGunboat()
 	{
-		global $DB;
+		$rankingDetailsClassicGunboat = [];
 
-		$rankingDetailsClassicGunboat = array();
-
-		$tabl = $DB->sql_tabl(
+		$tabl = $this->DB->sql_tabl(
 				"SELECT COUNT(m.id), m.status FROM wD_Members m 
 				 inner join wD_Games g on g.id = m.gameID 
 				 WHERE m.userID = ".$this->id." AND g.variantID = 1 and g.gameOver <> 'No' and g.pressType = 'NoPress' and g.playerTypes = 'Members'
 				 GROUP BY m.status"
 			);
 
-		$rankingDetailsClassicGunboat['stats'] = array();
-		while ( list($number, $status) = $DB->tabl_row($tabl) )
+		$rankingDetailsClassicGunboat['stats'] = [];
+		while ( list($number, $status) = $this->DB->tabl_row($tabl) )
 		{
 			if ($status != "Playing") {	$rankingDetailsClassicGunboat['stats'][$status] = $number; }
 		}
@@ -980,11 +972,9 @@ class User {
 	 */
 	public function rankingDetailsClassicPress()
 	{
-		global $DB;
+		$rankingDetailsClassicPress = [];
 
-		$rankingDetailsClassicPress = array();
-
-		$tabl = $DB->sql_tabl(
+		$tabl = $this->DB->sql_tabl(
 				"SELECT COUNT(m.id), m.status FROM wD_Members m 
 				 inner join wD_Games g on g.id = m.gameID 
 				 WHERE m.userID = ".$this->id." AND g.variantID = 1 and g.gameOver <> 'No' and g.pressType in ('Regular', 'RulebookPress') and g.playerTypes = 'Members'
@@ -992,7 +982,7 @@ class User {
 			);
 
 		$rankingDetailsClassicPress['stats'] = array();
-		while ( list($number, $status) = $DB->tabl_row($tabl) )
+		while ( list($number, $status) = $this->DB->tabl_row($tabl) )
 		{
 			if ($status != "Playing") {	$rankingDetailsClassicPress['stats'][$status] = $number; }
 		}
@@ -1005,19 +995,17 @@ class User {
 	 */
 	public function rankingDetailsClassicRanked()
 	{
-		global $DB;
+		$rankingDetailsClassicRanked = [];
 
-		$rankingDetailsClassicRanked = array();
-
-		$tabl = $DB->sql_tabl(
+		$tabl = $this->DB->sql_tabl(
 				"SELECT COUNT(m.id), m.status FROM wD_Members m 
 				 inner join wD_Games g on g.id = m.gameID 
 				 WHERE m.userID = ".$this->id." AND g.variantID = 1 and g.gameOver <> 'No' and g.potType <> 'Unranked' and g.playerTypes = 'Members'
 				 GROUP BY m.status"
 			);
 
-		$rankingDetailsClassicRanked['stats'] = array();
-		while ( list($number, $status) = $DB->tabl_row($tabl) )
+		$rankingDetailsClassicRanked['stats'] = [];
+		while ( list($number, $status) = $this->DB->tabl_row($tabl) )
 		{
 			if ($status != "Playing") {	$rankingDetailsClassicRanked['stats'][$status] = $number; }
 		}
@@ -1025,9 +1013,10 @@ class User {
 		return $rankingDetailsClassicRanked;
 	}
 
-	static function pointsInPlay($userID, $excludeGameID=false)
+	public static function pointsInPlay($userID, $excludeGameID=false)
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		list($pointsInPlay) = $DB->sql_row(
 			"SELECT SUM(m.bet) FROM wD_Members m ".
@@ -1045,14 +1034,12 @@ class User {
 
 	public function getMuteUsers() 
 	{
-		global $DB;
-
 		static $muteUsers;
 		if( isset($muteUsers) ) return $muteUsers;
 		$muteUsers = array();
 
-		$tabl = $DB->sql_tabl("SELECT muteUserID FROM wD_MuteUser WHERE userID=".$this->id);
-		while(list($muteUserID) = $DB->tabl_row($tabl))
+		$tabl = $this->DB->sql_tabl("SELECT muteUserID FROM wD_MuteUser WHERE userID=".$this->id);
+		while(list($muteUserID) = $this->DB->tabl_row($tabl))
 			$muteUsers[] = $muteUserID;
 
 		return $muteUsers;
@@ -1065,17 +1052,15 @@ class User {
 
 	public function toggleUserMute($muteUserID) 
 	{
-		global $DB;
 		$muteUserID = (int)$muteUserID;
 		if( $this->isUserMuted($muteUserID) )
-			$DB->sql_put("DELETE FROM wD_MuteUser WHERE userID=".$this->id." AND muteUserID=".$muteUserID);
+			$this->DB->sql_put("DELETE FROM wD_MuteUser WHERE userID=".$this->id." AND muteUserID=".$muteUserID);
 		else
-			$DB->sql_put("INSERT INTO wD_MuteUser (userID, muteUserID) VALUES (".$this->id.",".$muteUserID.")");
+			$this->DB->sql_put("INSERT INTO wD_MuteUser (userID, muteUserID) VALUES (".$this->id.",".$muteUserID.")");
 	}
 
 	public function getMuteCountries($gameID=-1) 
 	{
-		global $DB;
 		$gameID = (int) $gameID;
 
 		static $muteCountries;
@@ -1083,11 +1068,11 @@ class User {
 		if( isset($muteCountries[$gameID]) ) return $muteCountries[$gameID];
 
 		$muteCountries[$gameID] = array();
-		$tabl = $DB->sql_tabl("SELECT m.gameID, m.muteCountryID 
+		$tabl = $this->DB->sql_tabl("SELECT m.gameID, m.muteCountryID 
 			FROM wD_MuteCountry m INNER JOIN wD_Games g ON g.id = m.gameID
 			WHERE m.userID=".$this->id.($gameID>0?" AND m.gameID=".$gameID:''));
 
-		while(list($muteGameID,$muteCountryID) = $DB->tabl_row($tabl))
+		while(list($muteGameID,$muteCountryID) = $this->DB->tabl_row($tabl))
 		{
 			if( $gameID<0 ) // No game ID given, we are collecting all game IDs
 				$muteCountries[$gameID][] = array($muteGameID, $muteCountryID);
@@ -1100,13 +1085,11 @@ class User {
 
 	public function getLikeMessages() 
 	{
-		global $DB;
-
 		static $likeMessages;
 		if( !isset($likeMessages) ) $likeMessages = array();
 		else return $likeMessages;
 
-		$tabl = $DB->sql_tabl("SELECT likeMessageID FROM wD_LikePost WHERE userID=".$this->id);
+		$tabl = $this->DB->sql_tabl("SELECT likeMessageID FROM wD_LikePost WHERE userID=".$this->id);
 
 		while(list($likeMessageID) = $DB->tabl_row($tabl))
 			$likeMessages[] = $likeMessageID;
@@ -1128,15 +1111,13 @@ class User {
 
 	public function getMuteThreads($refresh=false) 
 	{
-		global $DB;
-
 		static $muteThreads;
 		if( $refresh || !isset($muteThreads) ) $muteThreads = array();
 		else return $muteThreads;
 
-		$tabl = $DB->sql_tabl("SELECT muteThreadID FROM wD_MuteThread WHERE userID=".$this->id);
+		$tabl = $this->DB->sql_tabl("SELECT muteThreadID FROM wD_MuteThread WHERE userID=".$this->id);
 
-		while(list($muteThreadID) = $DB->tabl_row($tabl))
+		while(list($muteThreadID) = $this->DB->tabl_row($tabl))
 			$muteThreads[] = $muteThreadID;
 
 		return $muteThreads;
@@ -1144,17 +1125,15 @@ class User {
 	
 	public function isThreadMuted($threadID) 
 	{
-		return in_array($threadID,$this->getMuteThreads($threadID));
+		return in_array($threadID, $this->getMuteThreads($threadID));
 	}
 
 	public function toggleThreadMute($threadID) 
 	{
-		global $DB;
-		
 		if( $this->isThreadMuted($threadID)) 
-			$DB->sql_put("DELETE FROM wD_MuteThread WHERE userID = ".$this->id." AND muteThreadID=".$threadID);
+			$this->DB->sql_put("DELETE FROM wD_MuteThread WHERE userID = ".$this->id." AND muteThreadID=".$threadID);
 		else
-			$DB->sql_put("INSERT INTO wD_MuteThread (userID, muteThreadID) VALUES (".$this->id.", ".$threadID.")");
+			$this->DB->sql_put("INSERT INTO wD_MuteThread (userID, muteThreadID) VALUES (".$this->id.", ".$threadID.")");
 	
 		$this->getMuteThreads(true);
 	}
@@ -1191,14 +1170,13 @@ class User {
 
 	public function toggleCountryMute($gameID,$muteCountryID) 
 	{
-		global $DB;
 		$gameID = (int)$gameID;
 		$muteCountryID = (int)$muteCountryID;
 
 		if( $this->isCountryMuted($gameID,$muteCountryID) )
-			$DB->sql_put("DELETE FROM wD_MuteCountry WHERE userID=".$this->id." AND gameID=".$gameID." AND muteCountryID=".$muteCountryID);
+			$this->DB->sql_put("DELETE FROM wD_MuteCountry WHERE userID=".$this->id." AND gameID=".$gameID." AND muteCountryID=".$muteCountryID);
 		else
-			$DB->sql_put("INSERT INTO wD_MuteCountry (userID, gameID, muteCountryID) VALUES (".$this->id.",".$gameID.",".$muteCountryID.")");
+			$this->DB->sql_put("INSERT INTO wD_MuteCountry (userID, gameID, muteCountryID) VALUES (".$this->id.",".$gameID.",".$muteCountryID.")");
 	}
 
 	/*
@@ -1206,12 +1184,11 @@ class User {
 	 */
 	public function qualifiesForEmergency() 
 	{
-		global $DB;
 		// If a mod has set this field to 1 this user is banned from emergency pauses. 
 		if ($this->emergencyPauseDate == 1) { return false; }
 
 		// Get count of users finished games that they did not resign or leave. 
-		list($finishedGames) = $DB->sql_row("
+		list($finishedGames) = $this->DB->sql_row("
 			SELECT COUNT(1) FROM wD_Games g inner join wD_Members m on g.id = m.gameID 
 			WHERE m.userID = ".$this->id." AND g.gameOver in ('Won', 'Drawn') and m.status in ('Won','Drawn','Survived','Defeated')");
 
@@ -1225,8 +1202,7 @@ class User {
 	 */
 	public function updateEmergencyPauseDate($updateDate) 
 	{
-		global $DB;
-		$DB->sql_put("update wD_Users set emergencyPauseDate = ".$updateDate." where id =".$this->id);
+		$this->DB->sql_put("update wD_Users set emergencyPauseDate = ".$updateDate." where id =".$this->id);
 	}
 
 	/*
@@ -1234,8 +1210,7 @@ class User {
 	 */
 	public function getYearlyUnExcusedMissedTurns() 
 	{
-		global $DB;
-		list($totalNonLiveMissedTurns) = $DB->sql_row("SELECT COUNT(1) FROM wD_MissedTurns t  
+		list($totalNonLiveMissedTurns) = $this->DB->sql_row("SELECT COUNT(1) FROM wD_MissedTurns t  
 		WHERE t.userID = ".$this->id." AND t.modExcused = 0 and t.liveGame = 0 and t.samePeriodExcused = 0 and t.systemExcused = 0 and t.turnDateTime > ".(time() - 31536000));
 		
 		return $totalNonLiveMissedTurns;
@@ -1246,8 +1221,7 @@ class User {
 	 */
 	public function getRecentUnExcusedMissedTurns() 
 	{
-		global $DB;
-		list($totalMissedTurns) = $DB->sql_row("SELECT COUNT(1) FROM wD_MissedTurns t  
+		list($totalMissedTurns) = $this->DB->sql_row("SELECT COUNT(1) FROM wD_MissedTurns t  
 			WHERE t.userID = ".$this->id." AND t.modExcused = 0 and t.liveGame = 0 and t.samePeriodExcused = 0 and t.systemExcused = 0 and t.turnDateTime > ".(time() - 2419200));
 		
 		return $totalMissedTurns;
@@ -1258,8 +1232,7 @@ class User {
 	 */
 	public function getMissedTurns() 
 	{
-		global $DB;
-		list($totalMissedTurns) = $DB->sql_row("SELECT COUNT(1) FROM wD_MissedTurns t  
+		list($totalMissedTurns) = $this->DB->sql_row("SELECT COUNT(1) FROM wD_MissedTurns t  
 			WHERE t.userID = ".$this->id." AND t.liveGame = 0 and t.modExcused = 0 and t.turnDateTime > ".(time() - 31536000));
 		
 		return $totalMissedTurns;
@@ -1270,9 +1243,7 @@ class User {
 	 */
 	public function getLiveUnExcusedMissedTurns() 
 	{
-		global $DB;
-
-		list($totalLiveMissedTurns) = $DB->sql_row("SELECT COUNT(1) FROM wD_MissedTurns t  
+		list($totalLiveMissedTurns) = $this->DB->sql_row("SELECT COUNT(1) FROM wD_MissedTurns t  
 		WHERE t.userID = ".$this->id." AND t.modExcused = 0 and t.liveGame = 1 and t.samePeriodExcused = 0 and t.systemExcused = 0 and t.turnDateTime > ".(time() - 2419200));
 		
 		return $totalLiveMissedTurns;
@@ -1283,8 +1254,7 @@ class User {
 	 */
 	public function getLiveRecentUnExcusedMissedTurns() 
 	{
-		global $DB;
-		list($totalMissedTurns) = $DB->sql_row("SELECT COUNT(1) FROM wD_MissedTurns t  
+		list($totalMissedTurns) = $this->DB->sql_row("SELECT COUNT(1) FROM wD_MissedTurns t  
 			WHERE t.userID = ".$this->id." AND t.modExcused = 0 and t.liveGame = 1 and t.samePeriodExcused = 0 and t.systemExcused = 0 and t.turnDateTime > ".(time() - (86400 * 7)));
 		
 		return $totalMissedTurns;
@@ -1295,8 +1265,7 @@ class User {
 	 */
 	public function getLiveMissedTurns() 
 	{
-		global $DB;
-		list($totalMissedTurns) = $DB->sql_row("SELECT COUNT(1) FROM wD_MissedTurns t  
+		list($totalMissedTurns) = $this->DB->sql_row("SELECT COUNT(1) FROM wD_MissedTurns t  
 			WHERE t.userID = ".$this->id." AND t.liveGame = 1 and t.modExcused = 0 and t.turnDateTime > ".(time() - 2419200));
 		
 		return $totalMissedTurns;
@@ -1307,8 +1276,7 @@ class User {
 	 */
 	public function userIsTempBanned() 
 	{
-		global $DB;
-		list($tempBan) = $DB->sql_row("SELECT u.tempBan FROM wD_Users u  WHERE u.id = ".$this->id);
+		list($tempBan) = $this->DB->sql_row("SELECT u.tempBan FROM wD_Users u  WHERE u.id = ".$this->id);
 
 		return $tempBan > time();
 	}
@@ -1318,9 +1286,7 @@ class User {
 	 */
 	public function getTheme()
 	{
-		global $DB;
-
-		list($variable) = $DB->sql_row("SELECT darkMode FROM wD_UserOptions WHERE userID=".$this->id);
+		list($variable) = $this->DB->sql_row("SELECT darkMode FROM wD_UserOptions WHERE userID=".$this->id);
 		if ($variable == null) 
 		{
 			return 'No';
@@ -1336,8 +1302,7 @@ class User {
 	 */
 	public function getBotGameCount() 
 	{
-		global $DB;
-		list($totalBotGames) = $DB->sql_row("SELECT COUNT(1) FROM wD_Games g inner join wD_Members m on m.gameID = g.id  
+		list($totalBotGames) = $this->DB->sql_row("SELECT COUNT(1) FROM wD_Games g inner join wD_Members m on m.gameID = g.id  
 			WHERE m.userID = ".$this->id." AND g.gameOver = 'No' and g.playerTypes = 'MemberVsBots'");
 		
 		return $totalBotGames;
@@ -1348,8 +1313,7 @@ class User {
 	 */
 	public function modLastCheckedOn() 
 	{
-		global $DB;
-		list($modLastCheckedOn) = $DB->sql_row("SELECT c.modLastCheckedOn FROM wD_UserConnections c WHERE c.userID = ".$this->id);
+		list($modLastCheckedOn) = $this->DB->sql_row("SELECT c.modLastCheckedOn FROM wD_UserConnections c WHERE c.userID = ".$this->id);
 		
 		return $modLastCheckedOn;
 	}
@@ -1359,8 +1323,7 @@ class User {
 	 */
 	public function modLastCheckedBy() 
 	{
-		global $DB;
-		list($modLastCheckedBy) = $DB->sql_row("SELECT c.modLastCheckedBy FROM wD_UserConnections c WHERE c.userID = ".$this->id);
+		list($modLastCheckedBy) = $this->DB->sql_row("SELECT c.modLastCheckedBy FROM wD_UserConnections c WHERE c.userID = ".$this->id);
 		
 		return $modLastCheckedBy;
 	}

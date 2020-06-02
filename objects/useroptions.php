@@ -66,7 +66,8 @@ class UserOptions
 	 */
 	public function load()
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 		$this->value = UserOptions::$defaults;
 
 		$row = $DB->sql_hash("SELECT * FROM wD_UserOptions WHERE userID=".$this->id );
@@ -87,7 +88,8 @@ class UserOptions
 
 	public function set($newValues)
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		$updates = [];
 

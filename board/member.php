@@ -35,7 +35,8 @@ class userMember extends panelMember
 	 */
 	public function __construct(Member $Member)
 	{
-		global $DB, $Game;
+		global $app;
+		$DB = $app->make('DB');
 
 		parent::__construct($Member);
 
@@ -65,7 +66,8 @@ class userMember extends panelMember
 	 */
 	protected function setBackFromLeft()
 	{
-		global $DB,$Game,$User;
+		global $app, $Game;
+		$DB = $app->make('DB');
 		
 		if ( $this->Game->Members->isTempBanned() )
 		{
@@ -124,7 +126,8 @@ class userMember extends panelMember
 	 */
 	public function toggleVote($voteName)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		// Unpause is stored as Pause in the database
 		if ( $voteName == 'Unpause' )
@@ -149,7 +152,8 @@ class userMember extends panelMember
 	 */
 	public function seen($seenCountryID)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		foreach($this->newMessagesFrom as $i => $countryID)
 			if ( $countryID == $seenCountryID )

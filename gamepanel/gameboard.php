@@ -32,7 +32,8 @@ class panelGameBoard extends panelGame
 {
 	public function mapHTML() : string
 	{
-		global $User;
+        global $app;
+        $User = $app->make('User');
 
 		$mapTurn = (($this->phase=='Pre-game'||$this->phase=='Diplomacy') ? $this->turn-1 : $this->turn);
 		$smallmapLink = 'map.php?gameID='.$this->id.'&turn='.$mapTurn .($User->options->value['showMoves'] == 'No'? '&hideMoves':'');
@@ -109,7 +110,8 @@ class panelGameBoard extends panelGame
 	 */
 	public function votes() : string
 	{
-		global $User;
+        global $app;
+        $User = $app->make('User');
 		if ( ( !$this->isStarted() || $this->phase == 'Finished' ) || !isset($this->Members->ByUserID[$User->id]) ) return '';
 
 		$vAllowed = Members::$votes;
@@ -320,7 +322,8 @@ class panelGameBoard extends panelGame
 	 */
 	public function header() : string
 	{
-		global $User;
+        global $app;
+        $User = $app->make('User');
 		libHTML::$alternate=2;
 		$buf = '<div class="titleBar">
 				'.$this->titleBar().'

@@ -30,8 +30,6 @@ class Modern2Variant_userOrderBuilds extends userOrderBuilds
 
 	protected function toTerrIDCheck()
 	{
-		global $DB;
-
 		// Don't duplicate destroy validation code
 		if( $this->type != 'Build Army' && $this->type != 'Build Fleet' )
 			return parent::toTerrIDCheck();

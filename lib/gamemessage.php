@@ -39,7 +39,8 @@ class libGameMessage
 	 */
 	static public function send($toCountryID, $fromCountryID, $message, $gameID=-1)
 	{
-		global $DB, $Game;
+		global $Game, $app;
+		$DB = $app->make('DB');
 
 		if ( ! is_object($Game) )
 		{
@@ -87,7 +88,8 @@ class libGameMessage
 	 */
 	private static function notify($toCountryID, $fromCountryID)
 	{
-		global $DB, $Game;
+		global $app, $Game;
+		$DB = $app->make('DB');
 
 		$DB->sql_put("COMMIT"); // Prevent deadlocks
 
@@ -109,4 +111,3 @@ class libGameMessage
 		}
 	}
 }
-?>

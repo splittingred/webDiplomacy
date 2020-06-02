@@ -37,7 +37,9 @@ class miscUpdate
 	 */
 	public static function forum()
 	{
-		global $DB,$Misc;
+        global $app;
+        $DB = $app->make('DB');
+        $Misc = $app->make('Misc');
 
 		list($Misc->ForumThreads) = $DB->sql_row("SELECT COUNT(type) FROM wD_ForumMessages WHERE type='ThreadStart'");
 
@@ -75,7 +77,9 @@ class miscUpdate
 	 */
 	public static function game()
 	{
-		global $DB, $Misc;
+        global $app;
+        $DB = $app->make('DB');
+        $Misc = $app->make('Misc');
 
 		list($Misc->GamesNew) = $DB->sql_row("SELECT COUNT(phase) FROM wD_Games WHERE phase = 'Pre-game'");
 		list($Misc->GamesActive) = $DB->sql_row("SELECT COUNT(phase) FROM wD_Games WHERE phase = 'Diplomacy' OR phase = 'Retreats' OR phase = 'Builds'");
@@ -105,8 +109,6 @@ class miscUpdate
 	 */
 	static public function errorLog()
 	{
-		global $Misc;
-
 		libError::errorTimes(); // Within this code an update is performed
 	}
 
@@ -120,7 +122,9 @@ class miscUpdate
 	 */
 	static public function user()
 	{
-		global $DB,$Misc;
+        global $app;
+        $DB = $app->make('DB');
+        $Misc = $app->make('Misc');
 
 		list($Misc->RankingPlayers) = $DB->sql_row(
 			"SELECT COUNT(id)+1 FROM wD_Users WHERE points > 100");

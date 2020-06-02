@@ -34,7 +34,9 @@ class processOrderDiplomacy extends processOrder
 	 */
 	public function completeAll()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		$DB->sql_put("UPDATE wD_Orders
 			SET type='Hold', toTerrID = NULL, fromTerrID = NULL
@@ -55,7 +57,9 @@ class processOrderDiplomacy extends processOrder
 	 */
 	public function toMoves()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		// TODO: Why does wD_Moves need its own ID?
 		// Insert all the needed info into the moves table, stripping off the coasts data, which the adjudicator doesn't deal with
@@ -82,7 +86,9 @@ class processOrderDiplomacy extends processOrder
 	 */
 	public function apply($standoffTerrs)
 	{
-		global $Game, $DB;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		/*
 		 * - Occupy all units, Set dislodged units to retreat
@@ -160,7 +166,9 @@ class processOrderDiplomacy extends processOrder
 	 */
 	public function create()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		// An order is needed for every unit current in-game unit
 		$DB->sql_put("INSERT INTO wD_Orders

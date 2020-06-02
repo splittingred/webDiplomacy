@@ -55,7 +55,8 @@ class Misc
 	
 	public function write()
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 		
 		foreach($this->updated as $name)
 		{
@@ -66,7 +67,8 @@ class Misc
 	
 	public function read()
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 		
 		$tabl = $DB->sql_tabl("SELECT name, value FROM wD_Misc");
 		while ( list($name, $value) = $DB->tabl_row($tabl) )

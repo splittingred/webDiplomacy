@@ -260,12 +260,27 @@ class Game
 	 */
 	public $startTime;
 
+	/** @var \Database */
+	protected $db;
+	/** @var \User */
+	protected $user;
+	/** @var Misc */
+	protected $misc;
+	/** @var \Diplomacy\Views\Renderer */
+	protected $renderer;
+
 	/**
 	 * @param int/array $gameData The game ID of the game to load, or the array of its database row
 	 * @param string[optional] $lockMode The database locking phase to use; no locking by default
 	 */
 	public function __construct($gameData, $lockMode = NOLOCK)
 	{
+	    global $app;
+	    $this->db = $app->make('DB');
+	    $this->user = $app->make('user');
+	    $this->misc = $app->make('Misc');
+	    $this->renderer = $app->make('renderer');
+
 		$this->lockMode = $lockMode;
 
 		/* If a Game has already been loaded it gets moved out of the way
@@ -456,8 +471,7 @@ class Game
 
 	public function hasModeratorPowers() : bool
 	{
-		global $User;
-		return ($User->type['Moderator'] && !isset($this->Members->ByUserID[$User->id]));
+		return ($this->user->type['Moderator'] && !isset($this->Members->ByUserID[$this->user->id]));
 	}
 
     public function loadRow(array $row) : void
@@ -475,42 +489,34 @@ class Game
 
     public function watched() : bool
 	{
-        global $DB, $User;
-
-		$row = $DB->sql_row('SELECT * from wD_WatchedGames WHERE gameID='.$this->id.' AND userID=' . $User->id);
+		$row = $this->db->sql_row('SELECT * from wD_WatchedGames WHERE gameID='.$this->id.' AND userID=' . $this->user->id);
 		return $row != false;
 	}
 
     public function watch() : void
 	{
-        global $DB, $User;
-
-		if (! $this->watched())
+		if (!$this->watched())
 		{
-		        $DB->sql_put('INSERT INTO wD_WatchedGames (gameID, userID) VALUES ('.$this->id. ','.$User->id.')');
-		        $DB->sql_put('COMMIT');
+		        $this->db->sql_put('INSERT INTO wD_WatchedGames (gameID, userID) VALUES ('.$this->id. ','.$this->user->id.')');
+		        $this->db->sql_put('COMMIT');
 		}
 	}
 
     public function unwatch() : void
 	{
-        global $DB, $User;
-
 	    if ($this->watched())
 		{
-			$DB->sql_put('DELETE from wD_WatchedGames WHERE gameID='. $this->id . ' AND userID='. $User->id);// . $this->id . ' AND userID=' . $User->id);
-			$DB->sql_put('COMMIT');
+			$this->db->sql_put('DELETE from wD_WatchedGames WHERE gameID='. $this->id . ' AND userID='. $this->user->id);// . $this->id . ' AND userID=' . $this->user->id);
+			$this->db->sql_put('COMMIT');
 		} 
 	}
 
     public function loadCDs() : void
 	{
-		global $DB;
-
         $this->civilDisorderInfo = array();
 
-		$tabl = $DB->sql_tabl('SELECT userID, countryID, turn, SCCount from wD_CivilDisorders where gameID='. $this->id);
-		while ( $row = $DB->tabl_hash($tabl) )
+		$tabl = $this->db->sql_tabl('SELECT userID, countryID, turn, SCCount from wD_CivilDisorders where gameID='. $this->id);
+		while ( $row = $this->db->tabl_hash($tabl) )
 		{
 			$this->civilDisorderInfo[$row['userID']] = $row;
 		}
@@ -522,9 +528,7 @@ class Game
 	 */
     public function load() : void
 	{
-		global $DB;
-
-		$row = $DB->sql_hash("SELECT
+		$row = $this->db->sql_hash("SELECT
 			g.id,
 			g.variantID,
 			LOWER(HEX(g.password)) as password,
@@ -571,13 +575,11 @@ class Game
 
     public function isJoinable() : bool
 	{
-		global $User;
-
 		if( $this->Members->isJoined() ) return false;
 
-        if ( array_key_exists($User->id,$this->civilDisorderInfo) ) return false;
+        if ( array_key_exists($this->user->id,$this->civilDisorderInfo) ) return false;
 
-		if( !$User->type['User'] ) return false;
+		if( !$this->user->type['User'] ) return false;
 
 		switch($this->phase)
 		{
@@ -585,14 +587,14 @@ class Game
 			case 'Pre-game':
 				if(count($this->Members->ByID)==count($this->Variant->countries))
 					return false;
-				elseif(is_null($this->minimumBet) || $User->points < $this->minimumBet )
+				elseif(is_null($this->minimumBet) || $this->user->points < $this->minimumBet )
 					return false;
 				else
 					return true;
 			default:
 				if(count($this->Members->ByStatus['Left'])==0)
 					return false;
-				elseif(is_null($this->minimumBet) || $User->points < $this->minimumBet )
+				elseif(is_null($this->minimumBet) || $this->user->points < $this->minimumBet )
 					return false;
 				else
 					return true;
@@ -670,7 +672,8 @@ class Game
 
     public static function gamesCanProcess() : bool
 	{
-		global $Misc;
+		global $app;
+		$Misc = $app->make('Misc');
 
 		static $gamesCanProcess;
 
@@ -698,8 +701,6 @@ class Game
 	 */
     public function needsProcess() : bool
 	{
-		global $Misc;
-
 		/*
 		 * - Games are processing as normal
 		 * - The game isn't finished
@@ -714,7 +715,7 @@ class Game
 		if( self::gamesCanProcess() && $this->phase!='Finished' && $this->processStatus=='Not-processing' &&
 			( $this->Members->isCompleted() || $this->missingPlayerPolicy!='Wait' ) && (
 				time() >= $this->processTime
-				|| ( ($this->phase!='Pre-game' && $this->Members->isReady() )
+				|| ( ($this->phase != 'Pre-game' && $this->Members->isReady() )
 					|| ($this->phase=='Pre-game' && count($this->Members->ByID)==count($this->Variant->countries) && !($this->isLiveGame()) ) )
 				)
 			)

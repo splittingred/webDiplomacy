@@ -39,7 +39,9 @@ class Chatbox
 	 */
 	public function findTab()
 	{
-		global $Member, $Game, $User;
+		global $Member, $Game;
+		global $app;
+		$User = $app->make('User');
 
 		$msgCountryID = 0;
 
@@ -87,7 +89,10 @@ class Chatbox
 	 */
 	public function postMessage($msgCountryID)
 	{
-		global $Member, $Game, $User, $DB;
+		global $Member, $Game;
+		global $app;
+		$DB = $app->make('DB');
+		$User = $app->make('User');
 		list($directorUserID) = $DB->sql_row("SELECT directorUserID FROM wD_Games WHERE id = ".$Game->id);
 		list($tournamentDirector, $tournamentCodirector) = $DB->sql_row("SELECT directorID, coDirectorID FROM wD_Tournaments t INNER JOIN wD_TournamentGames g ON t.id = g.tournamentID WHERE g.gameID = ".$Game->id);
 
@@ -149,7 +154,10 @@ class Chatbox
 	 */
 	public function output ($msgCountryID)
 	{
-		global $DB, $Game, $User, $Member;
+		global $Game, $Member;
+		global $app;
+		$DB = $app->make('DB');
+		$User = $app->make('User');
 		list($directorUserID) = $DB->sql_row("SELECT directorUserID FROM wD_Games WHERE id = ".$Game->id);
 		list($tournamentDirector, $tournamentCodirector) = $DB->sql_row("SELECT directorID, coDirectorID FROM wD_Tournaments t INNER JOIN wD_TournamentGames g ON t.id = g.tournamentID WHERE g.gameID = ".$Game->id);
 
@@ -345,7 +353,9 @@ class Chatbox
 	 */
 	function getMessages ( $msgCountryID, $limit=50 )
 	{
-		global $DB, $User, $Member, $Game;
+		global $Member, $Game;
+		global $app;
+		$DB = $app->make('DB');
 
 		if( !isset($Member) ) $msgCountryID=0;
 
@@ -390,7 +400,10 @@ class Chatbox
 
 	public function renderMessages($msgCountryID, $messages)
 	{
-		global $DB, $User, $Member, $Game;
+		global $Member, $Game;
+		global $app;
+		$DB = $app->make('DB');
+		$User = $app->make('User');
 
 		$messagestxt = "";
 

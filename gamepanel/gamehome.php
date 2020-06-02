@@ -98,7 +98,8 @@ class panelGameHome extends panelGameBoard
 	 */
 	public function titleBar() : string
 	{
-		global $User;
+        global $app;
+        $User = $app->make('User');
 		$buf = '
 			<div class="titleBarRightSide">
 				<span class="gameTimeRemaining">'.$this->gameTimeRemaining().'</span>
@@ -161,7 +162,9 @@ class panelGameHome extends panelGameBoard
 	 */
 	public function links() : string
 	{
-		global $DB, $User;
+        global $app;
+        $DB = $app->make('DB');
+        $User = $app->make('User');
 		$userInGame = 0;
 		list($userInGame) = $DB->sql_row("SELECT count(1) FROM wD_Members WHERE userID =".$User->id." and gameID =".$this->id);
 		$watchString= '';	

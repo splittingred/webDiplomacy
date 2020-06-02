@@ -2,7 +2,7 @@
 
 namespace Diplomacy\Services\Monads;
 
-class Result
+abstract class Result
 {
     /** @var mixed */
     protected $value;
@@ -22,4 +22,7 @@ class Result
     {
         return $this->value;
     }
+
+    abstract public function successful();
+    abstract public function failure();
 }

@@ -38,9 +38,10 @@ class UnorderedCountries {
 	/**
 	 * Load the countries with missing orders for a given user;
 	 */
-	function load($userID)
+	public function load($userID)
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
         // Filter allowed variantIDs
         $apiVariants = implode(', ', \Config::$apiConfig['variantIDs']);

@@ -364,7 +364,8 @@ abstract class drawMap
 	 */
 	protected function loadTerritories()
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		$territoryPositionsSQL = "SELECT id, name, ";
 		if ( $this->smallmap )

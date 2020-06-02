@@ -102,11 +102,12 @@ print '<div class="content">';
 
 function adminCPTabs()
 {
-	global $User;
+    global $app;
+    $User = $app->make('user');
 
 	$tab = !empty($_REQUEST['tab']) ? $_REQUEST['tab'] : 'control-panel';
-	global $renderer;
-	echo $renderer->render('admin/_topnav.twig', [
+	global $app;
+	echo $app->make('renderer')->render('admin/_topnav.twig', [
 	    'current' => $tab,
         'user' => $User,
     ]);

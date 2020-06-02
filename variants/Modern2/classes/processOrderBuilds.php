@@ -25,7 +25,9 @@ class Modern2Variant_processOrderBuilds extends processOrderBuilds
 {
 	public function create()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		$newOrders = array();
 		foreach($Game->Members->ByID as $Member )

@@ -19,9 +19,8 @@
 defined('IN_CODE') or die('This script can not be run by itself.');
 class ClassicChaosVariant_panelMembersHome extends panelMembersHome
 {
-	function membersList()
-	{
-		global $User;
+	function membersList(): string
+    {
 		
 		// $membersList[$i]=array($nameOrCountry,$iconOne,$iconTwo,...);
 		$membersList = array();

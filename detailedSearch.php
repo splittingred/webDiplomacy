@@ -11,7 +11,10 @@ require_once(l_r('objects/game.php'));
 require_once(l_r('gamepanel/game.php'));
 
 $tab = '';
-global $DB;
+global $app;
+$DB = $app->make('DB');
+$Misc = $app->make('Misc');
+$User = $app->make('User');
 
 // Ensure non-existant tables are not queried. phpbb forum tables exist only on webdip so their existence should be confirmed before use.
 list($serverHasPHPBB) = $DB->sql_row("SELECT count(1) FROM information_schema.tables WHERE table_name = 'phpbb_users'");
@@ -503,7 +506,6 @@ print '</br></br>';
 
 if ($tab == 'UserSearch')
 {
-	global $User;
 	if ($type != 'none' || $username != '')
 	{
 		$sql = "SELECT u.id, u.username, u.email, u.timeJoined, u.gameCount, u.reliabilityRating, u.points, u.type

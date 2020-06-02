@@ -155,10 +155,8 @@ class panelGame extends Game
 	 */
 	public function gameIcons() : string
 	{
-		global $Misc;
-
 		$buf = '';
-		if( $this->pot > $Misc->GameFeaturedThreshold )
+		if( $this->pot > $this->misc->GameFeaturedThreshold )
 			$buf .= '<img src="'.l_s('images/icons/star.png').'" alt="'.l_t('Featured').'" title="'.l_t('This is a featured game, one of the highest stakes games on the server!').'" /> ';
 
 		if( $this->private )
@@ -348,8 +346,7 @@ class panelGame extends Game
 	 */
 	public function members() : string
 	{
-		global $renderer;
-		return $renderer->render('games/members/summaryList.twig',[
+		return $this->renderer->render('games/members/summaryList.twig',[
 			'moderator_sees_member_info' => $this->moderatorSeesMemberInfo(),
 			'occupation_bar' => $this->Members->occupationBar(),
 			'members_list' => $this->Members->membersList(),
@@ -381,8 +378,7 @@ class panelGame extends Game
 	 */
 	public function archiveBar() : string
 	{
-		global $renderer;
-		return $renderer->render('games/board/archive_bar.twig', [
+		return $this->renderer->render('games/board/archive_bar.twig', [
 			'id' => $this->id,
 		]);
 	}
@@ -402,8 +398,6 @@ class panelGame extends Game
 	 */
 	public function joinBar() : string
 	{
-		global $User;
-
 		if ( $this->Members->isJoined() )
 		{
 			if ( $this->phase == 'Pre-game' )
@@ -425,16 +419,16 @@ class panelGame extends Game
 		{
 			$buf = '';
 
-			if ($this->minimumReliabilityRating > 0 && $User->type['User'])
+			if ($this->minimumReliabilityRating > 0 && $this->user->type['User'])
 			{
 				$buf .= l_t('Required Reliability: <span class="%s">%s%%</span><br/>',
-					($User->reliabilityRating < $this->minimumReliabilityRating ? 'Austria' :'Italy'),
+					($this->user->reliabilityRating < $this->minimumReliabilityRating ? 'Austria' :'Italy'),
 					($this->minimumReliabilityRating));
 			}
 
 			if ( $this->isJoinable() )
 			{
-				if( $this->minimumBet <= 100 && !$User->type['User'] && !$this->private )
+				if( $this->minimumBet <= 100 && !$this->user->type['User'] && !$this->private )
 					return l_t('A newly registered account can join this game; '.
 						'<a href="register.php" class="light">register now</a> to join.');
 
@@ -448,9 +442,9 @@ class panelGame extends Game
 					$question .= l_t('The game will start when all %s players have joined.', count($this->Variant->countries));
 				}
 
-				if ($User->reliabilityRating >= $this->minimumReliabilityRating)
+				if ($this->user->reliabilityRating >= $this->minimumReliabilityRating)
 				{
-					if (!($User->userIsTempBanned()))
+					if (!($this->user->userIsTempBanned()))
 					{
 						$buf .= '<form onsubmit="return confirm(\''.$question.'\');" method="post" action="board.php?gameID='.$this->id.'"><div>
 							<input type="hidden" name="formTicket" value="'.libHTML::formTicket().'" />';
@@ -473,22 +467,22 @@ class panelGame extends Game
 					}
 				}
 			}
-			if ($User->type['User'])
+			if ($this->user->type['User'])
 			{
-				if ($User->userIsTempBanned())
+				if ($this->user->userIsTempBanned())
 				{
 					$buf .= '<span style="font-size:75%;">(Due to a temporary ban you cannot join games.)</span>';
 				}
-				elseif ($User->reliabilityRating < $this->minimumReliabilityRating)
+				elseif ($this->user->reliabilityRating < $this->minimumReliabilityRating)
 				{
 					$buf .= '<span style="font-size:80%;">(You are not reliable enough to join this game.)</span>';
 				}
-				elseif ($User->points < $this->minimumBet)
+				elseif ($this->user->points < $this->minimumBet)
 				{
 					$buf .= '<span style="font-size:80%;">(You have too few points to join this game.)</span>';
 				}
 			}
-			if( $User->type['User'] && $this->phase != 'Finished')
+			if( $this->user->type['User'] && $this->phase != 'Finished')
 			{
 				$buf .= '<form method="post" action="redirect.php">'
 				       .'<input type="hidden" name="gameID" value="'.$this->id.'">';

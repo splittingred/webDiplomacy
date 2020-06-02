@@ -79,7 +79,8 @@ class processMembers extends Members
 	 */
 	function countUnitsSCs()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		// Reset
 		foreach($this->ByCountryID as $countryID=>$Member)
@@ -176,7 +177,8 @@ class processMembers extends Members
 	 */
 	function checkForWinner()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		
 		/*
 		 * See if only one person is left over
@@ -468,7 +470,9 @@ class processMembers extends Members
 	 */
 	function join($password="", $countryID=-1)
 	{
-		global $DB, $User;
+		global $app;
+		$DB = $app->make('DB');
+		$User = $app->make('user');
 
 		$countryID=(int)$countryID;
 
@@ -582,7 +586,8 @@ class processMembers extends Members
 	 */
 	function registerTurn() 
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		
 		// enter a turn for each active player with orders
 		$DB->sql_put("INSERT INTO wD_TurnDate (gameID, userID, countryID, turn, turnDateTime)
@@ -609,7 +614,8 @@ class processMembers extends Members
 	 */
 	function registerNMRs($nmrs) 
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 	
 		foreach( $this->ByID as $Member )
 		{
@@ -646,7 +652,8 @@ class processMembers extends Members
 	 */
 	function handleNMRs() 
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		
 		// Check if there is at least one active NMR and for that case reduce the excuses of all active members with NMRs and set members with no excuses as left.
 		$this->activeNMRs = false;
@@ -785,7 +792,8 @@ class processMembers extends Members
 	 */
 	function updateReliabilityStats()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		 require_once(l_r('gamemaster/gamemaster.php'));
 		 
 		$year = time() - 31536000;

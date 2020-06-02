@@ -114,7 +114,9 @@ class adjudicatorPreGame
 
 	protected function assignCountries(array $userCountries) 
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		// Finally the user->countryID array is written to the database and Game->Members objects,
 		// and the new countryID chances for each user based on their selection this time are written
@@ -137,7 +139,9 @@ class adjudicatorPreGame
 
 	protected function assignTerritories() 
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		$DB->sql_put(
 			"INSERT INTO wD_TerrStatus ( gameID, countryID, terrID )
@@ -149,7 +153,9 @@ class adjudicatorPreGame
 
 	protected function assignUnits() 
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		$terrIDByName = array();
 		$tabl = $DB->sql_tabl("SELECT id, name FROM wD_Territories WHERE mapID=".$Game->Variant->mapID);
@@ -174,7 +180,9 @@ class adjudicatorPreGame
 
 	protected function assignUnitOccupations() 
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		// Now link the TerrStatus and Units records via the occupyingUnitID TerrStatus column
 		$DB->sql_put(
@@ -199,7 +207,9 @@ class adjudicatorPreGame
 	 */
 	function adjudicate()
 	{		
-		global $Game, $DB;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		// If the game is a mixed game and there are not enough players in the game, and at least 2 humans then fill the game with bots. 
 		if ( ($Game->playerTypes == "Mixed") && (!$this->isEnoughPlayers()) && (count($Game->Members->ByID) > 1) )

@@ -29,8 +29,9 @@ class ColonialVariant_processMembers extends processMembers {
 
 		// After the Support-Center-Counter got updated check if HongKong is occupied by china.
 		// If that's true subtract 1 for Chinas total SC's
-		
-		global $DB;
+
+		global $app;
+		$DB = $app->make('DB');
 		list($owner_hk)=$DB->sql_row("SELECT countryID 
 			FROM wD_TerrStatus
 			WHERE (gameID=".$this->Game->id." AND terrID=9)");

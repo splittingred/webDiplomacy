@@ -76,7 +76,8 @@ class Unit {
 	 */
 	function __construct($row)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		if( !is_array($row) )
 			$row = $DB->sql_hash("SELECT * FROM wD_Units WHERE id = ".$row);

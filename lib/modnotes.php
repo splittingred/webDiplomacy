@@ -2,7 +2,8 @@
 
 class libModNotes {
 	static function reportBoxHTML($linkIDType, $linkID) {
-		global $User;
+        global $app;
+        $User = $app->make('user');
 
 		if( !$User->type['Moderator']&&$linkIDType=='User'&&$linkID==$User->id ) return '';
 
@@ -22,8 +23,10 @@ class libModNotes {
 		</div>';
 	}
 
-	static function checkInsertNote() {
-		global $User, $DB;
+	public static function checkInsertNote() {
+        global $app;
+        $User = $app->make('user');
+        $DB = $app->make('DB');
 
 		if( !isset($_REQUEST['linkIDType'])||!isset($_REQUEST['linkID'])||!isset($_REQUEST['note'])||!isset($_REQUEST['type']) ) return;
 
@@ -49,8 +52,10 @@ class libModNotes {
 			libHTML::notice('Report sent', "Your report has been posted, and will be dealt with by a moderator soon. Thanks for your patience.");
 	}
 
-	static function reportsDisplay($linkIDType, $linkID=0) {
-		global $User, $DB;
+	public static function reportsDisplay($linkIDType, $linkID=0) {
+		global $app;
+        $User = $app->make('user');
+        $DB = $app->make('DB');
 
 		if($linkIDType!='User'&&$linkIDType!='Game'&&$linkIDType!='All')
 			throw new Exception("Invalid note link-ID-type given: '".$linkIDType."', only User/Game allowed");
@@ -92,7 +97,9 @@ class libModNotes {
 	}
 
 	static function checkDeleteNote() {
-		global $User, $DB;
+        global $app;
+        $User = $app->make('user');
+        $DB = $app->make('DB');
 
 		if( !$User->type['Moderator'] || !isset($_REQUEST['modNoteDelete']) ) return;
 

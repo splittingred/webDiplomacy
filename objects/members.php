@@ -89,7 +89,8 @@ class Members
 
 	public function votesPassed()
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 		$votes = self::$votes;
 
 		$concede = 0;
@@ -183,7 +184,8 @@ class Members
 	 */
 	public function unreadyMembers()
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 		
 		foreach($this->ByStatus['Playing'] as $Member) 
 		{
@@ -204,7 +206,8 @@ class Members
 	 */
 	public function isJoined()
 	{
-		global $User;
+        global $app;
+        $User = $app->make('User');
 
 		return isset($this->ByUserID[$User->id]);
 	}
@@ -217,7 +220,8 @@ class Members
 	 */
 	public function isTempBanned()
 	{
-		global $User;
+        global $app;
+        $User = $app->make('User');
 		
 		return ( $this->isJoined() && $this->ByUserID[$User->id]->status == "Left" && $User->userIsTempBanned() );
 	}
@@ -271,7 +275,8 @@ class Members
 	}
 	public function load()
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		$tabl = $DB->sql_tabl("SELECT m.id AS id,
 				m.userID AS userID,
@@ -366,7 +371,8 @@ class Members
 
 	public function sendToWatchers($keep,$text) : void
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		$tabl = $DB->sql_tabl('SELECT userID FROM wD_WatchedGames WHERE gameID='.$this->Game->id);
 		while($watch=$DB->tabl_hash($tabl))
@@ -380,7 +386,8 @@ class Members
 
 	public function cantLeaveReason()
 	{
-		global $Misc;
+        global $app;
+        $Misc = $app->make('Misc');
 
 		if ( !$this->isJoined() )
 			return l_t("not a member");

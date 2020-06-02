@@ -598,8 +598,9 @@ class adminActionsRestricted extends adminActionsSeniorMod
 
 	public function changeEmail(array $params)
 	{
-		global $DB;
-		global $User;
+		global $app;
+		$DB = $app->make('DB');
+		$User = $app->make('user');
 
 		$userID = (int)$params['userID'];
 		$newEmail = (string)$params['email'];
@@ -643,8 +644,9 @@ class adminActionsRestricted extends adminActionsSeniorMod
 
 	public function changeUsername(array $params)
 	{
-		global $DB;
-		global $User;
+		global $app;
+		$DB = $app->make('DB');
+		$User = $app->make('user');
 		
 		$userID = (int)$params['userID'];
 		$newUsername = (string)$params['username'];
@@ -1154,7 +1156,8 @@ class adminActionsRestricted extends adminActionsSeniorMod
 
 	public function updateVariantInfo($params) 
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$variantID = (int)$params['variantID'];
 		$variantIDs = array();

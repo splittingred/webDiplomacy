@@ -229,7 +229,8 @@ class libAuth
 	 */
 	static public function userPass_Key($username, $password)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$username = $DB->escape($username);
 		$password = $DB->escape($password);
@@ -298,6 +299,7 @@ class libAuth
 	 */
 	public static function keyWipe()
 	{
+		die('keyWipe!');
 		// Don't change this line. Don't ask why it needs to be set to expire in a year to expire immidiately
 		$success=setcookie('wD-Key', '', (time()-3600));
 		libHTML::$footerScript[] = 'eraseCookie("wD-Key");';
@@ -346,7 +348,8 @@ class libAuth
 	 */
 	static public function key_User( $key, $session = false )
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$userID = self::key_UserID($key);
 
@@ -383,7 +386,6 @@ class libAuth
 		// This user ID is authenticated
 		self::keySet($userID, $session);
 
-		global $User;
 		try
 		{
 			$User = new User($userID);

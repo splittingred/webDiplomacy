@@ -4,6 +4,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Container\Container as Container;
 use Illuminate\Support\Facades\Facade as Facade;
 use \Illuminate\Pagination\Paginator as Paginator;
+use Twig\Loader\FilesystemLoader;
 
 if (!defined('IN_CODE')) {
     http_response_code(404);
@@ -23,14 +24,20 @@ require_once ROOT_PATH . 'objects/mailer.php';
 global $app;
 $app = new Container();
 $app->singleton('app', 'Illuminate\Container\Container');
+$app->singleton('renderer', function($app) {
+    $loader = new FilesystemLoader(ROOT_PATH . 'templates');
+    $env = new Renderer($loader, [
+        'cache' => ROOT_PATH . '/cache/templates',
+        'debug' => true,
+    ]);
+    $env->addGlobal('current_user', $app->make('user'));
+    return $env;
+});
 Facade::setFacadeApplication($app);
 
 Paginator::currentPageResolver(function ($pageName) {
     return empty($_GET[$pageName]) ? 1 : $_GET[$pageName];
 });
-
-global $renderer;
-$renderer = Renderer::getInstance();
 
 global $capsule;
 $capsule = new Capsule;

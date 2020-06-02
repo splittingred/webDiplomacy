@@ -164,7 +164,8 @@ class processGame extends Game
 	 */
 	static function backedUpGames()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		//self::backupTables();
 
@@ -185,7 +186,8 @@ class processGame extends Game
 	 */
 	static function wipeBackups()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		foreach(self::$gameTables as $tableName=>$idColName)
 			$DB->sql_put("DROP TABLE IF EXISTS wD_Backup_".$tableName);
@@ -199,7 +201,8 @@ class processGame extends Game
 	 */
 	static function restoreGame($gameID)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		list($countLive) = $DB->sql_row("SELECT COUNT(id) FROM wD_Games WHERE id = ".$gameID);
 		list($countBackup) = $DB->sql_row("SELECT COUNT(id) FROM wD_Backup_Games WHERE id = ".$gameID);
@@ -224,7 +227,8 @@ class processGame extends Game
 	 */
 	static private function backupTables()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		foreach(self::$gameTables as $tableName=>$idColName)
 			$DB->sql_put("CREATE TABLE IF NOT EXISTS wD_Backup_".$tableName." LIKE wD_".$tableName);
@@ -238,7 +242,8 @@ class processGame extends Game
 	 */
 	static function backupGame($gameID, $commitNow=true)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		//self::backupTables();
 
@@ -263,7 +268,8 @@ class processGame extends Game
 	 */
 	static function eraseGame($gameID)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		self::wipeCache($gameID);
 		self::backupGame($gameID, false);
@@ -294,7 +300,8 @@ class processGame extends Game
 	 */
 	public static function create($variantID, $name, $password, $bet, $potType, $phaseMinutes, $nextPhaseMinutes, $phaseSwitchPeriod, $joinPeriod, $anon, $press, $missingPlayerPolicy='Normal', $drawType, $rrLimit, $excusedMissedTurns, $playerTypes)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		if ( $name == 'DATC-Adjudicator-Test' and ! defined('DATC') )
 		{
@@ -361,7 +368,9 @@ class processGame extends Game
 	 */
 	function crashed()
 	{
-		global $Misc, $DB;
+		global $app;
+		$DB = $app->make('DB');
+		$Misc = $app->make('Misc');
 
 		assert($this->processStatus != 'Paused');
 
@@ -407,7 +416,8 @@ class processGame extends Game
 	 */
 	public function resetMinimumBet()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$minimumBet=false;
 		if ( $this->phase == 'Pre-game' )
@@ -442,7 +452,8 @@ class processGame extends Game
 	 */
 	private function recordNMRs()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 	
 		// detect which players NMR this turn, exclude anyone who is left to avoid giving them unearned un-excused missed turns. 
 		$tabl = $DB->sql_tabl("SELECT m.id 
@@ -498,7 +509,8 @@ class processGame extends Game
 	 */
 	protected function resetProcessTime() 
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		
 		$this->processTime = time() + $this->phaseMinutes*60;
 		$DB->sql_put("UPDATE wD_Games SET processTime = ".$this->processTime." WHERE id = ".$this->id);
@@ -509,7 +521,8 @@ class processGame extends Game
 	 */
 	protected function resetProcessTimeForMissedTurns() 
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 	
 		$newProcessTime = time() + 1440*60;
 		if ($this->phaseMinutes < 1440)
@@ -526,7 +539,8 @@ class processGame extends Game
 	 */
 	private function switchPhaseTime()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		// Only impact live games.
 		if ($this->phaseMinutes > 60) return;
@@ -555,7 +569,8 @@ class processGame extends Game
 	 */
 	function initializeStartTime()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		
 		if ($this->startTime == 0)
 		{
@@ -572,7 +587,8 @@ class processGame extends Game
 	 */
 	function process()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$this->gamelog('Beginning process');
 
@@ -791,7 +807,8 @@ class processGame extends Game
 	 */
 	function adjudicate()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$DB->sql_put("DELETE FROM wD_Moves WHERE gameID=".$GLOBALS['GAMEID']);
 
@@ -912,7 +929,8 @@ class processGame extends Game
 	protected function updateOwners()
 	{
 		// (This is protected, and not private, so that the DATC code has access)
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		if ( 0 == ($this->turn % 2 ) )
 		{
@@ -971,7 +989,8 @@ class processGame extends Game
 	 */
 	protected function archiveTerrStatus()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$DB->sql_put("DELETE FROM wD_TerrStatusArchive
 				WHERE gameID = ".$this->id." AND turn = ".$this->turn);
@@ -988,7 +1007,8 @@ class processGame extends Game
 	 */
 	protected function cleanTerrStatus()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$DB->sql_put(
 			"UPDATE wD_TerrStatus
@@ -1009,7 +1029,8 @@ class processGame extends Game
 	 */
 	protected function setPhase($phase, $gameOver='')
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$turn = '';
 		if ( $phase == 'Diplomacy' and $this->phase != 'Pre-game' )
@@ -1048,7 +1069,8 @@ class processGame extends Game
 		 * 'Playing'/'Left' -> 'Won'/'Survived'/'Resigned'
 		 * ('Defeated' status members are already set by now)
 		 */
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		$DB->sql_put("UPDATE wD_Games SET finishTime=".time()." WHERE id=".$this->id);
 		 
 		$this->Members->setWon($Winner);
@@ -1065,7 +1087,8 @@ class processGame extends Game
 	 */
 	protected function changePhase()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		/*
 		 * Pre-game -> Diplomacy (same turn)
@@ -1161,7 +1184,8 @@ class processGame extends Game
 	 */
 	public function togglePause($customMessage=false)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		if( $this->phase == 'Pre-game' )
 			throw new Exception(l_t("This game hasn't started"));
@@ -1219,7 +1243,8 @@ class processGame extends Game
 	 */
 	public function setDrawn()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		$DB->sql_put("UPDATE wD_Games SET finishTime=".time()." WHERE id=".$this->id);
 
 		// Unpause the game so that the processTime data isn't finalized as NULL
@@ -1255,7 +1280,8 @@ class processGame extends Game
 	 */
 	public function setConcede()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		// Ensure backend that a concede cannot be applied for the wrong variant type. 
 		if ( (empty(Config::$concedeVariants)) || (in_array($this->variantID, Config::$concedeVariants)) )

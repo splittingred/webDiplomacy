@@ -2,14 +2,21 @@
 
 namespace Diplomacy\Services\Authorization;
 
-use Diplomacy\Models\Session;
 use Diplomacy\Models\User;
 use Diplomacy\Services\Monads\Failure;
 use Diplomacy\Services\Monads\Result;
 use Diplomacy\Services\Monads\Success;
 
-class LoginService
+class Service
 {
+    /** @var SessionHandler */
+    protected $sessionHandler;
+
+    public function __construct()
+    {
+        $this->sessionHandler = new SessionHandler();
+    }
+
     /**
      * @param string $username
      * @param string $password
@@ -30,10 +37,21 @@ class LoginService
             return Failure::withError('invalid_password', 'Invalid login credentials. Please try again.');
         }
 
-        if (!Session::startForUser($user)) {
+        if (!$this->sessionHandler->touch($user->id)) {
             return Failure::withError('internal', 'Failed to login user. Please try again.');
         }
 
         return new Success($user);
+    }
+
+    public function getCurrentLegacyUser() : \User
+    {
+        if ($this->sessionHandler->isActive()) {
+            $userId = $this->sessionHandler->getUserId();
+            $user = new \User($userId);
+        } else {
+            $user = new \User(GUESTID);
+        }
+        return $user;
     }
 }

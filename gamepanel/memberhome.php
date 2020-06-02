@@ -55,7 +55,9 @@ class panelMemberHome extends panelMember
 	 */
 	function memberColumn()
 	{
-		global $User, $DB;
+		global $app;
+		$DB = $app->make('DB');
+		$User = $app->make('User');
 		list($directorUserID) = $DB->sql_row("SELECT directorUserID FROM wD_Games WHERE id = ".$this->Game->id);
 		list($tournamentDirector, $tournamentCodirector) = $DB->sql_row("SELECT directorID, coDirectorID FROM wD_Tournaments t INNER JOIN wD_TournamentGames g ON t.id = g.tournamentID WHERE g.gameID = ".$this->Game->id);
 

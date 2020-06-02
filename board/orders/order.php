@@ -129,7 +129,8 @@ abstract class userOrder extends order
 	 * @param array $inputs
 	 */
 	public function loadFromInput(array $inputs) {
-		global $DB; // To escape inputs
+		global $app;
+		$DB = $app->make('DB');
 
 		$data = array();
 
@@ -379,7 +380,8 @@ abstract class userOrder extends order
 	 */
 	protected function sqlCheck($sql)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$tabl=$DB->sql_tabl($sql);
 
@@ -431,7 +433,8 @@ abstract class userOrder extends order
 	 */
 	public function commit()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$setSQL=array();
 

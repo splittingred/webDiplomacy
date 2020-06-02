@@ -4,7 +4,9 @@ class libHome
 {
     static public function getType($type=false, $limit=35)
     {
-        global $DB, $User;
+        global $app;
+        $User = $app->make('user');
+        $DB = $app->make('DB');
 
         $notices=array();
 
@@ -23,8 +25,6 @@ class libHome
     }
     public static function Game()
     {
-        global $User;
-
         $pms = self::getType('Game');
 
         if(!count($pms))
@@ -104,7 +104,6 @@ class libHome
 
     public static function Notice()
     {
-        global $User;
         $output = '';
 
         $pms = self::getType();
@@ -126,10 +125,11 @@ class libHome
         return $output;
     }
 
-    static function topUsers()
+    public static function topUsers()
     {
-        global $DB;
-        $rows=array();
+        global $app;
+        $DB = $app->make('DB');
+        $rows = [];
         $tabl = $DB->sql_tabl("SELECT id, username, points FROM wD_Users
 						order BY points DESC LIMIT 10");
         $i=1;
@@ -142,7 +142,8 @@ class libHome
     }
     static function statsGlobalGame()
     {
-        global $Misc;
+        global $app;
+        $Misc = $app->make('Misc');
         $stats=array(
             'Starting'=>$Misc->GamesNew,
             'Joinable'=>$Misc->GamesOpen,
@@ -154,7 +155,8 @@ class libHome
     }
     static function statsGlobalUser()
     {
-        global $Misc;
+        global $app;
+        $Misc = $app->make('Misc');
         $stats=array(
             'Logged on'=>$Misc->OnlinePlayers,
             'Playing'=>$Misc->ActivePlayers,
@@ -192,7 +194,9 @@ class libHome
 
     static public function upcomingLiveGames ()
     {
-        global $User, $DB;
+        global $app;
+        $User = $app->make('user');
+        $DB = $app->make('DB');
 
         if ($User->options->value['displayUpcomingLive'] == 'No') return '';
 
@@ -223,7 +227,8 @@ class libHome
     static function forumNew()
     {
         // Select by id, prints replies and new threads
-        global $DB, $Misc;
+        global $app;
+        $DB = $app->make('DB');
 
         $tabl = $DB->sql_tabl("
 			SELECT m.id as postID, t.id as threadID, m.type, m.timeSent, IF(t.replies IS NULL,m.replies,t.replies) as replies,
@@ -346,7 +351,8 @@ class libHome
     static function forumNewExtern()
     {
         // Select by id, prints replies and new threads
-        global $DB, $Misc;
+        global $app;
+        $DB = $app->make('DB');
 
         $tabl = $DB->sql_tabl("SELECT t.forum_id, f.forum_name, t.topic_id, t.topic_title, t.topic_time, t.topic_views, t.topic_posts_approved,
 				u1.webdip_user_id as topic_poster_webdip, t.topic_poster, t.topic_first_poster_name, t.topic_first_poster_colour,

@@ -326,7 +326,8 @@ class libHTML
 
 	public static function threadLink($postID)
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		$postID = (int)$postID;
 
@@ -369,7 +370,8 @@ class libHTML
 	 */
 	static public function error($message)
 	{
-		global $Misc;
+		global $app;
+        $Misc = $app->make('Misc');
 
 		if ( !isset($Misc) )
 		{
@@ -400,9 +402,8 @@ class libHTML
 	{
 		require_once(l_r('global/definitions.php'));
 
-		$variantCSS = [];
-
-		global $renderer;
+		global $app;
+		$renderer = $app->make('renderer');
 		return $renderer->render('common/layout/header/head.twig', [
             'title' => $title,
             'css_version' => CSSVERSION,
@@ -419,8 +420,9 @@ class libHTML
 	 */
 	static public function starthtml($title = false, $echo = true) : string
 	{
-		global $User;
-		global $renderer;
+		global $app;
+        $renderer = $app->make('renderer');
+        $User = $app->make('user');
 
 		self::$scriptname = $scriptname = basename($_SERVER['PHP_SELF']);
 
@@ -479,9 +481,12 @@ class libHTML
 	 */
 	static private function globalNotices()
 	{
-		global $Misc, $User, $DB;
+		global $app;
+		$User = $app->make('user');
+		$DB = $app->make('DB');
+        $Misc = $app->make('Misc');
 		$notice=array();
-		if ( $Misc->Maintenance and isset($User) and $User->type['Admin'])
+		if ($Misc->Maintenance && isset($User) && $User->isAdmin())
 		{
 			/*
 			 * If the user is regular they are being shown the message as part of the main page,
@@ -524,7 +529,9 @@ class libHTML
 	 */
 	static public function gameNotifyBlock()
 	{
-		global $User, $DB;
+		global $app;
+		$DB = $app->make('DB');
+        $User = $app->make('user');
 
 		$tabl = $DB->sql_tabl(
 			"SELECT g.id, g.variantID, g.name, g.phase, m.orderStatus, m.countryID, (m.newMessagesFrom+0) as newMessagesFrom, g.processStatus
@@ -618,7 +625,8 @@ class libHTML
 	 */
 	static public function pages()
 	{
-		global $User;
+        global $app;
+        $User = $app->make('user');
 
 		$allUsers = array('Guest','User','Moderator','Admin');
 		$loggedOnUsers = array('User','Moderator','Admin');
@@ -702,8 +710,9 @@ class libHTML
 	 */
 	static public function menu()
 	{
-		global $User;
-		global $renderer;
+		global $app;
+        $User = $app->make('user');
+		$renderer = $app->make('renderer');
 		$authenticated = $User && $User->isAuthenticated();
 
         if (!$authenticated) {
@@ -733,7 +742,8 @@ class libHTML
 	 */
 	static public function footer($echo = true) : string
 	{
-		global $renderer;
+        global $app;
+        $renderer = $app->make('renderer');
 		$output = $renderer->render('common/layout/footer.twig', [
 			'stats' => self::footerStats(),
 			'webdiplomacy_version' => number_format(VERSION/100,2),
@@ -749,7 +759,10 @@ class libHTML
 
 	private static function footerStats()
 	{
-		global $Misc, $User, $renderer;
+		global $app;
+        $renderer = $app->make('renderer');
+        $User = $app->make('user');
+        $Misc = $app->make('Misc');
 
 		return $renderer->render('common/layout/footer/stats.twig',[
 			'logged_on' 		=> (int)$Misc->OnlinePlayers,
@@ -780,7 +793,8 @@ class libHTML
 
 	static private function footerScripts()
 	{
-		global $User, $Locale;
+        global $app, $Locale;
+        $User = $app->make('user');
 
 		$buf = '';
 

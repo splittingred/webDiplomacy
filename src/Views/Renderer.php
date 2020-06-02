@@ -8,18 +8,6 @@ use Twig\TemplateWrapper;
 
 class Renderer extends Environment
 {
-    public static function getInstance()
-    {
-        global $User;
-        $loader = new FilesystemLoader(ROOT_PATH . 'templates');
-        $env = new static($loader, [
-            'cache' => ROOT_PATH . '/cache/templates',
-            'debug' => true,
-        ]);
-        $env->addGlobal('user', $User);
-        return $env;
-    }
-
     /**
      * @param string|TemplateWrapper $name
      * @param array $context

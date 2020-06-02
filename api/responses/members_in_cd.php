@@ -38,9 +38,10 @@ class CountriesInCivilDisorder {
 	/**
 	 * Load the countries in CD;
 	 */
-	function load()
+	public function load()
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		// Filter allowed variantIDs
 		$apiVariants = implode(', ', \Config::$apiConfig['variantIDs']);

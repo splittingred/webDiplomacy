@@ -60,7 +60,9 @@ class adjudicatorDiplomacy {
 	 */
 	function adjudicate()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		/*
 		 * Adjudication:
@@ -379,7 +381,9 @@ class adjudicatorDiplomacy {
 	 */
 	function adjLoadUnits(array &$units, $moveType, $objectName, $targetQuery='', $multiTarget=false)
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		/*
 		 * This function loads units in two ways depending on whether $multiTarget is enabled

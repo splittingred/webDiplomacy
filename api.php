@@ -31,7 +31,9 @@ require_once('objects/game.php');
 require_once('lib/cache.php');
 require_once('lib/html.php');
 require_once('lib/time.php');
+global $app;
 $DB = new Database();
+$app->instance('DB', $DB);
 
 /**
  * Exception class - missing credentials (API key).
@@ -164,6 +166,8 @@ abstract class ApiEntry {
 	 */
 	protected $requirements;
 
+	protected $db;
+
 	/**
 	 * Initialize an ApiEntry.
 	 * @param string $route - API entry name.
@@ -181,6 +185,8 @@ abstract class ApiEntry {
 		$this->type = $type;
 		$this->databasePermissionField = $databasePermissionField;
 		$this->requirements = $requirements;
+		global $app;
+		$this->db = $app->make('DB');
 	}
 
 	/**
@@ -236,7 +242,6 @@ abstract class ApiEntry {
 	 * @throws RequestException - if no gameID field in requirements, or if no valid game ID provided.
 	 */
 	public function getAssociatedGame() {
-		global $DB;
 		if (!in_array('gameID', $this->requirements))
 			throw new RequestException('No game ID available for this request.');
 		$args = $this->getArgs();
@@ -246,7 +251,7 @@ abstract class ApiEntry {
 		$gameID = intval($gameID);
 		$Variant = libVariant::loadFromGameID($gameID);
 		libVariant::setGlobals($Variant);
-		$gameRow = $DB->sql_hash('SELECT * from wD_Games WHERE id = '.$gameID);
+		$gameRow = $this->db->sql_hash('SELECT * from wD_Games WHERE id = '.$gameID);
 		if (!$gameRow)
 			throw new RequestException('Invalid game ID');
 		return new Game($gameRow);
@@ -329,7 +334,6 @@ class SetOrders extends ApiEntry {
 	 * @throws ClientForbiddenException
 	 */
 	public function run($userID, $permissionIsExplicit) {
-		global $DB;
 		$args = $this->getArgs();
 		$gameID = $args['gameID'];	// checked in getAssociatedGame()
 		$turn = $args['turn'];
@@ -368,7 +372,7 @@ class SetOrders extends ApiEntry {
 		if (isset($game->Members->ByUserID[$userID]) && $countryID == $game->Members->ByUserID[$userID]->countryID) {
 			// API caller is the game member controlling given country ID.
 			// Setting the member status as Active
-			$DB->sql_put("UPDATE wD_Members SET userID = ".$userID.", status='Playing', missedPhases = 0, timeLoggedIn = ".time()." WHERE id = ".$member->id);
+			$this->db->sql_put("UPDATE wD_Members SET userID = ".$userID.", status='Playing', missedPhases = 0, timeLoggedIn = ".time()." WHERE id = ".$member->id);
 			unset($game->Members->ByUserID[$member->userID]);
 			unset($game->Members->ByStatus['Playing'][$member->id]);
 			$member->status='Playing';
@@ -399,8 +403,8 @@ class SetOrders extends ApiEntry {
 		$sql = 'SELECT wD_Orders.id AS orderID, wD_Units.terrID AS terrID FROM wD_Orders
 				LEFT JOIN wD_Units ON (wD_Orders.gameID = wD_Units.gameID AND wD_Orders.countryID = wD_Units.countryID AND wD_Orders.unitID = wD_Units.id) 
 				WHERE wD_Orders.gameID = '.$gameID.' AND wD_Orders.countryID = '.$countryID;
-		$res = $DB->sql_tabl($sql);
-		while ($row = $DB->tabl_hash($res)) {
+		$res = $this->db->sql_tabl($sql);
+		while ($row = $this->db->tabl_hash($res)) {
 			$orderID = $row['orderID'];
 			$terrID = $row['terrID'];
 			$orderToTerritory[$orderID] = $terrID;
@@ -505,11 +509,11 @@ class SetOrders extends ApiEntry {
 			$orderInterface->writeOrders();
 		$orderInterface->orderStatus->Ready = ($readyArg ? $readyArg == 'Yes' : $previousReadyValue);
 		$orderInterface->writeOrderStatus();
-        $DB->sql_put("COMMIT");
+        $this->db->sql_put("COMMIT");
 
 		// Return current orders.
 		$currentOrders = array();
-		$currentOrdersTabl = $DB->sql_tabl(
+		$currentOrdersTabl = $this->db->sql_tabl(
 		'SELECT
 			wD_Orders.id AS orderID,
 			wD_Orders.type AS type,
@@ -523,7 +527,7 @@ class SetOrders extends ApiEntry {
 			ON (wD_Orders.gameID = wD_Units.gameID AND wD_Orders.countryID = wD_Units.countryID AND wD_Orders.unitID = wD_Units.id)
 			WHERE wD_Orders.gameID = '.$gameID.' AND wD_Orders.countryID = '.$countryID
 		);
-		while ($row = $DB->tabl_hash($currentOrdersTabl)) {
+		while ($row = $this->db->tabl_hash($currentOrdersTabl)) {
 			$currentOrders[] = array(
 			    'unitType' => $row['unitType'],
 				'terrID' => ctype_digit($row['terrID']) ? intval($row['terrID']) : $row['terrID'],
@@ -545,25 +549,25 @@ class SetOrders extends ApiEntry {
 
             if( $game->processStatus!='Crashed' && $game->attempts > count($game->Members->ByID)*2 )
             {
-                $DB->sql_put("COMMIT");
+                $this->db->sql_put("COMMIT");
                 require_once(l_r('gamemaster/game.php'));
 
                 $game = libVariant::$Variant->processGame($game->id);
                 $game->crashed();
-                $DB->sql_put("COMMIT");
+                $this->db->sql_put("COMMIT");
             }
             elseif( $game->needsProcess() )
             {
-                $DB->sql_put("UPDATE wD_Games SET attempts=attempts+1 WHERE id=".$game->id);
-                $DB->sql_put("COMMIT");
+                $this->db->sql_put("UPDATE wD_Games SET attempts=attempts+1 WHERE id=".$game->id);
+                $this->db->sql_put("COMMIT");
 
                 require_once(l_r('gamemaster/game.php'));
                 $game = libVariant::$Variant->processGame($gameID);
                 if( $game->needsProcess() )
                 {
                     $game->process();
-                    $DB->sql_put("UPDATE wD_Games SET attempts=0 WHERE id=".$game->id);
-                    $DB->sql_put("COMMIT");
+                    $this->db->sql_put("UPDATE wD_Games SET attempts=0 WHERE id=".$game->id);
+                    $this->db->sql_put("COMMIT");
                 }
             }
         }
@@ -610,12 +614,11 @@ class ApiKey {
 	 * @throws ClientUnauthorizedException - if associated user cannot be found.
 	 */
 	private function load() {
-		global $DB;
-		$rowUserId = $DB->sql_hash("SELECT userID from wD_ApiKeys WHERE apiKey = '".$DB->escape($this->apiKey)."'");
+		$rowUserId = $this->db->sql_hash("SELECT userID from wD_ApiKeys WHERE apiKey = '".$this->db->escape($this->apiKey)."'");
 		if (!$rowUserId)
 			throw new ClientUnauthorizedException('No user associated to this API key.');
 		$this->userID = intval($rowUserId['userID']);
-		$permissionRow = $DB->sql_hash("SELECT * FROM wD_ApiPermissions WHERE userID = ".$this->userID);
+		$permissionRow = $this->db->sql_hash("SELECT * FROM wD_ApiPermissions WHERE userID = ".$this->userID);
 		if ($permissionRow) {
 			foreach (ApiKey::$permissionFields as $permissionField) {
 				if ($permissionRow[$permissionField] == 'Yes')

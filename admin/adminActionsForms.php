@@ -128,7 +128,9 @@ class adminActionsForms
 	 */
 	private static function save($name, array $paramValues, $details)
 	{
-		global $DB, $User;
+        global $app;
+        $User = $app->make('User');
+        $DB = $app->make('DB');
 
 		$name = $DB->escape($name);
 
@@ -159,7 +161,8 @@ class adminActionsForms
 	 */
 	public function process($actionName)
 	{
-		global $Misc;
+        global $app;
+        $Misc = $app->make('Misc');
 
 		// TODO: Use late static binding for this instead of INBOARD detection
 		extract($this->actionsList[$actionName]);
@@ -247,7 +250,8 @@ class adminActionsLayout
 {
 	public static function printActionShortcuts()
 	{
-		global $User;
+        global $app;
+        $User = $app->make('User');
 
 		print '<div class = "modTools">';
 		print '<ul class = "modTools">';

@@ -52,7 +52,9 @@ require_once(l_r('board/orders/builds.php'));
 class OrderInterface
 {
 	public static function newBoard() {
-		global $Game, $User, $Member;
+		global $Game, $Member;
+		global $app;
+		$User = $app->make('user');
 		return self::newContext($Game, $Member, $User);
 	}
 	public static function newContext(Game $Game, userMember $Member, User $User) {
@@ -112,7 +114,8 @@ class OrderInterface
 
 	public function load()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$DB->sql_put("SELECT * FROM wD_Members WHERE gameID = ".$this->gameID." AND countryID=".$this->countryID." ".UPDATE);
 
@@ -208,8 +211,6 @@ class OrderInterface
 	}
 
 	public function readyToggle() {
-		global $Member, $DB;
-
 		if( !$this->orderStatus->Ready )
 		{
 			if( !$this->orderStatus->Completed )
@@ -234,7 +235,9 @@ class OrderInterface
 	}
 
 	public function writeOrderStatus() {
-		global $DB, $Member;
+		global $Member;
+		global $app;
+		$DB = $app->make('DB');
 
 		$this->results['statusIcon']=$this->orderStatus->icon();
 		$this->results['statusText']=$this->orderStatus->iconText();

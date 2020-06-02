@@ -44,7 +44,9 @@ class datcGame extends processGame
 	 */
 	function __construct($testID)
 	{
-		global $DB, $Game, $Variant;
+		global $Game, $Variant;
+		global $app;
+		$DB = $app->make('DB');
 
 		/*
 		 * Create a clean new game to apply the test to
@@ -86,8 +88,8 @@ class datcGame extends processGame
 	 */
 	private static function wipe($id)
 	{
-		global $DB;
-
+		global $app;
+		$DB = $app->make('DB');
 		self::wipeCache($id);
 
 		$tables = array('Members','Orders', 'TerrStatus',
@@ -98,7 +100,8 @@ class datcGame extends processGame
 	}
 
 	function terrNameByID($terrID) {
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		static $cache;
 
 		if( !isset($cache) ) {
@@ -117,7 +120,8 @@ class datcGame extends processGame
 	 */
 	function outputTest()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$tabl = $DB->sql_tabl("SELECT * FROM wD_DATCOrders WHERE testID = ".$this->testID);
 
@@ -176,7 +180,8 @@ class datcGame extends processGame
 	 */
 	private function loadUnits()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$DB->sql_put(
 			"INSERT INTO wD_Units ( gameID, countryID, type, terrID )
@@ -186,7 +191,8 @@ class datcGame extends processGame
 	}
 
 	private function loadOI($memberID, $countryID){
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$con=array();
 		$con['gameID']=$this->id;
@@ -209,7 +215,8 @@ class datcGame extends processGame
 	 */
 	public function submitOrders()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		// Create DATCResults to save ajax.php results to, and modify OrdersHTML to save results to it
 		libHTML::$footerScript[] = 'DATCResults=new Hash();';
@@ -246,7 +253,8 @@ class datcGame extends processGame
 
 	private function submitOrdersForCountry($countryID)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		libHTML::$footerScript[] = '
 		var oHash = OrdersHTML.OrdersIndex;
@@ -301,7 +309,8 @@ class datcGame extends processGame
 	 */
 	function checkInvalidOrders()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$tabl = $DB->sql_tabl("SELECT o.id, d.legal, d.terrID,
 			o.type as oType, o.toTerrID as oToTerrID, o.fromTerrID as oFromTerrID, o.viaConvoy as oViaConvoy,
@@ -382,7 +391,8 @@ class datcGame extends processGame
 	 */
 	function checkResults()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		/*
 		 * Now the moves table can be used to determine whether the moves'
@@ -429,7 +439,8 @@ class datcGame extends processGame
 	 */
 	public function mapPrepare(array $standOffTerrs)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$PO = $this->Variant->processOrderDiplomacy();
 		$PO->archiveMoves();

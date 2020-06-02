@@ -221,9 +221,10 @@ class GameState {
 	 * Load the GameState object.
 	 * @throws \Exception
 	 */
-	function load()
+	public function load()
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		// Loading game state
 		$gameRow = $DB->sql_hash("SELECT id, variantID, turn, phase, gameOver FROM wD_Games WHERE id=".$this->gameID);

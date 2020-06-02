@@ -104,7 +104,8 @@ class panelMembers extends Members
 	 */
 	public function selectCivilDisorder()
 	{
-		global $User;
+        global $app;
+        $User = $app->make('User');
 
 		$buf = "";
 		if( 1==count($this->ByStatus['Left']) )
@@ -149,7 +150,8 @@ class panelMembers extends Members
 	{
 		if ( isset($this->occupationBarCache)) return $this->occupationBarCache;
 
-		global $renderer;
+        global $app;
+        $renderer = $app->make('renderer');
 
 		libHTML::$first=true;
 		if ($this->Game->isStarted())

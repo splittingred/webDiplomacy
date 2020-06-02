@@ -167,11 +167,6 @@ class adminActions extends adminActionsForms
 			),
 		);
 
-	public function __construct()
-	{
-		global $Misc;
-	}
-	
 	public function resetMinimumBet(array $params)
 	{
 		require_once(l_r('gamemaster/game.php'));
@@ -183,8 +178,8 @@ class adminActions extends adminActionsForms
 
 	public function drawType(array $params)
 	{
-		global $DB;
-
+		global $app;
+		$DB = $app->make('DB');
 		$gameID=(int)$params['gameID'];
 		$newSetting=(int)$params['newSetting'];
 
@@ -202,7 +197,8 @@ class adminActions extends adminActionsForms
 
 	public function alterMessaging(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$gameID=(int)$params['gameID'];
 		$newSetting=(int)$params['newSetting'];
@@ -223,7 +219,8 @@ class adminActions extends adminActionsForms
 
 	public function changePhaseLength(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		require_once(l_r('objects/game.php'));
 
@@ -251,7 +248,8 @@ class adminActions extends adminActionsForms
 
 	public function toggleWaitForOrders(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		require_once(l_r('objects/game.php'));
 
@@ -274,7 +272,8 @@ class adminActions extends adminActionsForms
 
 	public function setProcessTimeToPhaseConfirm(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		require_once(l_r('objects/game.php'));
 
@@ -288,7 +287,8 @@ class adminActions extends adminActionsForms
 
 	public function setProcessTimeToPhase(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$gameID = intval($params['gameID']);
 
@@ -305,7 +305,8 @@ class adminActions extends adminActionsForms
 
 	public function makePublic(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$gameID = intval($params['gameID']);
 
@@ -316,7 +317,8 @@ class adminActions extends adminActionsForms
 
 	public function makePrivate(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$gameID = intval($params['gameID']);
 		$password=$params['password'];
@@ -328,7 +330,8 @@ class adminActions extends adminActionsForms
 
 	public function setProcessTimeToNow(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$gameID = intval($params['gameID']);
 
@@ -345,7 +348,9 @@ class adminActions extends adminActionsForms
 
 	public function togglePause(array $params)
 	{
-		global $DB, $Game;
+		global $Game;
+		global $app;
+		$DB = $app->make('DB');
 
 		$gameID = (int)$params['gameID'];
 
@@ -364,8 +369,6 @@ class adminActions extends adminActionsForms
 
 	public function cdUserConfirm(array $params)
 	{
-		global $DB;
-
 		require_once('objects/game.php');
 
 		$User = new User($params['userID']);
@@ -380,7 +383,8 @@ class adminActions extends adminActionsForms
 
 	public function cdUser(array $params)
 	{
-		global $DB, $Game;
+		global $app, $Game;
+		$DB = $app->make('DB');
 
 		require_once(l_r('gamemaster/game.php'));
 
@@ -437,7 +441,8 @@ class adminActions extends adminActionsForms
 
 	public function replaceCoutries(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$gameIDs = (int)$params['gameIDs'];
 		$userID = (int)$params['userID'];
@@ -499,7 +504,8 @@ class adminActions extends adminActionsForms
 
 	public function replaceCoutriesConfirm(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$userID = (int)$params['userID'];
 		$replaceID = (int)$params['replaceID'];
@@ -519,7 +525,8 @@ class adminActions extends adminActionsForms
 
 	public function banUserConfirm(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$User = new User($params['userID']);
 
@@ -532,7 +539,10 @@ class adminActions extends adminActionsForms
 	
 	public function banUser(array $params)
 	{
-		global $User, $DB, $Game;
+		global $app;
+		$User = $app->make('User');
+		$DB = $app->make('DB');
+		global $Game;
 
 		$userID = (int)$params['userID'];
 
@@ -625,7 +635,8 @@ class adminActions extends adminActionsForms
 
 	public function tempBan(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$userID = (int)$params['userID'];
 		$days   = (int)$params['ban'];
@@ -650,7 +661,8 @@ class adminActions extends adminActionsForms
 
 	public function givePoints(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		$User = new User($params['userID']);
 
 		$userID = (int)$params['userID'];
@@ -679,7 +691,8 @@ class adminActions extends adminActionsForms
 
 	public function updateEmergencyDate(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$userID = (int)$params['userID'];
 		$setting = (int)$params['setting'];
@@ -692,7 +705,8 @@ class adminActions extends adminActionsForms
 
 	public function unbanUser(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$userID = (int)$params['userID'];
 
@@ -710,7 +724,8 @@ class adminActions extends adminActionsForms
 
 	public function excusedMissedTurnsIncreaseAll(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$gameID = (int)$params['gameID'];
 
@@ -720,7 +735,8 @@ class adminActions extends adminActionsForms
 
 	public function excusedMissedTurnsDecreaseAll(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$gameID = (int)$params['gameID'];
 
@@ -730,7 +746,8 @@ class adminActions extends adminActionsForms
 
 	public function excusedMissedTurnsIncrease(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$userIDtoUpdate = (int)$params['userID'];
 		$gameID = (int)$params['gameID'];
@@ -744,8 +761,8 @@ class adminActions extends adminActionsForms
 
 	public function excusedMissedTurnsDecrease(array $params)
 	{
-		global $DB;
-
+		global $app;
+		$DB = $app->make('DB');
 		$userIDtoUpdate = (int)$params['userID'];
 		$gameID = (int)$params['gameID'];
 
@@ -758,8 +775,8 @@ class adminActions extends adminActionsForms
 
 	public function recalculateUserRR(array $params)
 	{
-		global $DB;
-
+		global $app;
+		$DB = $app->make('DB');
 		$userIDtoUpdate = (int)$params['userID'];
 
 		require_once(l_r('gamemaster/gamemaster.php'));
@@ -785,7 +802,8 @@ class adminActions extends adminActionsForms
 
 	public function generateRegistrationLink(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		if (!isset($params['email']))
 			return "Please enter a valid email.";
@@ -810,7 +828,8 @@ class adminActions extends adminActionsForms
 
 	public function changeReliability(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		if (!isset($params['gameID']))
 		{

@@ -6,7 +6,10 @@
 
 require_once('header.php');
 
-global $DB;
+global $app;
+$Misc = $app->make('Misc');
+$User = $app->make('User');
+$DB = $app->make('DB');
 
 if( !$User->type['User'] )
 {

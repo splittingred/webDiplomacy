@@ -40,6 +40,8 @@ if (!empty($_REQUEST['q']))
 }
 else
 {
+    global $app;
+    $User = $app->make('user');
     if (!$User->isAuthenticated())
     {
         $controller = new IntroController();

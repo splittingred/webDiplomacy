@@ -34,7 +34,9 @@ class processOrderRetreats extends processOrder
 	 */
 	public function completeAll()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		$DB->sql_put("UPDATE wD_Orders
 			SET type='Disband'
@@ -46,7 +48,9 @@ class processOrderRetreats extends processOrder
 	 */
 	public function toMoves()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		// Insert all the needed info into the moves table, stripping off the coasts data, which the adjudicator doesn't deal with
 		$DB->sql_put("INSERT INTO wD_Moves
@@ -60,7 +64,9 @@ class processOrderRetreats extends processOrder
 	 */
 	public function create()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		// An order is needed for every unit which is retreating
 		$DB->sql_put("INSERT INTO wD_Orders
@@ -75,7 +81,9 @@ class processOrderRetreats extends processOrder
 	 */
 	public function apply()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		/*
 		 * Delete units which couldn't disband

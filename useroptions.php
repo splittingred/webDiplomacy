@@ -19,7 +19,10 @@
  */
 
 require_once('header.php');
-global $User;
+global $app;
+$Misc = $app->make('Misc');
+$User = $app->make('User');
+$DB = $app->make('DB');
 header('Content-Type: application/javascript');
 
 if ($User->options != null) 

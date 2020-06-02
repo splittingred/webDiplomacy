@@ -30,7 +30,8 @@ class adjudicatorRetreats {
 	 */
 	function adjudicate()
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		/*
 		 * - Fail any situations where more than one unit is retreating to one place

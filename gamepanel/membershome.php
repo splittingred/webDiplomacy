@@ -36,7 +36,6 @@ class panelMembersHome extends panelMembers
 	 */
 	public function membersList() : string
 	{
-		global $User;
 		// $membersList[$i]=array($nameOrCountryID,$iconOne,$iconTwo,...);
 		$membersList = array();
 		if($this->Game->phase == 'Pre-game')

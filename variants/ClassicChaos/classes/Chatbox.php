@@ -24,7 +24,9 @@ defined('IN_CODE') or die('This script can not be run by itself.');
 class ClassicChaosVariant_Chatbox extends Chatbox {
 
 	public function renderMessages($msgCountryID, $messages) {
-		global $Member, $User;
+		global $Member;
+		global $app;
+		$User = $app->make('User');
 
 		if (isset($User->showCountryNames) && $User->showCountryNames == 'Yes')
 			return parent::renderMessages($msgCountryID, $messages);
@@ -40,5 +42,3 @@ class ClassicChaosVariant_Chatbox extends Chatbox {
 	}
 
 }
-
-?>

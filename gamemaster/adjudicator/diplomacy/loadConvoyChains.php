@@ -88,7 +88,9 @@ class adjConvoyChains
 
 	static public function getConvoys()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		/*
 		 * There are 3 steps to creating the convoy chains:

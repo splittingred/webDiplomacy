@@ -70,7 +70,8 @@ class adminActionsForum extends adminActions
 	
 	private static function setNextActivePostSilence($silenceID) 
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		
 		/*
 		 * For this silence ID find the thread that is being silenced
@@ -124,7 +125,8 @@ class adminActionsForum extends adminActions
 
 	private static function setNextActiveUserSilence($silenceID) 
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		$silence = new Silence($silenceID);
 		if( !$silence->userID ) return;
 		
@@ -197,7 +199,8 @@ class adminActionsForum extends adminActions
 	
 	private static function checkSilenceParams(array $params) 
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		
 		if( strlen($params['reason']) < 5 )
 			throw new Exception(l_t("Please give a reason longer than 5 characters."));
@@ -220,7 +223,8 @@ class adminActionsForum extends adminActions
 	
 	public function createUserSilence(array $params)
 	{
-		global $User;
+		global $app;
+		$User = $app->make('user');
 		
 		self::checkSilenceParams($params);
 		
@@ -249,7 +253,8 @@ class adminActionsForum extends adminActions
 	
 	public function createThreadSilence(array $params)
 	{
-		global $User;
+		global $app;
+		$User = $app->make('user');
 		
 		self::checkSilenceParams($params);
 		
@@ -272,7 +277,8 @@ class adminActionsForum extends adminActions
 	
 	public function createUserThreadSilence(array $params)
 	{
-		global $User;
+		global $app;
+		$User = $app->make('user');
 		
 		self::checkSilenceParams($params);
 		
@@ -298,7 +304,8 @@ class adminActionsForum extends adminActions
 
 	public function syncForumLikes(array $params)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		
 		$DB->sql_put("UPDATE wD_ForumMessages fm
 			INNER JOIN (

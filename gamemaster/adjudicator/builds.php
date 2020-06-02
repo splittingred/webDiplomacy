@@ -30,7 +30,8 @@ class adjudicatorBuilds {
 	 */
 	function adjudicate()
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		/*
 		 * - Fail incomplete Destory orders

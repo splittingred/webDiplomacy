@@ -4,9 +4,11 @@ namespace Diplomacy\Controllers;
 
 use Diplomacy\Services\Request;
 use Diplomacy\Utilities\HasPlaceholders;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use libHTML;
 use Twig\Environment as Twig;
 use Twig\Error\Error as TwigError;
+use Illuminate\Container\Container as Container;
 
 abstract class BaseController
 {
@@ -38,10 +40,10 @@ abstract class BaseController
 
     public function __construct()
     {
-        global $renderer, $DB, $User;
-        $this->renderer = $renderer;
-        $this->database = $DB;
-        $this->currentUser = $User;
+        global $app;
+        $this->renderer = $app->make('renderer');
+        $this->database = $app->make('DB');
+        $this->currentUser = $app->make('user');
         $this->request = new Request();
         $this->setUp();
     }

@@ -33,7 +33,8 @@ class panelMember extends Member
 	 */
 	function memberSentMessages()
 	{
-		global $User;
+		global $app;
+		$User = $app->make('User');
 		if($this->Game->Members->isJoined() && !$this->Game->Members->isTempBanned())
 			if(in_array($this->countryID,$this->Game->Members->ByUserID[$User->id]->newMessagesFrom))
 				return libHTML::unreadMessages('board.php?gameID='.$this->gameID.'&msgCountryID='.$this->countryID.'#chatbox');
@@ -56,7 +57,8 @@ class panelMember extends Member
 		}
 		elseif ( $this->Game->phase != 'Pre-game' && $this->Game->phase != 'Finished')
 		{
-			global $DB;
+			global $app;
+			$DB = $app->make('DB');
 
 			$row = $DB->sql_hash("select count(1) from wD_Members where gameID = ".$this->gameID." and status not like '%Defeated%' and status not like '%Left%' and (orderStatus not like '%Saved%' and orderStatus not like '%Completed%' and orderStatus not like '%Ready%' and orderStatus not like '%None%')");
 			foreach ( $row as $name=>$value )
@@ -163,7 +165,8 @@ class panelMember extends Member
 	 */
 	function memberCountryName()
 	{
-		global $User;
+		global $app;
+		$User = $app->make('User');
 
 		if( $this->countryID != 0 )
 			return '<span class="country'.$this->countryID.' '.($User->id==$this->userID?'memberYourCountry':'').' memberStatus'.$this->status.'">'.
@@ -175,7 +178,9 @@ class panelMember extends Member
 	private $isNameHidden;
 	function isNameHidden()
 	{
-		global $User, $DB;
+		global $app;
+		$DB = $app->make('DB');
+		$User = $app->make('User');
 		list($directorUserID) = $DB->sql_row("SELECT directorUserID FROM wD_Games WHERE id = ".$this->Game->id);
 		list($tournamentDirector, $tournamentCodirector) = $DB->sql_row("SELECT directorID, coDirectorID FROM wD_Tournaments t INNER JOIN wD_TournamentGames g ON t.id = g.tournamentID WHERE g.gameID = ".$this->Game->id);
 
@@ -194,7 +199,9 @@ class panelMember extends Member
 	private $isLastSeenHidden;
 	function isLastSeenHidden()
 	{
-		global $User, $DB;
+		global $app;
+		$DB = $app->make('DB');
+		$User = $app->make('User');
 
 		list($tournamentDirector, $tournamentCodirector) = $DB->sql_row("SELECT directorID, coDirectorID FROM wD_Tournaments t INNER JOIN wD_TournamentGames g ON t.id = g.tournamentID WHERE g.gameID = ".$this->Game->id);
 
@@ -237,7 +244,6 @@ class panelMember extends Member
 	 */
 	function memberNameCountry()
 	{
-		global $User;
 		$buf = '';
 		if( $this->countryID != 'Unassigned' )
 			$buf .= '<span class="memberStatus'.$this->status.'">';
@@ -416,7 +422,8 @@ class panelMember extends Member
 	 */
 	function memberVotes()
 	{
-        global $User;
+		global $app;
+		$User = $app->make('User');
 
 		$buf=array();
 		foreach($this->votes as $voteName)
@@ -497,7 +504,8 @@ class panelMember extends Member
 
 	private function muteMember()
 	{
-		global $User;
+		global $app;
+		$User = $app->make('User');
 
 		static $alreadyMuted;
 		if( isset($alreadyMuted) ) return;
@@ -509,7 +517,8 @@ class panelMember extends Member
 
 	private function muteIcon()
 	{
-		global $User;
+		global $app;
+		$User = $app->make('User');
 
 		$buf = '';
 		if( $User->type['User'] && $this->userID!=$User->id)
@@ -534,7 +543,6 @@ class panelMember extends Member
 	 */
 	function memberBar()
 	{
-		global $User;
 		if ($this->Game->anon == 'No' || (!$this->isNameHidden) && isset($this->isNameHidden))
 		{
 			$buf = '<td class="memberLeftSide">

@@ -64,7 +64,9 @@ class ClassicChaosVariant_processOrderBuilds extends processOrderBuilds
 
 	public function create()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 		if ($Game->turn == 0) {
 			// Custom start
 			$terrIDByName = array();

@@ -97,7 +97,8 @@ class libVariant {
 	}
 
 	public static function installLock() {
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		static $locked;
 
@@ -120,8 +121,6 @@ class libVariant {
 	 * @return WDVariant
 	 */
 	public static function loadFromVariantName($variantName) {
-		global $DB, $Misc;
-
 		if( !isset(self::$Variants[$variantName]) )
 		{
 			$variantCache=self::cacheDir($variantName).'/data.php';
@@ -173,7 +172,8 @@ class libVariant {
 	 * @return WDVariant
 	 */
 	public static function loadFromGameID($gameID) {
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		if( !isset(self::$variantIDsByGameID[$gameID]) )
 		{

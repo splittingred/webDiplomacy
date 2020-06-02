@@ -34,7 +34,9 @@ class processOrder
 	 */
 	public function archiveMoves()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		// Wipe all the orders of phases which come after us or instead of us
 		$wipeMoveTypes = '';
@@ -122,7 +124,9 @@ class processOrder
 	 */
 	public function wipe()
 	{
-		global $DB, $Game;
+		global $Game;
+        global $app;
+        $DB = $app->make('DB');
 
 		$DB->sql_put("DELETE FROM wD_Orders WHERE gameID = ".$Game->id);
 	}

@@ -200,8 +200,6 @@ class Database {
 	 */
 	public function sql_tabl($sql)
 	{
-		global $User;
-
 		$this->getqueries++;
 
 		if( Config::$debug )
@@ -365,8 +363,6 @@ class Database {
 	 */
 	public function sql_put($sql)
 	{
-		global $User;
-
 		$this->putqueries++;
 
 		if( Config::$debug )

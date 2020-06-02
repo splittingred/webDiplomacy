@@ -48,7 +48,10 @@ function exception_handler( $exception)
 
 function error_handler($errno, $errstr, $errfile=false, $errline=false, $errcontext=false)
 {
-	global $DB, $User, $Game;
+	global $Game;
+    global $app;
+    $DB = $app->make('DB');
+    $User = $app->make('User');
 
 	if ( defined('ERROR') )
 		define('ERRORINERROR',true);
@@ -226,7 +229,8 @@ class libError
 
 	public static function stats()
 	{
-		global $Misc;
+        global $app;
+        $Misc = $app->make('Misc');
 
 		$errorTimes = self::errorTimes();
 		$count=count($errorTimes);
@@ -238,7 +242,8 @@ class libError
 
 	public static function errorTimes()
 	{
-		global $Misc;
+        global $app;
+        $Misc = $app->make('Misc');
 
 		if ( !libError::isLoggingEnabled() )
 			return array();
@@ -274,7 +279,8 @@ class libError
 
 	public static function clear()
 	{
-		global $Misc;
+        global $app;
+        $Misc = $app->make('Misc');
 
 		if ( !libError::isLoggingEnabled() )
 			return false;

@@ -24,7 +24,7 @@ class DashboardController extends BaseController
 
     protected function setUp()
     {
-        $this->tournamentsService = new TournamentsService($this->database);
+        $this->tournamentsService = new TournamentsService();
         $this->membersService = new MembersService();
         $this->gamesService = new GamesService();
         \libHTML::$footerIncludes[] = l_j('home.js');

@@ -34,7 +34,9 @@ class processOrderBuilds extends processOrder
 	 */
 	public function completeAll()
 	{
-		global $DB, $Game;
+		global $Game;
+		global $app;
+		$DB = $app->make('DB');
 
 		// Incomplete destroy orders are dealt with in the adjudicator
 		$DB->sql_put("UPDATE wD_Orders o INNER JOIN wD_Members m ON ( o.gameID = m.gameID AND o.countryID = m.countryID )
@@ -54,7 +56,9 @@ class processOrderBuilds extends processOrder
 	 */
 	public function toMoves()
 	{
-		global $DB, $Game;
+		global $Game;
+		global $app;
+		$DB = $app->make('DB');
 
 		// Insert all the needed info into the moves table, stripping off the coasts data, which the adjudicator doesn't deal with
 		$DB->sql_put("INSERT INTO wD_Moves
@@ -69,7 +73,9 @@ class processOrderBuilds extends processOrder
 	 */
 	public function create()
 	{
-		global $DB, $Game;
+		global $Game;
+		global $app;
+		$DB = $app->make('DB');
 
 		$newOrders = array();
 		foreach($Game->Members->ByID as $Member )
@@ -121,7 +127,9 @@ class processOrderBuilds extends processOrder
 	 */
 	public function apply()
 	{
-		global $Game, $DB;
+		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$DB->sql_put(
 				"DELETE FROM u

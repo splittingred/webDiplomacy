@@ -155,7 +155,8 @@ class userOrderDiplomacy extends userOrder
 	 * @return boolean True if valid, false otherwise
 	 */
 	protected function checkConvoyPath($startCoastTerrID, $endCoastTerrID, $mustContainTerrID=false, $mustNotContainTerrID=false) {
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		if( count($this->convoyPath)<2 ) // First, plus one fleet, then $endCoastTerrID makes the minimum 3
 			return false; // Not enough units in the convoyPath to be valid

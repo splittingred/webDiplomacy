@@ -34,7 +34,8 @@ class libGameMaster
 	 */
 	public static function clearStaleNotices()
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$DB->sql_put("DELETE FROM wD_Notices
 			WHERE keep='No' AND timeSent < (".time()."-7*24*60*60)");
@@ -46,7 +47,9 @@ class libGameMaster
 	 */
 	static public function updateSessionTable()
 	{
-		global $DB, $Misc;
+		global $app;
+		$DB = $app->make('DB');
+		$Misc = $app->make('Misc');
 
 		$DB->sql_put("BEGIN");
 
@@ -99,7 +102,9 @@ class libGameMaster
 	 */
 	static public function updateReliabilityRating($recalculateAll = false)
 	{
-		global $DB, $Misc;
+		global $app;
+		$DB = $app->make('DB');
+		$Misc = $app->make('Misc');
 
 		$year = time() - 31536000;
 		$lastMonth = time() - 2419200;

@@ -36,7 +36,8 @@ class search
 
 	public function __construct($searchType)
 	{
-		global $User;
+		global $app;
+		$User = $app->make('User');
 
 		// If we're a guest (and not browsing a profile) we can't filter games from the guest acconut
 		if(!$User->type['User'] && $searchType!='Profile')
@@ -107,7 +108,8 @@ class search
 
 	private function devQueryData($SQL)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 		print '<p class="notice">'.$SQL.'</p>';
 
 		$tabl = $DB->sql_tabl("EXPLAIN ".$SQL);
@@ -123,7 +125,8 @@ class search
 
 	public function printGamesList($Pager=null)
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		$SQL = $this->sql();
 		//$this->devQueryData($SQL);

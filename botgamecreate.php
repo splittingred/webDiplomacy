@@ -25,7 +25,10 @@
 
 require_once('header.php');
 
-global $User, $Misc, $DB;
+global $app;
+$Misc = $app->make('Misc');
+$User = $app->make('User');
+$DB = $app->make('DB');
 
 if ( $Misc->Panic )
 {

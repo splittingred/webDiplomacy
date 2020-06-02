@@ -77,7 +77,8 @@ class Message
 	 */
 	static public function send($toID, $fromUserID, $message, $subject="", $type='Bulletin')
 	{
-		global $DB;
+		global $app;
+		$DB = $app->make('DB');
 
 		if( defined('AdminUserSwitch') ) $fromUserID = AdminUserSwitch;
 
@@ -121,7 +122,7 @@ class Message
 
 	/**
 	 * Remove any HTML added to a message
-	 * @param $message The message to filter
+	 * @param string $message The message to filter
 	 * @return string The filtered message
 	 */
 	static function refilterHTML($message)

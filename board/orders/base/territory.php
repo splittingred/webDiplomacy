@@ -103,7 +103,8 @@ class Territory {
 	 */
 	function __construct($row)
 	{
-		global $DB;
+        global $app;
+        $DB = $app->make('DB');
 
 		if( !is_array($row) )
 			$row = $DB->sql_hash("SELECT * FROM wD_Territories WHERE id=".intval($row)." AND mapID=".MAPID);
