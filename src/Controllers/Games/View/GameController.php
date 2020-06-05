@@ -6,7 +6,12 @@ use Diplomacy\Models\Collection;
 
 class GameController extends BaseController
 {
-    protected $template = 'pages/games/view/game.twig';
+    protected $template = 'pages/games/view/index.twig';
+
+    public function getPageTitle(): string
+    {
+        return $this->game->name;
+    }
 
     public function call()
     {

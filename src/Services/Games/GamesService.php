@@ -17,6 +17,15 @@ use Illuminate\Database\Query\JoinClause;
 class GamesService
 {
     /**
+     * @param int $gameId
+     * @return Game
+     */
+    public function find(int $gameId) : Game
+    {
+        return Game::find($gameId);
+    }
+
+    /**
      * @param int $userId
      * @return Collection
      */

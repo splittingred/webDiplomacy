@@ -24,6 +24,8 @@ abstract class BaseController
     protected $request;
     /** @var string */
     protected $template;
+    /** @var bool */
+    protected $renderPageTitle = true;
     /** @var string */
     protected $pageTitle = '';
     /** @var string */
@@ -90,10 +92,11 @@ abstract class BaseController
     {
         try {
             $this->setDefaultPlaceholders();
+            $this->beforeRender();
 
-            $header = libHTML::starthtml($this->pageTitle, false);
+            $header = libHTML::starthtml($this->getPageTitle(), false);
 
-            if (!empty($this->pageTitle)) {
+            if (!empty($this->pageTitle) && $this->renderPageTitle) {
                 $pageHeader = $this->renderer->render('common/page_title.twig', [
                     'title' => $this->getPageTitle(),
                     'description' => $this->getPageDescription(),
@@ -102,7 +105,6 @@ abstract class BaseController
                 $pageHeader = '';
             }
 
-            $this->beforeRender();
             $variables = $this->call();
             $this->afterRender();
 

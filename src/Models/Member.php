@@ -4,6 +4,26 @@ namespace Diplomacy\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @property int id
+ * @property int userID
+ * @property int gameID
+ * @property int countryID
+ * @property string status
+ * @property int timeLoggedIn
+ * @property int bet
+ * @property int missedPhases
+ * @property string newMessagesFrom
+ * @property int supplyCenterNo
+ * @property int unitNo
+ * @property string votes
+ * @property int pointsWon
+ * @property int gameMessagesSent
+ * @property string orderStatus
+ * @property int hideNotifications
+ * @property int excusedMissedTurns
+ * @package Diplomacy\Models
+ */
 class Member extends EloquentBase
 {
     protected $table = 'wD_Members';
@@ -33,4 +53,8 @@ class Member extends EloquentBase
     {
         return $query->where('gameID', $gameId);
     }
+
+    /*****************************************************************************************************************
+     * INSTANCE METHODS
+     ****************************************************************************************************************/
 }

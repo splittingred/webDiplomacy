@@ -30,59 +30,57 @@ abstract class ScoringSystem {
 	public function pointsForSurvive($Member) {}
 	public function pointsForDefeat($Member) {return 0;}
 
-	public function abbr() {}
-	public function longName() {}
+	abstract public function abbr();
+	abstract public function longName();
 }
 
 class ScoringPPSC extends ScoringSystem {
 	private $ratios;
 	private function PPSCRatios() {
+        if ($this->ratios != null) return $this->ratios;
+
+        foreach($this->Game->Members->ByStatus['Left'] as $Member)
+            $ratios[$Member->countryID] = 0.0;
+        foreach($this->Game->Members->ByStatus['Playing'] as $Member)
+            $ratios[$Member->countryID] = 0.0;
+        /*
+         * PPSC; calculate based on active-player-owned supply-centers, but
+         * things are complicated because players with over $SCTarget SCs are limited
+         * to the winnings they would get from $SCTarget, and the remainder is
+         * distributed among the survivors according to their winnings.
+         */
+        $SCsInPlayCount = (float)$this->Game->Members->supplyCenterCount('Playing');
+
+        assert($SCsInPlayCount > 0);
+
+        $SCTarget = $this->Game->Variant->supplyCenterTarget;
+        foreach($this->Game->Members->ByStatus['Playing'] as $Member)
+        {
+
+            if( $Member->supplyCenterNo > $SCTarget )
             {
-			if( $this->ratios != null ) return $ratios;
- 
-			foreach($this->Game->Members->ByStatus['Left'] as $Member)
-		   		$ratios[$Member->countryID] = 0.0;
-		   	foreach($this->Game->Members->ByStatus['Playing'] as $Member)
-			   	$ratios[$Member->countryID] = 0.0;
-            /*
-             * PPSC; calculate based on active-player-owned supply-centers, but
-             * things are complicated because players with over $SCTarget SCs are limited
-             * to the winnings they would get from $SCTarget, and the remainder is
-             * distributed among the survivors according to their winnings.
-             */
-            $SCsInPlayCount = (float)$this->Game->Members->supplyCenterCount('Playing');
+                    /*
+                     * Winner is greedy and got more SCs than he needed:
+                     * - Get the number of extra SCs he has
+                     * - Reduce his total to $SCTarget
+                     * - Subtract the extra amount from the total SCs so they scale down
+                     */
 
-            assert($SCsInPlayCount > 0);
-
-            $SCTarget = $this->Game->Variant->supplyCenterTarget;
-            foreach($this->Game->Members->ByStatus['Playing'] as $Member)
-            {	
-
-				if( $Member->supplyCenterNo > $SCTarget )
-				{
-						/*
-						 * Winner is greedy and got more SCs than he needed:
-						 * - Get the number of extra SCs he has
-						 * - Reduce his total to $SCTarget
-						 * - Subtract the extra amount from the total SCs so they scale down
-						 */
-
-						/*
-						 * Subtracting the over-the-limit extra SCs from the winner and
-						 * from the total SC count effectively makes the algorithm behave
-						 * as if they didn't exist
-						 */
-						$SCsInPlayCount -= ( $Member->supplyCenterNo - $SCTarget );
-						$ratios[$Member->countryID] = $SCTarget/$SCsInPlayCount;
-				}                                            
-			}
-
-            foreach($this->Game->Members->ByStatus['Playing'] as $Member)
-            {
-                if( $Member->supplyCenterNo > $SCTarget) continue;
-
-                $ratios[$Member->countryID] = $Member->supplyCenterNo/$SCsInPlayCount;
+                    /*
+                     * Subtracting the over-the-limit extra SCs from the winner and
+                     * from the total SC count effectively makes the algorithm behave
+                     * as if they didn't exist
+                     */
+                    $SCsInPlayCount -= ( $Member->supplyCenterNo - $SCTarget );
+                    $ratios[$Member->countryID] = $SCTarget/$SCsInPlayCount;
             }
+        }
+
+        foreach($this->Game->Members->ByStatus['Playing'] as $Member)
+        {
+            if( $Member->supplyCenterNo > $SCTarget) continue;
+
+            $ratios[$Member->countryID] = $Member->supplyCenterNo/$SCsInPlayCount;
         }
 		return $ratios;
 	}
@@ -99,8 +97,12 @@ class ScoringPPSC extends ScoringSystem {
 		$ratios = $this->PPSCRatios();
 		return ceil($ratios[$Member->countryID] * $this->Game->pot);
 	}
-	public function abbr() { return 'SWS'; }
-			public function longName() {return 'Survivors-Win Scoring';} 
+	public function abbr(): string {
+	    return 'SWS';
+	}
+	public function longName(): string {
+	    return 'Survivors-Win Scoring';
+	}
 }
 class ScoringWTA extends ScoringSystem {
 	public function pointsForDraw($Member) {
@@ -108,35 +110,46 @@ class ScoringWTA extends ScoringSystem {
 	}
 	public function pointsForWin($Member) {return $this->Game->pot;}
 	public function pointsForSurvive($Member) {return 0;}
-	public function abbr() { return 'DSS'; }
-	public function longName() {return 'Draw-Size Scoring';} 
+	public function abbr(): string {
+	    return 'DSS';
+	}
+	public function longName(): string {
+	    return 'Draw-Size Scoring';
+	}
 }
 class ScoringUnranked extends ScoringSystem {
 	public function pointsForDraw($Member) { return $Member->bet;}
 	public function pointsForWin($Member) {return $Member->bet;}
 	public function pointsForSurvive($Member) {return $Member->bet;}
 	public function pointsForDefeat($Member) {return $Member->bet;}
-	public function abbr() { return 'Unranked'; }
-	public function longName() {return 'Unranked';} 
+	public function abbr(): string {
+	    return 'Unranked';
+	}
+	public function longName(): string {
+	    return 'Unranked';
+	}
 }
 
 class ScoringSoS extends ScoringSystem {
-		private $scoreTotal;
+    private $scoreTotal;
 
-		private function initSos() {
-			if($this->scoreTotal != null) return;
-            $this->scoreTotal = 0;
-			foreach($this->Game->Members->ByStatus['Left'] as $Member)
-		   		$this->scoreTotal += $Member->supplyCenterNo * $Member->supplyCenterNo;
-		   	foreach($this->Game->Members->ByStatus['Playing'] as $Member)
-		   		$this->scoreTotal += $Member->supplyCenterNo * $Member->supplyCenterNo;
-		}
-
+    private function initSos() {
+        if($this->scoreTotal != null) return;
+        $this->scoreTotal = 0;
+        foreach($this->Game->Members->ByStatus['Left'] as $Member)
+            $this->scoreTotal += $Member->supplyCenterNo * $Member->supplyCenterNo;
+        foreach($this->Game->Members->ByStatus['Playing'] as $Member)
+            $this->scoreTotal += $Member->supplyCenterNo * $Member->supplyCenterNo;
+    }
 
 	public function pointsForDraw($Member) { $this->initSoS(); return ceil($this->Game->pot *(($Member->supplyCenterNo * $Member->supplyCenterNo)/$this->scoreTotal));}
 	public function pointsForWin($Member) {return $this->Game->pot;}
 	public function pointsForSurvive($Member) {return 0;}
 	public function pointsForDefeat($Member) {return 0;}
-	public function abbr() { return 'SoS'; }
-	public function longName() {return 'Sum-of-Squares Scoring';} 
+	public function abbr(): string {
+        return 'SoS';
+    }
+	public function longName(): string {
+        return 'Sum-of-Squares Scoring';
+    }
 }

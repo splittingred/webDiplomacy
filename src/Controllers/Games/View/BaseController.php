@@ -3,6 +3,7 @@
 namespace Diplomacy\Controllers\Games\View;
 
 use Diplomacy\Controllers\BaseController as Base;
+use Diplomacy\Services\Request;
 
 abstract class BaseController extends Base
 {
@@ -16,7 +17,7 @@ abstract class BaseController extends Base
     /** @var \userMember */
     protected $member;
 
-    public function beforeRender(): void
+    public function beforeRender() : void
     {
         $this->loadGame();
     }
@@ -31,7 +32,7 @@ abstract class BaseController extends Base
      */
     protected function loadGame() : \panelGameBoard
     {
-        $gameId = $this->request->get('id');
+        $gameId = $this->request->get('id', 0, Request::TYPE_REQUEST);
         require_once 'objects/game.php';
         require_once 'board/chatbox.php';
         require_once 'gamepanel/gameboard.php';
@@ -42,7 +43,8 @@ abstract class BaseController extends Base
         $this->setPlaceholder('game', $this->game);
         $this->loadCountries($this->variant);
 
-        if ($this->currentUser && $this->currentUser->isAuthenticated()) {
+        if ($this->currentUser && $this->currentUser->isAuthenticated() && $this->game->Members->isJoined() && !$this->game->Members->isTempBanned()) {
+            $this->game->Members->makeUserMember($this->currentUser->id);
             $this->member = $this->game->Members->ByUserID[$this->currentUser->id];
             $this->setPlaceholder('member', $this->member);
         }

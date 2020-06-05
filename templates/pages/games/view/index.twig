@@ -1,0 +1,17 @@
+<div class="content-bare content-board-header">
+    <div class="boardHeader">
+        <div class="variant{{ game.variant.name }}">
+            <a id="gamePanel"></a>
+            {% include 'games/board/title_bar.twig' with { board: board } %}
+            {% include 'games/board/notice_bar.twig' with { board: board } %}
+            {% if board.allMembersAreJoined() and board.game.isStarted() %}
+                <div class="membersList">
+                    {{ board.getMemberHeaderBar()|raw }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="content content-follow-on">
+
+</div>

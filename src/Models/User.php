@@ -145,4 +145,16 @@ class User extends EloquentBase
         $this->password = hex2bin($hash);
         return true;
     }
+
+    /**
+     * @return Entities\User
+     */
+    public function toEntity() : \Diplomacy\Models\Entities\User
+    {
+        $entity = new \Diplomacy\Models\Entities\User();
+        $entity->id = $this->id;
+        $entity->username = $this->username;
+        $entity->email = $this->email;
+        return $entity;
+    }
 }

@@ -169,6 +169,9 @@ div.postboxadvice {
 div.clear {
 	border-bottom: 0;
 }
+.clear-both {
+	clear: both;
+}
 h1, h2, h3, h4 {
 	color: #009902;
 	margin-bottom:5px;

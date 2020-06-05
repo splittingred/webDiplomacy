@@ -4,11 +4,41 @@ namespace Diplomacy\Models;
 
 use Diplomacy\Services\Variants\VariantsService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use panelGame;
 use panelGameHome;
 use WDVariant;
 
+/**
+ * @property int id
+ * @property string name
+ * @property int variantID
+ * @property string turn
+ * @property string phase
+ * @property string processTime
+ * @property int pot
+ * @property string gameOver
+ * @property string processStatus
+ * @property string password
+ * @property string potType
+ * @property int pauseTimeRemaining
+ * @property int minimumBet
+ * @property int phaseMinutes
+ * @property int nextPhaseMinutes
+ * @property int phaseSwitchPeriod
+ * @property string anon
+ * @property string pressType
+ * @property int attempts
+ * @property string missingPlayerPolicy
+ * @property int directorUserID
+ * @property string drawType
+ * @property int minimumReliabilityRating
+ * @property int excusedMissedTurns
+ * @property int finishTime
+ * @property string playerTypes
+ * @property int startTime
+ */
 class Game extends EloquentBase
 {
     protected $table = 'wD_Games';
@@ -21,6 +51,8 @@ class Game extends EloquentBase
     protected $homeGamePanel;
     /** @var panelGame */
     protected $gamePanel;
+    /** @var \ScoringSystem $scoringSystem */
+    protected $scoringSystem;
 
     /*****************************************************************************************************************
      * RELATIONSHIPS
@@ -48,6 +80,41 @@ class Game extends EloquentBase
     public function turnDates() : HasMany
     {
         return $this->hasMany(TurnDate::class, 'gameID');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function director() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'directorUserID');
+    }
+
+    /**
+     * @return \ScoringSystem
+     */
+    public function getScoringSystem() : \ScoringSystem
+    {
+        if (!empty($this->scoringSystem)) return $this->scoringSystem;
+
+        switch ($this->potType) {
+            case 'Points-per-supply-center':
+                $this->scoringSystem = new \ScoringPPSC($this);
+                break;
+            case 'Winner-takes-all':
+                $this->scoringSystem = new \ScoringWTA($this);
+                break;
+            case 'Unranked':
+                $this->scoringSystem = new \ScoringUnranked($this);
+                break;
+            case 'Sum-of-squares':
+                $this->scoringSystem = new \ScoringSoS($this);
+                break;
+            default:
+                trigger_error("Unknown pot type '".$this->potType."'");
+                break;
+        }
+        return $this->scoringSystem;
     }
 
     /*****************************************************************************************************************
@@ -439,5 +506,172 @@ class Game extends EloquentBase
     public function isFinished() : bool
     {
         return $this->phase == 'Finished';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFeatured() : bool
+    {
+        return $this->pot > $this->getMisc()->GameFeaturedThreshold;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivate() : bool
+    {
+        return !empty($this->password);
+    }
+
+    /**
+     * @return int
+     */
+    public function getPhaseHours() : int
+    {
+        return (int)$this->phaseMinutes * 60;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPauseTimeRemaining() : int
+    {
+        return is_null($this->pauseTimeRemaining) ? $this->phaseMinutes * 60 : (int)$this->pauseTimeRemaining;
+    }
+
+    /**
+     * @return bool
+     */
+    public function processTimePassed() : bool
+    {
+        return $this->processTime < time();
+    }
+
+    /**
+     * @return int
+     */
+    public function getNextPhaseSeconds() : int
+    {
+        return (int)$this->nextPhaseMinutes * 60;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSwitchingPhasePeriod() : bool
+    {
+        return !$this->isFinished() && $this->phaseSwitchPeriod > 0 && $this->nextPhaseMinutes != $this->phaseMinutes;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhaseSwitchAsText() : string
+    {
+        if (!$this->isSwitchingPhasePeriod()) return '';
+
+        $deadline = $this->getPhaseSwitchPeriod();
+
+        $str = '<div>Changing phase length: <span><strong>'.\libTime::timeLengthText($this->getNextPhaseSeconds()).'</strong> /phase</span></div>';
+        if ($this->startTime > 0)
+        {
+            $timeWhenSwitch = $this->getPhaseSwitchDeadline();
+            if (time() >= $timeWhenSwitch) {
+                $str .= '<div><strong> At: End Of Phase</strong></div>';
+            } else {
+                $str .= '<div> In: <strong>'.\libTime::remainingText($timeWhenSwitch).'</strong>' . ' (' . \libTime::detailedText($timeWhenSwitch) . ')</div>';
+            }
+        } else {
+            $timeTillNextPhase = \libTime::timeLengthText($deadline);
+            $str .= '<div><span><strong>'.$timeTillNextPhase.'</strong> after game start</span></div></br>';
+        }
+        return $str;
+    }
+
+    /**
+     * @return int|mixed
+     */
+    public function getPhaseSwitchDeadline()
+    {
+        return $this->getPhaseSwitchPeriod() + $this->startTime;
+    }
+
+    /**
+     * Get phase switch period in seconds
+     *
+     * @return int
+     */
+    public function getPhaseSwitchPeriod() : int
+    {
+        return (int)$this->phaseSwitchPeriod * 60;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVariantNames() : array
+    {
+        $alternatives = [];
+        $alternatives[] = $this->getVariant()->link();
+
+        if ($this->pressType == 'NoPress')
+            $alternatives[] = 'No messaging';
+        elseif ($this->pressType == 'RulebookPress')
+            $alternatives[] = 'Rulebook press';
+        elseif ($this->pressType == 'PublicPressOnly')
+            $alternatives[] = 'Public messaging only';
+
+        if ($this->playerTypes == 'Mixed') $alternatives[] = 'Fill with Bots';
+        if ($this->playerTypes == 'MemberVsBots') $alternatives[] = 'Bot Game';
+        if ($this->anon == 'Yes') $alternatives[] = 'Anonymous players';
+
+        $alternatives[] = $this->getScoringSystem()->longName();
+
+        if ($this->drawType == 'draw-votes-hidden') $alternatives[] = 'Hidden draw votes';
+        if ($this->missingPlayerPolicy == 'Wait') $alternatives[] = 'Wait for orders';
+
+        return $alternatives;
+    }
+
+    /**
+     * Check whether this game will be considered a "live" game.
+     * @return true if phase minutes are less than 60.
+     **/
+    public function isLiveGame() : bool
+    {
+        return $this->phaseMinutes < 60;
+    }
+
+    /**
+     * DEPRECATED STUFF
+     */
+
+    /** @var \Misc */
+    private $misc;
+
+    private function getMisc() : \Misc
+    {
+        if (empty($this->misc)) {
+            global $app;
+            $this->misc = $app->make('Misc');
+        }
+        return $this->misc;
+    }
+
+    /** @var \panelGameBoard $oldGame */
+    protected $oldGame;
+    public function getOldGame(): \panelGameBoard
+    {
+        $this->oldGame = $this->getVariant()->panelGameBoard($this->id);
+        return $this->oldGame;
+    }
+
+    protected $members;
+    public function getMembers()
+    {
+        $game = $this->getOldGame();
+        $this->members = $this->getVariant()->Members($game);
+        return $this->members;
     }
 }
