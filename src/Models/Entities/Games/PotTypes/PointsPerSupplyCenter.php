@@ -9,5 +9,8 @@ use Diplomacy\Models\Entities\Games\PotType;
  */
 class PointsPerSupplyCenter extends PotType
 {
-
+    public function getLongName(): string
+    {
+        return 'Survivors-Win Scoring';
+    }
 }

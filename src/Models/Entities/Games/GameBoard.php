@@ -3,15 +3,18 @@
 namespace Diplomacy\Models\Entities\Games;
 
 use Diplomacy\Models\Game;
+use \Diplomacy\Models\Entities\Game as GameEntity;
 
 class GameBoard
 {
     public $game;
+    public $gameEntity;
     public $currentUser;
 
-    public function __construct(Game $game, \User $currentUser)
+    public function __construct(Game $game, GameEntity $gameEntity, \User $currentUser)
     {
         $this->game = $game;
+        $this->gameEntity = $gameEntity;
         $this->currentUser = $currentUser;
     }
 
@@ -23,7 +26,7 @@ class GameBoard
     {
         if (is_null($this->game->turn)) $turn = $this->game->turn;
 
-        return $this->game->getVariant()->turnAsDate($turn);
+        return $this->gameEntity->variant->turnAsDate($turn);
     }
 
     /**
@@ -31,15 +34,7 @@ class GameBoard
      */
     public function getPausedTimeRemainingAsText() : string
     {
-        return \libTime::timeLengthText($this->game->getPauseTimeRemaining());
-    }
-
-    /**
-     * @return string
-     */
-    public function getPointsIcon() : string
-    {
-        return \libHTML::points();
+        return $this->gameEntity->processing->getPauseTimeRemainingAsText();
     }
 
     /**
@@ -49,24 +44,7 @@ class GameBoard
      */
     public function getNextProcessTime() : string
     {
-        if ($this->game->processTimePassed())
-            return 'Now';
-        else
-            return \libTime::remainingText($this->game->processTime);
-    }
-
-
-    public function getProcessedTimeAsText()
-    {
-        return \libTime::detailedText($this->game->processTime);
-    }
-
-    /**
-     * @return string
-     */
-    public function getHoursPerPhase() : string
-    {
-        return \libTime::timeLengthText($this->game->getPhaseHours());
+        return $this->gameEntity->processing->timeRemainingAsText();
     }
 
     /**
@@ -74,28 +52,33 @@ class GameBoard
      */
     public function getNoticeBar() : string
     {
-        $countries = $this->game->getVariant()->countries;
-        $totalPlayers = count($countries);
-        $memberTotal = count($this->game->getMembers()->ByID);
-
-        if ($this->game->isFinished()) {
+        if ($this->gameEntity->phase->isFinished())
+        {
             return $this->getGameOverDetails();
         }
-        elseif ($this->game->isPreGame() && $memberTotal == $totalPlayers)
+        elseif ($this->gameEntity->phase->isPreGame())
         {
-            if ($this->game->isLiveGame()) {
-                return $totalPlayers . ' players joined; game will start at the scheduled time';
+            $totalPlayers = $this->gameEntity->getMemberCount();
+            if ($this->gameEntity->allSlotsFilled()) {
+                if ($this->gameEntity->phase->isLive()) {
+                    return $totalPlayers . ' players joined; game will start at the scheduled time';
+                } else {
+                    return $totalPlayers . ' players joined; game will start on next process cycle';
+                }
             } else {
-                return $totalPlayers . ' players joined; game will start on next process cycle';
+                $neededPlayers = $this->gameEntity->getCountryCount();
+                return "Game is currently at $totalPlayers members out of $neededPlayers - waiting for remaining to join.";
             }
         }
-        elseif ($this->game->missingPlayerPolicy == 'Wait' && !$this->game->getMembers()->isCompleted() && time() >= $this->game->processTime) {
+        elseif ($this->gameEntity->missingPlayerPolicy->isWait() && !$this->gameEntity->members->isReadyForProcessing() && $this->gameEntity->processing->overdue()) {
             return 'One or more players need to complete their orders before this wait-mode game can go on';
         }
         return '';
     }
 
     /**
+     * TODO: not sure this is correct. Fix it.
+     *
      * @return bool
      */
     public function allMembersAreJoined() : bool
@@ -108,7 +91,9 @@ class GameBoard
      */
     public function getMemberHeaderBar()
     {
-        return $this->game->getMembers()->ByUserID[$this->currentUser->id]->memberHeaderBar();
+        $member = $this->game->getMembers()->ByUserID[$this->currentUser->id];
+        return '';
+        //return $member->memberHeaderBar();
     }
 
     /**
@@ -116,13 +101,14 @@ class GameBoard
      */
     public function getGameOverDetails() : string
     {
-        if ($this->game->gameOver == 'Won')
+        if ($this->gameEntity->status->wasWon())
         {
-            // TODO: replace with just getting last element
-            $Winner = end($this->game->getMembers()->ByStatus['Won']);
-            return 'Game won by ' . $Winner->memberName();
+            $winner = $this->gameEntity->getWinner();
+            if ($winner) {
+                return 'Game won by ' . $winner->user->username;
+            }
         }
-        elseif( $this->game->gameOver == 'Drawn' )
+        elseif ($this->gameEntity->status->wasDrawn())
         {
             return 'Game drawn';
         }

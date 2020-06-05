@@ -2,9 +2,9 @@
     <div class="boardHeader">
         <div class="variant{{ game.variant.name }}">
             <a id="gamePanel"></a>
-            {% include 'games/board/title_bar.twig' with { board: board } %}
-            {% include 'games/board/notice_bar.twig' with { board: board } %}
-            {% if board.allMembersAreJoined() and board.game.isStarted() %}
+            {% include 'games/board/title_bar.twig' with { game: game, board: board } %}
+            {% include 'games/board/notice_bar.twig' with { game: game, board: board } %}
+            {% if game.allSlotsFilled() and game.phase.isStarted() %}
                 <div class="membersList">
                     {{ board.getMemberHeaderBar()|raw }}
                 </div>

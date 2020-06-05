@@ -1,27 +1,27 @@
 <div class="titleBar">
     <div class="titleBarRightSide">
         <div class="gameTimeRemaining">
-            {% if board.game.isFinished() %}
-                <span class="gameTimeRemainingNextPhase">Finished:</span> {{ board.getProcessedTimeAsText()|raw }}
-            {% elseif board.game.isPaused() %}
+            {% if game.phase.isFinished %}
+                <span class="gameTimeRemainingNextPhase">Finished:</span> {{ game.processing.getTimeAsText|raw }}
+            {% elseif game.processing.isPaused %}
                 Paused <img src="/images/icons/pause.png" title="Game paused" />
-                ({{ board.getPausedTimeRemainingAsText() }} left on unpause)
-            {% elseif board.game.isCrashed() %}
+                ({{ game.processing.getPauseTimeRemainingAsText }} left on unpause)
+            {% elseif game.processing.isCrashed %}
                 Crashed
             {% else %}
-                {% if board.game.isPreGame() %}
+                {% if game.phase.isPreGame %}
                     <span class="gameTimeRemainingNextPhase">Start:</span>
                 {% else %}
                     <span class="gameTimeRemainingNextPhase">Next:</span>
                 {% endif %}
-                {{ board.getNextProcessTime()|raw }} ({{ board.getProcessedTimeAsText()|raw }})
+                {{ game.processing.timeRemainingAsText|raw }} ({{ game.processing.getTimeAsText()|raw }})
             {% endif %}
         </div>
     </div>
 
     <div class="titleBarLeftSide">
-        {% include 'games/icons.twig' with { game: board.game } %}
-        <span class="gameName">{{ board.game.name }}</span>
+        {% include 'games/icons.twig' with { game: game } %}
+        <span class="gameName">{{ game.name }}</span>
     </div>
 
     <div class="clear-both"></div>
@@ -29,7 +29,7 @@
     <div class="titleBarRightSide">
         <div>
             <span class="gameHoursPerPhase">
-                <strong>{{ board.getHoursPerPhase() }}</strong> /phase
+                <strong>{{ game.phase.getLengthAsText }}</strong> /phase
             </span>
             {{ board.game.getPhaseSwitchAsText()|raw }}
         </div>
@@ -38,13 +38,13 @@
     <div class="titleBarLeftSide">
         <div>
             Pot:
-            <span class="gamePot">{{ board.game.pot }} {{ board.getPointsIcon()|raw }}</span>
-            - <span class="gameDate">{{ board.getPhaseAsText() }}</span>,
-              <span class="gamePhase">{{ board.game.phase }}</span>
+            <span class="gamePot">{{ game.potType.amount }} {{ game.potType.getPointsIcon|raw }}</span>
+            - <span class="gameDate">{{ game.getTurnAsText }}</span>,
+              <span class="gamePhase">{{ game.phase.name }}</span>
         </div>
         <div>
             <div class="titleBarLeftSide">
-                <span class="gamePotType">{{ board.game.getVariantNames()|join(', ')|raw }}</span>
+                <span class="gamePotType">{{ game.getVariantNames|join(', ')|raw }}</span>
             </div>
         </div>
     </div>
@@ -52,7 +52,7 @@
     <div class="clear-both"></div>
 
     <div class="titleBarRightSide">
-        <span class="excusedNMRs">{{ board.game.excusedMissedTurns }}</span> excused missed turn
+        <span class="excusedNMRs">{{ game.excusedMissedTurns }}</span> excused missed turns
     </div>
 
     <div class="clear-both"></div>

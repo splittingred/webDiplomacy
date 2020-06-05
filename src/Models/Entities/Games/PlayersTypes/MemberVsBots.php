@@ -9,5 +9,8 @@ use Diplomacy\Models\Entities\Games\PlayersType;
  */
 class MemberVsBots extends PlayersType
 {
-
+    public function getLongName(): string
+    {
+        return 'Bot Game';
+    }
 }

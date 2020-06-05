@@ -608,33 +608,6 @@ class Game extends EloquentBase
     }
 
     /**
-     * @return string
-     */
-    public function getVariantNames() : array
-    {
-        $alternatives = [];
-        $alternatives[] = $this->getVariant()->link();
-
-        if ($this->pressType == 'NoPress')
-            $alternatives[] = 'No messaging';
-        elseif ($this->pressType == 'RulebookPress')
-            $alternatives[] = 'Rulebook press';
-        elseif ($this->pressType == 'PublicPressOnly')
-            $alternatives[] = 'Public messaging only';
-
-        if ($this->playerTypes == 'Mixed') $alternatives[] = 'Fill with Bots';
-        if ($this->playerTypes == 'MemberVsBots') $alternatives[] = 'Bot Game';
-        if ($this->anon == 'Yes') $alternatives[] = 'Anonymous players';
-
-        $alternatives[] = $this->getScoringSystem()->longName();
-
-        if ($this->drawType == 'draw-votes-hidden') $alternatives[] = 'Hidden draw votes';
-        if ($this->missingPlayerPolicy == 'Wait') $alternatives[] = 'Wait for orders';
-
-        return $alternatives;
-    }
-
-    /**
      * Check whether this game will be considered a "live" game.
      * @return true if phase minutes are less than 60.
      **/

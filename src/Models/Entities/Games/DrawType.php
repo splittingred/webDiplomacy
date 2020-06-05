@@ -8,6 +8,8 @@ use Diplomacy\Models\Entities\Games\DrawTypes\InvalidTypeException;
 
 abstract class DrawType
 {
+    abstract public function getLongName(): string;
+
     /**
      * @param string $type
      * @throws InvalidTypeException

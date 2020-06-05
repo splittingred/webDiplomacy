@@ -9,5 +9,8 @@ use Diplomacy\Models\Entities\Games\PressType;
  */
 class PublicPressOnly extends PressType
 {
-
+    public function getLongName(): string
+    {
+        return 'Public messaging only';
+    }
 }

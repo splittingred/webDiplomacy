@@ -3,7 +3,7 @@
 namespace Diplomacy\Models\Entities\Games;
 
 use Diplomacy\Models\Entities\Games\PotTypes\InvalidTypeException;
-use Diplomacy\Models\Entities\Games\PotTypes\DrawVotesPublic;
+use Diplomacy\Models\Entities\Games\PotTypes\PointsPerSupplyCenter;
 use Diplomacy\Models\Entities\Games\PotTypes\SumOfSquares;
 use Diplomacy\Models\Entities\Games\PotTypes\Unranked;
 use Diplomacy\Models\Entities\Games\PotTypes\WinnerTakesAll;
@@ -22,9 +22,22 @@ abstract class PotType
     }
 
     /**
+     * @return string
+     */
+    abstract public function getLongName() : string;
+
+    /**
+     * @return string
+     */
+    public function getPointsIcon() : string
+    {
+        return \libHTML::points();
+    }
+
+    /**
      * @param string $type
      * @param int $amount
-     * @return DrawVotesPublic|SumOfSquares|Unranked|WinnerTakesAll
+     * @return PointsPerSupplyCenter|SumOfSquares|Unranked|WinnerTakesAll
      * @throws InvalidTypeException
      */
     public static function build(string $type, int $amount)
@@ -35,7 +48,7 @@ abstract class PotType
                 $instance = new WinnerTakesAll($amount);
                 break;
             case 'points-per-supply-center':
-                $instance = new DrawVotesPublic($amount);
+                $instance = new PointsPerSupplyCenter($amount);
                 break;
             case 'unranked':
                 $instance = new Unranked($amount);

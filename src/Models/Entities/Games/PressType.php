@@ -10,6 +10,8 @@ use Diplomacy\Models\Entities\Games\PressTypes\RulebookPress;
 
 abstract class PressType
 {
+    abstract public function getLongName() : string;
+
     /**
      * @param $type
      * @return NoPress|PublicPressOnly|Regular|RulebookPress

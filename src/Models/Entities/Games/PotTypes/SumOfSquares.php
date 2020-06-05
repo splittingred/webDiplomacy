@@ -9,5 +9,8 @@ use Diplomacy\Models\Entities\Games\PotType;
  */
 class SumOfSquares extends PotType
 {
-
+    public function getLongName(): string
+    {
+        return 'Sum-of-Squares Scoring';
+    }
 }

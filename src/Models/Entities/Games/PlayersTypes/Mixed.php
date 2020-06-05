@@ -9,5 +9,8 @@ use Diplomacy\Models\Entities\Games\PlayersType;
  */
 class Mixed extends PlayersType
 {
-
+    public function getLongName(): string
+    {
+        return 'Fill with Bots';
+    }
 }

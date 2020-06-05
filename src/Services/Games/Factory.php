@@ -4,8 +4,10 @@ namespace Diplomacy\Services\Games;
 
 use Diplomacy\Models\Entities\Games\Country;
 use Diplomacy\Models\Entities\Games\Member;
+use Diplomacy\Models\Entities\Games\Members\OrdersState;
 use Diplomacy\Models\Entities\Games\Members\Status as MemberStatus;
 use Diplomacy\Models\Entities\Games\MissingPlayerPolicy;
+use Diplomacy\Models\Entities\Games\Processing;
 use Diplomacy\Models\Entities\Games\Status as GameStatus;
 use Diplomacy\Models\Entities\Games\Turn;
 use Diplomacy\Models\Game;
@@ -22,6 +24,14 @@ use Diplomacy\Models\Entities\Games\PlayersTypes\InvalidTypeException as Invalid
 
 class Factory
 {
+    protected $misc;
+
+    public function __construct()
+    {
+        global $app;
+        $this->misc = $app->make('Misc');
+    }
+
     /**
      * @param int $gameId
      * @return mixed
@@ -51,8 +61,12 @@ class Factory
         $entity->startTime = $game->startTime;
         $entity->finishTime = $game->finishTime;
 
-        $entity->processTime = $game->processTime;
-        $entity->processStatus = $game->processStatus;
+        $entity->processing = new Processing(
+            (string)$game->processStatus,
+            (int)$game->processTime,
+            (int)$game->phaseMinutes,
+            is_null($game->pauseTimeRemaining) ? -1 : (int)$game->pauseTimeRemaining,
+        );
 
         // value objects
         $entity->status = new GameStatus($game->gameOver);
@@ -66,8 +80,13 @@ class Factory
         $entity->phase = new Phase($game->phase, (int)$game->phaseMinutes, (int)$game->phaseSwitchPeriod);
         $entity->nextPhase = new Phase($game->phase, (int)$game->phaseMinutes, (int)$game->phaseSwitchPeriod);
         $entity->director = $director ? $director->toEntity() : null;
+        $entity->featured = $game->pot > $this->misc->GameFeaturedThreshold;
 
         $countries = $entity->variant->countries;
+        foreach ($countries as $idx => $name) {
+            $entity->countries[] = new Country($idx + 1, $countries[$idx]);
+        }
+
         /** @var \Diplomacy\Models\Member $model */
         foreach ($game->members()->get() as $model) {
             $member = new Member();
@@ -84,15 +103,16 @@ class Factory
             $member->votes = array_filter(explode(',', $model->votes));
             $member->pointsWon = (int)$model->pointsWon;
             $member->gameMessagesSent = (int)$model->gameMessagesSent;
-            $member->orderStatus = array_filter(explode(',', $model->orderStatus));
+            $member->ordersState = new OrdersState(array_filter(explode(',', $model->orderStatus)));
             $member->hideNotifications = !empty($model->hideNotifications);
             $member->excusedMissedTurns = (int)$model->excusedMissedTurns;
+            $member->user = $model->user->toEntity();
             $entity->members[] = $member;
         }
 
-        echo '<pre>';
-        var_dump($entity);
-        die();
+//        echo '<pre>';
+//        var_dump($entity);
+//        die();
         return $entity;
     }
 }

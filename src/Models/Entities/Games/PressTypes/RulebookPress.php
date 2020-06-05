@@ -9,5 +9,8 @@ use Diplomacy\Models\Entities\Games\PressType;
  */
 class RulebookPress extends PressType
 {
-
+    public function getLongName(): string
+    {
+        return 'Rulebook press';
+    }
 }

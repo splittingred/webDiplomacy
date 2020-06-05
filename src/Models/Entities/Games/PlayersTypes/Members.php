@@ -9,5 +9,8 @@ use Diplomacy\Models\Entities\Games\PlayersType;
  */
 class Members extends PlayersType
 {
-
+    public function getLongName(): string
+    {
+        return ''; // no name for normal mode
+    }
 }

@@ -2,12 +2,16 @@
 
 namespace Diplomacy\Models\Entities\Games;
 
+use Diplomacy\Models\Entities\Games\Members\OrdersState;
 use Diplomacy\Models\Entities\Games\Members\Status;
+use Diplomacy\Models\Entities\User;
 
 class Member
 {
     /** @var int $id */
     public $id;
+    /** @var User $user */
+    public $user;
     /** @var int $gameId */
     public $gameId;
     /** @var Country $country */
@@ -32,8 +36,8 @@ class Member
     public $pointsWon;
     /** @var int $gameMessagesSent */
     public $gameMessagesSent;
-    /** @var string $orderStatus */
-    public $orderStatus;
+    /** @var OrdersState $ordersState */
+    public $ordersState;
     /** @var boolean $hideNotifications */
     public $hideNotifications;
     /** @var int $excusedMissedTurns */

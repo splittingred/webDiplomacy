@@ -9,5 +9,8 @@ use Diplomacy\Models\Entities\Games\DrawType;
  */
 class DrawVotesPublic extends DrawType
 {
-
+    public function getLongName(): string
+    {
+        return 'Public draw votes';
+    }
 }

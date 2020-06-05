@@ -9,5 +9,8 @@ use Diplomacy\Models\Entities\Games\DrawType;
  */
 class DrawVotesHidden extends DrawType
 {
-
+    public function getLongName(): string
+    {
+        return 'Hidden draw votes';
+    }
 }

@@ -19,4 +19,60 @@ class Status
     {
         $this->type = strtolower($type);
     }
+
+    /**
+     * @return bool
+     */
+    public function isPlaying(): bool
+    {
+        return $this->type == 'playing';
+    }
+
+    /**
+     * @return bool
+     */
+    public function won(): bool
+    {
+        return $this->type == 'won';
+    }
+
+    /**
+     * @return bool
+     */
+    public function defeated(): bool
+    {
+        return $this->type == 'defeated';
+    }
+
+    /**
+     * @return bool
+     */
+    public function left(): bool
+    {
+        return $this->type == 'left';
+    }
+
+    /**
+     * @return bool
+     */
+    public function drew(): bool
+    {
+        return $this->type == 'drawn';
+    }
+
+    /**
+     * @return bool
+     */
+    public function survived(): bool
+    {
+        return $this->type == 'survived';
+    }
+
+    /**
+     * @return bool
+     */
+    public function resigned(): bool
+    {
+        return $this->type == 'resigned';
+    }
 }

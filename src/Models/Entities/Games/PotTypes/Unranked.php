@@ -9,5 +9,8 @@ use Diplomacy\Models\Entities\Games\PotType;
  */
 class Unranked extends PotType
 {
-
+    public function getLongName(): string
+    {
+        return 'Unranked';
+    }
 }

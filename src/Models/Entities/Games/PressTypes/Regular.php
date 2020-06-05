@@ -9,5 +9,8 @@ use Diplomacy\Models\Entities\Games\PressType;
  */
 class Regular extends PressType
 {
-
+    public function getLongName(): string
+    {
+        return ''; // no alt name for regular
+    }
 }

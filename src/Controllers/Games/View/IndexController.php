@@ -35,8 +35,9 @@ class IndexController extends Base
     {
         $gameFactory = new Factory();
         $gameEntity = $gameFactory->build($this->game->id);
-        $gameBoard = new GameBoard($this->game, $this->currentUser);
+        $gameBoard = new GameBoard($this->game, $gameEntity, $this->currentUser);
         return [
+            'game' => $gameEntity,
             'board' => $gameBoard,
         ];
     }

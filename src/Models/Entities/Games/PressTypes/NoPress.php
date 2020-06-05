@@ -9,5 +9,8 @@ use Diplomacy\Models\Entities\Games\PressType;
  */
 class NoPress extends PressType
 {
-
+    public function getLongName(): string
+    {
+        return 'No messaging';
+    }
 }
