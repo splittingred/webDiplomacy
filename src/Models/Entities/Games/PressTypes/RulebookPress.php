@@ -2,6 +2,7 @@
 
 namespace Diplomacy\Models\Entities\Games\PressTypes;
 
+use Diplomacy\Models\Entities\Games\Phase;
 use Diplomacy\Models\Entities\Games\PressType;
 
 /**
@@ -9,6 +10,22 @@ use Diplomacy\Models\Entities\Games\PressType;
  */
 class RulebookPress extends PressType
 {
+    protected $type = 'RulebookPress';
+
+    public function allowPrivateMessages(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @param Phase $phase
+     * @return bool
+     */
+    public function allowPublicPress(Phase $phase): bool
+    {
+        return true;
+    }
+
     public function getLongName(): string
     {
         return 'Rulebook press';

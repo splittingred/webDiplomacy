@@ -69,4 +69,25 @@ class Member extends EloquentBase
     /*****************************************************************************************************************
      * INSTANCE METHODS
      ****************************************************************************************************************/
+
+
+    /**
+     * Register that you have viewed the messages from a certain countryID and
+     * no longer need notification of them
+     *
+     * @param string $seenCountryID The countryID who's messages were read
+     * @return bool
+     */
+    public function markMessageSeen($seenCountryID): bool
+    {
+        $messages = explode(',', $this->newMessagesFrom);
+        foreach ($messages as $i => $countryID) {
+            if ($countryID == $seenCountryID) {
+                unset($messages[$i]);
+                break;
+            }
+        }
+        $this->newMessagesFrom = implode(',', $messages);
+        return $this->save();
+    }
 }

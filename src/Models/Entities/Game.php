@@ -14,7 +14,8 @@ use Diplomacy\Models\Entities\Games\PressType;
 use Diplomacy\Models\Entities\Games\Processing;
 use Diplomacy\Models\Entities\Games\Status;
 use Diplomacy\Models\Entities\Games\Turn;
-use Diplomacy\Models\User;
+use Diplomacy\Models\Entities\User;
+use Diplomacy\Models\Entities\Tournament;
 
 class Game
 {
@@ -72,6 +73,8 @@ class Game
     public $director;
     /** @var bool $featured */
     public $featured = false;
+    /** @var Tournament $tournament */
+    public $tournament;
 
     public function __construct()
     {
@@ -138,6 +141,70 @@ class Game
     }
 
     /**
+     * Is the given user a Director for this game?
+     *
+     * @param int|User $user
+     * @return bool
+     */
+    public function isDirector($user): bool
+    {
+        $userId = is_int($user) ? $user : $user->id;
+
+        return $this->director && $this->director->id == $userId;
+    }
+
+    /**
+     * Is the given user a Tournament Director for this game?
+     *
+     * @param int|User $user
+     * @return bool
+     */
+    public function isTournamentDirector($user): bool
+    {
+        $userId = is_int($user) ? $user : $user->id;
+
+        return $this->tournament && $this->tournament->director->id == $userId;
+    }
+
+    /**
+     * Is the given user a Tournament Co-Director for this game?
+     *
+     * @param int|User $user
+     * @return bool
+     */
+    public function isTournamentCoDirector($user): bool
+    {
+        $userId = is_int($user) ? $user : $user->id;
+
+        return $this->tournament && $this->tournament->coDirector->id == $userId;
+    }
+
+    /**
+     * Should member names be hidden by default?
+     *
+     * @return bool
+     */
+    public function areMemberNamesHidden(): bool
+    {
+        return $this->anonymous && !$this->phase->isFinished();
+    }
+
+    /**
+     * @param Member $member
+     * @param int $currentUserId
+     * @return bool
+     */
+    public function isMemberNameHidden(Member $member, int $currentUserId = 0)
+    {
+        return $this->areMemberNamesHidden() && $member->canBeSeenBy($currentUserId);
+    }
+
+
+    /**************************************************
+     * OLDER METHODS
+     **************************************************/
+
+    /**
      * @return array
      */
     public function getVariantNames() : array
@@ -161,5 +228,41 @@ class Game
         if ($this->missingPlayerPolicy->isWait()) $alternatives[] = 'Wait for orders';
 
         return $alternatives;
+    }
+
+    /**
+     * @return array
+     */
+    public function supplyCenterPercentages(): array
+    {
+        $percentages = [];
+
+        $totalSCs = $this->members->supplyCenterCount();
+        $countryCount = $this->getCountryCount();
+
+        for ($countryID = 1; $countryID <= $countryCount; $countryID++) {
+            if (empty($totalSCs)) // We must be pre-game
+            {
+                $percentages[$countryID] = round((3 / (3 * 6 + 4)) * 100);
+            } else {
+                $member = $this->members->byCountryId($countryID);
+                if ($member) $percentages[$countryID] = round(($member->supplyCenterCount / $totalSCs) * 100);
+            }
+        }
+
+        $sum = 0;
+        foreach ($percentages as $countryID => $percent) {
+            $sum += $percentages[$countryID];
+        }
+
+        // Add the rounding error onto a countryID with a few SCs, where it won't be noticed
+        foreach ($percentages as $countryID => $percent) {
+            if ($percent > (1 / 8 * 100)) {
+                $percentages[$countryID] += 100 - $sum;
+                break;
+            }
+        }
+
+        return $percentages;
     }
 }

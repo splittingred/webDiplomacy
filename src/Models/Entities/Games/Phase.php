@@ -45,6 +45,27 @@ class Phase
     }
 
     /**
+     * Is press allowed during this phase?
+     * In standard games, only allowed during normal phases or if game is finished
+     *
+     * @return bool
+     */
+    public function isPressAllowed(): bool
+    {
+        return $this->isActive() || $this->isFinished();
+    }
+
+    /**
+     * Is the game active? Meaning in normal moves/builds/retreat phases - so not pre-game or finished.
+     *
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->isMoves() || $this->isBuilds() || $this->isRetreats();
+    }
+
+    /**
      * Check whether this game will be considered a "live" game.
      * @return true if phase minutes are less than 60.
      */
@@ -99,5 +120,13 @@ class Phase
     public function isBuilds(): bool
     {
         return $this->type == 'builds';
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->type;
     }
 }

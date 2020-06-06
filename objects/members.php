@@ -207,9 +207,9 @@ class Members
 	public function isJoined()
 	{
         global $app;
-        $User = $app->make('User');
+        $User = $app->make('user');
 
-		return isset($this->ByUserID[$User->id]);
+		return isset($this->ByUserID[(int)$User->id]);
 	}
 
 	/**

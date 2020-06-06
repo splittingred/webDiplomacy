@@ -1,0 +1,72 @@
+{% if member and member.isBanned %}
+    <div class="panelTempBanned"><strong>You are blocked from rejoining this game.</strong></div>
+
+{% elseif not game.phase.isPreGame and not game.phase.isFinished %}
+    <div class="panelAnonOnlyFlag">
+        {% if game.members.allOrdersAreEntered %}
+            <strong>All countries have entered orders.</strong>
+        {% else %}
+            <strong>At least 1 country still needs to enter orders!</strong>
+        {% endif %}
+    </div>
+{% endif %}
+
+{% if game.phase.isPregame %}
+    <div class="panelBarGraphMember memberProgressBarBlank">&nbsp;</div>
+{% else %}
+    <div class="panelBarGraphMember memberProgressBar barAlt">
+        {{ member.progressBar|raw }}
+    </div>
+{% endif %}
+
+{% if member %}
+<div class="memberBoardHeader barAlt1 barDivBorderTop">
+    <table>
+        <tr class="member">
+            <td class="memberLeftSide">
+                <span class="memberCountryName">{{ member.country.name }}</span>
+            </td>
+            <td class="memberRightSide {% if member.status.isDead %}memberStatusFade{% endif %}">
+                <div>
+                    {% if not member.isBanned %}
+                    <div class="memberUserDetail">
+                        {% if member.status.isPlaying %}
+                        <span class="member{{ member.id }}StatusIcon">{{ member.ordersState.icon|raw }}</span>
+                        {% endif %}
+                        - <span class="member{{ member.id }}StatusText">{{ member.ordersState.iconText }}</span>
+                        <br />
+
+                        {% if member.hasNewMessages %}
+                            {{ member.unreadMessagesLink|raw }}
+                        {% else %}
+                            No unread messages.
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <div class="memberGameDetail">
+                        {% if member.status.isPlaying %}
+                            <span class="memberStatus"><em>{{ member.status.text }}</em>.</span>
+                        {% endif %}
+
+                        <span class="memberPointsCount">
+                            {{ member.betWon|raw }}
+                        </span>
+                        <br />
+
+                        {% if not member.status.isDefeated %}
+                        <span class="memberUnitCount">
+                            <span class="memberSCCount">
+                                <em>{{ member.supplyCenterCount }}</em> supply-centers,
+                                <em class="{{ member.getUnitCountCssClass }}">{{ member.unitCount }} units</em>
+                            </span>
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="clear-both"></div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+{% endif %}

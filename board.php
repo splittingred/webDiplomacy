@@ -21,6 +21,9 @@
 /**
  * @package Board
  */
+
+use Diplomacy\Services\Games\Factory;
+
 require_once('header.php');
 
 if ( ! isset($_REQUEST['gameID']) )
@@ -218,13 +221,20 @@ if (isset($Member) && $Member->status == 'Playing' && !$Game->isFinished())
 	}
 }
 
+$gameFactory = new Factory();
+$gameEntity = $gameFactory->build($Game->id);
+$currentMember = $User ? $gameEntity->members->byUserId($User->id) : null;
+
+require_once 'board/OldChatbox.php';
+
 if (!$Game->isPreGame())
 {
-	$CB = $Game->Variant->Chatbox();
+    /** @var Chatbox $CB */
+	$CB = $Game->Variant->OldChatbox();
 
 	// Now that we have retrieved the latest messages we can update the time we last viewed the messages
 	// Post messages we sent, and get the user we're speaking to
-	$msgCountryID = $CB->findTab();
+    $msgCountryID = $CB->findTab();
 
 	$CB->postMessage($msgCountryID);
 	$DB->sql_put("COMMIT");

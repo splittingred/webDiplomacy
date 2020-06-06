@@ -2,8 +2,11 @@
 
 namespace Diplomacy\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * @package Diplomacy\Models
@@ -36,6 +39,30 @@ class Tournament extends EloquentBase
     public function scores() : HasMany
     {
         return $this->hasMany(TournamentScore::class, 'tournamentID');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function director(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'directorID');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function coDirector(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'coDirectorID');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function tournamentGames(): HasMany
+    {
+        return $this->hasMany(TournamentGame::class, 'tournamentID');
     }
 
     /**
@@ -108,5 +135,21 @@ class Tournament extends EloquentBase
     public function isRegistrationComplete() : bool
     {
         return $this->status != 'Registration';
+    }
+
+    public function toEntity(): \Diplomacy\Models\Entities\Tournament
+    {
+        /** @var User $director */
+        $director = $this->director()->first();
+        /** @var User $coDirector */
+        $coDirector = $this->coDirector()->first();
+
+        $tournament = new \Diplomacy\Models\Entities\Tournament();
+        $tournament->id = $this->id;
+        $tournament->name = $this->name;
+        $tournament->totalRounds = $this->totalRounds;
+        if ($director) $tournament->director = $director->toEntity();
+        if ($coDirector) $tournament->coDirector = $coDirector->toEntity();
+        return $tournament;
     }
 }

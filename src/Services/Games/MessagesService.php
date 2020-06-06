@@ -3,6 +3,9 @@
 namespace Diplomacy\Services\Games;
 
 use Diplomacy\Models\Collection;
+use Diplomacy\Models\Entities\Game as GameEntity;
+use Diplomacy\Models\Entities\Games\Country;
+use Diplomacy\Models\Entities\Games\Member as MemberEntity;
 use Diplomacy\Models\GameMessage;
 use Diplomacy\Models\Member;
 use Illuminate\Database\Query\Builder;
@@ -72,5 +75,59 @@ class MessagesService
         $query->orderBy('timeSent', 'desc');
         $messages = $query->get();
         return new Collection($messages, $count);
+    }
+
+    /**
+     * Can the member send a message in this phase?
+     *
+     * @param GameEntity $game
+     * @param MemberEntity $member
+     * @param int $countryId
+     * @return bool
+     */
+    public function canSend(GameEntity $game, MemberEntity $member, int $countryId): bool
+    {
+        $pressAllowsDMs = $game->pressType->allowPrivateMessages();
+        $phaseAllowsPress = $game->phase->isPressAllowed();
+
+        return (
+            (string)$game->pressType == 'Regular' // always allow messages in regular press type
+            || $member->isCountry($countryId) // can always send to self
+            || ($pressAllowsDMs && $phaseAllowsPress) // does this press type allow it in this phase?
+            || ($countryId == Country::GLOBAL && $game->pressType->allowPublicPress($game->phase)) // can public press be sent?
+        );
+    }
+
+    /**
+     * @param GameEntity $game
+     * @param MemberEntity $member
+     * @param int $countryId
+     * @param string $message
+     * @throws \Exception
+     */
+    public function sendToCountry(GameEntity $game, MemberEntity $member, int $countryId, string $message)
+    {
+        $countryName = $game->variant->getCountryName($countryId);
+
+        if ($this->canSend($game, $member, $countryId))
+        {
+            if ($countryId != Country::GLOBAL && $member->hasMutedCountry($countryId)) {
+                \libGameMessage::send($member->country->id, $countryId, 'Cannot send message; this country has muted you.');
+            } else {
+                \libGameMessage::send($countryId, $member->country->id, $message);
+            }
+        }
+        elseif ($member->user->isModerator())
+        {
+            \libGameMessage::send(Country::GLOBAL, 'Moderator', '('.$member->user->username.'): '.$countryName);
+        }
+        elseif ($game->isDirector($member->user))
+        {
+            \libGameMessage::send(Country::GLOBAL, 'Game Director', '('.$member->user->username.'): '.$countryName);
+        }
+        elseif ($game->isTournamentDirector($member->user) || $game->isTournamentCoDirector($member->user))
+        {
+            \libGameMessage::send(Country::GLOBAL, 'Tournament Director', '('.$member->user->username.'): '.$countryName);
+        }
     }
 }

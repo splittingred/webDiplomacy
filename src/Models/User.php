@@ -2,11 +2,46 @@
 
 namespace Diplomacy\Models;
 
+use Diplomacy\Models\Entities\Users\TemporaryBan;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @package Diplomacy\Models
+ * @property int id
+ * @property string username
+ * @property string email
+ * @property int points
+ * @property string comment
+ * @property string homepage
+ * @property string hideEmail
+ * @property int timeJoined
+ * @property string locale
+ * @property int timeLastSessionEnded
+ * @property int lastMessageIDViewed
+ * @property string password
+ * @property string type
+ * @property string notifications
+ * @property float ChanceEngland
+ * @property float ChanceFrance
+ * @property float ChanceItaly
+ * @property float ChanceGermany
+ * @property float ChanceAustria
+ * @property float ChanceRussia
+ * @property float ChanceTurkey
+ * @property string muteReports
+ * @property int silenceID
+ * @property int cdCount
+ * @property int nmrCount
+ * @property int cdTakenCount
+ * @property int phaseCount
+ * @property int gameCount
+ * @property double reliabilityRating
+ * @property int deletedCDs
+ * @property int tempBan
+ * @property int emergencyPauseDate
+ * @property int yearlyPhaseCount
+ * @property string tempBanReason
  */
 class User extends EloquentBase
 {
@@ -55,6 +90,23 @@ class User extends EloquentBase
     public function turnDates(): HasMany
     {
         return $this->hasMany(TurnDate::class, 'userID');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function mutedCountries(): HasMany
+    {
+        return $this->hasMany(MutedCountry::class, 'userID');
+    }
+
+    /**
+     * @param int $gameId
+     * @return HasMany
+     */
+    public function mutedCountriesForGame(int $gameId): HasMany
+    {
+        return $this->mutedCountries()->where(MutedCountry::getTableName().'.gameID', '=', $gameId);
     }
 
     /*****************************************************************************************************************
@@ -152,9 +204,14 @@ class User extends EloquentBase
     public function toEntity() : \Diplomacy\Models\Entities\User
     {
         $entity = new \Diplomacy\Models\Entities\User();
-        $entity->id = $this->id;
-        $entity->username = $this->username;
-        $entity->email = $this->email;
+        $entity->id = (int)$this->id;
+        $entity->username = (string)$this->username;
+        $entity->email = (string)$this->email;
+        if ($this->tempBan > 0) {
+            $entity->temporaryBan = new TemporaryBan((int)$this->tempBan, (string)$this->tempBanReason);
+        }
+        $entity->reliabilityRating = doubleval($this->reliabilityRating);
+        $entity->roles = explode(',', $this->type);
         return $entity;
     }
 }

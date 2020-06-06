@@ -10,7 +10,11 @@ use Diplomacy\Models\Entities\Games\PressTypes\RulebookPress;
 
 abstract class PressType
 {
+    protected $type;
+
     abstract public function getLongName() : string;
+    abstract public function allowPrivateMessages(): bool;
+    abstract public function allowPublicPress(Phase $phase): bool;
 
     /**
      * @param $type
@@ -37,6 +41,11 @@ abstract class PressType
                 throw new InvalidTypeException("Press type of $type not found!");
         }
         return $instance;
+    }
+
+    public function __toString()
+    {
+        return $this->type;
     }
 }
 

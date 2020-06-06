@@ -62,6 +62,7 @@ $Locale->initialize();
 require_once 'objects/silence.php';
 require_once 'objects/user.php';
 require_once 'objects/game.php';
+require_once 'board/chatbox.php';
 
 if (!defined('libError')) {
     require_once 'global/error.php';
@@ -100,6 +101,7 @@ if( !defined('AJAX') )
     $authService = new AuthorizationService();
     $User = $authService->getCurrentLegacyUser();
     $app->instance('user', $User);
+    $app->instance('User', $User);
 
     if ($User->isAdmin())
 	{

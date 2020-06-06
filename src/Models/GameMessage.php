@@ -2,16 +2,50 @@
 
 namespace Diplomacy\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use WDVariant;
 
 /**
  * @package Diplomacy\Models
+ * @property int id
+ * @property int timeSent
+ * @property string message
+ * @property int turn
+ * @property int toCountryID
+ * @property int fromCountryID
+ * @property int gameID
  */
 class GameMessage extends EloquentBase
 {
     protected $table = 'wD_GameMessages';
-
     protected $variant;
+
+    /*****************************************************************************************************************
+     * RELATIONSHIPS
+     ****************************************************************************************************************/
+
+    /**
+     * @return BelongsTo
+     */
+    public function game(): BelongsTo
+    {
+        return $this->belongsTo(Game::class, 'gameID');
+    }
+
+    /*****************************************************************************************************************
+     * SCOPES
+     ****************************************************************************************************************/
+
+    public function scopeForGame(Builder $query, int $gameId): Builder
+    {
+        return $query->where($this->getTableName().'.gameID', '=', $gameId);
+    }
+
+
+    /*****************************************************************************************************************
+     * INSTANCE METHODS
+     ****************************************************************************************************************/
 
     /**
      * @param WDVariant $variant

@@ -4,14 +4,31 @@
             <a id="gamePanel"></a>
             {% include 'games/board/title_bar.twig' with { game: game, board: board } %}
             {% include 'games/board/notice_bar.twig' with { game: game, board: board } %}
-            {% if game.allSlotsFilled() and game.phase.isStarted() %}
+            {% if game.allSlotsFilled() and game.phase.isStarted() and current_member %}
                 <div class="membersList">
-                    {{ board.getMemberHeaderBar()|raw }}
+                    {% include 'games/board/header_bar.twig' with { game: game, member: current_member } %}
                 </div>
             {% endif %}
+
+            <div class="panelBarGraphTop occupationBar">
+                {{ board.occupationBar|raw }}
+            </div>
         </div>
     </div>
 </div>
-<div class="content content-follow-on">
+<div class="content content-follow-on variant{{ game.variant.name }}">
+    {% if forum %}
+        {{ forum|raw }}
+        <div class="hr"></div>
+    {% endif %}
 
+    {{ map }}
+    <div class="hr"></div>
+
+    {% if orders %}
+        {{ orders }}
+        <div class="hr"></div>
+    {% endif %}
+
+    {{ game.summary }}
 </div>

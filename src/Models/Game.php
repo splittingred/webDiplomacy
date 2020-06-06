@@ -6,6 +6,7 @@ use Diplomacy\Services\Variants\VariantsService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use panelGame;
 use panelGameHome;
 use WDVariant;
@@ -115,6 +116,18 @@ class Game extends EloquentBase
                 break;
         }
         return $this->scoringSystem;
+    }
+
+    /**
+     * @return Builder|\Illuminate\Database\Eloquent\Model|object
+     */
+    public function getTournament()
+    {
+        $tournamentTable = Tournament::getTableName();
+        $tournamentGameTable = TournamentGame::getTableName();
+        return Tournament::query()
+            ->join($tournamentGameTable, $tournamentGameTable.'.tournamentID', '=', $tournamentTable.'.id')
+            ->where($tournamentGameTable .'.gameID', '=', $this->id)->first();
     }
 
     /*****************************************************************************************************************
@@ -509,43 +522,11 @@ class Game extends EloquentBase
     }
 
     /**
-     * @return bool
-     */
-    public function isFeatured() : bool
-    {
-        return $this->pot > $this->getMisc()->GameFeaturedThreshold;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPrivate() : bool
-    {
-        return !empty($this->password);
-    }
-
-    /**
-     * @return int
-     */
-    public function getPhaseHours() : int
-    {
-        return (int)$this->phaseMinutes * 60;
-    }
-
-    /**
      * @return int
      */
     public function getPauseTimeRemaining() : int
     {
         return is_null($this->pauseTimeRemaining) ? $this->phaseMinutes * 60 : (int)$this->pauseTimeRemaining;
-    }
-
-    /**
-     * @return bool
-     */
-    public function processTimePassed() : bool
-    {
-        return $this->processTime < time();
     }
 
     /**
@@ -605,15 +586,6 @@ class Game extends EloquentBase
     public function getPhaseSwitchPeriod() : int
     {
         return (int)$this->phaseSwitchPeriod * 60;
-    }
-
-    /**
-     * Check whether this game will be considered a "live" game.
-     * @return true if phase minutes are less than 60.
-     **/
-    public function isLiveGame() : bool
-    {
-        return $this->phaseMinutes < 60;
     }
 
     /**

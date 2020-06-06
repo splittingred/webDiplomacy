@@ -44,7 +44,7 @@ class panelMember extends Member
 	 * The member bar shown at the top of a board page for members of the game.
 	 * @return string
 	 */
-	function memberHeaderBar()
+	public function memberHeaderBar()
 	{
 		$buf = '';
 		libHTML::alternate();
