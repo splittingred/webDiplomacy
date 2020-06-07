@@ -11,6 +11,7 @@ use Diplomacy\Views\Components\Games\Members\BetWonComponent;
 use Diplomacy\Views\Components\Games\Members\CountryNameComponent;
 use Diplomacy\Views\Components\Games\Members\MemberNameComponent;
 use Diplomacy\Views\Components\Games\Members\NameComponent;
+use Diplomacy\Views\Components\Games\Members\ProgressBarComponent;
 use Diplomacy\Views\Components\Games\Members\UnitCountComponent;
 
 class Member
@@ -268,6 +269,23 @@ class Member
         return \libTime::timeLengthText(time() - $this->timeLoggedIn).' ('.\libTime::text($this->timeLoggedIn).')';
     }
 
+    /**
+     * @param Game $game
+     * @return string
+     */
+    public function betWon(Game $game): string
+    {
+        return (string)(new BetWonComponent($this, $game));
+    }
+
+    /**
+     * @return string
+     */
+    public function progressBar(): string
+    {
+        return (string)(new ProgressBarComponent($this));
+    }
+
     /**********
      * DEPRECATED METHODS
      **********/
@@ -286,103 +304,5 @@ class Member
         $buf .= '</span>';
 
         return $buf;
-    }
-
-    // TODO: Clean this up and finish its conversion
-    /**
-     * @return string
-     */
-    public function betWon(Game $game): string
-    {
-        return (string)(new BetWonComponent($this, $game));
-//
-//        $buf = l_t('Bet:').' <em>'.$this->bet.libHTML::points().'</em>, ';
-//
-//        if ( $this->Game->phase == 'Pre-game' )
-//            return l_t('Bet:').' <em>'.$this->bet.libHTML::points().'</em>';
-//
-//        if( $this->status == 'Playing' || $this->status == 'Left' )
-//        {
-//            $buf .= l_t('worth:').' <em';
-//            $value = $this->Game->Scoring->pointsForDraw($this);
-//            if ( $value > $this->bet )
-//                $buf .= ' class="good"';
-//            elseif ( $value < $this->bet )
-//                $buf .= ' class="bad"';
-//
-//            $buf .= '>'.$value.libHTML::points().'</em>';
-//            return $buf;
-//        }
-//        elseif ( $this->status == 'Won' || ($this->Game->potType == 'Points-per-supply-center' &&  $this->status == 'Survived') || $this->status == 'Drawn' )
-//        {
-//            $buf .= l_t('won:').' <em';
-//            $value = $this->pointsWon;
-//            if ( $value > $this->bet )
-//                $buf .= ' class="good"';
-//            elseif ( $value < $this->bet )
-//                $buf .= ' class="bad"';
-//
-//            $buf .= '>'.$value.libHTML::points().'</em>';
-//            return $buf;
-//        }
-//        else
-//        {
-//            return l_t('Bet:').' <em class="bad">'.$this->bet.libHTML::points().'</em>';
-//        }
-    }
-
-    /**
-     * $Remaining
-     * $SCEqual, ($Remaining)
-     * $SCEqual, $UnitDeficit, ($Remaining)
-     * $SCEqual, $UnitSurplus, ($Remaining)
-     * @return string
-     */
-    public function progressBar(): string
-    {
-        \libHTML::$first=true;
-
-        if ($this->hasNoPieces())
-        {
-            return '<table class="memberProgressBarTable"><tr>
-            <td class="memberProgressBarRemaining '.\libHTML::first().'" style="width:100%"></td>
-            </tr></table>';
-        }
-
-        $dividers = [];
-        if ($this->hasUnitDeficit())
-        {
-            $dividers[$this->unitCount] = 'SCs';
-            $dividers[$this->supplyCenterCount] = 'UnitDeficit';
-        }
-        else
-        {
-            $dividers[$this->supplyCenterCount] = 'SCs';
-            if ($this->hasUnitSurplus()) $dividers[$this->unitCount] = 'UnitSurplus';
-        }
-
-        $buf = '';
-        $lastNumber = 0;
-        $number = 0;
-        foreach($dividers as $number => $type)
-        {
-            if (($number - $lastNumber) == 0 ) continue;
-            if ($lastNumber == $this->supplyCenterTarget) break;
-            if ($number > $this->supplyCenterTarget) $number = $this->supplyCenterTarget;
-
-            $width = round(($number - $lastNumber) / $this->supplyCenterTarget * 100);
-
-            $buf .= '<td class="memberProgressBar'.$type.' '.\libHTML::first().'" style="width:'.$width.'%"></td>';
-
-            $lastNumber = $number;
-        }
-
-        if ($number < $this->supplyCenterTarget)
-        {
-            $width = round(($this->supplyCenterTarget - $number) / $this->supplyCenterTarget * 100);
-            $buf .= '<td class="memberProgressBarRemaining '.\libHTML::first().'" style="width:'.$width.'%"></td>';
-        }
-
-        return '<table class="memberProgressBarTable"><tr>'.$buf.'</tr></table>';
     }
 }

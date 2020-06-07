@@ -1,0 +1,18 @@
+{% if hasNoPieces %}
+    <table class="memberProgressBarTable first">
+        <tr>
+            <td class="memberProgressBarRemaining" style="width:100%"></td>
+        </tr>
+    </table>
+{% else %}
+    <table class="memberProgressBarTable">
+        <tr>
+        {% for segment in segments %}
+            <td class="memberProgressBar{{ segment.type }} {{ segment.first }}" style="width:{{ segment.width }}%"></td>
+        {% endfor %}
+        {% if belowSupplyCenterTarget %}
+            <td class="memberProgressBarRemaining first" style="width:{{ remainingTargetWidth }}%"></td>
+        {% endif %}
+        </tr>
+    </table>
+{% endif %}
