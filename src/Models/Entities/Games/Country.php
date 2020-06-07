@@ -27,4 +27,12 @@ class Country
     {
         return $this->id == static::GLOBAL;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 }

@@ -196,7 +196,7 @@ class Game
      */
     public function isMemberNameHidden(Member $member, int $currentUserId = 0)
     {
-        return $this->areMemberNamesHidden() && $member->canBeSeenBy($currentUserId);
+        return $this->areMemberNamesHidden() && !$member->canBeSeenBy($currentUserId);
     }
 
 

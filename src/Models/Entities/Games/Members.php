@@ -1,6 +1,8 @@
 <?php
 namespace Diplomacy\Models\Entities\Games;
 
+use Diplomacy\Models\Entities\User;
+
 class Members extends \ArrayObject
 {
     /**
@@ -13,6 +15,19 @@ class Members extends \ArrayObject
             if (!$member->ordersState->readyForProcessing()) return false;
         }
         return true;
+    }
+
+    /**
+     * @param int|User|\User $user
+     * @return bool
+     */
+    public function isUserInGame($user): bool
+    {
+        $userId = is_int($user) ? $user : $user->id;
+        foreach ($this as $member) {
+            if ($member->user->id == $userId) return true;
+        }
+        return false;
     }
 
     /**

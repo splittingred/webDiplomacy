@@ -13,4 +13,12 @@ class DrawVotesPublic extends DrawType
     {
         return 'Public draw votes';
     }
+
+    /**
+     * @return bool
+     */
+    public function hideDrawVotes(): bool
+    {
+        return false;
+    }
 }

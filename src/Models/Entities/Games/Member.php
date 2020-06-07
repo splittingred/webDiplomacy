@@ -7,6 +7,9 @@ use Diplomacy\Models\Entities\Games\Members\OrdersState;
 use Diplomacy\Models\Entities\Games\Members\Status;
 use Diplomacy\Models\Entities\User;
 use Diplomacy\Models\Entities\Users\MutedCountry;
+use Diplomacy\Views\Components\Games\Members\CountryNameComponent;
+use Diplomacy\Views\Components\Games\Members\MemberNameComponent;
+use Diplomacy\Views\Components\Games\Members\NameComponent;
 
 class Member
 {
@@ -203,42 +206,63 @@ class Member
     public function getRenderedCountryName(Game $game, $currentUser = null): string
     {
         $currentUserId = is_int($currentUser) ? $currentUser : $currentUser->id;
-        $output = '';
-        if (!$this->country->isGlobal()) {
-            $output .= '<span class="memberStatus' . $this->status . '">';
-        }
-
-        if ($game->isMemberNameHidden($this, $currentUserId)) {
-            $output .= '<a class="country' . $this->country->id . '">' . $this->country->name . '</a>';
-        } else {
-            $output .= '<a class="country'.$this->country->id.'" href="/games/'. $game->id.'/view?msgCountryID='.$this->country->id.'#chatboxanchor">'.$this->country->name.'</a>';
-        }
-
-        return $output . '</span>';
+        return (string)(new CountryNameComponent($game, $this, $currentUserId));
     }
+
+    /**
+     * @param Game $game
+     * @param int $currentUserId
+     * @return string
+     */
+    public function getRenderedName(Game $game, int $currentUserId = 0)
+    {
+        return (string)(new NameComponent($this, $game, $currentUserId));
+    }
+
 
     /**
      * @param Game $game
      * @param mixed $currentUser
      * @return string
      */
-    public function getRenderedUserName(Game $game, $currentUser = null): string
+    public function getMemberNameForGame(Game $game, $currentUser = null): string
     {
         $currentUserId = is_int($currentUser) ? $currentUser : $currentUser->id;
-        $output = '';
-        if ($this->country->isGlobal()) {
-            $output .= '<span class="memberStatus' . $this->status . '">';
-        }
-
-        if ($game->isMemberNameHidden($this, $currentUserId)) {
-            $output .= '<a class="country' . $this->country->id . '">' . $this->country->name . '</a>';
-        } else {
-            $output .= '<a class="country'.$this->country->id.'" href="/profile.php?userID='.$this->user->id.'">'.$this->user->username.'</a>';
-        }
-        return $output . '</span>';
-
+        return (string)(new MemberNameComponent($game, $this, $currentUserId));
     }
 
+    /**
+     * @param int|User|\User $user
+     * @return string
+     */
+    public function messagesFromLink($user): string
+    {
+        if ($this->isBanned()) return '';
+        $userId = is_int($user) ? $user : $user->id;
+
+        if (!in_array($userId, $this->newMessagesFrom)) return '';
+
+        return \libHTML::unreadMessages('/games/'.$this->gameId.'/view&msgCountryID='.$this->country->id.'#chatbox');
+    }
+
+    /**
+     * @param int|User|\User $user
+     * @return bool
+     */
+    public function isUser($user): bool
+    {
+        $userId = is_int($user) ? $user : $user->id;
+        return $this->user->id == $userId;
+    }
+
+    /**
+     * A textual display of this user's last log-in time
+     * @return string Last log-in time
+     */
+    public function lastLoggedInAsText(): string
+    {
+        return \libTime::timeLengthText(time() - $this->timeLoggedIn).' ('.\libTime::text($this->timeLoggedIn).')';
+    }
 
     /**********
      * DEPRECATED METHODS

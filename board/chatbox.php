@@ -23,6 +23,7 @@ use Diplomacy\Models\Entities\Games\Country;
 use \Diplomacy\Models\Entities\Games\Member;
 use Diplomacy\Models\GameMessage;
 use \Diplomacy\Services\Games\MessagesService;
+use Diplomacy\Views\Renderer;
 
 defined('IN_CODE') or die('This script can not be run by itself.');
 
@@ -38,10 +39,12 @@ class Chatbox
 {
     /** @var MessagesService $messagesService */
     protected $messagesService;
+    protected $renderer;
 
-    public function __construct()
+    public function __construct(Renderer $renderer)
     {
         $this->messagesService = new MessagesService();
+        $this->renderer = $renderer;
     }
 
     /**
@@ -143,6 +146,8 @@ class Chatbox
 	{
 		$chatbox = '<a id="chatboxanchor"></a><a id="chatbox"></a>';
 
+		$targetMember = $game->members->byCountryId($msgCountryID);
+
 		// Print each user's tab
 		if (isset($member))
 			$chatbox .= $this->outputTabs($msgCountryID, $game, $member);
@@ -161,14 +166,13 @@ class Chatbox
 		{
 			$memList = [];
 			for ($countryID = 1; $countryID <= $game->getCountryCount(); $countryID++) {
-                $memList[] = $game->members->byCountryId($countryID)->getRenderedUserName($game, $currentUser);
+                $memList[] = $game->members->byCountryId($countryID)->getMemberNameForGame($game, $currentUser);
             }
 			$chatbox .= '<div class="chatboxMembersList">'.implode(', ',$memList).'</div>';
 		}
 		elseif (!$member || !$member->isCountry($msgCountryID))
 		{
-		    // TODO: FINISH THIS
-			$chatbox .= '';//$Game->Members->ByCountryID[$msgCountryID]->memberBar();
+		    $chatbox .= (string)(new \Diplomacy\Views\Components\Games\Members\BarComponent($game, $targetMember, $currentUser));
 		}
 
 		$chatbox .= '</TD></TR></TABLE></DIV>';

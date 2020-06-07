@@ -1,0 +1,5 @@
+{% if hidden %}(Anonymous){% else %}
+<a href="/profile.php?userID={{ member.user.id }}">{{ member.user.username }}</a>
+<span class="points">({{ member.user.points }}{{ pointsIcon|raw }}{{ member.user.roleIcons|raw }})</span>
+{{ admin_switch }}
+{% endif %}

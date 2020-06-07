@@ -33,13 +33,21 @@ class User
     /* some more fields and i'll get to them */
 
     /**
+     * @param string|array $desiredRoles
+     * @return bool
+     */
+    public function hasRole($desiredRoles): bool
+    {
+        if (!is_array($desiredRoles)) $desiredRoles = [$desiredRoles];
+        return count(array_intersect($desiredRoles, $this->roles)) > 0;
+    }
+
+    /**
      * @return bool
      */
     public function isModerator(): bool
     {
-        return in_array(static::ROLE_MODERATOR, $this->roles) ||
-               in_array(static::ROLE_SENIOR_MODERATOR, $this->roles) ||
-               in_array(static::ROLE_ADMIN, $this->roles);
+        return $this->hasRole([static::ROLE_MODERATOR, static::ROLE_SENIOR_MODERATOR, static::ROLE_ADMIN]);
     }
 
     /**
@@ -47,7 +55,39 @@ class User
      */
     public function isAdmin(): bool
     {
-        return in_array(static::ROLE_ADMIN, $this->roles);
+        return $this->hasRole(static::ROLE_ADMIN);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBanned(): bool
+    {
+        return $this->hasRole(static::ROLE_BANNED);
+    }
+
+    /**
+     * @return string
+     */
+    public function roleIcons(): string
+    {
+        $buf = '';
+        if ($this->isModerator()) {
+            $buf .= '<img src="/images/icons/mod.png" alt="Mod" title="Moderator/Admin" />';
+        } elseif ($this->isBanned()) {
+            $buf .= '<img src="/images/icons/cross.png" alt="X" title="Banned" />';
+        }
+
+        if ($this->hasRole(static::ROLE_DONATOR_PLATINUM))
+            $buf .= \libHTML::platinum();
+        elseif ($this->hasRole(static::ROLE_DONATOR_GOLD))
+            $buf .= \libHTML::gold();
+        elseif ($this->hasRole(static::ROLE_DONATOR_SILVER))
+            $buf .= \libHTML::silver();
+        elseif ($this->hasRole(static::ROLE_DONATOR_BRONZE))
+            $buf .= \libHTML::bronze();
+
+        return $buf;
     }
 }
 

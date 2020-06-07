@@ -1,0 +1,4 @@
+<span class="memberVotes">
+    {% if votes|length > 0 %}Votes: {{ votes|join(',') }}{% endif %}
+    {% if drawVotesHidden %}(any draw votes are hidden){% endif %}
+</span>

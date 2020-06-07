@@ -58,8 +58,7 @@ class IndexController extends Base
 
     protected function getForum(GameEntity $game, Member $member = null, \User $legacyUser = null)
     {
-        /** @var \Chatbox $chatBox */
-        $chatBox = $game->variant->Chatbox();
+        $chatBox = new \Chatbox($this->renderer);
         // Now that we have retrieved the latest messages we can update the time we last viewed the messages
         // Post messages we sent, and get the user we're speaking to
         $countryId = $chatBox->findTab($game, $member);

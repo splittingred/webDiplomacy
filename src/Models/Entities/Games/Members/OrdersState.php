@@ -119,4 +119,26 @@ class OrdersState
             return 'No orders submitted!';
         }
     }
+
+    /**
+     * @return string
+     */
+    public function iconAnon(): string
+    {
+        if ($this->hasState(static::STATE_NONE)) {
+            return '- ';
+
+        } elseif ($this->hasState(static::STATE_READY)) {
+            return '<img src="' . l_s('images/icons/lock.png') . '" alt="' . l_t('Anon') . '" title="' . l_t('This country has options this turn') . '" /> ';
+
+        } elseif ($this->hasState(static::STATE_COMPLETED)) {
+            return '<img src="' . l_s('images/icons/lock.png') . '" alt="' . l_t('Anon') . '" title="' . l_t('This country has options this turn') . '" /> ';
+
+        } elseif ($this->hasState(static::STATE_SAVED)) {
+            return '<img src="' . l_s('images/icons/lock.png') . '" alt="' . l_t('Anon') . '" title="' . l_t('This country has options this turn') . '" /> ';
+
+        } else {
+            return '<img src="' . l_s('images/icons/lock.png') . '" alt="' . l_t('Anon') . '" title="' . l_t('This country has options this turn') . '" /> ';
+        }
+    }
 }

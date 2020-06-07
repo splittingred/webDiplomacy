@@ -1,0 +1,43 @@
+<td class="memberLeftSide">
+    <span class="memberCountryName">
+        {{ messagesFromLink|raw }}
+
+        {% if member.status.isPlaying %}
+            <span class="member{{ member.id }}StatusIcon">{% if showNames %}{{ member.ordersState.icon|raw }}{% else %}{{ member.ordersState.iconAnon|raw }}{% endif %}</span>
+        {% endif %}
+        {% if not member.country.isGlobal %}
+            <span class="country{{ member.country.id }} {% if isSelf %}memberYourCountry{% endif %} memberStatus{{ member.status }}">
+                {{ member.country }}
+            </span>
+        {% endif %}
+    </span>
+    {{ member.muteIcon|raw }}
+</td>
+<td class="memberRightSide{% if member.status.isDead %} memberStatusFade{% endif %}">
+    <div>
+        <div class="memberUserDetail">
+            <span class="memberName">{{ memberName|raw }}</span>
+
+            {% if member.status.isPlaying and not game.phase.isFinished %}
+                {% if showNames %}
+                    {% if game.excusedMissedTurns > 0 %}- Delays left: <span class="excusedNMRs">{{ member.excusedMissedTurns }}</span> of <span class="excusedNMRs">{{ game.excusedMissedTurns }}</span>{% endif %}
+                    {% if member.missedPhases > 1 %}- <span class="missedPhases">Delayed last turn</span>{% endif %}
+                {% endif %}
+                {% if member.user.canSeeLastSeen %}
+                    <br />
+                    <span class="memberLastSeen">Last seen: <strong>{{ member.lastLoggedInAsText }}</strong></span>
+                {% endif %}
+            {% endif %}
+
+            <br />{{ votes|raw }}
+        </div>
+        <div class="memberGameDetail">
+            {{ member.gameDetail|raw }}
+        </div>
+        <div class="clear-both"></div>
+    </div>
+
+    {% if not game.phase.isPreGame %}
+        <div class="panelBarGraphCountry memberProgressBar">{{ member.progressBar|raw }}</div>
+    {% endif %}
+</td>
