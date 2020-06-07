@@ -2,6 +2,7 @@
 
 namespace Diplomacy\Models\Entities\Games;
 
+use Diplomacy\Models\Entities\Game;
 use Diplomacy\Models\Entities\Games\PotTypes\InvalidTypeException;
 use Diplomacy\Models\Entities\Games\PotTypes\PointsPerSupplyCenter;
 use Diplomacy\Models\Entities\Games\PotTypes\SumOfSquares;
@@ -25,6 +26,45 @@ abstract class PotType
      * @return string
      */
     abstract public function getLongName() : string;
+
+    /**
+     * @return bool
+     */
+    abstract public function grantsPointsOnSurvivals(): bool;
+
+    /**
+     * How many points does this scoring system give on a draw?
+     * @param Game $game
+     * @param Member $member
+     * @return int
+     */
+    abstract public function pointsForDraw(Game $game, Member $member): int;
+
+    /**
+     * How many points does this game give for wins?
+     *
+     * @param Game $game
+     * @param Member $member
+     * @return int
+     */
+    abstract public function pointsForWin(Game $game, Member $member): int;
+
+    /**
+     * How many points does this game give for survivals?
+     *
+     * @param Game $game
+     * @param Member $member
+     * @return int
+     */
+    abstract public function pointsForSurvival(Game $game, Member $member): int;
+
+    /**
+     * How many points does this game give for defeats?
+     * @param Game $game
+     * @param Member $member
+     * @return int
+     */
+    abstract public function pointsForDefeat(Game $game, Member $member): int;
 
     /**
      * @return string

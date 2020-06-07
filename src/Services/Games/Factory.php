@@ -22,6 +22,7 @@ use Diplomacy\Models\Entities\Games\PotTypes\InvalidTypeException as InvalidPotT
 use Diplomacy\Models\Entities\Games\PressTypes\InvalidTypeException as InvalidPressTypeException;
 use \Diplomacy\Models\Entities\Games\DrawTypes\InvalidTypeException as InvalidDrawTypeException;
 use Diplomacy\Models\Entities\Games\PlayersTypes\InvalidTypeException as InvalidPlayersTypeException;
+use Diplomacy\Models\Tournament;
 
 class Factory
 {
@@ -59,10 +60,9 @@ class Factory
         $entity->minimumReliabilityRating = (int)$game->minimumReliabilityRating;
         $entity->excusedMissedTurns = (int)$game->excusedMissedTurns;
 
+        /** @var Tournament $tournament */
         $tournament = $game->getTournament();
         if ($tournament) $entity->tournament = $tournament->toEntity();
-
-        // list($tournamentDirector, $tournamentCodirector) = $DB->sql_row("SELECT directorID, coDirectorID FROM wD_Tournaments t INNER JOIN wD_TournamentGames g ON t.id = g.tournamentID WHERE g.gameID = ".$Game->id);
 
         // potential value objects
         $entity->startTime = $game->startTime;

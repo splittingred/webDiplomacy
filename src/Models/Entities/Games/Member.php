@@ -7,9 +7,11 @@ use Diplomacy\Models\Entities\Games\Members\OrdersState;
 use Diplomacy\Models\Entities\Games\Members\Status;
 use Diplomacy\Models\Entities\User;
 use Diplomacy\Models\Entities\Users\MutedCountry;
+use Diplomacy\Views\Components\Games\Members\BetWonComponent;
 use Diplomacy\Views\Components\Games\Members\CountryNameComponent;
 use Diplomacy\Views\Components\Games\Members\MemberNameComponent;
 use Diplomacy\Views\Components\Games\Members\NameComponent;
+use Diplomacy\Views\Components\Games\Members\UnitCountComponent;
 
 class Member
 {
@@ -111,15 +113,9 @@ class Member
     /**
      * @return string
      */
-    public function getUnitCountCssClass(): string
+    public function unitCountComponent(): string
     {
-        if ($this->unitCount < $this->supplyCenterCount)
-            $unitStyle = 'good';
-        elseif ($this->unitCount > $this->supplyCenterCount)
-            $unitStyle = 'bad';
-        else
-            $unitStyle = 'neutral';
-        return $unitStyle;
+        return (string)(new UnitCountComponent($this));
     }
 
     /**
@@ -159,7 +155,15 @@ class Member
      */
     public function hasNoPieces(): bool
     {
-        return $this->unitCount + $this->supplyCenterCount == 0;
+        return $this->piecesCount() == 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function piecesCount(): int
+    {
+        return $this->unitCount + $this->supplyCenterCount;
     }
 
     /**
@@ -288,10 +292,9 @@ class Member
     /**
      * @return string
      */
-    public function betWon(): string
+    public function betWon(Game $game): string
     {
-        return l_t('Bet:').' <em>'.$this->bet.\libHTML::points().'</em>';
-
+        return (string)(new BetWonComponent($this, $game));
 //
 //        $buf = l_t('Bet:').' <em>'.$this->bet.libHTML::points().'</em>, ';
 //

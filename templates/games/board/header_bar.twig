@@ -45,22 +45,17 @@
                     {% endif %}
 
                     <div class="memberGameDetail">
-                        {% if member.status.isPlaying %}
+                        {% if not member.status.isPlaying %}
                             <span class="memberStatus"><em>{{ member.status.text }}</em>.</span>
                         {% endif %}
 
                         <span class="memberPointsCount">
-                            {{ member.betWon|raw }}
+                            {{ member.betWon(game)|raw }}
                         </span>
                         <br />
 
                         {% if not member.status.isDefeated %}
-                        <span class="memberUnitCount">
-                            <span class="memberSCCount">
-                                <em>{{ member.supplyCenterCount }}</em> supply-centers,
-                                <em class="{{ member.getUnitCountCssClass }}">{{ member.unitCount }} units</em>
-                            </span>
-                            </span>
+                            {{ member.unitCountComponent|raw }}
                         {% endif %}
                     </div>
                     <div class="clear-both"></div>

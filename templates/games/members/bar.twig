@@ -32,7 +32,14 @@
             <br />{{ votes|raw }}
         </div>
         <div class="memberGameDetail">
-            {{ member.gameDetail|raw }}
+            {% if not member.status.isPlaying %}
+                <span class="memberStatus"><em>{{ member.status.text }}</em></span>
+            {% endif %}
+
+            <span class="memberPointsCount">{{ member.betWon(game)|raw }}</span>
+            {% if not member.status.isDefeated %}
+                <br />{{ member.unitCountComponent|raw }}
+            {% endif %}
         </div>
         <div class="clear-both"></div>
     </div>

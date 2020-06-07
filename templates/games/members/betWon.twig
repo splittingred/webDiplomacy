@@ -1,0 +1,13 @@
+{% if game.phase.isPreGame %}
+    Bet: <em>{{ member.bet }}{{ pointsIcon|raw }}</em>
+{% else %}
+   {% if member.status.isPlaying or member.status.isLeft %}
+       Bet: <em>{{ member.bet }}{{ pointsIcon|raw }}</em>,
+       worth: <em class="{{ betClass }}">{{ betValue }}{{ pointsIcon|raw }}</em>
+   {% elseif member.status.hasWon %}
+       Bet: <em>{{ member.bet }}{{ pointsIcon|raw }}</em>,
+       won: <em class="{{ betClass }}">{{ betValue }}{{ pointsIcon|raw }}</em>
+   {% else %}
+       Bet: <em class="bad">{{ member.bet }}{{ pointsIcon|raw }}</em>
+   {% endif %}
+{% endif %}

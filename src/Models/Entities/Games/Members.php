@@ -46,6 +46,22 @@ class Members extends \ArrayObject
     }
 
     /**
+     * Get a Member for a given status
+     *
+     * @param string $status
+     * @return array<Member>
+     */
+    public function allWithStatus(string $status): array
+    {
+        $members = [];
+        /** @var Member $member */
+        foreach ($this as $member) {
+            if ((string)$member->status == $status) $members[] = $member;
+        }
+        return $members;
+    }
+
+    /**
      * Get a member for a given country ID
      *
      * @param int $countryId
@@ -96,14 +112,21 @@ class Members extends \ArrayObject
     }
 
     /**
+     * @param string $status
      * @return int
      */
-    public function supplyCenterCount() : int
+    public function supplyCenterCount(string $status = '') : int
     {
         $count = 0;
+        $status = strtolower($status);
+
         /** @var Member $member */
         foreach ($this as $member) {
-            $count += $member->supplyCenterCount;
+            if (!empty($status)) {
+                if ((string)$member->status == $status) $count += $member->supplyCenterCount;
+            } else {
+                $count += $member->supplyCenterCount;
+            }
         }
         return $count;
     }
