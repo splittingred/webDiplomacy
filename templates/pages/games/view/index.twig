@@ -22,13 +22,13 @@
         <div class="hr"></div>
     {% endif %}
 
-    {{ map }}
+    {{ map|raw }}
     <div class="hr"></div>
 
     {% if orders %}
-        {{ orders }}
+        {{ orders|raw }}
         <div class="hr"></div>
     {% endif %}
 
-    {{ game.summary }}
+    {{ game.summary|raw }}
 </div>

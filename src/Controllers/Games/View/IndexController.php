@@ -10,6 +10,7 @@ use Diplomacy\Services\Games\Factory;
 use Diplomacy\Services\Games\GamesService;
 use Diplomacy\Services\Request;
 use \Diplomacy\Models\Entities\Games\GameBoard;
+use Diplomacy\Views\Components\Games\MapComponent;
 
 class IndexController extends Base
 {
@@ -22,6 +23,7 @@ class IndexController extends Base
     protected $game;
 
     protected $footerScripts = ['makeFormsSafe();'];
+
 
     public function setUp()
     {
@@ -47,6 +49,7 @@ class IndexController extends Base
             'game' => $gameEntity,
             'board' => $gameBoard,
             'forum' => $this->getForum($gameEntity, $currentMember, $this->currentUser),
+            'map' => (string)(new MapComponent($gameEntity, $this->currentUser)),
         ];
     }
 
