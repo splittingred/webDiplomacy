@@ -172,8 +172,9 @@ class Chatbox
 		}
 		elseif (!$member || !$member->isCountry($msgCountryID))
 		{
-		    $chatbox .= (string)(new \Diplomacy\Views\Components\Games\Members\BarComponent($game, $targetMember, $currentUser));
+		    $chatbox .= (string)(new \Diplomacy\Views\Components\Games\Members\BarComponent($game, $targetMember, $member));
 		}
+		
 
 		$chatbox .= '</TD></TR></TABLE></DIV>';
 

@@ -2,12 +2,13 @@
 
 namespace Diplomacy\Views\Components;
 
+use Diplomacy\Views\CanAccessRequest;
 use Diplomacy\Views\CanRender;
-use Diplomacy\Views\Renderer;
 
 abstract class BaseComponent
 {
     use CanRender;
+    use CanAccessRequest;
 
     /**
      * @return array
@@ -18,10 +19,26 @@ abstract class BaseComponent
     }
 
     /**
+     * Do any actions before rendering the component
+     */
+    public function beforeRender(): void
+    {
+    }
+
+    /**
      * @return string
      */
     public function __toString(): string
     {
-        return $this->renderer()->render($this->template, $this->attributes());
+        $this->beforeRender();
+        return $this->renderer()->render($this->getTemplate(), $this->attributes());
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTemplate(): string
+    {
+        return $this->template;
     }
 }

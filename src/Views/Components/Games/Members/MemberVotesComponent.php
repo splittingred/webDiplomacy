@@ -4,6 +4,7 @@ namespace Diplomacy\Views\Components\Games\Members;
 
 use Diplomacy\Models\Entities\Game;
 use Diplomacy\Models\Entities\Games\Member;
+use Diplomacy\Models\Entities\User;
 use Diplomacy\Views\Components\BaseComponent;
 
 class MemberVotesComponent extends BaseComponent
@@ -13,10 +14,10 @@ class MemberVotesComponent extends BaseComponent
     protected $member;
     /** @var Game $game */
     protected $game;
-    /** @var \User $currentUser */
+    /** @var User $currentUser */
     protected $currentUser;
 
-    public function __construct(Member $member, Game $game, \User $currentUser)
+    public function __construct(Member $member, Game $game, User $currentUser)
     {
         $this->member = $member;
         $this->game = $game;

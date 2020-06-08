@@ -6,6 +6,7 @@ use Diplomacy\Models\Entities\Users\TemporaryBan;
 
 class User
 {
+    const GUEST_ID = 1;
     const ROLE_USER = 'User';
     const ROLE_GUEST = 'Guest';
     const ROLE_DONATOR_BRONZE = 'DonatorBronze';
@@ -31,6 +32,14 @@ class User
     public $reliabilityRating;
     public $roles = [];
     /* some more fields and i'll get to them */
+
+    /**
+     * @return bool
+     */
+    public function isAuthenticated()
+    {
+        return !empty($this->id) && $this->id != static::GUEST_ID;
+    }
 
     /**
      * @param string|array $desiredRoles

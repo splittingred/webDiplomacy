@@ -46,7 +46,7 @@ abstract class BaseController
         $this->renderer = $app->make('renderer');
         $this->database = $app->make('DB');
         $this->currentUser = $app->make('user');
-        $this->request = new Request();
+        $this->request = $app->make('request');
         $this->setUp();
     }
 

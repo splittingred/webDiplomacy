@@ -59,8 +59,7 @@ abstract class userOrder extends order
 	 */
 	public static function load($phase, $orderID, $gameID, $countryID)
 	{
-		global $Game;
-
+		$Order = null;
 		switch ( $phase )
 		{
 			case 'Diplomacy':

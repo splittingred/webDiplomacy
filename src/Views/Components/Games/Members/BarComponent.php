@@ -11,13 +11,13 @@ class BarComponent extends BaseComponent
     protected $template = 'games/members/bar.twig';
     protected $game;
     protected $member;
-    protected $currentUser;
+    protected $currentMember;
 
-    public function __construct(Game $game, Member $member, \User $currentUser)
+    public function __construct(Game $game, Member $member, Member $currentMember = null)
     {
         $this->game = $game;
         $this->member = $member;
-        $this->currentUser = $currentUser;
+        $this->currentMember = $currentMember;
     }
 
     /**
@@ -27,13 +27,14 @@ class BarComponent extends BaseComponent
     {
         return [
             'game' => $this->game,
-            'currentUser' => $this->currentUser,
+            'currentMember' => $this->currentMember,
+            'currentUser' => $this->currentMember->user,
             'member' => $this->member,
-            'memberName' => $this->member->getRenderedName($this->game, $this->currentUser->id),
-            'showNames' => !$this->game->isMemberNameHidden($this->member, $this->currentUser->id),
-            'messagesFromLink' => $this->member->messagesFromLink($this->currentUser),
-            'isSelf' => $this->member->isUser($this->currentUser),
-            'votes' => (string)(new MemberVotesComponent($this->member, $this->game, $this->currentUser)),
+            'memberName' => $this->member->getRenderedName($this->game, $this->currentMember->user->id),
+            'showNames' => !$this->game->isMemberNameHidden($this->member, $this->currentMember->user->id),
+            'messagesFromLink' => $this->member->messagesFromLink($this->currentMember->user),
+            'isSelf' => $this->member->isUser($this->currentMember->user),
+            'votes' => (string)(new MemberVotesComponent($this->member, $this->game, $this->currentMember->user)),
         ];
     }
 }

@@ -1,0 +1,5 @@
+{% if show %}
+<a onclick="return confirm('Are you sure you want to mute the messages from {{ targetCountryName}}?');" href="{{ url }}">
+    <img src="/images/icons/unmute.png" alt="Mute player" title="Mute player" />
+</a>
+{% endif %}

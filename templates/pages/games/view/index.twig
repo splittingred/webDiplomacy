@@ -26,7 +26,7 @@
     <div class="hr"></div>
 
     {% if orders %}
-        {{ orders|raw }}
+        <div id="orderDiv{{ current_member.id }}">{{ orders|raw }}</div>
         <div class="hr"></div>
     {% endif %}
 

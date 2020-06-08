@@ -51,7 +51,7 @@ function error_handler($errno, $errstr, $errfile=false, $errline=false, $errcont
 	global $Game;
     global $app;
     $DB = $app->make('DB');
-    $User = $app->make('User');
+    $User = $app->make('user');
 
 	if ( defined('ERROR') )
 		define('ERRORINERROR',true);

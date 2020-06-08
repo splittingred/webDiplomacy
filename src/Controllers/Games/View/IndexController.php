@@ -49,6 +49,7 @@ class IndexController extends Base
             'game' => $gameEntity,
             'board' => $gameBoard,
             'forum' => $this->getForum($gameEntity, $currentMember, $this->currentUser),
+            'orders' => $this->getOrders($gameEntity, $currentMember, $this->currentUser),
             'map' => (string)(new MapComponent($gameEntity, $this->currentUser)),
         ];
     }
@@ -68,5 +69,13 @@ class IndexController extends Base
         $chatBox->postMessage($countryId, $game, $member);
         $this->database->sql_put('COMMIT');
         return $chatBox->output($countryId, $game, $member, $legacyUser);
+    }
+
+    protected function getOrders(GameEntity $game, Member $member = null, \User $legacyUser = null)
+    {
+        if (!$game->phase->isActive()) return '';
+
+        // TODO: Will require redoing _all_ of the orderinterface class
+        return '';
     }
 }

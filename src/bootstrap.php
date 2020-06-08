@@ -1,4 +1,6 @@
 <?php
+
+use Diplomacy\Services\Request;
 use Diplomacy\Views\Renderer;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Container\Container as Container;
@@ -53,3 +55,6 @@ $capsule->addConnection([
 $capsule->setAsGlobal();
 // Setup the Eloquent ORM.
 $capsule->bootEloquent();
+
+$request = new Request();
+$app->instance('request', $request);

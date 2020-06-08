@@ -10,6 +10,7 @@ use Diplomacy\Models\Entities\Users\MutedCountry;
 use Diplomacy\Views\Components\Games\Members\BetWonComponent;
 use Diplomacy\Views\Components\Games\Members\CountryNameComponent;
 use Diplomacy\Views\Components\Games\Members\MemberNameComponent;
+use Diplomacy\Views\Components\Games\Members\MuteIconComponent;
 use Diplomacy\Views\Components\Games\Members\NameComponent;
 use Diplomacy\Views\Components\Games\Members\ProgressBarComponent;
 use Diplomacy\Views\Components\Games\Members\UnitCountComponent;
@@ -284,6 +285,11 @@ class Member
     public function progressBar(): string
     {
         return (string)(new ProgressBarComponent($this));
+    }
+
+    public function muteIcon(Game $game, Member $currentMember = null): string
+    {
+        return (string)(new MuteIconComponent($game, $this, $currentMember));
     }
 
     /**********

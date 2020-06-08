@@ -31,6 +31,11 @@ class Processing
         $this->phaseMinutes = $phaseMinutes;
     }
 
+    public function getTime(): int
+    {
+        return $this->time;
+    }
+
     /**
      * @return bool is the processing overdue?
      */
