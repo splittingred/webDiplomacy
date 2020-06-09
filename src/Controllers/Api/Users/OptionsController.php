@@ -6,7 +6,6 @@ use Diplomacy\Controllers\BaseController;
 
 class OptionsController extends BaseController
 {
-
     public function call()
     {
         header('Content-type: application/javascript');
