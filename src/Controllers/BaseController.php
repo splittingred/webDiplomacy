@@ -169,11 +169,12 @@ abstract class BaseController
     /**
      * @param string $path
      */
-    public function redirectRelative(string $path = '/') : void
+    public function redirectRelative(string $path = '/', $exit = false) : void
     {
         $baseUrl = rtrim(\Config::$url, '/');
         $path = ltrim($path, '/');
         header("Location: {$baseUrl}/{$path}");
+        if ($exit) { close(); }
     }
 
     /**

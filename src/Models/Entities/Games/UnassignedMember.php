@@ -40,4 +40,12 @@ class UnassignedMember extends Member
     {
         return false;
     }
+
+    /**
+     * @return bool
+     */
+    public function isAuthenticated(): bool
+    {
+        return false;
+    }
 }

@@ -14,19 +14,19 @@ class MemberNameComponent extends BaseComponent
     protected $game;
     /** @var Member $member */
     protected $member;
-    /** @var int $currentUserId */
-    protected $currentUserId;
+    /** @var Member $currentMember */
+    protected $currentMember;
 
     /**
      * @param Game $game
      * @param Member $member
-     * @param int $currentUserId
+     * @param Member $currentMember
      */
-    public function __construct(Game $game, Member $member, int $currentUserId = 0)
+    public function __construct(Game $game, Member $member, Member $currentMember)
     {
         $this->game = $game;
         $this->member = $member;
-        $this->currentUserId = $currentUserId;
+        $this->currentMember = $currentMember;
     }
 
     /**
@@ -38,7 +38,7 @@ class MemberNameComponent extends BaseComponent
             'member' => $this->member,
             'game' => $this->game,
             'isGlobal' => $this->member->country->isGlobal(),
-            'isHidden' => $this->game->isMemberNameHidden($this->member, $this->currentUserId),
+            'isHidden' => $this->game->isMemberNameHidden($this->member, $this->currentMember),
         ];
     }
 }

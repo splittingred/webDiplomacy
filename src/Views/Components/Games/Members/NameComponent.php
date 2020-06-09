@@ -13,21 +13,21 @@ class NameComponent extends BaseComponent
     protected $member;
     /** @var Game $game */
     protected $game;
-    /** @var int $currentUserId */
-    protected $currentUserId;
+    /** @var Member $currentMember */
+    protected $currentMember;
 
-    public function __construct(Member $member, Game $game, int $currentUserId = 0)
+    public function __construct(Member $member, Game $game, Member $currentMember)
     {
         $this->member = $member;
         $this->game = $game;
-        $this->currentUserId = $currentUserId;
+        $this->currentMember = $currentMember;
     }
 
     public function attributes(): array
     {
 
         return [
-            'hidden' => $this->game->isMemberNameHidden($this->member, $this->currentUserId),
+            'hidden' => $this->game->isMemberNameHidden($this->member, $this->currentMember),
             'member' => $this->member,
             'pointsIcon' => \libHTML::points(),
         ];

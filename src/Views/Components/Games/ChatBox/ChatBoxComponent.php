@@ -102,30 +102,15 @@ class ChatBoxComponent extends BaseComponent
      */
     public function attributes(): array
     {
-        $attributes = [
+        return [
             'tabs' => $this->isAuthenticated ? $this->getTabs() : '',
             'game' => $this->game,
             'isGlobal' => $this->isGlobal,
             'isAll' => $this->isAll,
+            'memberNames' => $this->getMemberNames(),
+            'messages' => $this->getMessages(),
+            'form' => $this->isAuthenticated ? $this->getForm() : '',
         ];
-
-        if ($this->isGlobal || $this->isAll)
-        {
-            $memberList = [];
-            for ($countryID = 1; $countryID <= $this->game->getCountryCount(); $countryID++) {
-                $memberList[] = $this->game->members->byCountryId($countryID)->getMemberNameForGame($this->game, $this->currentMember->user);
-            }
-            $attributes['members'] = $memberList;
-        }
-        elseif (!$this->isAuthenticated || !$this->currentMemberIsTargetCountry)
-        {
-            $attributes['targetMemberBar'] = $this->getSingleMemberBar();
-        }
-
-        $attributes['messages'] = $this->getMessages();
-        $attributes['form'] = $this->getForm();
-
-        return $attributes;
     }
 
     /**
@@ -139,14 +124,6 @@ class ChatBoxComponent extends BaseComponent
     }
 
     /**
-     * @return string
-     */
-    public function getSingleMemberBar(): string
-    {
-        return (string)(new MemberBarComponent($this->game, $this->targetMember, $this->currentMember));
-    }
-
-    /**
      * Get the form HTML
      *
      * @return string
@@ -154,6 +131,16 @@ class ChatBoxComponent extends BaseComponent
     protected function getForm(): string
     {
         return (string)(new FormComponent($this->game, $this->targetMember, $this->targetCountryId));
+    }
+
+    /**
+     * Get a list of member names, properly rendered to respect anonymous settings
+     *
+     * @return string
+     */
+    protected function getMemberNames(): string
+    {
+        return (string)(new MemberNamesComponent($this->game, $this->currentMember, $this->targetCountryId));
     }
 
     /**

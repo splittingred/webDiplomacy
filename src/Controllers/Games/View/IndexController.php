@@ -10,6 +10,7 @@ use Diplomacy\Services\Games\Factory;
 use Diplomacy\Services\Games\GamesService;
 use Diplomacy\Services\Request;
 use \Diplomacy\Models\Entities\Games\GameBoard;
+use Diplomacy\Views\Components\Games\ChatBox\ChatBoxComponent;
 use Diplomacy\Views\Components\Games\MapComponent;
 
 class IndexController extends Base
@@ -19,8 +20,14 @@ class IndexController extends Base
 
     /** @var GamesService $gamesService */
     protected $gamesService;
+    /** @var Factory $gameFactory */
+    protected $gameFactory;
     /** @var Game $game */
     protected $game;
+    /** @var GameEntity */
+    protected $gameEntity;
+    /** @var Member $currentMember */
+    protected $currentMember;
 
     protected $footerScripts = ['makeFormsSafe();'];
 
@@ -28,6 +35,7 @@ class IndexController extends Base
     public function setUp()
     {
         parent::setUp();
+        $this->gameFactory = new Factory();
         $this->gamesService = new GamesService();
     }
 
@@ -39,36 +47,39 @@ class IndexController extends Base
 
     public function call()
     {
-        $gameFactory = new Factory();
-        $gameEntity = $gameFactory->build($this->game->id);
-        $gameBoard = new GameBoard($this->game, $gameEntity, $this->currentUser);
+        $gameBoard = new GameBoard($this->game, $this->gameEntity, $this->currentUser);
 
-        $currentMember = $gameEntity->members->byUserId($this->currentUser->id);
         return [
-            'current_member' => $currentMember,
-            'game' => $gameEntity,
+            'current_member' => $this->currentMember,
+            'game' => $this->gameEntity,
             'board' => $gameBoard,
-            'forum' => $this->getForum($gameEntity, $currentMember, $this->currentUser),
-            'orders' => $this->getOrders($gameEntity, $currentMember, $this->currentUser),
-            'map' => (string)(new MapComponent($gameEntity, $this->currentUser)),
+            'forum' => $this->getForum(),
+            'orders' => $this->getOrders(),
+            'map' => (string)(new MapComponent($this->gameEntity, $this->currentUser)),
         ];
     }
 
     protected function loadGame()
     {
         $gameId = $this->request->get('id', 0, Request::TYPE_REQUEST);
+        if (empty($gameId)) $this->redirectRelative('/', true);
+
         $this->game = $this->gamesService->find($gameId);
+        if (empty($this->game)) $this->redirectRelative('/', true);
+
+        $this->gameEntity = $this->gameFactory->build($this->game->id);
+        $this->currentMember = $this->gameEntity->members->byUserId($this->currentUser->id);
     }
 
-    protected function getForum(GameEntity $game, Member $member = null, \User $legacyUser = null)
+    protected function getForum()
     {
-        $targetCountryId = $this->request->get('msgCountryID', -1, Request::TYPE_REQUEST);
-        return (string)(new \Diplomacy\Views\Components\Games\ChatBox\ChatBoxComponent($game, $member, $targetCountryId));
+        $targetCountryId = $this->request->get('countryId', -1, Request::TYPE_REQUEST);
+        return (string)(new ChatBoxComponent($this->gameEntity, $this->currentMember, $targetCountryId));
     }
 
-    protected function getOrders(GameEntity $game, Member $member = null, \User $legacyUser = null)
+    protected function getOrders()
     {
-        if (!$game->phase->isActive()) return '';
+        if (!$this->gameEntity->phase->isActive()) return '';
 
         // TODO: Will require redoing _all_ of the orderinterface class
         return '';

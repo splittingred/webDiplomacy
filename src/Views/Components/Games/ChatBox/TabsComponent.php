@@ -61,7 +61,7 @@ class TabsComponent extends BaseComponent
             }
             elseif ($member->isFilled())
             {
-                $tab['rendered'] = $member->getRenderedCountryName($this->game, $this->currentMember->user);
+                $tab['rendered'] = $member->getRenderedCountryName($this->game, $this->currentMember);
             }
 
             if (!$isCurrent && in_array($member->country->id, $this->currentMember->newMessagesFrom) )

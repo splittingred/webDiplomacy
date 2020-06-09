@@ -5,7 +5,7 @@
                 {{ tab.rendered|raw }}
             {% endif %}
         {% else %}{# notes or global #}
-            <a href="/games/{{ game.id }}/view?msgCountryID={{ tab.countryId }}#chatboxanchor"
+            <a href="/games/{{ game.id }}/view?countryId={{ tab.countryId }}#chatboxanchor"
                class="country{{ tab.countryId }} {{ tab.currentCls }}"
                title="Open {{ tab.countryName }} chatbox tab">
                 {{ tab.countryName|raw }}

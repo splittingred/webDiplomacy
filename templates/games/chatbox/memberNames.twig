@@ -1,0 +1,15 @@
+<div class="chatbox{% if not currentMember.isAuthenticated %} chatboxnotabs{% endif %}">
+    <table class="chatbox">
+        <tr class="barAlt2 membersList">
+            <td>
+                {% if isGlobal or isAll %}
+                    <div class="chatboxMembersList">
+                        {% for member in members %}{{ member|raw }}{% endfor %}
+                    </div>
+                {% else %}
+                    {{ targetMemberBar|raw }}
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+</div>

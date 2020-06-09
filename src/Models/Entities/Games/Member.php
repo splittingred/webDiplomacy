@@ -199,50 +199,47 @@ class Member
     /**
      * Can this member be seen on game lists by the specified User, even if it's an anonymous game?
      *
-     * @param int|User $user
+     * @param Member $currentMember
      * @return bool
      */
-    public function canBeSeenBy($user): bool
+    public function canBeSeenBy($currentMember): bool
     {
-        $userId = is_int($user) ? $user : $user->id;
-        $isSelf = $userId != $this->user->id;
-        return $isSelf || $this->isDirector || $this->isTournamentDirector || $this->isTournamentCoDirector;
+        $isSelf = $currentMember->isUser($this->user);
+        return $isSelf || $currentMember->isDirector || $currentMember->isTournamentDirector || $currentMember->isTournamentCoDirector;
     }
 
     /**
      * Get the fully rendered country name for this member, properly hiding it if the member is anonymous and
-     * the viewing user cannot see anonymous members.
+     * the viewing member cannot see anonymous members.
      *
      * @param Game $game
-     * @param mixed $currentUser
+     * @param Member $currentMember
      * @return string
      */
-    public function getRenderedCountryName(Game $game, $currentUser = null): string
+    public function getRenderedCountryName(Game $game, Member $currentMember): string
     {
-        $currentUserId = is_int($currentUser) ? $currentUser : $currentUser->id;
-        return (string)(new CountryNameComponent($game, $this, $currentUserId));
+        return (string)(new CountryNameComponent($game, $this, $currentMember));
     }
 
     /**
      * @param Game $game
-     * @param int $currentUserId
+     * @param Member $currentMember
      * @return string
      */
-    public function getRenderedName(Game $game, int $currentUserId = 0)
+    public function getRenderedName(Game $game, Member $currentMember)
     {
-        return (string)(new NameComponent($this, $game, $currentUserId));
+        return (string)(new NameComponent($this, $game, $currentMember));
     }
 
 
     /**
      * @param Game $game
-     * @param mixed $currentUser
+     * @param Member $currentMember
      * @return string
      */
-    public function getMemberNameForGame(Game $game, $currentUser = null): string
+    public function getMemberNameForGame(Game $game, Member $currentMember): string
     {
-        $currentUserId = is_int($currentUser) ? $currentUser : $currentUser->id;
-        return (string)(new MemberNameComponent($game, $this, $currentUserId));
+        return (string)(new MemberNameComponent($game, $this, $currentMember));
     }
 
     /**
@@ -256,7 +253,7 @@ class Member
 
         if (!$this->hasNewMessageFrom($userId)) return '';
 
-        return \libHTML::unreadMessages('/games/'.$this->gameId.'/view&msgCountryID='.$this->country->id.'#chatbox');
+        return \libHTML::unreadMessages('/games/'.$this->gameId.'/view&countryId='.$this->country->id.'#chatbox');
     }
 
     /**

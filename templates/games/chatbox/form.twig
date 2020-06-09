@@ -1,5 +1,5 @@
 <div class="chatbox">
-    <form method="post" class="safeForm" action="/message.php?gameID={{ game.id }}&amp;msgCountryID={{ targetCountryId }}" id="chatForm">
+    <form method="post" class="safeForm" action="/message.php?gameID={{ game.id }}&amp;countryId={{ targetCountryId }}" id="chatForm">
         <table>
             <tr class="barAlt2">
                 <td class="left">
@@ -21,7 +21,7 @@
     </form>
 </div>
 {% if not isGlobal and not isAll %}
-<form method="post" name="markUnread" class="safeForm" action="/games/{{ game.id }}/view&amp;msgCountryID={{ targetCountryId }}#chatboxanchor">
+<form method="post" name="markUnread" class="safeForm" action="/games/{{ game.id }}/view&amp;countryId={{ targetCountryId }}#chatboxanchor">
     <input type="hidden" tabindex="2" value="" name="MarkAsUnread" />
 </form>
 {% endif %}

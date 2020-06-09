@@ -191,12 +191,12 @@ class Game
 
     /**
      * @param Member $member
-     * @param int $currentUserId
+     * @param Member $currentMember
      * @return bool
      */
-    public function isMemberNameHidden(Member $member, int $currentUserId = 0)
+    public function isMemberNameHidden(Member $member, Member $currentMember)
     {
-        return $this->areMemberNamesHidden() && !$member->canBeSeenBy($currentUserId);
+        return $this->areMemberNamesHidden() && !$member->canBeSeenBy($currentMember);
     }
 
 

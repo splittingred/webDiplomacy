@@ -4,7 +4,7 @@
             <a id="gamePanel"></a>
             {% include 'games/board/title_bar.twig' with { game: game, board: board } %}
             {% include 'games/board/notice_bar.twig' with { game: game, board: board } %}
-            {% if game.allSlotsFilled() and game.phase.isStarted() and current_member %}
+            {% if game.allSlotsFilled() and game.phase.isStarted() and current_member.isAuthenticated() %}
                 <div class="membersList">
                     {% include 'games/board/header_bar.twig' with { game: game, member: current_member } %}
                 </div>
