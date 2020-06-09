@@ -100,6 +100,10 @@ class Router
 
         /* admin */
         $this->router->get('admin/logs', 'Admin\LogsController@handle');
+
+        /* api */
+        $this->router->get('api/users/options', 'Api\Users\OptionsController@handle');
+        $this->router->get('api/users/options.js', 'Api\Users\OptionsController@handle');
     }
 
     /**
