@@ -144,6 +144,9 @@ class Chatbox
      */
 	public function output($msgCountryID, Game $game, Member $member = null, \User $currentUser = null)
 	{
+	    return (string)(new \Diplomacy\Views\Components\Games\ChatBox\ChatBoxComponent($game, $member, $msgCountryID));
+
+
 		$chatbox = '<a id="chatboxanchor"></a><a id="chatbox"></a>';
 
 		$targetMember = $game->members->byCountryId($msgCountryID);
@@ -278,47 +281,7 @@ class Chatbox
      */
 	protected function outputTabs(int $msgCountryID, Game $game, Member $currentMember = null)
 	{
-		$tabs = '<div id="chatboxtabs" class="gamelistings-tabs">';
-
-		for($countryID = 0; $countryID <= $game->getCountryCount(); $countryID++)
-		{
-		    $member = $game->members->byCountryId($countryID);
-
-			// Do not allow country specific tabs for restricted press games.
-            if (!$game->pressType->allowPrivateMessages()) continue;
-
-			$hrefPrefix = '<a href="/games/'.$game->id.'/view?msgCountryID='.$member->country->id.'#chatboxanchor" '.
-				'class="country'.$countryID.' '.( $msgCountryID == $countryID ? ' current"'
-					: '" title="'.l_t('Open %s chatbox tab"',( $countryID == 0 ? 'the global' : $member->country->name."'s" )) ).'>';
-
-			if ($currentMember->id == $member->id)
-			{
-				$tabs .= $hrefPrefix . 'Notes';
-			}
-			elseif ($member->isFilled())
-			{
-				$tabs .= $member->getRenderedCountryName($game, $currentMember->user);
-			}
-			else
-			{
-				$tabs .= $hrefPrefix . 'Global';
-			}
-
-			if ($msgCountryID != $countryID && in_array($countryID, $currentMember->newMessagesFrom) )
-			{
-				// This isn't the tab I am currently viewing, and it has sent me new messages
-				$tabs .= ' '.libHTML::unreadMessages();
-			} elseif ($msgCountryID == $countryID && isset($_REQUEST['MarkAsUnread'])) {
-                // Mark as unread patch!
-                $tabs .= ' ' . libHTML::unreadMessages();
-            }
-
-			$tabs .= '</a>';
-		}
-
-		$tabs .= '</div>';
-
-		return $tabs;
+	    return (string)(new \Diplomacy\Views\Components\Games\ChatBox\TabsComponent($game, $currentMember, $msgCountryID));
 	}
 
 	protected function countryName(Game $game, int $countryID) {

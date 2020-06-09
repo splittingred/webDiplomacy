@@ -14,6 +14,7 @@ class Status
     const STATUS_DRAWN = 'drawn'; // drew the game with others
     const STATUS_SURVIVED = 'survived'; // had SCs at the end but did not win or draw
     const STATUS_RESIGNED = 'resigned'; // surrendered the game
+    const STATUS_UNASSIGNED = 'unassigned';
 
     /** @var string */
     protected $type;
@@ -106,6 +107,14 @@ class Status
     public function resigned(): bool
     {
         return $this->type == self::STATUS_RESIGNED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function unassigned(): bool
+    {
+        return $this->type == self::STATUS_UNASSIGNED;
     }
 
     /**

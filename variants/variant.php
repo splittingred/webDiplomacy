@@ -253,6 +253,8 @@ abstract class WDVariant {
      */
 	public function getCountryName(int $id) : string
     {
+        if ($id == 0) return '';
+
         if (empty($this->countryIDToName)) {
             $this->countryIdToName = [];
             foreach ($this->countries as $index => $countryName) {

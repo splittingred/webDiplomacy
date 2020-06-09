@@ -8,6 +8,8 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class TabsComponent extends BaseComponent
 {
+    protected $template = 'games/chatbox/tabs.twig';
+
     /** @var Game $game */
     protected $game;
     /** @var Member|null $currentMember */
@@ -29,46 +31,46 @@ class TabsComponent extends BaseComponent
 
     public function attributes(): array
     {
-        $attributes = [
-            'tabs' => [],
+        return [
+            'game' => $this->game,
+            'tabs' => $this->getTabs(),
+            'privateMessagesAllowed' => $this->game->pressType->allowPrivateMessages(),
         ];
+    }
 
-        for($countryID = 0; $countryID <= $this->game->getCountryCount(); $countryID++)
+    protected function getTabs(): array
+    {
+        $tabs = [];
+        for($countryId = 0; $countryId <= $this->game->getCountryCount(); $countryId++)
         {
-            $member = $this->game->members->byCountryId($countryID);
+            $member = $this->game->members->byCountryId($countryId);
+            $isCurrent = $this->targetCountryId == $member->country->id;
 
-            // Do not allow country specific tabs for restricted press games.
-            if (!$this->game->pressType->allowPrivateMessages()) continue;
-
-            $hrefPrefix = '<a href="/games/'.$this->game->id.'/view?msgCountryID='.$member->country->id.'#chatboxanchor" '.
-                'class="country'.$countryID.' '.( $this->targetCountryId == $countryID ? ' current"'
-                    : '" title="'.l_t('Open %s chatbox tab"',( $countryID == 0 ? 'the global' : $member->country->name."'s" )) ).'>';
+            $tab = [
+                'countryId' => $member->country->id,
+                'countryName' => $member->country->name,
+                'current' => $isCurrent,
+                'currentCls' => $isCurrent ? 'current' : '',
+                'isGlobal' => $member->country->isGlobal(),
+                'rendered' => '',
+            ];
 
             if ($this->currentMember->id == $member->id)
             {
-                $tabs .= $hrefPrefix . 'Notes';
+                $tab['countryName'] = 'Notes';
             }
             elseif ($member->isFilled())
             {
-                $tabs .= $member->getRenderedCountryName($this->game, $this->currentMember->user);
-            }
-            else
-            {
-                $tabs .= $hrefPrefix . 'Global';
+                $tab['rendered'] = $member->getRenderedCountryName($this->game, $this->currentMember->user);
             }
 
-            if ($this->targetCountryId != $countryID && in_array($countryID, $this->currentMember->newMessagesFrom) )
+            if (!$isCurrent && in_array($member->country->id, $this->currentMember->newMessagesFrom) )
             {
                 // This isn't the tab I am currently viewing, and it has sent me new messages
-                $tabs .= ' '.libHTML::unreadMessages();
-            } elseif ($this->targetCountryId == $countryID && isset($_REQUEST['MarkAsUnread'])) {
-                // Mark as unread patch!
-                $tabs .= ' ' . libHTML::unreadMessages();
+                $tab['unreadIcon'] = ' ' . \libHTML::unreadMessages();
             }
-
-            $tabs .= '</a>';
+            $tabs[] = $tab;
         }
-
-        return $attributes;
+        return $tabs;
     }
 }

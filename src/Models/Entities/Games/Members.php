@@ -34,7 +34,7 @@ class Members extends \ArrayObject
      * Get a Member for a given User ID
      *
      * @param int $userId
-     * @return Member|null
+     * @return Member|UnassignedMember
      */
     public function byUserId(int $userId)
     {
@@ -42,7 +42,7 @@ class Members extends \ArrayObject
         foreach ($this as $member) {
             if ($member->user->id == $userId) return $member;
         }
-        return null;
+        return new UnassignedMember();
     }
 
     /**
@@ -84,10 +84,7 @@ class Members extends \ArrayObject
      */
     public function isUserBanned(int $userId): bool
     {
-        $member = $this->byUserId($userId);
-        if (empty($member)) return false;
-
-        return $member->isBanned();
+        return $this->byUserId($userId)->isBanned();
     }
 
     /**

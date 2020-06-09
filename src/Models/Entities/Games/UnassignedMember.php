@@ -23,11 +23,20 @@ class UnassignedMember extends Member
         $this->country = new Country(0, 'Global');
         $this->user = new User();
         $this->user->id = User::GUEST_ID;
+        $this->status = new Status(Status::STATUS_UNASSIGNED);
     }
     /**
      * @return bool
      */
     public function isFilled(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBanned(): bool
     {
         return false;
     }

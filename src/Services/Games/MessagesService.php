@@ -97,7 +97,7 @@ class MessagesService
     public function forChatBox(GameEntity $game, int $countryId, $currentMemberCountryId = -1, int $limit = 50): Collection
     {
         /** @var \Illuminate\Database\Eloquent\Builder $q */
-        $q = \Diplomacy\Models\GameMessage::forGame($game->id);
+        $q = GameMessage::forGame($game->id);
 
         if ($countryId == Country::ALL)
         {
@@ -128,7 +128,7 @@ class MessagesService
 
         $total = $q->count();
 
-        $q->orderBy('id', 'desc')
+        $q->orderBy('timeSent', 'asc')
             ->limit($limit);
 
         $entities = [];

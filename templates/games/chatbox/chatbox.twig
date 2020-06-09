@@ -1,21 +1,19 @@
 <a id="chatboxanchor"></a>
 <a id="chatbox"></a>
 
-{{ tabs }}
+{{ tabs|raw }}
 
 <div class="chatWrapper">
     <div class="chatbox{% if not currentMember %} chatboxnotabs{% endif %}">
         <table class="chatbox">
             <tr class="barAlt2 membersList">
                 <td>
-                    {% if global %}
+                    {% if isGlobal or isAll %}
                     <div class="chatboxMembersList">
-                        {% for member in members %}
-                            {{ member }}
-                        {% endif %}
+                        {% for member in members %}{{ member|raw }}{% endfor %}
                     </div>
                     {% else %}
-                        {{ targetMemberBar }}
+                        {{ targetMemberBar|raw }}
                     {% endif %}
                 </td>
             </tr>
@@ -29,12 +27,12 @@
                     <td class="notice">No messages yet posted.</td>
                 </tr>
             {% else %}
-                {{ messages }}
-            {% end %}
+                {{ messages|raw }}
+            {% endif %}
         </table>
     </div>
 </div>
-{{ form }}
+{{ form|raw }}
 
 <script>
 let cbs = $('chatboxscroll');

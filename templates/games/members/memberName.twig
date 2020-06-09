@@ -1,9 +1,7 @@
 {% if not isGlobal %}<span class="memberStatus{{ member.status }}">{% endif %}
-
 {% if isHidden %}
     <a class="country{{ member.country.id }}">{{ member.country.name }}</a>
 {% else %}
     <a class="country{{ member.country.id }}" href="/profile.php?userID={{ member.user.id }}">{{ member.user.username }}</a>
 {% endif %}
-
 {% if not isGlobal %}</span>{% endif %}

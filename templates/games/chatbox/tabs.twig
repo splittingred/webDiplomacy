@@ -1,3 +1,17 @@
 <div id="chatboxtabs" class="gamelistings-tabs">
-    {{ tabs }}
+    {% for tab in tabs %}
+        {% if tab.isCountry %}
+            {% if privateMessagesAllowed %}
+                {{ tab.rendered|raw }}
+            {% endif %}
+        {% else %}{# notes or global #}
+            <a href="/games/{{ game.id }}/view?msgCountryID={{ tab.countryId }}#chatboxanchor"
+               class="country{{ tab.countryId }} {{ tab.currentCls }}"
+               title="Open {{ tab.countryName }} chatbox tab">
+                {{ tab.countryName|raw }}
+
+                {{ tab.unreadIcon|raw }}
+            </a>
+        {% endif %}
+    {% endfor %}
 </div>

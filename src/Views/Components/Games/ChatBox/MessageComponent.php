@@ -28,7 +28,7 @@ class MessageComponent extends BaseComponent
      * @param bool $showAuthors
      * @param bool $alternate
      */
-    public function __construct(Message $message, Game $game, Member $currentMember, bool $showAuthors, bool $alternate)
+    public function __construct(Message $message, Game $game, Member $currentMember, bool $showAuthors = true, bool $alternate = false)
     {
         $this->message = $message;
         $this->game = $game;
@@ -42,22 +42,32 @@ class MessageComponent extends BaseComponent
      */
     public function attributes(): array
     {
+        $isAuthenticated = $this->currentMember->isAuthenticated();
+        $isToMe = $isAuthenticated && $this->currentMember->isCountry($this->message->toCountry);
+        $isFromMe = $isAuthenticated && $this->currentMember->isCountry($this->message->fromCountry);
         $attributes = [
+            'gameId' => $this->game->id,
             'timeAsText' => $this->message->timeSentAsText(),
             'alternate' => $this->alternate,
+            'showAuthors' => $this->showAuthors,
+            'toCountry' => $this->message->toCountry,
+            'fromCountry' => $this->message->fromCountry,
+            'body' => $this->message->message,
+            'isNote' => $isToMe && $isFromMe,
+            'isGlobalSystem' => $this->message->fromCountry->isGlobal() && $this->message->toCountry->isGlobal(),
         ];
 
         if ($this->showAuthors)
         {
-            if ($this->currentMember->isCountry($this->message->fromCountry)) {
-                $attributes['from'] = 'you';
+            if ($isFromMe) {
+                $attributes['from'] = 'You';
             } elseif ($this->message->fromCountry->isGlobal()) {
                 $attributes['from'] = 'Gamemaster';
             } else {
                 $attributes['from'] = $this->message->fromCountry->name;
             }
 
-            if ($this->currentMember->isCountry($this->message->toCountry)) {
+            if ($isToMe) {
                 $attributes['to'] = 'You';
             } else {
                 $attributes['to'] = $this->message->toCountry->name;
@@ -65,7 +75,8 @@ class MessageComponent extends BaseComponent
         }
 
         $attributes['turn'] = $this->message->turn->name;
-        $attributes['fromMe'] = $this->currentMember->isAuthenticated() && $this->currentMember->isCountry($this->message->fromCountry);
+        $attributes['toMe'] = $isToMe;
+        $attributes['fromMe'] = $isFromMe;
         return $attributes;
     }
 }

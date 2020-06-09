@@ -3,7 +3,7 @@
         <table>
             <tr class="barAlt2">
                 <td class="left">
-                    {% if not global %}
+                    {% if not isGlobal and not isAll %}
                         <a href="#" onclick="document.markUnread.submit(); return false;" tabindex="3">Mark unread</a>
                     {% endif %}
                 </td>
@@ -20,7 +20,7 @@
         </table>
     </form>
 </div>
-{% if global %}
+{% if not isGlobal and not isAll %}
 <form method="post" name="markUnread" class="safeForm" action="/games/{{ game.id }}/view&amp;msgCountryID={{ targetCountryId }}#chatboxanchor">
     <input type="hidden" tabindex="2" value="" name="MarkAsUnread" />
 </form>

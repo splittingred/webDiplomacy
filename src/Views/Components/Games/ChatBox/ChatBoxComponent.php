@@ -23,6 +23,8 @@ use Diplomacy\Views\Components\Games\Members\BarComponent as MemberBarComponent;
  */
 class ChatBoxComponent extends BaseComponent
 {
+    protected $template = 'games/chatbox/chatbox.twig';
+
     /** @var Game $game */
     protected $game;
     /** @var Member|null $currentMember */
@@ -35,6 +37,8 @@ class ChatBoxComponent extends BaseComponent
     protected $currentMemberIsTargetCountry;
     /** @var bool $isGlobal */
     protected $isGlobal;
+    /** @var bool $isAll */
+    protected $isAll;
     /** @var bool $isAuthenticated */
     protected $isAuthenticated;
     /** @var MessagesService $messagesService */
@@ -56,6 +60,7 @@ class ChatBoxComponent extends BaseComponent
         $this->targetMember = $this->game->members->byCountryId($this->targetCountryId);
         $this->currentMemberIsTargetCountry = $this->isAuthenticated && $this->currentMember->isCountry($this->targetCountryId);
         $this->isGlobal = $this->targetCountryId == Country::GLOBAL;
+        $this->isAll = $this->targetCountryId == Country::ALL;
         $this->messagesService = new MessagesService();
         $this->membersService = new MembersService();
     }
@@ -81,7 +86,7 @@ class ChatBoxComponent extends BaseComponent
     public function findTargetCountry(int $targetCountryId = 0)
     {
         // Ensure in proper range
-        $this->targetCountryId = $this->targetCountryId > Country::GLOBAL && $this->targetCountryId < $this->game->getCountryCount() ? $targetCountryId : Country::GLOBAL;
+        $this->targetCountryId = $this->targetCountryId < -1 && $this->targetCountryId < $this->game->getCountryCount() ? $targetCountryId : Country::GLOBAL;
 
         // Enforce Global and Notes tabs when its not Regular or Rulebook press game, and not looking at
         // own messages
@@ -101,9 +106,10 @@ class ChatBoxComponent extends BaseComponent
             'tabs' => $this->isAuthenticated ? $this->getTabs() : '',
             'game' => $this->game,
             'isGlobal' => $this->isGlobal,
+            'isAll' => $this->isAll,
         ];
 
-        if ($this->isGlobal)
+        if ($this->isGlobal || $this->isAll)
         {
             $memberList = [];
             for ($countryID = 1; $countryID <= $this->game->getCountryCount(); $countryID++) {
@@ -158,7 +164,7 @@ class ChatBoxComponent extends BaseComponent
     protected function getMessages(): string
     {
         $targetCountryId = !$this->isAuthenticated ? -1 : $this->targetCountryId;
-        $currentMemberCountryId = $this->isAuthenticated ? -1 : $this->currentMember->country->id;
+        $currentMemberCountryId = !$this->isAuthenticated ? -1 : $this->currentMember->country->id;
 
         $messages = $this->messagesService->forChatBox($this->game, $targetCountryId, $currentMemberCountryId);
 
@@ -167,9 +173,9 @@ class ChatBoxComponent extends BaseComponent
         /** @var Message $message */
         foreach ($messages as $message)
         {
-            $alternate = !$alternate;
             $showAuthors = $this->targetCountryId == Country::ALL && $this->isAuthenticated;
             $output[] = (string)(new MessageComponent($message, $this->game, $this->currentMember, $showAuthors, $alternate));
+            $alternate = !$alternate;
         }
         return join("\n", $output);
     }
@@ -194,7 +200,7 @@ class ChatBoxComponent extends BaseComponent
     protected function handleNewMessage(): Result
     {
         // Handle new message submission
-        $messageBody = trim($this->request->get('newMessage', '', Request::TYPE_POST));
+        $messageBody = trim($this->getRequest()->get('newMessage', '', Request::TYPE_POST));
         if (empty($messageBody)) return new Success();
 
         try {
@@ -211,7 +217,7 @@ class ChatBoxComponent extends BaseComponent
      */
     protected function handleMarkUnread(): Result
     {
-        if ($this->request->isEmpty('MarkAsUnread', Request::TYPE_POST)) return (new Success());
+        if ($this->getRequest()->isEmpty('MarkAsUnread', Request::TYPE_POST)) return (new Success());
 
         return $this->messagesService->markCountryMessageUnseen($this->currentMember, $this->targetCountryId);
     }

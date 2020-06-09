@@ -1,13 +1,19 @@
-<tr class="replyalternate{{ alternate ? 1 : 2 }} gameID{{ message.gameID }}countryID{{ message.fromCountryID }}">
-    <td class="left time">{{ timeAsText }}</td>
-    <td class="right country{{ message.fromCountryID }}">
-        <strong>{{ turn }}</strong>:
+<tr class="replyalternate{{ alternate ? 1 : 2 }} gameID{{ gameId }}countryID{{ fromCountry.id }}">
+    <td class="left time">{{ timeAsText|raw }}</td>
+    <td class="right {% if not fromCountry.isGlobal %}country{{ fromCountry.id }}{% endif %}">
+        <strong>{{ turn|raw }}</strong>:
+        {% if showAuthors %}
+            {% if not isGlobalSystem and not isNote %}
+                <em><strong>{{ from }}{% if not toCountry.isGlobal %} to <span class="country{{ toCountry.id }}">{{ to }}</span>{% endif %}</strong></em>:
+            {% endif %}
 
-        (To: <strong>{{ from }}</strong>{{ to }}) -
-        {% if fromMe %}
-            <span class="messageFromMe">{{ body }}</span>
+            {% if fromMe %}
+                <span class="messageFromMe">{{ body|raw }}</span>
+            {% else %}
+                {{ body|raw }}
+            {% endif %}
         {% else %}
-            {{ body }}
+            {{ body|raw }}
         {% endif %}
     </td>
 </tr>

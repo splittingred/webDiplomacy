@@ -62,13 +62,8 @@ class IndexController extends Base
 
     protected function getForum(GameEntity $game, Member $member = null, \User $legacyUser = null)
     {
-        $chatBox = new \Chatbox($this->renderer);
-        // Now that we have retrieved the latest messages we can update the time we last viewed the messages
-        // Post messages we sent, and get the user we're speaking to
-        $countryId = $chatBox->findTab($game, $member);
-        $chatBox->postMessage($countryId, $game, $member);
-        $this->database->sql_put('COMMIT');
-        return $chatBox->output($countryId, $game, $member, $legacyUser);
+        $targetCountryId = $this->request->get('msgCountryID', -1, Request::TYPE_REQUEST);
+        return (string)(new \Diplomacy\Views\Components\Games\ChatBox\ChatBoxComponent($game, $member, $targetCountryId));
     }
 
     protected function getOrders(GameEntity $game, Member $member = null, \User $legacyUser = null)

@@ -34,13 +34,13 @@ class Member
     /** @var string $missedPhases */
     public $missedPhases;
     /** @var array $newMessagesFrom */
-    public $newMessagesFrom;
+    public $newMessagesFrom = [];
     /** @var int $supplyCenterCount */
     public $supplyCenterCount;
     /** @var int $unitCount */
     public $unitCount;
     /** @var array<string> $votes */
-    public $votes;
+    public $votes = [];
     /** @var int $pointsWon */
     public $pointsWon;
     /** @var int $gameMessagesSent */
@@ -54,7 +54,7 @@ class Member
     /** @var int $supplyCenterTarget The target number of SCs to win for this member */
     public $supplyCenterTarget;
     /** @var array $mutedCountries */
-    public $mutedCountries;
+    public $mutedCountries = [];
 
     /** @var bool $isDirector */
     public $isDirector;
@@ -254,9 +254,19 @@ class Member
         if ($this->isBanned()) return '';
         $userId = is_int($user) ? $user : $user->id;
 
-        if (!in_array($userId, $this->newMessagesFrom)) return '';
+        if (!$this->hasNewMessageFrom($userId)) return '';
 
         return \libHTML::unreadMessages('/games/'.$this->gameId.'/view&msgCountryID='.$this->country->id.'#chatbox');
+    }
+
+    /**
+     * @param int|User $user
+     * @return boolean
+     */
+    public function hasNewMessageFrom($user): bool
+    {
+        $userId = is_int($user) ? $user : $user->id;
+        return in_array($userId, $this->newMessagesFrom);
     }
 
     /**

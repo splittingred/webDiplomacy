@@ -21,6 +21,8 @@ class FormComponent extends BaseComponent
     protected $messagesService;
     /** @var bool $isGlobal */
     protected $isGlobal;
+    /** @var bool $isAll */
+    protected $isAll;
 
     /**
      * @param Game $game
@@ -33,6 +35,7 @@ class FormComponent extends BaseComponent
         $this->currentMember = $currentMember;
         $this->targetCountryId = $this->targetCountryId > Country::GLOBAL && $this->targetCountryId < $this->game->getCountryCount() ? (int)$targetCountryId : Country::GLOBAL;
         $this->isGlobal = $this->targetCountryId == Country::GLOBAL;
+        $this->isAll = $this->targetCountryId == Country::ALL;
         $this->messagesService = new MessagesService();
     }
 
@@ -42,6 +45,7 @@ class FormComponent extends BaseComponent
             'game' => $this->game,
             'targetCountryId' => $this->targetCountryId,
             'isGlobal' => $this->isGlobal,
+            'isAll' => $this->isAll,
         ];
 
         $currentUserIsSudo = $this->currentMember->user->isModerator()
