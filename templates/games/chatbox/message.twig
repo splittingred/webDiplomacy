@@ -1,0 +1,13 @@
+<tr class="replyalternate{{ alternate ? 1 : 2 }} gameID{{ message.gameID }}countryID{{ message.fromCountryID }}">
+    <td class="left time">{{ timeAsText }}</td>
+    <td class="right country{{ message.fromCountryID }}">
+        <strong>{{ turn }}</strong>:
+
+        (To: <strong>{{ from }}</strong>{{ to }}) -
+        {% if fromMe %}
+            <span class="messageFromMe">{{ body }}</span>
+        {% else %}
+            {{ body }}
+        {% endif %}
+    </td>
+</tr>

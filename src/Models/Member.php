@@ -75,18 +75,33 @@ class Member extends EloquentBase
      * Register that you have viewed the messages from a certain countryID and
      * no longer need notification of them
      *
-     * @param string $seenCountryID The countryID who's messages were read
+     * @param int $countryId The countryID who's messages were read
      * @return bool
      */
-    public function markMessageSeen($seenCountryID): bool
+    public function markMessageSeen(int $countryId): bool
     {
         $messages = explode(',', $this->newMessagesFrom);
-        foreach ($messages as $i => $countryID) {
-            if ($countryID == $seenCountryID) {
+        foreach ($messages as $i => $fromCountryId) {
+            if ($fromCountryId == $countryId) {
                 unset($messages[$i]);
                 break;
             }
         }
+        $this->newMessagesFrom = implode(',', $messages);
+        return $this->save();
+    }
+
+    /**
+     * Mark message unseen from a country
+     *
+     * @param int $countryId
+     * @return bool
+     */
+    public function markMessageUnseen(int $countryId): bool
+    {
+        $messages = explode(',', $this->newMessagesFrom);
+        $messages[] = $countryId;
+        $messages = array_unique($messages);
         $this->newMessagesFrom = implode(',', $messages);
         return $this->save();
     }

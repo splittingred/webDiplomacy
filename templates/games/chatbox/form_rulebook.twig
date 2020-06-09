@@ -1,0 +1,12 @@
+<div class="chatbox">
+    <table>
+        <tr class="barAlt2">
+            <td class="center">
+                <form method="post" name="markUnread" class="safeForm" action="/games/{{ game.id }}/view&amp;msgCountryID={{ targetCountryId }}#chatboxanchor">
+                    <input type="hidden" tabindex="2" value="" name="MarkAsUnread" />
+                </form>
+                <a href="#" onclick="document.markUnread.submit(); return false;" tabindex="3">Mark unread</a>
+            </td>
+        </tr>
+    </table>
+</div>

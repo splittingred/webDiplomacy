@@ -9,6 +9,7 @@ use Diplomacy\Models\Entities\Game;
  */
 class Country
 {
+    const ALL = -1;
     const GLOBAL = 0;
 
     public $id = self::GLOBAL;

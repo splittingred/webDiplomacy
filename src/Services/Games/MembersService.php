@@ -7,6 +7,7 @@ use Diplomacy\Models\Entities\Games\Member as MemberEntity;
 use Diplomacy\Models\Member;
 use Diplomacy\Models\MutedCountry;
 use Diplomacy\Services\Monads\Failure;
+use Diplomacy\Services\Monads\Result;
 use Diplomacy\Services\Monads\Success;
 
 /**
@@ -16,6 +17,11 @@ use Diplomacy\Services\Monads\Success;
  */
 class MembersService
 {
+    /**
+     * @param int $userId
+     * @param int $gameId
+     * @return Member
+     */
     public function findForGame(int $userId, int $gameId)
     {
         return Member::where('userID', $userId)->where('gameID', $gameId)->first();
@@ -28,7 +34,7 @@ class MembersService
      * @param CountryEntity $country
      * @return Failure|Success
      */
-    public function toggleCountryMute(MemberEntity $member, CountryEntity $country)
+    public function toggleCountryMute(MemberEntity $member, CountryEntity $country): Result
     {
         if (!$member->user->isAuthenticated()) {
             return Failure::withError('not_authenticated', 'User not authenticated');

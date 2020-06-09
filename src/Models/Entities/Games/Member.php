@@ -74,6 +74,14 @@ class Member
     /**
      * @return bool
      */
+    public function isAuthenticated(): bool
+    {
+        return $this->user->isAuthenticated();
+    }
+
+    /**
+     * @return bool
+     */
     public function hasUnsubmittedOrders(): bool
     {
         return $this->status->isPlaying() && !$this->ordersState->submitted();

@@ -1,0 +1,27 @@
+<div class="chatbox">
+    <form method="post" class="safeForm" action="/message.php?gameID={{ game.id }}&amp;msgCountryID={{ targetCountryId }}" id="chatForm">
+        <table>
+            <tr class="barAlt2">
+                <td class="left">
+                    {% if not global %}
+                        <a href="#" onclick="document.markUnread.submit(); return false;" tabindex="3">Mark unread</a>
+                    {% endif %}
+                </td>
+                <TD class="right" rowspan="2">
+                    <textarea id="sendbox" tabindex="1" name="newMessage" style="width:98% !important" width="100%" ROWS="5"></textarea>
+                </TD>
+            </tr>
+            <TR class="barAlt2">
+                <TD class="left send">
+                    <input type="hidden" name="formTicket" value="{{ formTicket }}" />
+                    <input type="submit" tabindex="2" class="form-submit" value="Send" name="Send" onclick="return false;" id="message-send"/><br/>
+                </TD>
+            </TR>
+        </table>
+    </form>
+</div>
+{% if global %}
+<form method="post" name="markUnread" class="safeForm" action="/games/{{ game.id }}/view&amp;msgCountryID={{ targetCountryId }}#chatboxanchor">
+    <input type="hidden" tabindex="2" value="" name="MarkAsUnread" />
+</form>
+{% endif %}

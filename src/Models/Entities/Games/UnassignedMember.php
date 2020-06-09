@@ -21,5 +21,14 @@ class UnassignedMember extends Member
     public function __construct()
     {
         $this->country = new Country(0, 'Global');
+        $this->user = new User();
+        $this->user->id = User::GUEST_ID;
+    }
+    /**
+     * @return bool
+     */
+    public function isFilled(): bool
+    {
+        return false;
     }
 }
