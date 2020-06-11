@@ -808,9 +808,9 @@ class libHTML
 
 			$buf .= '
 			<script type="text/javascript">
-			muteUsers = $A(['.implode(',',$User->getMuteUsers()).']);
-			muteCountries = $A(['.implode(',',$gameMutePairs).']);
-			muteThreads = $A(['.implode(',',$User->getMuteThreads()).']);
+			let muteUsers = ['.implode(',',$User->getMuteUsers()).'];
+			let muteCountries = ['.implode(',',$gameMutePairs).'];
+			let muteThreads = ['.implode(',',$User->getMuteThreads()).'];
 			</script>';
 			unset($gameMutePairs);
 			self::$footerIncludes[] = l_j('mute.js');
@@ -831,14 +831,11 @@ class libHTML
 
 		// Add the javascript includes:
 		$footerIncludes = array();
-		$footerIncludes[] = l_j('../locales/layer.js');
-		$footerIncludes[] = l_j('../locales/English/layer.js');
-		$footerIncludes[] = l_j('contrib/sprintf.js');
-		$footerIncludes[] = l_j('utility.js');
-		$footerIncludes[] = l_j('cacheUpdate.js');
-		$footerIncludes[] = l_j('timeHandler.js');
-		$footerIncludes[] = l_j('forum.js');
-		$footerIncludes[] = l_j('Color.Vision.Daltonize.js');
+		$footerIncludes[] ='contrib/sprintf.js';
+		$footerIncludes[] = 'utility.js';
+		$footerIncludes[] = 'cacheUpdate.js';
+		$footerIncludes[] = 'timeHandler.js';
+		$footerIncludes[] = 'forum.js';
 
 		// Don't localize all the footer includes here, as some of them may be dynamically generated
 		foreach( array_merge($footerIncludes,self::$footerIncludes) as $includeJS ) // Add on the dynamically added includes
@@ -848,7 +845,7 @@ class libHTML
 		// time handling functions. Only logged-in users need to run these
 		$buf .= '
 		<script type="text/javascript">
-			var UserClass = function () {
+			let UserClass = function () {
 				this.id='.$User->id.';
 				this.username="'.htmlentities($User->username).'";
 				this.points='.$User->points.'
@@ -858,49 +855,19 @@ class libHTML
 				this.darkMode="'.$User->options->value['darkMode'].'";
 			}
 			User = new UserClass();
-			var headerEvent = document.getElementsByClassName("clickable");
+			let headerEvent = document.getElementsByClassName("clickable");
 
-			WEBDIP_DEBUG='.(Config::$debug ? 'true':'false').';
+			let WEBDIP_DEBUG='.(Config::$debug ? 'true':'false').';
 
-			document.observe("dom:loaded", function() {
-
-				try {
-					'.l_jf('Locale.onLoad').'();
-
-					'.l_jf('setForumMessageIcons').'();
-					'.l_jf('setPostsItalicized').'();
-					'.l_jf('updateTimestamps').'();
-					'.l_jf('updateTimestampGames').'();
-					'.l_jf('updateUTCOffset').'();
-					'.l_jf('updateTimers').'();
-
-					'.implode("\n", self::$footerScript).'
-
-					'.l_jf('Locale.afterLoad').'();
-				}
-				catch( e ) {
-					'.(Config::$debug ? 'alert(e);':'').'
-				}
-			}, this);
-			document.observe("click", function(e) {
-				try {
-					'.l_jf('clickOut').'(e);
-				} catch (e) {
-					'.(Config::$debug ? 'alert(e);':'').'
-				}
-			}, this)
-			for (var i = 0; i < headerEvent.length; i++) {
-				headerEvent[i].addEventListener("click", function(e){
-					try {
-						'.l_jf('click').'(e);
-					} catch ( e ){
-						'.(Config::$debug ? 'alert(e);':'').'
-					}
-				}, this);
-			}
-			var toggle = localStorage.getItem("desktopEnabled");
-			var darkMode = localStorage.getItem("darkModeEnabled");
-			var dark = User.darkMode;
+			$(window).on("load", function() {
+                setForumMessageIcons();
+                setPostsItalicized();
+                updateTimestamps();
+                updateTimestampGames();
+                updateUTCOffset();
+                updateTimers();
+                '.implode("\n", self::$footerScript).'
+			});
 		</script>';
 		return $buf;
 	}

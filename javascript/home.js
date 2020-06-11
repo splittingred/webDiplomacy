@@ -24,43 +24,45 @@
  */
 function homeGameHighlighter() {
 	
-	$$(".homeGamesStats span[gameID].homeGameTitleBar").map(function (gameTitleBar) {
-		var gameID = gameTitleBar.getAttribute("gameID");
+	$(".homeGamesStats span[gameID].homeGameTitleBar").map(function () {
+		let gameTitleBar = $(this);
+		let gameID = gameTitleBar.attr("gameID");
 		
 		// A function to determine if a given element is of the same game
-		var isUnrelated = function(testElement) {
-			var testGameID = testElement.getAttribute("gameID");
-			return !( !Object.isUndefined(testGameID) && testGameID==gameID );
+		let isUnrelated = function(testElement) {
+			let testGameID = testElement.attr("gameID");
+			return !(testGameID == gameID);
 		};
 		
 		// Unrelated game-panels
-		var panelsUnrelated = $$("div[gameID].gamePanelHome").findAll( isUnrelated );
+		let panelsUnrelated = $("div[gameID].gamePanelHome").find( isUnrelated );
 		// Unrelated game-notices
-		var noticesUnrelated = $$("div.homeNotice").findAll( isUnrelated );
+		let noticesUnrelated = $("div.homeNotice").find( isUnrelated );
 		
 		// Functions to set/unset transparency
-		var fadeOut = function(e) { e.setOpacity(0.5); };
-		var fadeIn = function(e) { e.setOpacity(1.0); };
-		
+		// let fadeOut = function(e) { e.setOpacity(0.5); };
+		// let fadeIn = function(e) { e.setOpacity(1.0); };
+		//
 		// Mouse over the game title bar; hide unrelated notices, fade unrelated game panels
 		gameTitleBar.onmouseover = function () {
-			panelsUnrelated.map(fadeOut);
+			// panelsUnrelated.map(fadeOut);
 			noticesUnrelated.invoke('hide');
 		};
 		gameTitleBar.onmouseout = function () {
-			panelsUnrelated.map(fadeIn);
+			// panelsUnrelated.map(fadeIn);
 			noticesUnrelated.invoke('show');
 		};
 		
 		// Mouse over any game link; fade unrelated notices, fade unrelated game panels
-		$$('a[gameID="'+gameID+'"]').map(function(gameNoticeLink) {
+		$('a[gameID="'+gameID+'"]').map(function() {
+			let gameNoticeLink = $(this);
 			gameNoticeLink.onmouseover = function() {
-				panelsUnrelated.map(fadeOut);
-				noticesUnrelated.map(fadeOut);
+				// panelsUnrelated.map(fadeOut);
+				// noticesUnrelated.map(fadeOut);
 			};
 			gameNoticeLink.onmouseout = function() {
-				panelsUnrelated.map(fadeIn);
-				noticesUnrelated.map(fadeIn);
+				// panelsUnrelated.map(fadeIn);
+				// noticesUnrelated.map(fadeIn);
 			};
 		});
 		

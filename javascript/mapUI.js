@@ -19,10 +19,10 @@
 // See doc/javascript.txt for information on JavaScript in webDiplomacy
 
 // Current turn, -2 is undefined, -1 is pre-game
-var turn=-2;
+let turn=-2;
 
-var noMoves='';
-var preview='';
+let noMoves='';
+let preview='';
 
 // Toggle the display of the Move arrows.
 function toggleMoves(gameID, currentTurn) {

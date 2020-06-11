@@ -1,0 +1,254 @@
+<form method="post" action="/games/new" class="new-game-form">
+    <div class="form-group">
+        <label for="ng-name">Game Name:</label>
+        <input id="ng-name" type="text" name="newGame[name]" value="{{ values.name }}" size="30" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="ng-bet">Bet size: (5-{{ current_user.points }}{{ current_user.pointsIcon }})</label>
+        <img id="ng-bet-help"
+             tabindex="0"
+             role="button"
+             title="Bet"
+             data-toggle="popover"
+             data-trigger="hover"
+             data-html="true"
+             data-content="The bet required to join this game. This is the amount of points that all players, including you, must put into the game's pot (<a href='/help/points' class='light'>read more</a>)."
+             class="help-btn"
+             src="/images/icons/help.png"
+             alt="Help"
+        />
+        <input id="ng-bet" type="text" name="newGame[bet]" size="7" value="{{ values.bet }}" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="ng-phase-minutes">Phase length: (5 min - 10 days)</label>
+        <img id="ng-phase-minutes-help"
+             tabindex="0"
+             role="button"
+             title="Phase Length"
+             data-toggle="popover"
+             data-trigger="hover"
+             data-html="true"
+             data-content="How long each phase of the game will last in hours. Longer phase hours means a slow game with more time to talk. Shorter phases require players be available to check the game frequently."
+             class="help-btn"
+             src="/images/icons/help.png"
+             alt="Help"
+        />
+        <select name="newGame[phaseMinutes]" id="ng-phase-minutes" class="form-control">
+            {% for phaseLength, phaseLengthText in phaseLengths %}
+            <option value="{{ phaseLength }}">{{ phaseLengthText }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ng-phase-switch-period">Time Until Phase Swap</label>
+        <select id="ng-phase-switch-period" name="newGame[phaseSwitchPeriod]" class="form-control">
+            <option value="-1"{% if values.phaseSwitchPeriod == -1 %} selected="selected"{% endif %}> No phase switch</option>
+            {% for period, periodText in phaseSwitchPeriods %}
+                <option value="{{ period }}">{{ periodText }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group" id="nextPhaseMinutesPara">
+        <label for="ng-next-phase-minutes">Phase Length After Swap</label>
+        <select id="ng-next-phase-minutes" name="newGame[nextPhaseMinutes]" class="form-control">
+            {% for nextPhaseMinutes, nextPhaseMinutesText in nextPhasePeriods %}
+                <option value="{{ nextPhaseMinutes }}">{{ nextPhaseMinutesText }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ng-join-period">Time to Fill Game: (5 min - 14 days)</label>
+        <select id="ng-join-period" name="newGame[joinPeriod]" class="form-control">
+            {% for joinPeriod, joinPeriodText in joinPeriods %}
+                <option value="{{ joinPeriod }}">{{ joinPeriodText }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ng-press-type">Game Messaging:</label>
+        <img id="ng-press-type-help"
+             tabindex="0"
+             role="button"
+             title="Press Type"
+             data-toggle="popover"
+             data-trigger="hover"
+             data-html="true"
+             data-content="The type of messaging allowed in a game.<br />
+                    All: Global and Private Messaging allowed.<br />
+                    Global Only: Only Global Messaging allowed.<br />
+                    None: No messaging allowed.<br />
+                    Rulebook: No messaging allowed during build and retreat phases."
+             class="help-btn"
+             src="/images/icons/help.png"
+             alt="Help"
+        />
+        <select id="ng-press-type" name="newGame[pressType]" class="form-control">
+            <option value="Regular" selected="selected">All </option>
+            <option value="PublicPressOnly">Global only</option>
+            <option value="NoPress">None (No messaging)</option>
+            <option value="RulebookPress">Per rulebook</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ng-variant">Variant type (map choices):</label>
+        <img id="ng-variant-help"
+             tabindex="0"
+             role="button"
+             title="Variant"
+             data-toggle="popover"
+             data-html="true"
+             data-content="<p>Type of Diplomacy game from a selection of maps and alternate rule settings available. Click any of the variant names to view the details on the variants page.</p>
+                    <p><strong>Available variants:</strong></p>
+                    <ul class='variants'>
+                    {% for variant in variants %}
+                        <li class='variant{{ variant.name }}'>{{ variant.link }}</li>
+                    {% endfor %}
+                    </ul>
+                    <p>Please note that 1 vs 1 games will default to a 5 point bet as an unranked game no matter what bet/game type are selected.</p>"
+             class="help-btn"
+             src="/images/icons/help.png"
+             alt="Help"
+        />
+        <select id="ng-variant" name="newGame[variantID]" class="form-control">
+            {% for variant in variants %}
+                <option name="newGame[variantID]" value="{{ variant.id }}">{{ variant.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+{# currently disabled #}
+{#    <div id="botFill" class="form-check">#}
+{#        <input type="checkbox" id="ng-bot-fill" name="newGame[botFill]" value="Yes" class="form-check-input" {% if values.botFill %} checked="checked"{% endif %} />#}
+{#        <label for="ng-bot-fill" class="form-check-label">Fill Empty Spots with Bots</label>#}
+{#        <img id="ng-bot-fill-help"#}
+{#             tabindex="0"#}
+{#             role="button"#}
+{#             title="Fill with Bots"#}
+{#             data-toggle="popover"#}
+{#             data-trigger="hover"#}
+{#             data-html="true"#}
+{#             data-content="If the game has at least 2 human players it will fill with bots if there are empty#}
+{#               spaces at the designated start time instead of being cancelled. This type of game will default to a#}
+{#               5 point bet, unranked, and anonymous regardless of what settings you select. If the game fills with#}
+{#               7 human players it will run just like any normal game and will be included in classic stats."#}
+{#             class="help-btn"#}
+{#             src="/images/icons/help.png"#}
+{#             alt="Help"#}
+{#        />#}
+{#    </div>#}
+
+    <div class="form-group">
+        <label for="ng-pot-type">Scoring: (<a href="/help/points#DSS">See scoring types here</a>)</label>
+
+        <img id="ng-pot-type-help"
+             tabindex="0"
+             role="button"
+             title="Scoring"
+             data-toggle="popover"
+             data-trigger="hover"
+             data-html="true"
+             data-content="<p>This setting determines how points are split up if/when the game draws.</p>
+                    <p>In <strong>Draw-Size Scoring</strong>, the pot is split equally between the remaining players when the game draws (this setting used to be called WTA).</p>
+                    <p>In <strong>Sum-of-Squares</strong> scoring, the pot is divided depending on how many centers you control when the game draws.</p>
+                    <p>In both <strong>Draw-Size Scoring</strong> and <strong>Sum-of-Squares</strong>, any solo winner receives the whole pot.</p>
+                    <p><strong>Unranked</strong> games have no effect on your points at the end of the game; your bet is refunded whether you won, drew or lost.</p>"
+             class="help-btn"
+             src="/images/icons/help.png"
+             alt="Help"
+        />
+        <select name="newGame[potType]" id="ng-pot-type" class="form-control">
+            <option value="Winner-takes-all" selected="selected">DSS (Equal split for draws)</option>
+            <option value="Sum-of-squares">SoS (Weighted split on draw)</option>
+            <option value="Unranked">Unranked</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ng-anon">Anonymous players: </label>
+
+        <img id="ng-anon-help"
+             tabindex="0"
+             role="button"
+             title="Anonymous Players"
+             data-toggle="popover"
+             data-trigger="hover"
+             data-html="true"
+             data-content="Decide if player names should be shown or hidden.</br></br> *Please note that games with no messaging are always anonymous regardless of what is set here to prevent cheating."
+             class="help-btn"
+             src="/images/icons/help.png"
+             alt="Help"
+        />
+        <select name="newGame[anon]" id="ng-anon" class="form-control">
+            <option name="newGame[anon]" value="No" selected>No</option>
+            <option name="newGame[anon]" value="Yes">Yes</option>
+        </select>
+    </div>
+
+
+    <div class="form-group">
+        <label for="ng-draw-type">Draw votes:</label>
+        <select name="newGame[drawType]" id="ng-draw-type" class="form-control">
+            <option value="draw-votes-public" selected="selected">Show draw votes</option>
+            <option value="draw-votes-hidden">Hide draw votes</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ng-min-rating">Required reliability rating:</label>
+        <input id="ng-min-rating" type="number" name="newGame[minimumReliabilityRating]" size="2" value="{{ values.minimumReliabilityRating }}" class="form-control" max="{{ maxRR }}" min="0" placeholder="0" step="1" />
+    </div>
+
+    <div class="form-group">
+        <label for="ng-excused-missed-turns">Excused delays per player:</label>
+
+        <img id="ng-excused-missed-turns-help"
+             tabindex="0"
+             role="button"
+             title="Excused delays per player"
+             data-toggle="popover"
+             data-trigger="hover"
+             data-html="true"
+             data-content="The number of excused delays before a player is removed from the game and can be replaced.
+                    If a player is missing orders at a deadline, the deadline will reset and the player will be
+                    charged 1 excused delay. If they are out of excuses they will go into Civil Disorder.
+                    The game will only progress with missing orders if no replacement is found within one phase of a player being forced into Civil Disorder.
+                    Set this value low to prevent delays to your game, set it higher to be more forgiving to people who might need occasional delays."
+             class="help-btn"
+             src="/images/icons/help.png"
+             alt="Help"
+        />
+        <select id="ng-excused-missed-turns" name="newGame[excusedMissedTurns]" class="form-control">
+            {% for i in 0..4 %}
+            <option value="{{ i }}">{% if i == 0 %}0 (strict){% else %}{{ i }}{% endif %}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <img src="/images/icons/lock.png" alt="Private" />
+            <label for="ng-password">Add Invite Code (optional):</label>
+            <input type="password" autocomplete="off" name="newGame[password]" value="" size="20" id="ng-password" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <img src="/images/icons/lock.png" alt="Private" />
+            <label for="ng-password-confirm">Confirm Invite Code:</label>
+            <input autocomplete="off" type="password" name="newGame[passwordcheck]" value="" size="20" id="ng-password-confirm" class="form-control" />
+        </div>
+    </div>
+
+    <br />
+
+    <div class="form-group">
+        <button class="btn btn-primary green-Submit" type="submit">Create Game</button>
+    </div>
+</form>

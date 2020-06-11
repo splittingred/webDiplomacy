@@ -2202,3 +2202,19 @@ ul.threads-list li p {
 	 box-sizing: border-box;
 	 padding: 0;
 }
+
+.help-btn
+{
+	width: 16px;
+	height: 16px;
+}
+
+.popover {
+	padding: 5px;
+}
+.popover h3 {
+	margin: 0 0 10px 0;
+	padding: 0;
+	font-size: 18px;
+	border-bottom: 1px solid #0a2b1d;
+}

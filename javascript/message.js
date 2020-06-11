@@ -1,4 +1,4 @@
-document.observe("dom:loaded", function() {
+$(document).ready(function() {
     Event.observe('message-send', 'click', function(event) {
         $('chatForm').request({
             onFailure: function() {

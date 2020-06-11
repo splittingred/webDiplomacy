@@ -16,6 +16,9 @@
 * Ensure members not in-game dont mess things up
 * Ensure hidden draw votes works
 
+## Frontend
+
+- Lots of javascript will need to be fixed to deal with scriptaculous removal
 
 ## Test Cases To Do
 
