@@ -87,7 +87,7 @@ class Member
      */
     public function isBanned(): bool
     {
-        return $this->status->left() && $this->user->temporaryBan;
+        return $this->status->hasLeft() && $this->user->temporaryBan;
     }
 
     /**

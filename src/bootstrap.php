@@ -19,13 +19,15 @@ if (!defined('ROOT_PATH')) {
 
 require_once ROOT_PATH . 'vendor/autoload.php';
 require_once ROOT_PATH . 'config.php';
-require_once ROOT_PATH . 'src/bootstrap_legacy.php';
-require_once ROOT_PATH . 'global/definitions.php';
-require_once ROOT_PATH . 'objects/mailer.php';
 
 global $app;
 $app = new Container();
 $app->singleton('app', 'Illuminate\Container\Container');
+
+require_once ROOT_PATH . 'src/bootstrap_legacy.php';
+require_once ROOT_PATH . 'global/definitions.php';
+require_once ROOT_PATH . 'objects/mailer.php';
+
 $app->singleton('renderer', function($app) {
     return Renderer::initialize($app);
 });

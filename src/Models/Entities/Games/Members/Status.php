@@ -17,7 +17,7 @@ class Status
     const STATUS_UNASSIGNED = 'unassigned';
 
     /** @var string */
-    protected $type;
+    public $type;
 
     /**
      * @param string $type
@@ -52,7 +52,15 @@ class Status
      */
     public function isAlive(): bool
     {
-        return !$this->isDead();
+        return !$this->isDead() && !$this->isUnassigned();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUnassigned(): bool
+    {
+        return $this->type == self::STATUS_UNASSIGNED;
     }
 
     /**
@@ -74,7 +82,7 @@ class Status
     /**
      * @return bool
      */
-    public function won(): bool
+    public function hasWon(): bool
     {
         return $this->type == self::STATUS_WON;
     }
@@ -84,15 +92,15 @@ class Status
      *
      * @return bool
      */
-    public function lost(): bool
+    public function hasLost(): bool
     {
-        return $this->defeated() || $this->resigned();
+        return $this->isDefeated() || $this->hasResigned();
     }
 
     /**
      * @return bool
      */
-    public function defeated(): bool
+    public function isDefeated(): bool
     {
         return $this->type == self::STATUS_DEFEATED;
     }
@@ -100,7 +108,7 @@ class Status
     /**
      * @return bool
      */
-    public function left(): bool
+    public function hasLeft(): bool
     {
         return $this->type == self::STATUS_LEFT;
     }
@@ -108,7 +116,7 @@ class Status
     /**
      * @return bool
      */
-    public function drew(): bool
+    public function hasDrawn(): bool
     {
         return $this->type == self::STATUS_DRAWN;
     }
@@ -116,7 +124,7 @@ class Status
     /**
      * @return bool
      */
-    public function survived(): bool
+    public function hasSurvived(): bool
     {
         return $this->type == self::STATUS_SURVIVED;
     }
@@ -124,17 +132,9 @@ class Status
     /**
      * @return bool
      */
-    public function resigned(): bool
+    public function hasResigned(): bool
     {
         return $this->type == self::STATUS_RESIGNED;
-    }
-
-    /**
-     * @return bool
-     */
-    public function unassigned(): bool
-    {
-        return $this->type == self::STATUS_UNASSIGNED;
     }
 
     /**

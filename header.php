@@ -35,8 +35,7 @@ define('ROOT_PATH', dirname(__FILE__) . '/');
 if( !defined('IN_CODE') )
 	define('IN_CODE', 1); // A flag to tell scripts they aren't being executed by themselves
 
-require_once 'src/bootstrap.php';
-global $app;
+require_once ROOT_PATH . 'src/bootstrap.php';
 
 ob_start(); // Buffer output. libHTML::footer() flushes.
 
@@ -49,51 +48,21 @@ if ( isset($_REQUEST['uid']) ) $_REQUEST['userID'] = $_REQUEST['uid'];
 $GLOBALS = [];
 $GLOBALS['scriptStartTime'] = microtime(true);
 
-// All the standard includes.
-require_once('lib/cache.php');
-require_once('lib/time.php');
-require_once('lib/html.php');
-require_once('locales/layer.php');
-
-global $Locale;
-require_once('locales/'.Config::$locale.'/layer.php'); // This will set $Locale
-$Locale->initialize();
-
-require_once 'objects/silence.php';
-require_once 'objects/user.php';
-require_once 'objects/game.php';
-require_once 'board/chatbox.php';
-
-if (!defined('libError')) {
-    require_once 'global/error.php';
-}
-// Set up the error handler
-
-date_default_timezone_set('UTC');
-
-// Create database object
-require_once 'objects/database.php';
-$DB = new Database();
-$app->instance('DB', $DB);
-
-// Set up the misc values object
-require_once 'objects/misc.php';
-global $Misc;
-$Misc = new Misc();
-$app->instance('Misc', $Misc);
-
 if ($Misc->Version != VERSION)
 {
     // auto-upgrades
 	require_once 'install/install.php';
 }
 
+if (strlen(Config::$serverMessages['ServerOffline']) )
+    die('<html><head><title>Server offline</title></head>'.
+        '<body>'.Config::$serverMessages['ServerOffline'].'</body></html>');
+
 // Taken from the php manual to disable caching
 header("Last-Modified: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 
-require_once 'lib/auth.php';
 
 if( !defined('AJAX') )
 {

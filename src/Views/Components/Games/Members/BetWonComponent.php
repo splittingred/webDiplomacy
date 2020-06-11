@@ -22,8 +22,8 @@ class BetWonComponent extends BaseComponent
 
     public function attributes(): array
     {
-        $playingOrLeft = $this->member->status->isPlaying() || $this->member->status->left();
-        $hasWonPoints = $this->member->status->won() || ($this->game->potType->grantsPointsOnSurvivals() && $this->member->status->survived()) || $this->member->status->drew();
+        $playingOrLeft = $this->member->status->isPlaying() || $this->member->status->hasLeft();
+        $hasWonPoints = $this->member->status->hasWon() || ($this->game->potType->grantsPointsOnSurvivals() && $this->member->status->hasSurvived()) || $this->member->status->hasDrawn();
 
         $betValue = $this->game->potType->amount;
 

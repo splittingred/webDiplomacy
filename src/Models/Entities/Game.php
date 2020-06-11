@@ -116,7 +116,7 @@ class Game
 
         /** @var Member $member */
         foreach ($this->members as $member) {
-            if ($member->status->won()) return $member;
+            if ($member->status->hasWon()) return $member;
         }
         return null;
     }

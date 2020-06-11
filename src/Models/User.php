@@ -138,15 +138,6 @@ class User extends EloquentBase
      ****************************************************************************************************************/
 
     /**
-     * @param string $password
-     * @return string
-     */
-    public static function hashPassword(string $password): string
-    {
-        return md5(\Config::$salt . md5($password));
-    }
-
-    /**
      * @return string
      */
     public function generateSessionKey()
@@ -159,16 +150,37 @@ class User extends EloquentBase
      */
     public function getPasswordHash()
     {
-        return strtolower(bin2hex($this->password));
+        return bin2hex($this->password);
     }
 
     /**
      * @param string $password
      * @return string
      */
-    public function passwordMatches(string $password): string
+    public static function hashPassword(string $password): string
     {
-        return 0 == strcasecmp($this->getPasswordHash(), static::hashPassword($password));
+        return md5(\Config::$salt . md5($password));
+    }
+
+    /**
+     * @param string $password
+     * @return bool
+     */
+    public function passwordMatches(string $password): bool
+    {
+        $actualPasswordHash = $this->getPasswordHash();
+        $attemptedPasswordHash = static::hashPassword($password);
+        return 0 == strcasecmp($actualPasswordHash, $attemptedPasswordHash);
+    }
+
+    /**
+     * @param string $password
+     * @return bool
+     */
+    public function setPassword(string $password) : bool
+    {
+        $this->password = hex2bin(static::hashPassword($password));
+        return true;
     }
 
     /**
@@ -185,17 +197,6 @@ class User extends EloquentBase
     public function forgotPasswordToken(): string
     {
         return base64_encode(substr(md5(\Config::$secret . $this->email), 0, 8) . '%7C' . time() . '%7C' . urlencode($this->email));
-    }
-
-    /**
-     * @param string $password
-     * @return bool
-     */
-    public function setPassword(string $password) : bool
-    {
-        $hash = md5(\Config::$salt . md5($password));
-        $this->password = hex2bin($hash);
-        return true;
     }
 
     /**

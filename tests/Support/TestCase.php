@@ -1,23 +1,30 @@
 <?php
 namespace Support;
 
+use League\FactoryMuffin\FactoryMuffin;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
 class TestCase extends PHPUnitTestCase
 {
-    protected static $factory;
+    /** @var FactoryMuffin $fm */
+    public static $fm;
 
-    public static function getFactory()
+    public static function setupBeforeClass(): void
     {
-        if (!static::$factory) {
-            $generator = new \Faker\Generator();
-            // static::$factory = \Illuminate\Database\Eloquent\Factory::construct($generator, ROOT_PATH . '/tests/Factories/');
-        }
-        return static::$factory;
+        static::$fm = new FactoryMuffin();
+        static::$fm->loadFactories([ROOT_PATH . 'tests/Factories']);
     }
 
-    public function factory($type, array $atttributes = [])
+    /**
+     * @return FactoryMuffin
+     */
+    public function factories()
     {
-        return static::getFactory()->make($type, $atttributes);
+        return static::$fm;
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        static::$fm->deleteSaved();
     }
 }

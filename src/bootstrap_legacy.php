@@ -4,10 +4,42 @@ if (!defined('IN_CODE')) {
     exit(1);
 }
 
-if (strlen(Config::$serverMessages['ServerOffline']) )
-    die('<html><head><title>Server offline</title></head>'.
-        '<body>'.Config::$serverMessages['ServerOffline'].'</body></html>');
+// All the standard includes.
+require_once ROOT_PATH . 'lib/cache.php';
+require_once ROOT_PATH . 'lib/time.php';
+require_once ROOT_PATH . 'lib/html.php';
+require_once ROOT_PATH . 'locales/layer.php';
 
+require_once ROOT_PATH . 'objects/silence.php';
+require_once ROOT_PATH . 'objects/user.php';
+require_once ROOT_PATH . 'objects/game.php';
+require_once ROOT_PATH . 'board/chatbox.php';
+
+global $Locale;
+$loc = !empty(Config::$locale) ? Config::$locale : 'English';
+require_once ROOT_PATH . "locales/$loc/layer.php"; // This will set $Locale
+$Locale->initialize();
+
+// Set up the error handler
+if (!defined('libError')) {
+    require_once ROOT_PATH . 'global/error.php';
+}
+
+date_default_timezone_set('UTC');
+
+global $app;
+// Create database object
+require_once ROOT_PATH . 'objects/database.php';
+$DB = new Database();
+$app->instance('DB', $DB);
+
+// Set up the misc values object
+require_once ROOT_PATH . 'objects/misc.php';
+global $Misc;
+$Misc = new Misc();
+$app->instance('Misc', $Misc);
+
+require_once ROOT_PATH . 'lib/auth.php';
 
 if( ini_get('request_order') !== false ) {
 
