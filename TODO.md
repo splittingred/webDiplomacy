@@ -1,4 +1,12 @@
+### General
 
+* Make a seed script to seed DB with lots of test data, including
+  * Games active user is in
+  * Games active user is only watching
+  * Games active user has left midway
+  * Games active user has lost
+  * Games in Tournaments
+  * Variant Games
 
 ### Board View
 
