@@ -2,6 +2,7 @@
 
 namespace Diplomacy\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -9,7 +10,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class WatchedGame extends EloquentBase
 {
+    use HasCompositePrimaryKey;
     protected $table = 'wD_WatchedGames';
+    protected $primaryKey = ['userID', 'gameID'];
+
+    /*****************************************************************************************************************
+     * RELATIONSHIPS
+     ****************************************************************************************************************/
 
     /**
      * @return BelongsTo
@@ -26,4 +33,30 @@ class WatchedGame extends EloquentBase
     {
         return $this->belongsTo(User::class, 'userID');
     }
+
+    /*****************************************************************************************************************
+     * SCOPES
+     ****************************************************************************************************************/
+
+    /**
+     * @param Builder $query
+     * @param int $gameId
+     * @return Builder
+     */
+    public function scopeForGame(Builder $query, int $gameId): Builder
+    {
+        return $query->where($this->getTableName().'.gameID', '=', $gameId);
+    }
+
+    /**
+     * @param Builder $query
+     * @param int $userId
+     * @return Builder
+     */
+    public function scopeForUser(Builder $query, int $userId): Builder
+    {
+        return $query->where($this->getTableName().'.userID', '=', $userId);
+    }
+
+
 }

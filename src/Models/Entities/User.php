@@ -31,6 +31,8 @@ class User
     /** @var double $reliabilityRating */
     public $reliabilityRating;
     public $roles = [];
+    /** @var int $timeLastSessionEnded */
+    public $timeLastSessionEnded;
     /* some more fields and i'll get to them */
 
     /**

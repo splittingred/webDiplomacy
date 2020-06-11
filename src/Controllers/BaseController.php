@@ -2,6 +2,7 @@
 
 namespace Diplomacy\Controllers;
 
+use Diplomacy\Models\User;
 use Diplomacy\Services\Request;
 use Diplomacy\Utilities\HasPlaceholders;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -20,6 +21,8 @@ abstract class BaseController
     protected $database;
     /** @var \User */
     protected $currentUser;
+    /** @var \Diplomacy\Models\Entities\User */
+    protected $currentUserEntity;
     /** @var Request */
     protected $request;
     /** @var string */
@@ -46,6 +49,9 @@ abstract class BaseController
         $this->renderer = $app->make('renderer');
         $this->database = $app->make('DB');
         $this->currentUser = $app->make('user');
+        if (!empty($this->currentUser->id)) {
+            $this->currentUserEntity = User::find($this->currentUser->id)->toEntity();
+        }
         $this->request = $app->make('request');
         $this->setUp();
     }
@@ -146,6 +152,7 @@ abstract class BaseController
     protected function setDefaultPlaceholders() : void
     {
         $this->setPlaceholder('current_user', $this->currentUser);
+        $this->setPlaceholder('current_user_entity', $this->currentUserEntity);
         $this->setPlaceholder('moderator_email', \Config::$modEMail ? \Config::$modEMail : \Config::$adminEMail);
         $this->setPlaceholder('admin_email', \Config::$adminEMail);
         $this->setPlaceholder('current_page', $this->getCurrentPage());

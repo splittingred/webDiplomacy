@@ -94,7 +94,7 @@ class Game
      */
     public function getMemberCount(): int
     {
-        return count($this->members);
+        return $this->members->totalInGame();
     }
 
     /**

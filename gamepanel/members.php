@@ -176,7 +176,7 @@ class panelMembers extends Members
 		else
 		{
             $joinedPercent = ceil((count($this->ByID)*100.0/count($this->Game->Variant->countries)));
-            $buf = $renderer->render('games/members/occupation_bar/active.twig',[
+            $buf = $renderer->render('games/members/occupation_bar/pre_game.twig',[
                 'joined_percent' => $joinedPercent,
                 'remaining_percent' => 100 - $joinedPercent,
             ]);

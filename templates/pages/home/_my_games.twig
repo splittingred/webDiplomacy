@@ -13,7 +13,7 @@
     </p>
 </div>
 {% else %}
-    {% for game in games %}
-        {{ game.getHomeSummary()|raw }}
+    {% for gameRecord in games %}
+        {{ component('Games.HomePanel', { game: gameRecord.game, currentMember: gameRecord.currentMember })|raw }}
     {% endfor %}
 {% endif %}

@@ -2,12 +2,29 @@
 
 namespace Diplomacy\Views;
 
+use Illuminate\Container\Container;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TemplateWrapper;
 
 class Renderer extends Environment
 {
+    /**
+     * @param Container $app
+     * @return Renderer
+     */
+    public static function initialize(Container $app)
+    {
+        $loader = new FilesystemLoader(ROOT_PATH . 'templates');
+        $env = new Renderer($loader, [
+            'cache' => ROOT_PATH . '/cache/templates',
+            'debug' => true,
+        ]);
+        $env->addExtension(new \Diplomacy\Views\TwigComponent());
+        $env->addGlobal('current_user', $app->make('user'));
+        return $env;
+    }
+
     /**
      * @param string|TemplateWrapper $name
      * @param array $context

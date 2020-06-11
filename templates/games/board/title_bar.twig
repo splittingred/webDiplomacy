@@ -1,22 +1,6 @@
 <div class="titleBar">
     <div class="titleBarRightSide">
-        <div class="gameTimeRemaining">
-            {% if game.phase.isFinished %}
-                <span class="gameTimeRemainingNextPhase">Finished:</span> {{ game.processing.getTimeAsText|raw }}
-            {% elseif game.processing.isPaused %}
-                Paused <img src="/images/icons/pause.png" title="Game paused" />
-                ({{ game.processing.getPauseTimeRemainingAsText }} left on unpause)
-            {% elseif game.processing.isCrashed %}
-                Crashed
-            {% else %}
-                {% if game.phase.isPreGame %}
-                    <span class="gameTimeRemainingNextPhase">Start:</span>
-                {% else %}
-                    <span class="gameTimeRemainingNextPhase">Next:</span>
-                {% endif %}
-                {{ game.processing.timeRemainingAsText|raw }} ({{ game.processing.getTimeAsText()|raw }})
-            {% endif %}
-        </div>
+        {{ component('Games.TimeRemaining', { game: game })|raw }}
     </div>
 
     <div class="titleBarLeftSide">

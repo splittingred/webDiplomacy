@@ -189,7 +189,6 @@ class panelGameHome extends panelGameBoard
 		}
 		else
 		{
-			$noticesStatus = 5;
 			$SubmitName = 'Toggle Notices';
 			list($noticesStatus) = $DB->sql_row("SELECT hideNotifications FROM wD_Members WHERE userID =".$User->id." and gameID =".$this->id);
 			if ($noticesStatus == 1) { $SubmitName = 'Enable Notices'; }

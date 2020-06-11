@@ -18,7 +18,6 @@ class UnitCountComponent extends BaseComponent
 
     public function attributes(): array
     {
-
         return [
             'supplyCenterCount' => $this->member->supplyCenterCount,
             'unitCount' => $this->member->unitCount,

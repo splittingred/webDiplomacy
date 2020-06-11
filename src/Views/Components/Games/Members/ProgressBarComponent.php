@@ -2,17 +2,26 @@
 
 namespace Diplomacy\Views\Components\Games\Members;
 
+use Diplomacy\Models\Entities\Game;
 use Diplomacy\Models\Entities\Games\Member;
 use Diplomacy\Views\Components\BaseComponent;
 
+/**
+ * Represents a progress bar for a single given member
+ *
+ * @package Diplomacy\Views\Components\Games\Members
+ */
 class ProgressBarComponent extends BaseComponent
 {
     protected $template = 'games/members/progressBar.twig';
+    /** @var Game $game */
+    protected $game;
     /** @var Member $member */
     protected $member;
 
-    public function __construct(Member $member)
+    public function __construct(Game $game, Member $member)
     {
+        $this->game = $game;
         $this->member = $member;
     }
 
@@ -31,6 +40,7 @@ class ProgressBarComponent extends BaseComponent
         $attributes = [
             'hasNoPieces' => $hasNoPieces,
             'supplyCenterTarget' => $this->member->supplyCenterTarget,
+            'isPreGame' => $this->game->phase->isPreGame(),
         ];
         if (!$hasNoPieces) {
             $dividers = [];

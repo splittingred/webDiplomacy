@@ -22,6 +22,14 @@ class Country
     }
 
     /**
+     * @return string
+     */
+    public function shortName(): string
+    {
+        return substr($this->name, 0, 3);
+    }
+
+    /**
      * @return bool
      */
     public function isGlobal(): bool

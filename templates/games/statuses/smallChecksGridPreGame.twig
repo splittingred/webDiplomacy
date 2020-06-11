@@ -1,0 +1,9 @@
+<table class="homeMembersTable">
+    {% for member in members %}
+    <tr class="homeMembersTableTr">
+        {% if member.filled %}
+            <img src="/images/icons/tick.png" alt=" " title="Player joined, spot filled" />'
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>

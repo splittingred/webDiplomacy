@@ -11,7 +11,8 @@
             </span>
         {% endif %}
     </span>
-    <br />{{ member.muteIcon(game, currentMember)|raw }}
+    <br />
+    {{ component('Games.Members.MuteIcon', { game: game, member: member, currentMember: currentMember })|raw }}
 </td>
 <td class="memberRightSide{% if member.status.isDead %} memberStatusFade{% endif %}">
     <div>
@@ -36,15 +37,15 @@
                 <span class="memberStatus"><em>{{ member.status.text }}</em></span>
             {% endif %}
 
-            <span class="memberPointsCount">{{ member.betWon(game)|raw }}</span>
+            <span class="memberPointsCount">{{ component('Games.Members.BetWon', { game: game, member: member })|raw }}</span>
             {% if not member.status.isDefeated %}
-                <br />{{ member.unitCountComponent|raw }}
+                <br />{{ component('Games.Members.UnitCount', { member: member })|raw }}
             {% endif %}
         </div>
         <div class="clear-both"></div>
     </div>
 
     {% if not game.phase.isPreGame %}
-        <div class="panelBarGraphCountry memberProgressBar">{{ member.progressBar|raw }}</div>
+        <div class="panelBarGraphCountry memberProgressBar">{{ component('Games.Members.ProgressBar', { game: game, member: member})|raw }}</div>
     {% endif %}
 </td>

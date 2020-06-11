@@ -68,7 +68,7 @@ class IndexController extends Base
         if (empty($this->game)) $this->redirectRelative('/', true);
 
         $this->gameEntity = $this->gameFactory->build($this->game->id);
-        $this->currentMember = $this->gameEntity->members->byUserId($this->currentUser->id);
+        $this->currentMember = $this->gameEntity->members->byUser($this->currentUserEntity);
     }
 
     protected function getForum()

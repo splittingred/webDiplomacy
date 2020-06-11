@@ -1,9 +1,9 @@
 <div class="homeHeader">Defeated games</div>
 <div class="hr"></div>
-{% if my_defeats is empty %}
+{% if games is empty %}
     <p class="notice"> You are not defeated in any active games, good job!</p>
 {% else %}
-    {% for game in my_defeats %}
-        {{ game.getHomeSummary()|raw }}
+    {% for gameRecord in games %}
+        {{ component('Games.HomePanel', { game: gameRecord.game, currentMember: gameRecord.currentMember })|raw }}
     {% endfor %}
 {% endif %}

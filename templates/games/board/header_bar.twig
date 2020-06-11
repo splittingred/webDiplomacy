@@ -1,4 +1,5 @@
-{% if member and member.isBanned %}
+{# TODO: Make a component #}
+{% if not member.isInGame and member.isBanned %}
     <div class="panelTempBanned"><strong>You are blocked from rejoining this game.</strong></div>
 
 {% elseif not game.phase.isPreGame and not game.phase.isFinished %}
@@ -11,15 +12,9 @@
     </div>
 {% endif %}
 
-{% if game.phase.isPregame %}
-    <div class="panelBarGraphMember memberProgressBarBlank">&nbsp;</div>
-{% else %}
-    <div class="panelBarGraphMember memberProgressBar barAlt">
-        {{ member.progressBar|raw }}
-    </div>
-{% endif %}
+{{ component('Games.Members.ProgressBar', { game: game, member: member })|raw }}
 
-{% if member %}
+{% if member.isInGame %}{# only show if member is a part of this game #}
 <div class="memberBoardHeader barAlt1 barDivBorderTop">
     <table>
         <tr class="member">
@@ -30,11 +25,7 @@
                 <div>
                     {% if not member.isBanned %}
                     <div class="memberUserDetail">
-                        {% if member.status.isPlaying %}
-                        <span class="member{{ member.id }}StatusIcon">{{ member.ordersState.icon|raw }}</span>
-                        {% endif %}
-                        - <span class="member{{ member.id }}StatusText">{{ member.ordersState.iconText }}</span>
-                        <br />
+                        {{ component('Games.Members.OrderStatus', { member: member })|raw }}
 
                         {% if member.hasNewMessages %}
                             {{ member.unreadMessagesLink|raw }}
@@ -49,13 +40,11 @@
                             <span class="memberStatus"><em>{{ member.status.text }}</em>.</span>
                         {% endif %}
 
-                        <span class="memberPointsCount">
-                            {{ member.betWon(game)|raw }}
-                        </span>
+                        {{ component('Games.Members.BetWon', { game: game, member: member })|raw }}
                         <br />
 
                         {% if not member.status.isDefeated %}
-                            {{ member.unitCountComponent|raw }}
+                            {{ component('Games.Members.UnitCount', { member: member })|raw }}
                         {% endif %}
                     </div>
                     <div class="clear-both"></div>

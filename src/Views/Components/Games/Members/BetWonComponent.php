@@ -14,49 +14,14 @@ class BetWonComponent extends BaseComponent
     /** @var Game $game */
     protected $game;
 
-    public function __construct(Member $member, Game $game)
+    public function __construct(Game $game, Member $member)
     {
-        $this->member = $member;
         $this->game = $game;
+        $this->member = $member;
     }
 
     public function attributes(): array
     {
-
-
-
-//        if ( $this->Game->phase == 'Pre-game' )
-//            return l_t('Bet:').' <em>'.$this->bet.libHTML::points().'</em>';
-//
-//        if( $this->status == 'Playing' || $this->status == 'Left' )
-//        {
-//            $buf .= l_t('worth:').' <em';
-//            $value = $this->Game->Scoring->pointsForDraw($this);
-//            if ( $value > $this->bet )
-//                $buf .= ' class="good"';
-//            elseif ( $value < $this->bet )
-//                $buf .= ' class="bad"';
-//
-//            $buf .= '>'.$value.libHTML::points().'</em>';
-//            return $buf;
-//        }
-//        elseif ( $this->status == 'Won' || ($this->Game->potType == 'Points-per-supply-center' &&  $this->status == 'Survived') || $this->status == 'Drawn' )
-//        {
-//            $buf .= l_t('won:').' <em';
-//            $value = $this->pointsWon;
-//            if ( $value > $this->bet )
-//                $buf .= ' class="good"';
-//            elseif ( $value < $this->bet )
-//                $buf .= ' class="bad"';
-//
-//            $buf .= '>'.$value.libHTML::points().'</em>';
-//            return $buf;
-//        }
-//        else
-//        {
-//            return l_t('Bet:').' <em class="bad">'.$this->bet.libHTML::points().'</em>';
-//        }
-
         $playingOrLeft = $this->member->status->isPlaying() || $this->member->status->left();
         $hasWonPoints = $this->member->status->won() || ($this->game->potType->grantsPointsOnSurvivals() && $this->member->status->survived()) || $this->member->status->drew();
 

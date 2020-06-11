@@ -1,0 +1,42 @@
+<div class="gamePanelHome variant{{ game.variant.name }}" gameid="{{ game.id }}">
+    <div class="titleBar">
+        <div class="titleBarRightSide">
+            {{ component('Games.TimeRemaining', { game: game, displayTimeAsText: false })|raw }}
+        </div>
+
+        <div class="titleBarLeftSide">
+            {% include 'games/icons.twig' with { game: game } %}
+            <span class="gameName"><span class="homeGameTitleBar" gameid="{{ game.id }}">{{ game.name }}</span></span>
+        </div>
+
+        <div class="clear-both"></div>
+
+        <div class="titleBarRightSide">
+            <span class="gameDate">{{ game.getTurnAsText }}</span>,
+            <span class="gamePhase">{{ game.phase.name }}</span>
+        </div>
+
+        <div class="titleBarLeftSide">
+            <div>
+                Pot: <span class="gamePot">{{ game.potType.amount }} {{ game.potType.getPointsIcon|raw }}</span>
+                <span class="{% if gameAboveReliabilityThreshold %}Austria{% endif %}">RR{{ game.minimumReliabilityRating }}%</span>
+            </div>
+        </div>
+    </div>
+    <br class="clear-both" />
+
+    {{ component('Games.NoticeBar', { game: game })|raw }}
+
+    <div class="panelBarGraph occupationBar">
+        {{ component('Games.OccupationBar', { game: game })|raw }}
+    </div>
+    <div class="membersList membersFullTable{% if canSeeMemberInfo %} modEyes{% endif %}">
+        {{ component('Games.Statuses.SmallChecksGrid', { game: game, currentMember: currentMember })|raw }}
+    </div>
+    <div class="panelBarGraph occupationBar">
+        {{ component('Games.OccupationBar', { game: game })|raw }}
+    </div>
+
+    {{ component('Games.SmallPanelLinks', { game: game, currentMember: currentMember })|raw }}
+    <div class="bar lastBar">&nbsp;</div>
+</div>

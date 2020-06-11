@@ -15,22 +15,25 @@ use Diplomacy\Models\Entities\Users\MutedCountry;
  */
 class UnassignedMember extends Member
 {
-    /** @var int $id */
-    public $id = 0;
-
     public function __construct()
     {
-        $this->country = new Country(0, 'Global');
+        $this->country = new Country(0, 'Unassigned');
         $this->user = new User();
         $this->user->id = User::GUEST_ID;
         $this->status = new Status(Status::STATUS_UNASSIGNED);
+        $this->ordersState = new OrdersState([]);
+        $this->isInGame = false;
     }
+
     /**
-     * @return bool
+     * @param User $user
+     * @return UnassignedMember
      */
-    public function isFilled(): bool
+    public static function buildFromUser(User $user): UnassignedMember
     {
-        return false;
+        $m = new static();
+        $m->user = $user;
+        return $m;
     }
 
     /**

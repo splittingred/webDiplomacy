@@ -48,7 +48,7 @@ class TabsComponent extends BaseComponent
 
             $tab = [
                 'countryId' => $member->country->id,
-                'countryName' => $member->country->name,
+                'countryName' => $countryId == Country::GLOBAL ? 'Global' : $member->country->name,
                 'current' => $isCurrent,
                 'currentCls' => $isCurrent ? 'current' : '',
                 'isGlobal' => $member->country->isGlobal(),
@@ -59,7 +59,7 @@ class TabsComponent extends BaseComponent
             {
                 $tab['countryName'] = 'Notes';
             }
-            elseif ($member->isFilled())
+            elseif ($member->isInGame)
             {
                 $tab['rendered'] = $member->getRenderedCountryName($this->game, $this->currentMember);
             }

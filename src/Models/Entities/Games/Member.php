@@ -63,13 +63,8 @@ class Member
     /** @var bool $isTournamentCoDirector */
     public $isTournamentCoDirector;
 
-    /**
-     * @return bool
-     */
-    public function isFilled(): bool
-    {
-        return $this->id > 0;
-    }
+    /** @var bool $isInGame */
+    public $isInGame = true;
 
     /**
      * @return bool
@@ -118,14 +113,6 @@ class Member
             if ($mutedCountry->countryId == $countryId) return true;
         }
         return false;
-    }
-
-    /**
-     * @return string
-     */
-    public function unitCountComponent(): string
-    {
-        return (string)(new UnitCountComponent($this));
     }
 
     /**
@@ -253,7 +240,7 @@ class Member
 
         if (!$this->hasNewMessageFrom($userId)) return '';
 
-        return \libHTML::unreadMessages('/games/'.$this->gameId.'/view&countryId='.$this->country->id.'#chatbox');
+        return \libHTML::unreadMessages('/games/'.$this->gameId.'/view?countryId='.$this->country->id.'#chatbox');
     }
 
     /**
@@ -283,28 +270,6 @@ class Member
     public function lastLoggedInAsText(): string
     {
         return \libTime::timeLengthText(time() - $this->timeLoggedIn).' ('.\libTime::text($this->timeLoggedIn).')';
-    }
-
-    /**
-     * @param Game $game
-     * @return string
-     */
-    public function betWon(Game $game): string
-    {
-        return (string)(new BetWonComponent($this, $game));
-    }
-
-    /**
-     * @return string
-     */
-    public function progressBar(): string
-    {
-        return (string)(new ProgressBarComponent($this));
-    }
-
-    public function muteIcon(Game $game, Member $currentMember = null): string
-    {
-        return (string)(new MuteIconComponent($game, $this, $currentMember));
     }
 
     /**********

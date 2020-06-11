@@ -1,0 +1,27 @@
+<table class="homeMembersTable">
+    <tr class="homeMembersTableTr">
+        {% for member in members %}
+        <td style="width:{{ member.width }}%;" class="barAlt{{ member.alternate }}">
+            <span class="country{{ member.country.id }} {{ member.cssCls }} {{ member.status.cssClass }}">{{ member.name }}</span>
+        </td>
+        {% endfor %}
+    </tr>
+    <tr class="homeMembersTableTr">
+        {% for member in members %}
+            <td style="width:{{ member.width }}%;" class="barAlt{{ member.alternate }}">
+                {% if member.status.isPlaying %}
+                    <span class="member{{ member.id }}StatusIcon">{{ member.statusIcon|raw }}</span>
+                {% endif %}
+            </td>
+        {% endfor %}
+    </tr>
+    {% if currentMember.isAuthenticated %}
+    <tr class="homeMembersTableTr">
+        {% for member in members %}
+            <td style="width:{{ member.width }}%;" class="barAlt{{ member.alternate }}">
+                {{ member.newMessagesIcon|raw }}
+            </td>
+        {% endfor %}
+    </tr>
+    {% endif %}
+</table>

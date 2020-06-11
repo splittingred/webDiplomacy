@@ -38,6 +38,16 @@ class Status
     }
 
     /**
+     * Get the CSS class that highlights the name appropriately
+     *
+     * @return string
+     */
+    public function cssClass(): string
+    {
+        return 'memberStatus' . ucfirst($this->type);
+    }
+
+    /**
      * @return bool
      */
     public function isAlive(): bool
@@ -67,6 +77,16 @@ class Status
     public function won(): bool
     {
         return $this->type == self::STATUS_WON;
+    }
+
+    /**
+     * Whether the member "lost", which is to be defeated or resign
+     *
+     * @return bool
+     */
+    public function lost(): bool
+    {
+        return $this->defeated() || $this->resigned();
     }
 
     /**

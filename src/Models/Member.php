@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Member extends EloquentBase
 {
     protected $table = 'wD_Members';
+    protected $with = ['user'];
     protected $hidden = [];
 
     /**
@@ -64,6 +65,16 @@ class Member extends EloquentBase
     public function scopeForGame(Builder $query, int $gameId) : Builder
     {
         return $query->where('gameID', $gameId);
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeLeftJoinUser(Builder $query) : Builder
+    {
+        $usersTable = User::getTableName();
+        return $query->leftJoin($usersTable, $usersTable . '.id', '=', static::getTableName() . '.userID');
     }
 
     /*****************************************************************************************************************

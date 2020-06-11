@@ -9,6 +9,7 @@ use Diplomacy\Services\Games\GamesService;
 use Diplomacy\Services\Games\MembersService;
 use Diplomacy\Tournaments\Service as TournamentsService;
 use Diplomacy\Services\Request;
+use Diplomacy\Views\Components\Games\HomePanelComponent;
 use libHome;
 
 class DashboardController extends BaseController
@@ -50,7 +51,7 @@ class DashboardController extends BaseController
             'my_watched' => $this->getMyWatched(),
         ];
 
-        $result = $this->tournamentsService->findParticipatingForUser($this->currentUser->id);
+        $result = $this->tournamentsService->findParticipatingForUser($this->currentUserEntity->id);
         if ($result->any()) {
             $variables['my_tournaments'] = $this->renderPartial('pages/home/tournaments.twig', [
                 'title' => 'My Tournaments',
@@ -58,7 +59,7 @@ class DashboardController extends BaseController
             ]);
         }
 
-        $result = $this->tournamentsService->findSpectatingForUser($this->currentUser->id);
+        $result = $this->tournamentsService->findSpectatingForUser($this->currentUserEntity->id);
         if ($result->any()) {
             $variables['spectating_tournaments'] = $this->renderPartial('pages/home/tournaments.twig', [
                 'title' => 'Spectated Tournaments',
@@ -70,27 +71,54 @@ class DashboardController extends BaseController
     }
 
     /**
-     * @return Collection
+     * @return array|mixed
      */
-    protected function getMyGames() : Collection
+    protected function getMyGames(): array
     {
-        return $this->gamesService->getActiveForUser($this->currentUser->id);
+        $collection = $this->gamesService->getActiveForUser($this->currentUserEntity->id);
+        $output = [];
+        /** @var \Diplomacy\Models\Entities\Game $game */
+        foreach ($collection as $game) {
+            $output[] = [
+                'game' => $game,
+                'currentMember' => $game->members->byUser($this->currentUserEntity),
+            ];
+        }
+        return $output;
     }
 
     /**
      * @return Collection
      */
-    protected function getMyDefeats() : Collection
+    protected function getMyDefeats(): array
     {
-        return $this->gamesService->getDefeatsForUser($this->currentUser->id);
+        $collection = $this->gamesService->getDefeatsForUser($this->currentUserEntity->id);
+        $output = [];
+        /** @var \Diplomacy\Models\Entities\Game $game */
+        foreach ($collection as $game) {
+            $output[] = [
+                'game' => $game,
+                'currentMember' => $game->members->byUser($this->currentUserEntity),
+            ];
+        }
+        return $output;
     }
 
     /**
-     * @return Collection
+     * @return array
      */
-    public function getMyWatched() : Collection
+    public function getMyWatched(): array
     {
-        return $this->gamesService->getWatchedForUser($this->currentUser->id);
+        $collection = $this->gamesService->getWatchedForUser($this->currentUserEntity->id);
+        $output = [];
+        /** @var \Diplomacy\Models\Entities\Game $game */
+        foreach ($collection as $game) {
+            $output[] = [
+                'game' => $game,
+                'currentMember' => $game->members->byUser($this->currentUserEntity),
+            ];
+        }
+        return $output;
     }
 
     /**
@@ -98,9 +126,9 @@ class DashboardController extends BaseController
      */
     private function updateLastSeenHome() : void
     {
-        if (!isset($_SESSION['lastSeenHome']) || $_SESSION['lastSeenHome'] < $this->currentUser->timeLastSessionEnded)
+        if (!isset($_SESSION['lastSeenHome']) || $_SESSION['lastSeenHome'] < $this->currentUserEntity->timeLastSessionEnded)
         {
-            $_SESSION['lastSeenHome'] = $this->currentUser->timeLastSessionEnded;
+            $_SESSION['lastSeenHome'] = $this->currentUserEntity->timeLastSessionEnded;
         }
     }
 

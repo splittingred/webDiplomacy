@@ -16,6 +16,14 @@ use Illuminate\Database\Query\JoinClause;
  */
 class GamesService
 {
+    /** @var Factory $entityFactory */
+    protected $entityFactory;
+
+    public function __construct()
+    {
+        $this->entityFactory = new Factory();
+    }
+
     /**
      * @param int $gameId
      * @return Game
@@ -27,7 +35,7 @@ class GamesService
 
     /**
      * @param int $userId
-     * @return Collection
+     * @return Collection<\Diplomacy\Models\Entities\Game>
      */
     public function getActiveForUser(int $userId) : Collection
     {
@@ -47,8 +55,12 @@ class GamesService
             ->orderBy($gameTable . '.processTime', 'asc');
 
         $count = $query->count();
-        $games = $query->get();
+        $results = $query->get();
 
+        $games = [];
+        foreach ($results as $entry) {
+            $games[] = $this->entityFactory->build($entry, false);
+        }
         return new Collection($games, $count);
     }
 
@@ -56,7 +68,7 @@ class GamesService
      * Get all defeats for a given user
      *
      * @param int $userId
-     * @return Collection
+     * @return Collection<\Diplomacy\Models\Entities\Game>
      */
     public function getDefeatsForUser(int $userId) : Collection
     {
@@ -76,14 +88,18 @@ class GamesService
             ->orderBy($gameTable . '.processTime', 'asc');
 
         $count = $query->count();
-        $games = $query->get();
+        $results = $query->get();
 
+        $games = [];
+        foreach ($results as $entry) {
+            $games[] = $this->entityFactory->build($entry, false);
+        }
         return new Collection($games, $count);
     }
 
     /**
      * @param int $userId
-     * @return Collection
+     * @return Collection<\Diplomacy\Models\Entities\Game>
      */
     public function getWatchedForUser(int $userId) : Collection
     {
@@ -97,7 +113,12 @@ class GamesService
             ->orderBy('processTime','ASC');
 
         $count = $query->count();
-        $games = $query->get();
+        $results = $query->get();
+
+        $games = [];
+        foreach ($results as $entry) {
+            $games[] = $this->entityFactory->build($entry, false);
+        }
 
         return new Collection($games, $count);
     }

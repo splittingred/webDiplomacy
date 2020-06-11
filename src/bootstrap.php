@@ -27,13 +27,7 @@ global $app;
 $app = new Container();
 $app->singleton('app', 'Illuminate\Container\Container');
 $app->singleton('renderer', function($app) {
-    $loader = new FilesystemLoader(ROOT_PATH . 'templates');
-    $env = new Renderer($loader, [
-        'cache' => ROOT_PATH . '/cache/templates',
-        'debug' => true,
-    ]);
-    $env->addGlobal('current_user', $app->make('user'));
-    return $env;
+    return Renderer::initialize($app);
 });
 $app->instance('mailer', new \Mailer());
 Facade::setFacadeApplication($app);

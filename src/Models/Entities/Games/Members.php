@@ -24,25 +24,26 @@ class Members extends \ArrayObject
     public function isUserInGame($user): bool
     {
         $userId = is_int($user) ? $user : $user->id;
+        /** @var Member $member */
         foreach ($this as $member) {
-            if ($member->user->id == $userId) return true;
+            if ($member->user->id == $userId && $member->isInGame) return true;
         }
         return false;
     }
 
     /**
-     * Get a Member for a given User ID
+     * Get a Member for a given User
      *
-     * @param int $userId
+     * @param User $user
      * @return Member|UnassignedMember
      */
-    public function byUserId(int $userId)
+    public function byUser(User $user)
     {
         /** @var Member $member */
         foreach ($this as $member) {
-            if ($member->user->id == $userId) return $member;
+            if ($member->isUser($user)) return $member;
         }
-        return new UnassignedMember();
+        return UnassignedMember::buildFromUser($user);
     }
 
     /**
@@ -62,6 +63,22 @@ class Members extends \ArrayObject
     }
 
     /**
+     * @return int
+     */
+    public function totalInGame(): int
+    {
+        if (empty($this->totalInGame)) {
+            $this->totalInGame = 0;
+
+            /** @var Member $member */
+            foreach ($this as $member) {
+                if ($member->isInGame) $this->totalInGame += 1;
+            }
+        }
+        return $this->totalInGame;
+    }
+
+    /**
      * Get a member for a given country ID
      *
      * @param int $countryId
@@ -71,6 +88,8 @@ class Members extends \ArrayObject
     {
         /** @var Member $member */
         foreach ($this as $member) {
+            if (!$member->isInGame) continue;
+
             if ($member->country->id == $countryId) return $member;
         }
         return new UnassignedMember();
@@ -79,12 +98,12 @@ class Members extends \ArrayObject
     /**
      * Determine if a given user is participating, but banned for this game
      *
-     * @param int $userId
+     * @param User $user
      * @return bool
      */
-    public function isUserBanned(int $userId): bool
+    public function isUserBanned($user): bool
     {
-        return $this->byUserId($userId)->isBanned();
+        return $this->byUser($user)->isBanned();
     }
 
     /**
@@ -119,6 +138,8 @@ class Members extends \ArrayObject
 
         /** @var Member $member */
         foreach ($this as $member) {
+            if (!$member->isInGame) continue; // ignore "members" not in-game
+
             if (!empty($status)) {
                 if ((string)$member->status == $status) $count += $member->supplyCenterCount;
             } else {

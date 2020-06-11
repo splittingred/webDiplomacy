@@ -10,6 +10,7 @@ use Diplomacy\Models\Entities\Games\MissingPlayerPolicy;
 use Diplomacy\Models\Entities\Games\Processing;
 use Diplomacy\Models\Entities\Games\Status as GameStatus;
 use Diplomacy\Models\Entities\Games\Turn;
+use Diplomacy\Models\Entities\Games\UnassignedMember;
 use Diplomacy\Models\Entities\Users\MutedCountry;
 use Diplomacy\Models\Game;
 use Diplomacy\Models\Entities\Games\DrawType;
@@ -35,18 +36,21 @@ class Factory
     }
 
     /**
-     * @param int $gameId
+     * @param int|Game $game
+     * @param bool $hydrateNestedRelationships
      * @return mixed
      * @throws InvalidPotTypeException
      * @throws InvalidPressTypeException
      * @throws InvalidDrawTypeException
      * @throws InvalidPlayersTypeException
      */
-    public function build(int $gameId): GameEntity
+    public function build($game, bool $hydrateNestedRelationships = true): GameEntity
     {
-        /** @var Game $game */
-        $game = Game::find($gameId);
-        $director = $game->directorUserID ? $game->director()->first() : null;
+        if (is_int($game)) {
+            /** @var Game $game */
+            $game = Game::where('id', '=', $game)->with('members', 'director')->first();
+        }
+        $director = $game->directorUserID ? $game->director : null;
         $variant = $game->getVariant();
 
         $entity = new GameEntity();
@@ -98,15 +102,26 @@ class Factory
 
         /** @var \Diplomacy\Models\Member $model */
         foreach ($members as $model) {
-            $member = new Member();
+            $countryIndex = $model->countryID - 1;
+            if ($countryIndex < 0 || $countryIndex >= count($countries)) {
+                $member = new UnassignedMember();
+            } else {
+                $country = new Country($model->countryID, $countries[$countryIndex]);
+                $member = new Member();
+                $member->country = $country;
+            }
             $member->id = (int)$model->id;
             $member->gameId = (int)$model->gameID;
-            $member->country = new Country($model->countryID, $countries[$model->countryID - 1]);
             $member->status = new MemberStatus((string)$model->status);
             $member->timeLoggedIn = (int)$model->timeLoggedIn;
             $member->bet = (int)$model->bet;
             $member->missedPhases = (int)$model->missedPhases;
-            $member->newMessagesFrom = array_filter(explode(',', $model->newMessagesFrom));
+            $nmf = explode(',', $model->newMessagesFrom);
+            $nmf = array_map(function($userId) {
+                $userId = (int)$userId;
+                return !empty($userId) ? $userId : false;
+            }, $nmf);
+            $member->newMessagesFrom = array_filter($nmf);
             $member->supplyCenterCount = (int)$model->supplyCenterNo;
             $member->unitCount = (int)$model->unitNo;
             $member->votes = array_filter(explode(',', $model->votes));
@@ -123,12 +138,14 @@ class Factory
 
             $member->user = $model->user->toEntity();
 
-            foreach ($model->user->mutedCountriesForGame($game->id)->get() as $mc) {
-                $member->mutedCountries[] = new MutedCountry(
-                    $mc->muteCountryID,
-                    $mc->gameID,
-                    strtotime($mc->timestamp),
-                );
+            if ($hydrateNestedRelationships) {
+                foreach ($model->user->mutedCountriesForGame($game->id)->get() as $mc) {
+                    $member->mutedCountries[] = new MutedCountry(
+                        $mc->muteCountryID,
+                        $mc->gameID,
+                        strtotime($mc->timestamp),
+                    );
+                }
             }
 
             $member->supplyCenterTarget = $variant->supplyCenterTarget;

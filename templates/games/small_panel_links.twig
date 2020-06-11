@@ -1,0 +1,23 @@
+{% if watched or notInGame %}
+    <div class="bar homeGameLinks barAlt2">
+        <a href="/games/{{ game.id }}/view">Open</a>
+        {% if watched %}- <a href="/games/{{ game.id }}/view?unwatch=1">Stop spectating</a>{% endif %}
+    </div>
+
+{% elseif game.phase.isPreGame %}
+<div class="bar homeGameLinks barAlt2">
+    <form action="#" method="post">
+        <a href="/games/{{ game.id }}/view">Open</a>
+        <input type="hidden" value="{{ game.id }}" name="gameToggleName" />
+        <input type="submit" title="Turn on/off the notifications for this game." style="float: right;" class="home-submit toggle-notice" name="submit" value="{{ notificationButtonText }}" />
+    </form>
+</div>
+{% else %}
+    <div class="bar homeGameLinks barAlt2">
+        <form action="#" method="post">
+            <a href="/games/{{ game.id }}/view#gamePanel">Open</a>
+            <input type="hidden" value="{{ game.id }}" name="gameToggleName" />
+            <input type="submit" title="Turn on/off the notifications for this game." style="float: right;" class = "home-submit toggle-notice" name="submit" value="{{ notificationButtonText }}" />
+        </form>
+    </div>
+{% endif %}

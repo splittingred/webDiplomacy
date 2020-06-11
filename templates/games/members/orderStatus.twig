@@ -1,0 +1,5 @@
+{% if member.status.isPlaying %}
+    <span class="member{{ member.id }}StatusIcon">{{ member.ordersState.icon|raw }}</span>
+{% endif %}
+- <span class="member{{ member.id }}StatusText">{{ member.ordersState.iconText }}</span>
+<br />

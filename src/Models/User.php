@@ -213,6 +213,7 @@ class User extends EloquentBase
         $entity->reliabilityRating = doubleval($this->reliabilityRating);
         $entity->roles = explode(',', $this->type);
         $entity->points = (int)$this->points;
+        $entity->timeLastSessionEnded = (int)$this->timeLastSessionEnded;
         return $entity;
     }
 }
