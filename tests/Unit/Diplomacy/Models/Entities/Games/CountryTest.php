@@ -3,7 +3,7 @@
 namespace Unit\Diplomacy\Models\Entities\Games;
 
 use Diplomacy\Models\Entities\Games\Country;
-use PHPUnit\Framework\TestCase;
+use Support\TestCase;
 
 class CountryTest extends TestCase
 {

@@ -9,9 +9,11 @@
     "ext-json": "*",
     "aura/session": "^2.1",
     "bramus/router": "^1.4",
+    "fzaninotto/faker": "^1.9",
     "illuminate/database": "^7.12",
     "illuminate/pagination": "^7.12",
     "laravel/tinker": "^2.4",
+    "symfony/finder": "^5.1",
     "twig/twig": "^3.0"
   },
   "require-dev": {
