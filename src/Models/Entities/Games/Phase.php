@@ -9,6 +9,14 @@ namespace Diplomacy\Models\Entities\Games;
  */
 class Phase
 {
+    const TYPE_FINISHED = 'finished';
+    const TYPE_PRE_GAME = 'pre-game';
+    const TYPE_MOVES = 'diplomacy';
+    const TYPE_RETREATS = 'retreats';
+    const TYPE_BUILDS = 'builds';
+
+    const LIVE_THRESHOLD_MINUTES = 60;
+
     public $name;
     public $minutes;
     public $nextSwitchPeriod;
@@ -71,7 +79,7 @@ class Phase
      */
     public function isLive(): bool
     {
-        return $this->minutes < 60;
+        return $this->minutes < static::LIVE_THRESHOLD_MINUTES;
     }
 
     /**
@@ -79,7 +87,7 @@ class Phase
      */
     public function isFinished(): bool
     {
-        return $this->type == 'finished';
+        return $this->type == static::TYPE_FINISHED;
     }
 
     /**
@@ -87,7 +95,7 @@ class Phase
      */
     public function isPreGame(): bool
     {
-        return $this->type == 'pre-game';
+        return $this->type == static::TYPE_PRE_GAME;
     }
 
     /**
@@ -103,7 +111,7 @@ class Phase
      */
     public function isMoves(): bool
     {
-        return $this->type == 'diplomacy';
+        return $this->type == static::TYPE_MOVES;
     }
 
     /**
@@ -111,7 +119,7 @@ class Phase
      */
     public function isRetreats(): bool
     {
-        return $this->type == 'retreats';
+        return $this->type == static::TYPE_RETREATS;
     }
 
     /**
@@ -119,7 +127,7 @@ class Phase
      */
     public function isBuilds(): bool
     {
-        return $this->type == 'builds';
+        return $this->type == static::TYPE_BUILDS;
     }
 
     /**

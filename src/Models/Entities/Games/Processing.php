@@ -7,6 +7,12 @@ namespace Diplomacy\Models\Entities\Games;
  */
 class Processing
 {
+    const STATUS_NOT_PROCESSING = 'Not-processing';
+    const STATUS_PROCESSING = 'Processing';
+    const STATUS_CRASHED = 'Crashed';
+    const STATUS_PAUSED = 'Paused';
+    const TIME_NOW_TEXT = 'Now';
+
     /** @var string $status */
     protected $status;
     /** @var int $time */
@@ -49,7 +55,7 @@ class Processing
      */
     public function timeRemainingAsText(): string
     {
-        return $this->overdue() ? 'Now' : \libTime::remainingText($this->time);
+        return $this->overdue() ? static::TIME_NOW_TEXT : \libTime::remainingText($this->time);
     }
 
     /**
@@ -81,7 +87,7 @@ class Processing
      */
     public function isPaused(): bool
     {
-        return $this->status == 'paused';
+        return $this->status == static::STATUS_PAUSED;
     }
 
     /**
@@ -89,7 +95,7 @@ class Processing
      */
     public function isCrashed(): bool
     {
-        return $this->status == 'crashed';
+        return $this->status == static::STATUS_CRASHED;
     }
 
     /**
@@ -97,7 +103,7 @@ class Processing
      */
     public function isProcessing(): bool
     {
-        return $this->status == 'processing';
+        return $this->status == static::STATUS_PROCESSING;
     }
 
     /**
@@ -105,6 +111,6 @@ class Processing
      */
     public function isNotProcessing(): bool
     {
-        return $this->status == 'not-processing';
+        return $this->status == static::STATUS_NOT_PROCESSING;
     }
 }

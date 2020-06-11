@@ -7,6 +7,10 @@ namespace Diplomacy\Models\Entities\Games;
  */
 class Status
 {
+    const STATUS_ACTIVE = 'no';
+    const STATUS_WON = 'won';
+    const STATUS_DRAWN = 'drawn';
+
     /** @var string $type */
     protected $type;
 
@@ -23,7 +27,7 @@ class Status
      */
     public function isActive(): bool
     {
-        return $this->type == 'no';
+        return $this->type == static::STATUS_ACTIVE;
     }
 
     /**
@@ -39,7 +43,7 @@ class Status
      */
     public function wasWon(): bool
     {
-        return $this->type == 'won';
+        return $this->type == static::STATUS_WON;
     }
 
     /**
@@ -47,6 +51,6 @@ class Status
      */
     public function wasDrawn(): bool
     {
-        return $this->type == 'drawn';
+        return $this->type == static::STATUS_DRAWN;
     }
 }

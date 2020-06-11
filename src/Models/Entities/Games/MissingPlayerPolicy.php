@@ -7,6 +7,10 @@ namespace Diplomacy\Models\Entities\Games;
  */
 class MissingPlayerPolicy
 {
+    const TYPE_STRICT = 'strict';
+    const TYPE_NORMAL = 'normal';
+    const TYPE_WAIT = 'wait';
+
     protected $type;
 
     /**
@@ -22,7 +26,7 @@ class MissingPlayerPolicy
      */
     public function isNormal(): bool
     {
-        return $this->type == 'normal';
+        return $this->type == static::TYPE_NORMAL;
     }
 
     /**
@@ -30,7 +34,7 @@ class MissingPlayerPolicy
      */
     public function isStrict(): bool
     {
-        return $this->type == 'strict';
+        return $this->type == static::TYPE_STRICT;
     }
 
     /**
@@ -38,6 +42,6 @@ class MissingPlayerPolicy
      */
     public function isWait(): bool
     {
-        return $this->type == 'wait';
+        return $this->type == static::TYPE_WAIT;
     }
 }

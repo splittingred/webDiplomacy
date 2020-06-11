@@ -26,6 +26,9 @@ class NoPress extends PressType
         return $phase->isFinished();
     }
 
+    /**
+     * @return string
+     */
     public function getLongName(): string
     {
         return 'No messaging';
