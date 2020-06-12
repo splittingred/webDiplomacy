@@ -1,0 +1,10 @@
+<div class="custom-control custom-checkbox">
+    <input type="checkbox"
+           name="{{ field.fieldName }}"
+           id="{{ field.id }}"
+           class="{{ field.cssCls }} custom-control-input"
+           value="{{ field.value }}"
+    />
+    <label for="{{ field.id }}" class="custom-control-label">{{ field.label }} {{ field.helpIcon|raw }}</label>
+    {{ field.errorMessages|raw }}
+</div>

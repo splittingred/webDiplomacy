@@ -24,6 +24,7 @@ global $app;
 $app = new Container();
 $app->singleton('app', 'Illuminate\Container\Container');
 
+
 require_once ROOT_PATH . 'src/bootstrap_legacy.php';
 require_once ROOT_PATH . 'global/definitions.php';
 require_once ROOT_PATH . 'objects/mailer.php';
@@ -54,3 +55,10 @@ $capsule->bootEloquent();
 
 $request = new Request();
 $app->instance('request', $request);
+
+$fileSystem = new \Illuminate\Filesystem\Filesystem();
+$fileLoader = new \Illuminate\Translation\FileLoader($fileSystem, ROOT_PATH. 'resources/lang/');
+$translator = new \Illuminate\Translation\Translator($fileLoader, 'en');
+$app->instance('translation.translator', $translator);
+$validatorFactory = new \Illuminate\Validation\Factory($translator, $app);
+$app->instance('validation.factory', $validatorFactory);

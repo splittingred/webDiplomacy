@@ -11,28 +11,95 @@ class SearchForm extends BaseForm
     protected $template = 'forms/games/search_form.twig';
     protected $requestType = Request::TYPE_GET;
     protected $fields = [
-        'status'            => 'all',
-        'user_games'        => 'all',
-        'round'             => 'all',
-        'joinable'          => 'all',
-        'privacy'           => 'all',
-        'pot_type'          => 'all',
-        'draw_votes'        => 'all',
-        'variant'           => 'all',
-        'excused_turns'     => -1,
-        'anonymity'         => 'all',
-        'phase_length_min'  => 5,
-        'phase_length_max'  => 14400,
-        'rr_min'            => 0,
-        'rr_max'            => 100,
-        'bet_min'           => '',
-        'bet_max'           => '',
-        'messaging_types'   => ['norm', 'pub', 'none', 'rule'],
-        'tournament_id'     => 1,
-        'tournament_rounds' => 5,
-        'user_id'           => 0,
-        'sort_by'           => 'id',
-        'sort_dir'          => 'desc',
+        'status'            => [
+            'default' => 'all'
+        ],
+        'user_games'        => [
+            'default' => 'all'
+        ],
+        'round'             => [
+            'default' => 'all'
+        ],
+        'joinable'          => [
+            'default' => 'all'
+        ],
+        'privacy'           => [
+            'default' => 'all'
+        ],
+        'pot_type'          => [
+            'type' => 'Games\PotTypeSelect',
+            'showAll' => true,
+            'default' => '-1',
+        ],
+        'draw_votes'        => [
+            'type' => 'Games\DrawTypeSelect',
+            'default' => 'all',
+            'showAll' => true,
+            'showAllValue' => 'all',
+        ],
+        'variant'           => [
+            'type' => 'Games\VariantSelect',
+            'default' => 'all',
+            'showAll' => true,
+            'showAllValue' => 'all',
+        ],
+        'excused_turns'     => [
+            'default' => -1
+        ],
+        'anonymity'         => [
+            'default' => 'all',
+            'type'    => 'select',
+            'label'   => 'Anonymity',
+            'options' => [
+                ['value' => 'all', 'text' => 'All'],
+                ['value' => 'yes', 'text' => 'Anonymous'],
+                ['value' => 'no', 'text' => 'Non-Anonymous'],
+            ],
+        ],
+        'phase_length_min'  => [
+            'type' => 'Games\PhaseLengthSelect',
+            'label' => 'Phase Length From',
+            'default' => 5
+        ],
+        'phase_length_max'  => [
+            'type' => 'Games\PhaseLengthSelect',
+            'label' => 'Phase Length To',
+            'default' => 14400
+        ],
+        'rr_min'            => [
+            'default' => 0
+        ],
+        'rr_max'            => [
+            'default' => 100
+        ],
+        'bet_min'           => [
+            'type'      => 'number',
+            'label'     => 'Bet Size From',
+            'min'       => 0,
+            'default'   => '',
+        ],
+        'bet_max'           => [
+            'type'      => 'number',
+            'label'     => 'Bet Size To',
+            'min'       => 0,
+            'default'   => '',
+        ],
+        'messaging_types'   => [
+            'type' => 'checkboxes',
+            'label' => 'Messaging Types',
+            'default' => ['norm', 'pub', 'none', 'rule'],
+            'options' => [
+                ['value' => 'norm', 'text' => 'Regular'],
+                ['value' => 'pub',  'text' => 'Public Only'],
+                ['value' => 'none', 'text' => 'No Messaging'],
+                ['value' => 'rule', 'text' => 'Rulebook'],
+            ],
+        ],
+        'tournament_id'     => ['default' => 1],
+        'tournament_rounds' => ['default' => 5],
+        'user_id'           => ['default' => 0],
+        'sort_by'           => ['default' => 'id'],
+        'sort_dir'          => ['default' => 'desc'],
     ];
 
     protected $sortColumns = [
@@ -45,38 +112,6 @@ class SearchForm extends BaseForm
         'watchedGames'              => 'Spectator Count',
         'turn'                      => 'Game Turn',
         'processTime'               => 'Time to Next Phase',
-    ];
-    protected $messagingTypes = [
-        'norm'  => 'Regular',
-        'pub'   => 'Public Only',
-        'none'  => 'No Messaging',
-        'rule'  => 'Rulebook',
-    ];
-    protected $phaseLengths = [
-        '5' => '5 Minutes',
-        '7' => '10 Minutes',
-        '15' => '15 Minutes',
-        '20' => '20 Minutes',
-        '30' => '30 Minutes',
-        '60' => '1 Hour',
-        '120' => '2 Hours',
-        '240' => '4 Hours',
-        '480' => '8 Hours',
-        '600' => '10 Hours',
-        '720' => '12 Hours',
-        '840' => '14 Hours',
-        '960' => '16 Hours',
-        '1080' => '18 Hours',
-        '1200' => '20 Hours',
-        '1320' => '22 Hours',
-        '1440' => '1 Day',
-        '2880' => '2 Days',
-        '4320' => '3 Days',
-        '5760' => '4 Days',
-        '7200' => '5 Days',
-        '8640' => '6 Days',
-        '10080' => '7 Days',
-        '14400' => '10 Days',
     ];
     protected $anonymityLevels = [
         'all' => 'All',
@@ -127,8 +162,6 @@ class SearchForm extends BaseForm
             'draw_vote_options' => $this->drawVoteOptions,
             'variants' => \Config::$variants,
             'anonymity_levels' => $this->anonymityLevels,
-            'phase_lengths' => $this->phaseLengths,
-            'messaging_types' => $this->messagingTypes,
             'sort_columns' => $this->sortColumns,
         ]);
     }

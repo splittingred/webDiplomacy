@@ -2,10 +2,12 @@
 
 namespace Diplomacy\Controllers;
 
+use Diplomacy\Forms\BaseForm;
 use Diplomacy\Models\User;
 use Diplomacy\Services\Request;
 use Diplomacy\Utilities\HasPlaceholders;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Validation\Factory as ValidationFactory;
 use libHTML;
 use Twig\Environment as Twig;
 use Twig\Error\Error as TwigError;
@@ -25,6 +27,9 @@ abstract class BaseController
     protected $currentUserEntity;
     /** @var Request */
     protected $request;
+    /** @var ValidationFactory $validationFactory */
+    protected $validationFactory;
+
     /** @var string */
     protected $template;
     /** @var bool */
@@ -53,6 +58,7 @@ abstract class BaseController
             $this->currentUserEntity = User::find($this->currentUser->id)->toEntity();
         }
         $this->request = $app->make('request');
+        $this->validationFactory = $app->make('validation.factory');
         $this->setUp();
     }
 
@@ -69,6 +75,19 @@ abstract class BaseController
     protected function getTemplate() : string
     {
         return $this->template;
+    }
+
+    /** @var BaseForm $form */
+    protected $form;
+
+    /**
+     * @param $class
+     * @return BaseForm
+     */
+    protected function makeForm($class): BaseForm
+    {
+        $this->form = new $class($this->request, $this->renderer, $this->validationFactory);
+        return $this->form;
     }
 
     /**

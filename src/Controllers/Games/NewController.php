@@ -9,12 +9,10 @@ use Diplomacy\Models\Game;
 class NewController extends BaseController
 {
     public $template = 'pages/games/new.twig';
-    /** @var NewForm $form */
-    protected $form;
 
     public function setUp()
     {
-        $this->form = new NewForm($this->request, $this->renderer);
+        $this->makeForm(NewForm::class);
         parent::setUp();
     }
 

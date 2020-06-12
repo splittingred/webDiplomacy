@@ -1,0 +1,11 @@
+<div class="form-group">
+    <label for="{{ field.id }}">{{ field.label }}: {{ field.helpIcon|raw }}</label>
+    <input id="{{ field.id }}"
+           type="text"
+           name="{{ field.fieldName }}"
+           value="{{ field.value }}"
+           class="{{ field.cssCls }}"
+    {% for ikey, ival in field.inputAttributes %} {{ ikey }}="{{ ival }}"{% endfor %}
+    />
+    {{ field.errorMessages|raw }}
+</div>

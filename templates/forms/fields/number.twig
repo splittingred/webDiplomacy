@@ -1,0 +1,16 @@
+<div class="form-group">
+    <label for="{{ field.id }}">{{ field.label }}: {{ field.helpIcon|raw }}</label>
+    <input id="{{ field.id }}"
+           type="number"
+           name="{{ field.fieldName }}"
+           value="{{ field.value }}"
+           class="{{ field.cssCls }}"
+           size="{{ field.size }}"
+           max="{{ field.max }}"
+           min="{{ field.min }}"
+           placeholder="{{ field.default }}"
+           step="{{ field.step }}"
+    {% for ikey, ival in field.inputAttributes %} {{ ikey }}="{{ ival }}"{% endfor %}
+    />
+    {{ field.errorMessages|raw }}
+</div>

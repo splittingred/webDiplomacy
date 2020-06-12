@@ -1,0 +1,16 @@
+<div class="form-group">
+    <label>{{ field.label }}: {{ field.helpIcon }}</label>
+    {% for option in field.options %}
+        <div class="custom-control custom-control-inline custom-checkbox">
+            <input type="checkbox"
+                   class="custom-control-input"
+                   name="{{ option.name }}"
+                   id="{{ option.id }}"
+                   value="{{ option.value }}"
+                    {% if option.value in field.default %} checked="checked"{% endif %}
+            >
+            <label class="custom-control-label" for="{{ option.id }}">{{ option.text }}</label>
+        </div>
+    {% endfor %}
+    {{ field.errorMessages|raw }}
+</div>

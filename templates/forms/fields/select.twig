@@ -1,0 +1,9 @@
+<div class="form-group">
+    <label for="{{ field.id }}">{{ field.label|raw }}: {{ field.helpIcon|raw }}</label>
+    <select id="{{ field.id }}" name="{{ field.fieldName }}" class="{{ field.cssCls }}" {% for ikey, ival in field.inputAttributes %} {{ ikey }}="{{ ival }}"{% endfor %}>
+    {% if field.showAll %}<option value="{{ field.showAllValue }}"{% if option.value == field.showAllValue %} selected="selected"{% endif %}>All</option>{% endif %}
+    {% for option in field.options %}
+        <option value="{{ option.value }}"{% if option.value == field.value %} selected="selected"{% endif %}>{{ option.text }}</option>
+    {% endfor %}
+    </select>
+</div>

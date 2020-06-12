@@ -24,20 +24,20 @@ class IndexController extends BaseController
 
     public function setUp()
     {
-        $this->searchForm = new SearchForm($this->request, $this->renderer);
+        $this->makeForm(SearchForm::class);
         $this->searchService = new SearchService();
         parent::setUp();
     }
 
     public function call()
     {
-        $collection = $this->getGames($this->searchForm);
+        $collection = $this->getGames($this->form);
         return [
             'games' => $collection->getEntities(),
             'total_pages' => $this->getTotalPages($collection->getTotal()),
             'pagination' => $this->getPagination($collection->getTotal()),
             'tabs' => $this->getGamesTabs('search'),
-            'search_form' => $this->searchForm->render(),
+            'search_form' => $this->form->render(),
         ];
     }
 

@@ -5,6 +5,8 @@ namespace Diplomacy\Forms;
 use Diplomacy\Services\Request;
 use Diplomacy\Utilities\HasPlaceholders;
 use Diplomacy\Views\Renderer;
+use Illuminate\Validation\Factory as ValidationFactory;
+use Illuminate\Validation\Validator;
 
 /**
  * @package Diplomacy\Forms
@@ -24,19 +26,46 @@ abstract class BaseForm
     /** @var string */
     protected $submitFieldName = 'submit';
     /** @var string */
+    protected $nestedIn = '';
+    /** @var string */
     protected $requestType = Request::TYPE_POST;
     /** @var array */
     protected $onSubmissionCallbacks = [];
 
+    /** @var Validator  */
+    protected $validator;
+    /** @var array $validationRules */
+    protected $validationRules = [];
+    /** @var array $validationMessages */
+    protected $validationMessages = [];
+    /** @var array $validationCustomAttributes */
+    protected $validationCustomAttributes = [];
+
+    /** @var FieldFactory $fieldFactory */
+    protected $fieldFactory;
+    /** @var array $fieldObjects */
+    protected $fieldObjects = [];
+    /** @var string $fieldPrefix */
+    protected $fieldPrefix = '';
+
     /**
      * @param Request $request
      * @param Renderer $renderer
+     * @param ValidationFactory $validatorFactory
      */
-    public function __construct(Request $request, Renderer $renderer)
+    public function __construct(Request $request, Renderer $renderer, ValidationFactory $validatorFactory)
     {
         $this->request = $request;
         $this->renderer = $renderer;
         $this->setUp();
+        $this->validator = $validatorFactory->make(array_keys($this->fields), $this->validationRules, $this->validationMessages, $this->validationCustomAttributes);
+
+        $clsNameLength = strlen(self::class);
+        $defaultFieldPrefix = substr(self::class, 0, $clsNameLength < 4 ? $clsNameLength : 4);
+        $fieldPrefix = !empty($this->fieldPrefix) ? $this->fieldPrefix : $defaultFieldPrefix;
+        $this->fieldFactory = new FieldFactory($this->renderer, $fieldPrefix, $this->nestedIn);
+
+        $this->buildFields();
     }
 
     public function setUp() : void
@@ -56,19 +85,48 @@ abstract class BaseForm
     public function afterRender() { }
 
     /**
+     * @return bool
+     */
+    public function validate(): bool
+    {
+        return !$this->validator->fails();
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors(): array
+    {
+        $data = [];
+        foreach (array_keys($this->fields) as $key) {
+            $errors = $this->validator->errors()->get($key, '<div class="invalid-feedback">:message</div>');
+            $data[$key] = $errors;
+        }
+        return $data;
+    }
+
+    /**
      * @return string
      */
     public function render() : string
     {
-        if ($this->isSubmitted()) {
+        if ($this->isSubmitted() && $this->validate()) {
             $this->handleSubmit();
         }
 
         $this->beforeRender();
-        $this->setPlaceholder('values', $this->getValues());
+        $this->setPlaceholder('fields', $this->getFields());
         $output = $this->renderer->render($this->template, $this->placeholders);
         $this->afterRender();
         return $output;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFields(): array
+    {
+        return $this->fieldObjects;
     }
 
     /**
@@ -88,22 +146,18 @@ abstract class BaseForm
      */
     public function getValues() : array
     {
-        if (!$this->isSubmitted()) return $this->getFields();
-
-        $postValues = $this->request->getParameters($this->requestType);
-        $acceptedKeys = $this->getFieldNames();
-        return array_filter($postValues, function ($key) use ($acceptedKeys) { return in_array($key, $acceptedKeys); }, ARRAY_FILTER_USE_KEY);
+        return array_map(function($f) {
+            return $f->value;
+        }, $this->fieldObjects);
     }
 
     /**
      * @param string $k
-     * @param mixed|null $default
      * @return mixed|null
      */
-    public function getValue(string $k, $default = null)
+    public function getValue(string $k)
     {
-        $values = $this->getValues();
-        return array_key_exists($k, $values) ? $values[$k] : $default;
+        return $this->fieldObjects[$k]->value;
     }
 
     /**
@@ -117,17 +171,9 @@ abstract class BaseForm
     /**
      * @return array
      */
-    protected function getFields() : array
-    {
-        return $this->fields;
-    }
-
-    /**
-     * @return array
-     */
     protected function getFieldNames() : array
     {
-        return array_keys($this->getFields());
+        return array_keys($this->fields);
     }
 
     /**
@@ -138,5 +184,22 @@ abstract class BaseForm
         $baseUrl = rtrim(\Config::$url, '/');
         $path = ltrim($path, '/');
         header("Location: {$baseUrl}/{$path}");
+    }
+
+    /**
+     * Build the field objects
+     */
+    protected function buildFields(): void
+    {
+        $postValues = [];
+        $errors = [];
+        if ($this->isSubmitted()) {
+            $postValues = $this->request->getParameters($this->requestType);
+            if (!empty($this->nestedIn)) {
+                $postValues = array_key_exists($this->nestedIn, $postValues) ? $postValues[$this->nestedIn] : [];
+            }
+            $errors = $this->getErrors();
+        }
+        $this->fieldObjects = $this->fieldFactory->build($this->fields, $postValues, $errors);
     }
 }
