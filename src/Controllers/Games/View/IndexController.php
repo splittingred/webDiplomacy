@@ -29,9 +29,6 @@ class IndexController extends Base
     /** @var Member $currentMember */
     protected $currentMember;
 
-    protected $footerScripts = ['makeFormsSafe();'];
-
-
     public function setUp()
     {
         parent::setUp();

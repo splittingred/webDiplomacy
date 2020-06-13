@@ -24,7 +24,7 @@
 ## Frontend
 
 - Lots of javascript will need to be fixed to deal with scriptaculous removal
-- Fix dropdown menus
+- Map JS is totally broken
 
 ## Test Cases To Do
 

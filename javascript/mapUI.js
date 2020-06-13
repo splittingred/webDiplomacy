@@ -88,25 +88,25 @@ function mapArrows(currentTurn, newTurn)
 {
 	if ( newTurn == -1 )
 	{
-		$('Start').src = l_s("images/historyicons/Start_disabled.png");
-		$('Backward').src = l_s("images/historyicons/Backward_disabled.png");
+		$('Start').src = ("images/historyicons/Start_disabled.png");
+		$('Backward').src = ("images/historyicons/Backward_disabled.png");
 	}
 	else
 	{
-		$('Start').src = l_s("images/historyicons/Start.png");
-		$('Backward').src = l_s("images/historyicons/Backward.png");
+		$('Start').src = ("images/historyicons/Start.png");
+		$('Backward').src = ("images/historyicons/Backward.png");
 	}
 	
 	// Draw the greyed icons if the user can go no further forward
 	if ( newTurn == currentTurn )
 	{
-		$('Forward').src = l_s("images/historyicons/Forward_disabled.png");
-		$('End').src = l_s("images/historyicons/End_disabled.png");
+		$('Forward').src = ("images/historyicons/Forward_disabled.png");
+		$('End').src = ("images/historyicons/End_disabled.png");
 	}
 	else
 	{
-		$('Forward').src = l_s("images/historyicons/Forward.png");
-		$('End').src = l_s("images/historyicons/End.png");
+		$('Forward').src = ("images/historyicons/Forward.png");
+		$('End').src = ("images/historyicons/End.png");
 	}
 }
 turnToText='';//() { return ''; }
@@ -156,5 +156,6 @@ function recolorMap()
 	}
 }
 
-recolorMap();
-Event.observe($('mapImage'),'load',recolorMap);
+$(window).on("load", function() {
+	$('#mapImage').bind('load', recolorMap);
+});

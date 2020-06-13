@@ -108,7 +108,7 @@ function OrdersHTMLFormClass() {
 		}
 		else
 		{
-			if( !Object.isUndefined(response.headerJSON.newContext) )
+			if( response.headerJSON.newContext )
 			{
 				this.context = response.headerJSON.newContext;
 				this.contextKey = response.headerJSON.newContextKey;

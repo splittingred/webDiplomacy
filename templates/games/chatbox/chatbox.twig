@@ -21,10 +21,13 @@
 {{ form|raw }}
 
 <script>
-let cbs = $('chatboxscroll');
-cbs.scrollTop = cbs.scrollHeight;
-// Don't focus the chatbox if the user is entering orders
-// if request msgCountryID
-let sb = $('sendbox');
-if (sb != null && !Object.isUndefined(sb)) { sb.focus(); }
+$(window).on("load", function() {
+    let cbs = $('#chatboxscroll');
+    cbs.scrollTop(cbs.prop("scrollHeight"));
+    // Don't focus the chatbox if the user is entering orders
+    {% if app.request.countryId %}
+    let sb = $('#sendbox');
+    if (sb != null && sb) { sb.focus(); }
+    {% endif %}
+});
 </script>

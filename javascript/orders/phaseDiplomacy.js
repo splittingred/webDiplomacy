@@ -50,7 +50,7 @@ function loadOrdersPhase() {
 					else if( this.type=='Convoy' && this.Unit.convoyOptions.any(function(c){ return (c==this.fromTerrID); },this) )
 					{
 						convoyPath = this.Unit.ConvoyGroup.pathArmyToCoastWithFleet(this.FromTerritory, this.ToTerritory, this.Unit.Territory);
-						if( Object.isUndefined(convoyPath) )
+						if( !(convoyPath) )
 							this.wipe(['toTerrID','fromTerrID']);
 					}
 				}
@@ -67,7 +67,7 @@ function loadOrdersPhase() {
 					var thisOrder=this;
 					var filterSet=function(fFilter,fSet) { MyOrders.select(fFilter).map(fSet); };
 					
-					if( Object.isUndefined(this.setAndShow) ) {
+					if( !(this.setAndShow) ) {
 						MyOrders.map(function(o){ 
 							o.setAndShow=function(n,v){ o.inputValue(n,v); o.reHTML(n); };
 						});
@@ -85,7 +85,7 @@ function loadOrdersPhase() {
 							break;
 							
 						case "Support move":
-							if( !Object.isUndefined(this.ToTerritory) ) {
+							if( (this.ToTerritory) ) {
 								// We have toTerr, where we are supporting to
 
 								MyOrders.select(function(o) { 
@@ -95,7 +95,7 @@ function loadOrdersPhase() {
 								});
 							}
 							
-							if( !Object.isUndefined(this.FromTerritory) ) {
+							if( (this.FromTerritory) ) {
 								// We have fromTerr, where we are supporting from
 
 								MyOrders.map(function(o) {
@@ -108,7 +108,7 @@ function loadOrdersPhase() {
 									});
 									
 									convoyingArmyList.select(function(o) { 
-										return( Object.isUndefined(o.ToTerritory)||o.ToTerritory.id!=thisOrder.ToTerritory.id );
+										return( !(o.ToTerritory)||o.ToTerritory.id!=thisOrder.ToTerritory.id );
 									}).map(function(o){
 										o.setAndShow('toTerrID',thisOrder.ToTerritory.id.toString());
 									});
@@ -118,7 +118,7 @@ function loadOrdersPhase() {
 							break;
 						
 						case "Convoy":
-							if( !Object.isUndefined(this.ToTerritory) ) {
+							if( (this.ToTerritory) ) {
 								// We have toTerr, where we are convoying to
 								
 								// If it's one of ours it had better move (had it?)
@@ -129,7 +129,7 @@ function loadOrdersPhase() {
 								});
 							}
 							
-							if( !Object.isUndefined(this.FromTerritory) ) {
+							if( (this.FromTerritory) ) {
 								// We have fromTerr, where we are convoying from
 
 								// If it's one of ours it had better move to where we're convoying it
@@ -216,7 +216,7 @@ function loadOrdersPhase() {
 			};
 			
 			OrderObj.updateFromTerrChoices = function () {
-				if( Object.isUndefined(this.ToTerritory) )
+				if( !(this.ToTerritory) )
 				{
 					this.fromTerrChoices = undefined;
 				}
@@ -259,7 +259,7 @@ function loadOrdersPhase() {
 				if( toTerrID == '' ) return '';
 				
 				var ToUnitType;
-				if( Object.isUndefined(this.ToTerritory) || Object.isUndefined(this.ToTerritory.Unit) )
+				if( !(this.ToTerritory) || !(this.ToTerritory.Unit) )
 					ToUnitType = 'unit';
 				else
 					ToUnitType = this.ToTerritory.Unit.type.toLowerCase();
@@ -285,7 +285,7 @@ function loadOrdersPhase() {
 				}
 			};
 			OrderObj.viaConvoyHTML = function () {
-				if( Object.isUndefined(this.viaConvoyChoices) )
+				if( !(this.viaConvoyChoices) )
 					return '';
 				else if ( this.viaConvoyChoices.values().length==1 )
 					return '<input type="hidden" name="orderForm['+this.id+'][viaConvoy]" value="'+this.viaConvoyChoices.values()[0]+'" />';

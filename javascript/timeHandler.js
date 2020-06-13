@@ -26,16 +26,17 @@
 let updateTimestamps = function () {
 	$('.timestamp').map(function() {
 		let c = $(this);
-		let cDate = new Date( parseInt(this.getAttribute("unixtime"))*1000 );
+		let cDate = new Date( parseInt(c.attr("unixtime"))*1000 );
 		c.html( dateToText(cDate) );
 	},this);
 }
 
 // update class timestampGames to be in the local time, taking the unixtime attribute and converting it via dateToText()
 let updateTimestampGames = function () {
-	$('.timestampGames').map(function(c) {
-		const cDate = new Date( parseInt(c.getAttribute("unixtime"))*1000 );
-		c.update( dateToTextTimestampGames(cDate) );
+	$('.timestampGames').map(function() {
+		let c = $(this);
+		const cDate = new Date( parseInt(c.attr("unixtime"))*1000 );
+		c.html( dateToTextTimestampGames(cDate) );
 	},this);
 }
 
@@ -137,8 +138,9 @@ function updateUTCOffset() {
 	if( minutes < 10 ) minutes = '0'+minutes.toString();
 
 	let utcE = $("UTCOffset");
-	if(utcE !== undefined && utcE != null)
-		utcE.html('UTC'+sign.toString()+hours.toString()+':'+minutes.toString());
+	if (utcE !== undefined && utcE != null) {
+		utcE.html('UTC' + sign.toString() + hours.toString() + ':' + minutes.toString());
+	}
 }
 
 
@@ -155,7 +157,7 @@ function updateTimers() {
 	
 	$(".timeremaining").map(function(c) {
 		
-		var givenTime = parseInt(c.getAttribute("unixtime"));
+		var givenTime = parseInt(c.attr("unixtime"));
 		var secondsRemaining = givenTime - timeFrom;
 
 		if( secondsRemaining < 300 )

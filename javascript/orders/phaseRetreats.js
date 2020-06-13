@@ -48,9 +48,9 @@ function loadOrdersPhase() {
 				
 				this.toTerrChoices = this.Unit.getMovableTerritories().select(function(t){
 					
-					if( !Object.isUndefined(t.coastParent.standoff) && t.coastParent.standoff )
+					if( t.coastParent.standoff && t.coastParent.standoff )
 						return false;
-					else if ( !Object.isUndefined(t.coastParent.Unit) )
+					else if ( t.coastParent.Unit )
 						return false;
 					else if ( this.Unit.Territory.coastParent.occupiedFromTerrID == t.coastParent.id )
 						return false;

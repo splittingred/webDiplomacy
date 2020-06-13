@@ -24,18 +24,18 @@
 
 function muteAll() {
 	muteUsers.map(function(m) {
-		$(".userID"+m).map(function(mt) {
-			mt.hide();
+		$(".userID"+m).map(function() {
+			$(this).hide();
 		});
 	});
 	muteCountries.map(function(m) {
 		$(".gameID"+m[0]+"countryID"+m[1]).map(function(mt) {
-			mt.hide();
+			$(this).hide();
 		});
 	});
 	muteThreads.map(function(m) {
 		$(".threadID"+m).map(function(mt) {
-			mt.hide();
+			$(this).hide();
 		});
 	});
 }

@@ -222,8 +222,11 @@ if (isset($Member) && $Member->status == 'Playing' && !$Game->isFinished())
 }
 
 $gameFactory = new Factory();
-$gameEntity = $gameFactory->build($Game->id);
-$currentMember = $User ? $gameEntity->members->byUserId($User->id) : null;
+$gameModel = \Diplomacy\Models\Game::find($Game->id);
+$gameEntity = $gameFactory->build($gameModel);
+$userModel = \Diplomacy\Models\User::find($User->id);
+$userEntity = $userModel->toEntity();
+$currentMember = $User ? $gameEntity->members->byUser($userEntity) : null;
 
 require_once 'board/OldChatbox.php';
 
