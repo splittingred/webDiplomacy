@@ -7,6 +7,7 @@ use Diplomacy\Models\User;
 use Diplomacy\Services\Request;
 use Diplomacy\Utilities\HasPlaceholders;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Log\Logger;
 use Illuminate\Validation\Factory as ValidationFactory;
 use libHTML;
 use Twig\Environment as Twig;
@@ -48,6 +49,9 @@ abstract class BaseController
     /** @var array */
     protected $noticeMappings = [];
 
+    /** @var Logger */
+    protected $logger;
+
     public function __construct()
     {
         global $app;
@@ -59,6 +63,7 @@ abstract class BaseController
         }
         $this->request = $app->make('request');
         $this->validationFactory = $app->make('validation.factory');
+        $this->logger = $app->make('logger');
         $this->setUp();
     }
 

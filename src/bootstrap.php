@@ -29,16 +29,18 @@ require_once ROOT_PATH . 'src/bootstrap_legacy.php';
 require_once ROOT_PATH . 'global/definitions.php';
 require_once ROOT_PATH . 'objects/mailer.php';
 
-$app->singleton('renderer', function($app) {
-    return Renderer::initialize($app);
-});
-$app->instance('mailer', new \Mailer());
 Facade::setFacadeApplication($app);
 
-Paginator::currentPageResolver(function ($pageName) {
-    return empty($_GET[$pageName]) ? 1 : $_GET[$pageName];
-});
+/****************************************************************
+/* Logger
+/****************************************************************/
+$log = new Illuminate\Log\Logger(new Monolog\Logger('webDiplomacy Logger'));
+$log->pushHandler(new Monolog\Handler\StreamHandler('./log/development.log')); // TODO: make env specific
+$app->instance('logger', $log);
 
+/****************************************************************
+/* Database
+/****************************************************************/
 global $capsule;
 $capsule = new Capsule;
 $capsule->addConnection([
@@ -53,8 +55,22 @@ $capsule->setAsGlobal();
 // Setup the Eloquent ORM.
 $capsule->bootEloquent();
 
+/****************************************************************
+/* Controllers
+/****************************************************************/
 $request = new Request();
 $app->instance('request', $request);
+$app->singleton('renderer', function($app) {
+    return Renderer::initialize($app);
+});
+
+Paginator::currentPageResolver(function ($pageName) {
+    return empty($_GET[$pageName]) ? 1 : $_GET[$pageName];
+});
+
+/****************************************************************
+/* Validation
+/****************************************************************/
 
 $fileSystem = new \Illuminate\Filesystem\Filesystem();
 $fileLoader = new \Illuminate\Translation\FileLoader($fileSystem, ROOT_PATH. 'resources/lang/');
@@ -62,3 +78,8 @@ $translator = new \Illuminate\Translation\Translator($fileLoader, 'en');
 $app->instance('translation.translator', $translator);
 $validatorFactory = new \Illuminate\Validation\Factory($translator, $app);
 $app->instance('validation.factory', $validatorFactory);
+
+/****************************************************************
+/* Misc
+/****************************************************************/
+$app->instance('mailer', new \Mailer());

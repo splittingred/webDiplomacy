@@ -45,7 +45,6 @@ class IndexController extends Base
     public function call()
     {
         $gameBoard = new GameBoard($this->game, $this->gameEntity, $this->currentUser);
-
         return [
             'current_member' => $this->currentMember,
             'game' => $this->gameEntity,

@@ -27,3 +27,4 @@ adminInfo.php
 tmp/
 vendor/
 tests/coverage/
+log/*.log
