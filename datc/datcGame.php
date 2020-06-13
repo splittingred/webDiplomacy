@@ -219,7 +219,7 @@ class datcGame extends processGame
 		$DB = $app->make('DB');
 
 		// Create DATCResults to save ajax.php results to, and modify OrdersHTML to save results to it
-		libHTML::$footerScript[] = 'DATCResults=new Hash();';
+		libHTML::$footerScript[] = 'DATCResults= {};';
 
 		// For each countryID with orders output the blank orders, then add the extra code to enter and submit those orders via JS.
 		$tabl=$DB->sql_tabl("SELECT m.countryID, m.id FROM wD_Members m
@@ -292,7 +292,7 @@ class datcGame extends processGame
 			}
 			else
 			{
-				$H(response.headerJSON.orders).each(function(p) {
+				response.headerJSON.orders.each(function(p) {
 					DATCResults.set(p[0],p[1].status);
 				},this);
 				this.onSemiSuccess(response);
@@ -459,5 +459,3 @@ class datcGame extends processGame
 		$DB->sql_put("UPDATE wD_Games SET phase='Retreats' WHERE id = ".$this->id);
 	}
 }
-
-?>

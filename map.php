@@ -181,6 +181,7 @@ elseif ( $mapType == 'json' )
 else
 {
 	require_once(l_r('map/drawMap.php'));
+	/** @var drawMap $drawMap */
 	$drawMap = $Variant->drawMap($mapType=='small');
 }
 
@@ -547,5 +548,3 @@ else
 	libHTML::serveImage($filename);
 }
 unset($drawMap); // $drawMap is memory intensive and should be freed as soon as no longer needed
-
-?>
