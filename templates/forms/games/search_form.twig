@@ -71,27 +71,8 @@
         {{ fields.phase_length_min|raw }}
         {{ fields.phase_length_max|raw }}
 
-        <div class="form-group">
-            <label for="sf-rr-min">Reliability Rating From</label>
-            <select name="rr_min" id="sf-rr-min" class="gameCreate form-control">
-                {% for i in 0..10 %}
-                    <option {% if values.rr_min == (i * 10) %} selected="selected"{% endif %} value="{{ i * 10 }}">
-                        {{ i * 10 }}%
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="sf-rr-max">To</label>
-            <select name="rr_max" id="sf-rr-max" class="gameCreate form-control">
-                {% for i in 0..10 %}
-                <option {% if values.rr_max == (i * 10) %} selected="selected"{% endif %} value="{{ i * 10 }}">
-                    {{ i * 10 }}%
-                </option>
-                {% endfor %}
-            </select>
-        </div>
+        {{ fields.rr_min|raw }}
+        {{ fields.rr_max|raw }}
 
         {{ fields.bet_min|raw }}
         {{ fields.bet_max|raw }}

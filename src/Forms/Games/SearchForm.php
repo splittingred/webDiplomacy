@@ -67,9 +67,19 @@ class SearchForm extends BaseForm
             'default' => 14400
         ],
         'rr_min'            => [
+            'type' => 'PercentSelect',
+            'label' => 'Reliability Rating From',
+            'step' => 10,
+            'min' => 0,
+            'max' => 100,
             'default' => 0
         ],
         'rr_max'            => [
+            'type' => 'PercentSelect',
+            'label' => 'Reliability Rating To',
+            'step' => 10,
+            'min' => 0,
+            'max' => 100,
             'default' => 100
         ],
         'bet_min'           => [
