@@ -16,9 +16,15 @@
 * Ensure members not in-game dont mess things up
 * Ensure hidden draw votes works
 
+## Forms
+
+- Fix games search form
+- Finish game create form 
+
 ## Frontend
 
 - Lots of javascript will need to be fixed to deal with scriptaculous removal
+- Fix dropdown menus
 
 ## Test Cases To Do
 

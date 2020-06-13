@@ -12,10 +12,10 @@ class ForgotPasswordConfirmationForm extends BaseForm
     protected $requestType = Request::TYPE_POST;
     protected $submitFieldName = 'user_id';
     protected $fields = [
-        'user_id' => '',
-        'old_password' => '',
-        'new_password' => '',
-        'new_password_confirmation' => '',
+        'user_id' => [],
+        'old_password' => ['type' => 'password'],
+        'new_password' => ['type' => 'password'],
+        'new_password_confirmation' => ['type' => 'password'],
     ];
     /** @var Service $authService */
     protected $authService;

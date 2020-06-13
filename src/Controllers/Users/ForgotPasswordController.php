@@ -11,9 +11,6 @@ class ForgotPasswordController extends BaseController
     protected $pageTitle = 'Reset your password/find lost username';
     protected $pageDescription = 'Get back into your account!';
 
-    /** @var ForgotPasswordForm */
-    protected $forgotPasswordForm;
-
     protected $noticeMappings = [
         'sent' => 'An email has been sent with a reset link, click that link and enter a new password. If you do not see the email check your spam folder.',
         'invalid_code' => 'Invalid forgot password code. Please try again.',
@@ -23,14 +20,14 @@ class ForgotPasswordController extends BaseController
 
     public function setUp()
     {
-        $this->forgotPasswordForm = new ForgotPasswordForm($this->request, $this->renderer);
+        $this->makeForm(ForgotPasswordForm::class);
         parent::setUp();
     }
 
     public function call()
     {
         return [
-            'form' => $this->forgotPasswordForm->render(),
+            'form' => $this->form->render(),
         ];
     }
 }

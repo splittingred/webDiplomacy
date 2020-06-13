@@ -1,17 +1,28 @@
-<div class="nav-tab">
-    <a href="/users/login" title="Log onto webDiplomacy using an existing user account">Log on</a>
-</div>
-<div class="nav-tab">
-    <a href="/register.php" title="Make a new user account">Register</a>
-</div>
-<div id="navSubMenu" class = "clickable nav-tab">Help ▼
-    <div id="nav-drop">
-        <a href="/help/rules">Site Rules</a>
-        <a href="/help/faq" title="Frequently Asked Questions">FAQ</a>
-        <a href="/intro" title="Intro to Diplomacy">Diplomacy Intro</a>
-        <a href="/help/points" title="Points and Scoring Systems">Points/Scoring</a>
-        <a href="/variants/list" title="Active webDiplomacy variants">Variants</a>
-        <a href="/help" title="Site information, guides, stats, links">More Info</a>
-        <a href="/help/donations">Donate</a>
-    </div>
-</div>
+<ul class="nav navbar-nav">
+    <li class="nav-item">
+        <a class="nav-link nav-tab" href="/users/login" title="Log onto webDiplomacy using an existing user account">Log on</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link nav-tab" href="/register.php" title="Make a new user account">Register</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="menu-games" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Games</a>
+        <div class="dropdown-menu" aria-labelledby="menu-games">
+            <a class="dropdown-item" href="/games/open" title="Open positions dropped by other players, free to claim">Open Positions</a>
+            <a class="dropdown-item" href="/tournaments.php" title="Information about tournaments on webDiplomacy">Tournaments</a>
+            <a class="dropdown-item" href="/stats/hall-of-fame" title="Information about tournaments on webDiplomacy">Hall of Fame</a>
+        </div>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="menu-help" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</a>
+        <div class="dropdown-menu" aria-labelledby="menu-help">
+            <a class="dropdown-item" href="/help/rules">Site Rules</a>
+            <a class="dropdown-item" href="/help/faq" title="Frequently Asked Questions">FAQ</a>
+            <a class="dropdown-item" href="/intro" title="Intro to Diplomacy">Diplomacy Intro</a>
+            <a class="dropdown-item" href="/help/points" title="Points and Scoring Systems">Points/Scoring</a>
+            <a class="dropdown-item" href="/variants/list" title="Active webDiplomacy variants">Variants</a>
+            <a class="dropdown-item" href="/help" title="Site information, guides, stats, links">More Info</a>
+            <a class="dropdown-item" href="/help/donations">Donate</a>
+        </div>
+    </li>
+</ul>

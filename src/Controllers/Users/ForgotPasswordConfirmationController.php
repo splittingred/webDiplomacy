@@ -18,8 +18,6 @@ class ForgotPasswordConfirmationController extends BaseController
 
     /** @var Service */
     protected $authService;
-    /** @var ForgotPasswordConfirmationForm */
-    protected $forgotPasswordConfirmationForm;
 
     protected $noticeMappings = [
         'changed' => 'Your password has successfully been changed. Please login again.',
@@ -31,7 +29,7 @@ class ForgotPasswordConfirmationController extends BaseController
     public function setUp()
     {
         $this->authService = new Service();
-        $this->forgotPasswordConfirmationForm = new ForgotPasswordConfirmationForm($this->request, $this->renderer);
+        $this->makeForm(ForgotPasswordConfirmationForm::class);
         parent::setUp();
     }
 
@@ -48,11 +46,11 @@ class ForgotPasswordConfirmationController extends BaseController
             $user = $result->getValue();
         }
 
-        $this->forgotPasswordConfirmationForm->setPlaceholder('user_id', $user->id);
-        $this->forgotPasswordConfirmationForm->setPlaceholder('token', $token);
+        $this->form->setPlaceholder('user_id', $user->id);
+        $this->form->setPlaceholder('token', $token);
 
         return [
-            'form' => $this->forgotPasswordConfirmationForm->render(),
+            'form' => $this->form->render(),
         ];
     }
 }

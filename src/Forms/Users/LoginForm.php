@@ -13,8 +13,8 @@ class LoginForm extends BaseForm
     protected $requestType = Request::TYPE_POST;
     protected $submitFieldName = 'username';
     protected $fields = [
-        'username' => '',
-        'password' => '',
+        'username' => [],
+        'password' => ['type' => 'password'],
     ];
     /** @var Service */
     protected $authService;

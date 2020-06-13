@@ -12,7 +12,7 @@ class ForgotPasswordForm extends BaseForm
     protected $requestType = Request::TYPE_POST;
     protected $submitFieldName = 'username';
     protected $fields = [
-        'username' => '',
+        'username' => [],
     ];
     /** @var Service $authService */
     protected $authService;
