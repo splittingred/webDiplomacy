@@ -70,7 +70,7 @@ jobs:
       - run:
           name: Create database
           command: |
-            sudo mysql -u root -ppassword -e "CREATE DATABASE webdiplomacy;"
+            sudo mysql -u root -ppassword -e "CREATE DATABASE webdiplomacy_test;"
 #      - run: cp .env.circle .env
 #      - run: php artisan key:generate
 #      - run: php artisan migrate

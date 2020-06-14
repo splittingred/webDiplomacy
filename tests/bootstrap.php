@@ -1,5 +1,5 @@
 <?php
-
+$_ENV['DB_NAME'] = 'webdiplomacy_test';
 define('ROOT_PATH', dirname(__DIR__) . '/');
 define('IN_CODE', true);
 

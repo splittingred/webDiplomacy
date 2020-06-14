@@ -27,10 +27,15 @@ class GamesService
     /**
      * @param int $gameId
      * @return Game
+     * @throws \Exception
      */
     public function find(int $gameId) : Game
     {
-        return Game::find($gameId);
+        $game = Game::find($gameId);
+        if (!$game) {
+            throw new \Exception("Game with ID {$gameId} not found.");
+        }
+        return $game;
     }
 
     /**

@@ -1,15 +1,15 @@
 <div id="mapstore">
     <img id="mapImage" src="{{ smallMapUrl }}" alt=" " title="The small map for the current phase. If you are starting a new turn this will show the last turn's orders" />
     <p class="lightgrey" style="text-align:center">
-        <a class="mapnav" href="#" onClick="loadMap({{ game.id }},{{ mapTurn }},-1); return false;">
+        <a class="mapnav" href="/games/{{ game.id }}/view#mapImage" onClick="loadMap({{ game.id }},{{ mapTurn }},-1); return false;">
             <img id="Start" src="/images/historyicons/Start_disabled.png" alt="Start" title="View the map from the first turn" />
         </a>
 
-        <a class="mapnav" href="#" onClick="loadMapStep({{ game.id }},{{ mapTurn }},-1); return false;">
+        <a class="mapnav" href="/games/{{ game.id }}/view#mapImage" onClick="loadMapStep({{ game.id }},{{ mapTurn }},-1); return false;">
             <img id="Backward" src="/images/historyicons/Backward_disabled.png" alt="Backward" title="View the map from the previous turn" />
         </a>
 
-        <a class="mapnav" href="#" onClick="toggleMoves({{ game.id }},{{ mapTurn }}); return false;">
+        <a class="mapnav" href="/games/{{ game.id }}/view#mapImage" onClick="toggleMoves({{ game.id }},{{ mapTurn }}); return false;">
             <img id="NoMoves" src="/images/historyicons/hidemoves.png" alt="NoMoves" title="Toggle movement lines" />
         </a>
 
@@ -17,16 +17,16 @@
             <img src="/images/historyicons/external.png" alt="Open large map" title="This button will open the large map in a new window. The large map shows all the moves, and is useful when the small map isn\'t clear enough." />
         </a>
 
-        <a class="mapnav" href="#" onClick="loadMapStep({{ game.id }},{{ mapTurn }},1); return false;">
+        <a class="mapnav" href="/games/{{ game.id }}/view#mapImage" onClick="loadMapStep({{ game.id }},{{ mapTurn }},1); return false;">
             <img id="Forward" src="/images/historyicons/Forward_disabled.png" alt="Forward" title="View the map from the next turn" />
         </a>
 
-        <a class="mapnav" href="#" onClick="loadMap({{ game.id }},{{ mapTurn }},{{ mapTurn }}); return false;">
+        <a class="mapnav" href="/games/{{ game.id }}/view#mapImage" onClick="loadMap({{ game.id }},{{ mapTurn }},{{ mapTurn }}); return false;">
             <img id="End" src="/images/historyicons/End_disabled.png" alt="End" title="View the map from the most recent turn" />
         </a>
 
         {% if isInGame %}
-        <a class="mapnav" href="#" onClick="togglePreview({{ game.id }},{{ mapTurn }}); return false;">
+        <a class="mapnav" href="/games/{{ game.id }}/view#mapImage" onClick="togglePreview({{ game.id }},{{ mapTurn }}); return false;">
             <img id="Preview" src="/images/historyicons/Preview.png" alt="PreviewMoves" title="Show server side stored orders on the map" />
         </a>
         {% endif %}
@@ -35,8 +35,8 @@
 </div>
 
 <script>
+let turnToText ={{ game.variant.turnAsDateJS|raw }}
 jQuery(document).bind("ready", function() {
-    turnToText ={{ game.variant.turnAsDateJS|raw }}
     mapArrows({{ mapTurn }},{{ mapTurn }});
 });
 </script>

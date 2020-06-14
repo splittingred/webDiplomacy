@@ -28,3 +28,4 @@ tmp/
 vendor/
 tests/coverage/
 log/*.log
+.env

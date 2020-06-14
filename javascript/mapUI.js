@@ -109,23 +109,19 @@ function mapArrows(currentTurn, newTurn)
 		$('End').src = l_s("images/historyicons/End.png");
 	}
 }
-turnToText='';//() { return ''; }
-
 // Load the map for the specified turn, refresh arrows. Assumes newTurn is valid, sets turn=newTurn
 function loadMap(gameID, currentTurn, newTurn)
 {
 	turn=newTurn;
-	
+
 	// Draw the greyed icons if the user can go no further back
 	mapArrows(currentTurn, newTurn);
-	
+
 	// Display the current date being viewed
-	if( turn == currentTurn )
+	if( turn == currentTurn ) {
 		$('History').hide(); // .. if viewing an old turn
-	else
-	{
+	} else {
 		$('History').innerHTML = turnToText(turn);
-		
 		$('History').show();
 	}
 	

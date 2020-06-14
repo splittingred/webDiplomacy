@@ -18,12 +18,13 @@ if (!defined('ROOT_PATH')) {
 }
 
 require_once ROOT_PATH . 'vendor/autoload.php';
+$dotEnv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+$dotEnv->load();
 require_once ROOT_PATH . 'config.php';
 
 global $app;
 $app = new Container();
 $app->singleton('app', 'Illuminate\Container\Container');
-
 
 require_once ROOT_PATH . 'src/bootstrap_legacy.php';
 require_once ROOT_PATH . 'global/definitions.php';
@@ -45,10 +46,10 @@ global $capsule;
 $capsule = new Capsule;
 $capsule->addConnection([
     'driver' => 'mysql',
-    'host' => \Config::$database_socket,
-    'database' => \Config::$database_name,
-    'username' => \Config::$database_username,
-    'password' => \Config::$database_password,
+    'host' => !empty($_ENV['DB_HOST']) ? $_ENV['DB_HOST'] : \Config::$database_socket,
+    'database' => !empty($_ENV['DB_NAME']) ? $_ENV['DB_NAME'] : \Config::$database_name,
+    'username' => !empty($_ENV['DB_USER']) ? $_ENV['DB_USER'] : \Config::$database_username,
+    'password' => !empty($_ENV['DB_PASS']) ? $_ENV['DB_PASS'] : \Config::$database_password,
 ]);
 //Make this Capsule instance available globally.
 $capsule->setAsGlobal();

@@ -76,8 +76,11 @@ class Database {
 	 */
 	public function __construct()
     {
-      $this->link = mysqli_connect(Config::$database_socket,
-				Config::$database_username, Config::$database_password);
+        $this->link = mysqli_connect(
+          Config::$database_socket,
+		  Config::$database_username,
+          Config::$database_password
+        );
 
 		if( ! $this->link )
 			trigger_error(l_t("Couldn't connect to the MySQL server, if this problem persists please inform the admin."));
