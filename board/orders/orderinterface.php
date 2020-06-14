@@ -18,6 +18,11 @@
     along with webDiplomacy.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Diplomacy\Models\Entities\Games\Country;
+use Diplomacy\Models\Entities\Games\Members\OrdersState;
+use Diplomacy\Models\Entities\Games\Phase;
+use Diplomacy\Models\Entities\Games\Turn;
+
 defined('IN_CODE') or die('This script can not be run by itself.');
 
 require_once(l_r('board/orders/order.php'));
@@ -51,39 +56,6 @@ require_once(l_r('board/orders/builds.php'));
  */
 class OrderInterface
 {
-	/**
-	 * @return OrderInterface
-	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
-	 */
-	public static function newBoard() {
-		global $Game, $Member;
-		global $app;
-		$User = $app->make('user');
-		return self::newContext($Game, $Member, $User);
-	}
-	public static function newContext(Game $Game, userMember $Member, User $User)
-    {
-        $gameEntity = static::loadGameEntity((int)$Game->id);
-
-        $userEntity = new \Diplomacy\Models\Entities\User();
-        $userEntity->id = $User->id;
-        $memberEntity = new \Diplomacy\Models\Entities\Games\Member();
-        $memberEntity->id = $Member->id;
-	    $country = new \Diplomacy\Models\Entities\Games\Country($Member->countryID, '');
-	    $turn = new \Diplomacy\Models\Entities\Games\Turn($Game->turn, '');
-        $phase = new \Diplomacy\Models\Entities\Games\Phase($Game->phase, 0,0);
-		return $Game->Variant->OrderInterface(
-		    $gameEntity,
-            $userEntity,
-            $memberEntity,
-            $turn,
-            $phase,
-            $country,
-			$Member->orderStatus,
-            $Game->processTime+6*60*60
-        );
-	}
-
 	public static function loadGameEntity(int $gameId)
     {
         $gameModel = \Diplomacy\Models\Game::find($gameId);
@@ -96,7 +68,6 @@ class OrderInterface
 
 	public static function newJSON($key, $json)
     {
-
         require_once ROOT_PATH . 'lib/variant.php';
         require_once ROOT_PATH . 'objects/basic/set.php';
 
@@ -110,14 +81,15 @@ class OrderInterface
 
 		$gameEntity = static::loadGameEntity((int)$authContext['gameID']);
 
-		// TODO: Verify these
+		// TODO: Eventually convert upstream, coalesce this better
         $userEntity = new \Diplomacy\Models\Entities\User();
         $userEntity->id = $inContext['userID'];
         $memberEntity = new \Diplomacy\Models\Entities\Games\Member();
         $memberEntity->id = $inContext['memberID'];
-        $turnEntity = new \Diplomacy\Models\Entities\Games\Turn($inContext['turn'], '');
-        $phaseEntity = new \Diplomacy\Models\Entities\Games\Phase($inContext['phase'], 0, 0);
-        $countryEntity = new \Diplomacy\Models\Entities\Games\Country($inContext['countryID'], '');
+        $turnEntity = new Turn($inContext['turn'], '');
+        $phaseEntity = new Phase($inContext['phase'], 0, 0);
+        $countryEntity = new Country($inContext['countryID'], '');
+        $ordersStateEntity = new OrdersState(explode(',',$inContext['orderStatus']));
 		return $gameEntity->variant->OrderInterface(
 		    $gameEntity,
             $userEntity,
@@ -125,7 +97,7 @@ class OrderInterface
             $turnEntity,
             $phaseEntity,
             $countryEntity,
-			new setMemberOrderStatus($inContext['orderStatus']),
+            $ordersStateEntity,
             $inContext['tokenExpireTime'],
             $inContext['maxOrderID']
         );
@@ -133,16 +105,16 @@ class OrderInterface
 
 	/** @var \Diplomacy\Models\Entities\Game */
 	public $game;
-	protected $variantID;
 	protected $user;
 	/** @var \Diplomacy\Models\Entities\Games\Member $member */
 	protected $member;
-	/** @var \Diplomacy\Models\Entities\Games\Turn $turn */
+	/** @var Turn $turn */
 	protected $turn;
-	/** @var \Diplomacy\Models\Entities\Games\Phase $phase */
+	/** @var Phase $phase */
 	protected $phase;
-	/** @var \Diplomacy\Models\Entities\Games\Country $country */
+	/** @var Country $country */
 	protected $country;
+	/** @var OrdersState */
 	public $orderStatus;
 	protected $tokenExpireTime;
 	protected $maxOrderID;
@@ -152,10 +124,10 @@ class OrderInterface
      * @param \Diplomacy\Models\Entities\Game $game
      * @param \Diplomacy\Models\Entities\User $user
      * @param \Diplomacy\Models\Entities\Games\Member $member
-     * @param \Diplomacy\Models\Entities\Games\Turn $turn
-     * @param \Diplomacy\Models\Entities\Games\Phase $phase
-     * @param \Diplomacy\Models\Entities\Games\Country $country
-     * @param setMemberOrderStatus $orderStatus
+     * @param Turn $turn
+     * @param Phase $phase
+     * @param Country $country
+     * @param OrdersState $orderStatus
      * @param $tokenExpireTime
      * @param bool $maxOrderID
      */
@@ -163,21 +135,20 @@ class OrderInterface
         \Diplomacy\Models\Entities\Game $game,
         \Diplomacy\Models\Entities\User $user,
         \Diplomacy\Models\Entities\Games\Member $member,
-        \Diplomacy\Models\Entities\Games\Turn $turn,
-        \Diplomacy\Models\Entities\Games\Phase $phase,
-        \Diplomacy\Models\Entities\Games\Country $country,
-		setMemberOrderStatus $orderStatus,
+        Turn $turn,
+        Phase $phase,
+        Country $country,
+		OrdersState $orderStatus,
         $tokenExpireTime,
         $maxOrderID=false
     ) {
 		$this->game = $game;
-		$this->variantID =(int)$game->variant->id;
 		$this->user = $user;
 		$this->member = $member;
 		$this->turn = $turn;
 		$this->phase = $phase;
 		$this->country = $country;
-		$this->orderStatus=$orderStatus;
+		$this->orderStatus = $orderStatus;
 		$this->tokenExpireTime=$tokenExpireTime;
 		$this->maxOrderID=$maxOrderID;
 	}
@@ -216,7 +187,7 @@ class OrderInterface
 
 	public function set($orderUpdates)
 	{
-		if( $this->orderStatus->Ready ) return;
+		if ($this->orderStatus->hasState(OrdersState::STATE_READY)) return;
 
 		$this->log($orderUpdates);
 
@@ -261,10 +232,10 @@ class OrderInterface
 	public function validate() {
 
 		if( count($this->Orders)==0 )
-			$this->orderStatus->None=true;
+			$this->orderStatus->addState(OrdersState::STATE_NONE);
 
-		$complete=true;
-		foreach($this->Orders as $Order)
+		$complete = true;
+		foreach ($this->Orders as $Order)
 		{
 			$Order->validate();
 
@@ -280,33 +251,39 @@ class OrderInterface
 
 			$this->results['orders'][$Order->id] = $result;
 		}
-		$this->orderStatus->Completed = $complete;
+		if ($complete) {
+		    $this->orderStatus->addState(OrdersState::STATE_COMPLETED);
+        } else {
+		    $this->orderStatus->removeState(OrdersState::STATE_COMPLETED);
+        }
 
 		return $this->results;
 	}
 
 	public function readyToggle() {
-		if( !$this->orderStatus->Ready )
+		if (!$this->orderStatus->isReady())
 		{
-			if( !$this->orderStatus->Completed )
-				$this->results['notice'] .= l_t(' Could not set to ready, orders not complete and valid.');
-			else
-				$this->orderStatus->Ready=true;
+			if (!$this->orderStatus->isCompleted()) {
+                $this->results['notice'] .= l_t(' Could not set to ready, orders not complete and valid.');
+            } else {
+                $this->orderStatus->addState(OrdersState::STATE_READY);
+            }
 		}
 		else
-			$this->orderStatus->Ready = false;
+        {
+            $this->orderStatus->removeState(OrdersState::STATE_READY);
+        }
 
-		return $this->orderStatus->Ready;
+		return $this->orderStatus->isReady();
 	}
 
 	public function writeOrders() {
-		$updated=false;
-		foreach($this->Orders as $Order)
-			if( $Order->commit() )
-				$updated=true;
+		$updated = false;
+		foreach($this->Orders as $Order) {
+            if ($Order->commit()) $updated = true;
+        }
 
-		if( $updated )
-			$this->orderStatus->Saved=true;
+		if ($updated) $this->orderStatus->addState(OrdersState::STATE_SAVED);
 	}
 
 	public function writeOrderStatus() {
@@ -314,20 +291,18 @@ class OrderInterface
 		global $app;
 		$DB = $app->make('DB');
 
-		$this->results['statusIcon']=$this->orderStatus->icon();
-		$this->results['statusText']=$this->orderStatus->iconText();
+		$this->results['statusIcon'] = $this->orderStatus->icon();
+		$this->results['statusText'] = $this->orderStatus->iconText();
 
-		if( $this->orderStatus->updated )
-		{
-			if( isset($Member) && $Member instanceof Member && $Member->id == $this->member->id )
-				$Member->orderStatus = $this->orderStatus;
+        if( isset($Member) && $Member instanceof Member && $Member->id == $this->member->id ) {
+            $Member->orderStatus = $this->orderStatus->toSet();
+        }
 
-			$DB->sql_put("UPDATE wD_Members SET orderStatus = '".$this->orderStatus."' WHERE id = ".$this->member->id);
+        $DB->sql_put("UPDATE wD_Members SET orderStatus = '".$this->orderStatus."' WHERE id = ".$this->member->id);
 
-			$newContext = $this->getContext($this);
-			$this->results['newContext'] = $newContext['context'];
-			$this->results['newContextKey'] = $newContext['key'];
-		}
+        $newContext = $this->getContext($this);
+        $this->results['newContext'] = $newContext['context'];
+        $this->results['newContextKey'] = $newContext['key'];
 	}
 
 	public function getResults() {
@@ -352,14 +327,14 @@ class OrderInterface
         } else {
             $context = [
                 'gameID' => $contextOf->game->id,
-                'variantID' => $contextOf->variantID,
+                'variantID' => $contextOf->game->variant->id,
                 'userID' => $contextOf->user->id,
                 'memberID' => $contextOf->member->id,
                 'turn' => $contextOf->turn->id,
                 'phase' => $contextOf->phase->name,
                 'tokenExpireTime' => $contextOf->tokenExpireTime,
                 'maxOrderID' => $contextOf->maxOrderID,
-                'orderStatus' => $contextOf->orderStatus,
+                'orderStatus' => $contextOf->orderStatus->toArray(),
             ];
         }
         $json = json_encode($context);
@@ -423,7 +398,7 @@ class OrderInterface
 
 		$html .= '
 	<form id="orderFormElement" onsubmit="return false;">
-		<a name="orders"></a><div class = "chatWrapper"><table class="orders">';
+		<a id="orders"></a><div class = "chatWrapper"><table class="orders">';
 
 		$alternate = false;
 		foreach($this->Orders as $Order)
@@ -439,10 +414,9 @@ class OrderInterface
 				<div style="text-align:center;"><span id="ordersNoticeArea'.$this->member->id.'"></span>
 				'.
 				($Game->pressType == 'RulebookPress' && !$this->phase->isMoves() ? ''  :
-			'<input id="UpdateButton'.$this->member->id.'" type="Submit" class="form-submit spaced-button" name="'.
-				l_t('Update').'" value="'.l_t('Save').'" disabled />' ) .'
+			'<input id="UpdateButton'.$this->member->id.'" type="Submit" class="form-submit spaced-button" name="Update" value="Save" disabled="disabled" />' ) .'
 			<input id="FinalizeButton'.$this->member->id.'" type="Submit" class="form-submit spaced-button" name="'.
-				l_t($this->orderStatus->Ready?'Not ready':'Ready').'" value="'.l_t($this->orderStatus->Ready?'Not ready':'Ready').'" disabled />
+				l_t($this->orderStatus->isReady() ? 'Not ready' : 'Ready').'" value="'.l_t($this->orderStatus->isReady() ? 'Not ready' : 'Ready').'" disabled="disabled" />
 		</div>
 	</form>';
 

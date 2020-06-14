@@ -71,9 +71,42 @@ class OrdersState
         return count(array_intersect($this->states, $submittedStates)) > 0;
     }
 
-    public function hasState(string $state)
+    public function isReady(): bool
+    {
+        return $this->hasState(OrdersState::STATE_READY);
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->hasState(OrdersState::STATE_COMPLETED);
+    }
+
+    /**
+     * @param string $state
+     * @return bool
+     */
+    public function hasState(string $state): bool
     {
         return in_array($state, $this->states);
+    }
+
+    /**
+     * @param string $state
+     */
+    public function addState(string $state)
+    {
+        $this->states[] = $state;
+        $this->states = array_unique($this->states);
+    }
+
+    /**
+     * @param string $state
+     */
+    public function removeState(string $state)
+    {
+        if (array_search($state, $this->states) !== false) {
+            unset($this->states[$state]);
+        }
     }
 
     /**
@@ -150,5 +183,21 @@ class OrdersState
     public function toSet() : \setMemberOrderStatus
     {
         return new \setMemberOrderStatus(implode(',', $this->states));
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return $this->states;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return implode(',', $this->states);
     }
 }

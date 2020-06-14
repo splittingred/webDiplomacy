@@ -22,6 +22,7 @@
  * @package Board
  */
 
+use Diplomacy\Models\Entities\Games\UnassignedMember;
 use Diplomacy\Services\Games\Factory;
 
 require_once('header.php');
@@ -106,6 +107,14 @@ else
 	}
 }
 
+// load new models
+$gameFactory = new Factory();
+$gameModel = \Diplomacy\Models\Game::find($Game->id);
+$gameEntity = $gameFactory->build($gameModel);
+$userModel = \Diplomacy\Models\User::find($User->id);
+$userEntity = $userModel->toEntity();
+$currentMember = $User ? $gameEntity->members->byUser($userEntity) : new UnassignedMember();
+
 if ($Game->watched() && isset($_REQUEST['unwatch'])) {
 	print '<div class="content-notice gameTimeRemaining">'
 		.'<form method="post" action="redirect.php">'
@@ -119,7 +128,7 @@ if ($Game->watched() && isset($_REQUEST['unwatch'])) {
 
 if (isset($Member) && $Member->status == 'Playing' && !$Game->isFinished())
 {
-	if(!$Game->isPreGame())
+	if(!$gameEntity->phase->isPreGame())
 	{
 		if(isset($_REQUEST['Unpause'])) $_REQUEST['Pause']='on'; // Hack because Unpause = toggle Pause
 
@@ -131,9 +140,10 @@ if (isset($Member) && $Member->status == 'Playing' && !$Game->isFinished())
 
 	$DB->sql_put("COMMIT");
 
-	if (!$Game->isCrashed() && !$Game->isPaused() && $Game->attempts > count($Game->Members->ByID)/2+4  )
+	$threshold = ($gameEntity->getMemberCount() / 2) + 4;
+	if (!$gameEntity->processing->isCrashed() && !$gameEntity->processing->isPaused() && $gameEntity->attempts > $threshold)
 	{
-		require_once(l_r('gamemaster/game.php'));
+		require_once ROOT_PATH . 'gamemaster/game.php';
 		$Game = $Game->Variant->processGame($Game->id);
 		$Game->crashed();
 		$DB->sql_put("COMMIT");
@@ -146,7 +156,7 @@ if (isset($Member) && $Member->status == 'Playing' && !$Game->isFinished())
 		    $g->attempts = $g->attempts + 1;
 		    $g->save();
 
-			require_once(l_r('gamemaster/game.php'));
+			require_once ROOT_PATH . 'gamemaster/game.php';
 			$Game = $Game->Variant->processGame($Game->id);
 			try
 			{
@@ -211,29 +221,30 @@ if (isset($Member) && $Member->status == 'Playing' && !$Game->isFinished())
 		$Member = $Game->Members->ByUserID[$User->id];
 	}
 
-	if ($Game->isInProgress())
+	if ($gameEntity->phase->isActive())
 	{
-		$OI = OrderInterface::newBoard();
-		$OI->load();
-
-		$Orders = '<div id="orderDiv'.$Member->id.'">'.$OI->html().'</div>';
-		unset($OI);
+		$interface = $Game->Variant->OrderInterface(
+            $gameEntity,
+            $userEntity,
+            $currentMember,
+            $gameEntity->currentTurn,
+            $gameEntity->phase,
+            $currentMember->country,
+            $currentMember->ordersState,
+            $gameEntity->processing->getTime()+6*60*60
+        );
+        $interface->load();
+		$Orders = '<div id="orderDiv'.$currentMember->id.'">'.$interface->html().'</div>';
+		unset($interface);
 	}
 }
 
-$gameFactory = new Factory();
-$gameModel = \Diplomacy\Models\Game::find($Game->id);
-$gameEntity = $gameFactory->build($gameModel);
-$userModel = \Diplomacy\Models\User::find($User->id);
-$userEntity = $userModel->toEntity();
-$currentMember = $User ? $gameEntity->members->byUser($userEntity) : null;
-
 require_once 'board/OldChatbox.php';
 
-if (!$Game->isPreGame())
+if (!$gameEntity->phase->isPreGame())
 {
-    /** @var Chatbox $CB */
-	$CB = $Game->Variant->OldChatbox();
+    /** @var OldChatbox $CB */
+	$CB = $gameEntity->variant->OldChatbox();
 
 	// Now that we have retrieved the latest messages we can update the time we last viewed the messages
 	// Post messages we sent, and get the user we're speaking to

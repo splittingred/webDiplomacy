@@ -39,7 +39,7 @@ class OrdersComponent extends BaseComponent
             $this->game->currentTurn,
             $this->game->phase,
             $this->currentMember->country,
-            $this->currentMember->ordersState->toSet(),
+            $this->currentMember->ordersState,
             $this->game->processing->getTime()+6*60*60
         );
         $interface->load();
