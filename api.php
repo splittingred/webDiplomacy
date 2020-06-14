@@ -468,18 +468,26 @@ class SetOrders extends ApiEntry {
 			}
 		}
 
+        $gameEntity = OrderInterface::loadGameEntity($game->id);
+        $userEntity = new \Diplomacy\Models\Entities\User();
+        $userEntity->id = $userID;
+        $memberEntity = $gameEntity->members->byUser($userEntity);
+        $turnEntity = new \Diplomacy\Models\Entities\Games\Turn($turn, '');
+        $phaseEntity = new \Diplomacy\Models\Entities\Games\Phase($phase, 0, 0);
+        $countryEntity = new \Diplomacy\Models\Entities\Games\Country($countryID, '');
+
 		$orderInterface = null;
 		$previousReadyValue = $member->orderStatus->Ready;
 		while (true) {
+		    // TODO: FIX
 			// Create order interface in any case.
 			$orderInterface = new OrderInterface(
-				$gameID,
-				$game->variantID,
-				$userID,
-                $member->id,
-				$turn,
-				$phase,
-				$countryID,
+                $gameEntity,
+				$userEntity,
+                $memberEntity,
+                $turnEntity,
+				$phaseEntity,
+				$countryEntity,
 				$member->orderStatus,
 				null,
 				false

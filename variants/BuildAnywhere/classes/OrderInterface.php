@@ -4,10 +4,9 @@ class BuildAnywhereVariant_OrderInterface extends OrderInterface {
 
     /**
      * Call the parent constructor transparently to keep things working
-     * @param $gameID
-     * @param $variantID
+     * @param $game
      * @param $user
-     * @param $memberID
+     * @param $member
      * @param $turn
      * @param $phase
      * @param $country
@@ -15,11 +14,10 @@ class BuildAnywhereVariant_OrderInterface extends OrderInterface {
      * @param $tokenExpireTime
      * @param bool $maxOrderID
      */
-	public function __construct($gameID, $variantID, $user, $memberID, $turn, $phase, $country,
+	public function __construct($game, $user, $member, $turn, $phase, $country,
 		setMemberOrderStatus $orderStatus, $tokenExpireTime, $maxOrderID = false)
 	{
-		parent::__construct($gameID, $variantID, $user, $memberID, $turn, $phase, $country,
-			$orderStatus, $tokenExpireTime, $maxOrderID);
+		parent::__construct($game, $user, $member, $turn, $phase, $country, $orderStatus, $tokenExpireTime, $maxOrderID);
 	}
 
 	protected function jsLoadBoard() {

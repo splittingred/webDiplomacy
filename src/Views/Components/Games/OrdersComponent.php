@@ -33,8 +33,7 @@ class OrdersComponent extends BaseComponent
         $Member = $Game->Members->ByUserID[$this->currentMember->user->id];
 
         $interface = $this->game->variant->OrderInterface(
-            $this->game->id,
-            $this->game->variant->id,
+            $this->game,
             $this->currentMember->user,
             $this->currentMember,
             $this->game->currentTurn,
@@ -44,7 +43,6 @@ class OrdersComponent extends BaseComponent
             $this->game->processing->getTime()+6*60*60
         );
         $interface->load();
-
 
         return [
             'orders' => $interface->html(),
