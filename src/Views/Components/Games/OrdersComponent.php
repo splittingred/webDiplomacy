@@ -35,11 +35,11 @@ class OrdersComponent extends BaseComponent
         $interface = $this->game->variant->OrderInterface(
             $this->game->id,
             $this->game->variant->id,
-            $this->currentMember->user->id,
-            $this->currentMember->id,
-            $this->game->currentTurn->id,
-            $this->game->phase->name,
-            $this->currentMember->country->id,
+            $this->currentMember->user,
+            $this->currentMember,
+            $this->game->currentTurn,
+            $this->game->phase,
+            $this->currentMember->country,
             $this->currentMember->ordersState->toSet(),
             $this->game->processing->getTime()+6*60*60
         );

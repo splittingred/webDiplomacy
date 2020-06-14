@@ -62,9 +62,15 @@ class OrderInterface
 		return self::newContext($Game, $Member, $User);
 	}
 	public static function newContext(Game $Game, userMember $Member, User $User) {
-		$OI = $Game->Variant->OrderInterface($Game->id, $Game->Variant->id, $User->id, $Member->id, $Game->turn, $Game->phase, $Member->countryID,
+        $user = new \Diplomacy\Models\Entities\User();
+        $user->id = $User->id;
+        $memberEntity = new \Diplomacy\Models\Entities\Games\Member();
+        $memberEntity->id = $Member->id;
+	    $country = new \Diplomacy\Models\Entities\Games\Country($Member->countryID, '');
+	    $turn = new \Diplomacy\Models\Entities\Games\Turn($Game->turn, '');
+        $phase = new \Diplomacy\Models\Entities\Games\Phase($Game->phase, 0,0);
+		return $Game->Variant->OrderInterface($Game->id, $Game->Variant->id, $User->id, $memberEntity, $turn, $phase, $country,
 			$Member->orderStatus, $Game->processTime+6*60*60);
-		return $OI;
 	}
 
 	public static function newJSON($key, $json) {
@@ -81,8 +87,16 @@ class OrderInterface
 		libVariant::setGlobals($Variant);
 
 		require_once(l_r('objects/basic/set.php'));
-		$OI = $Variant->OrderInterface($inContext['gameID'],$inContext['variantID'],$inContext['userID'],$inContext['memberID'],
-			$inContext['turn'],$inContext['phase'],$inContext['countryID'],
+		// TODO: Verify these
+        $user = new \Diplomacy\Models\Entities\User();
+        $user->id = $inContext['userID'];
+        $country = new \Diplomacy\Models\Entities\Games\Country($inContext['countryID'], '');
+        $turn = new \Diplomacy\Models\Entities\Games\Turn($inContext['turn'], '');
+        $phase = new \Diplomacy\Models\Entities\Games\Phase($inContext['phase'], 0, 0);
+        $member = new \Diplomacy\Models\Entities\Games\Member();
+        $member->id = $inContext['memberID'];
+		$OI = $Variant->OrderInterface($inContext['gameID'],$inContext['variantID'],$user,$member,
+			$turn,$phase,$country,
 			new setMemberOrderStatus($inContext['orderStatus']), $inContext['tokenExpireTime'], $inContext['maxOrderID']);
 
 		return $OI;
@@ -90,25 +104,42 @@ class OrderInterface
 
 	public $gameID;
 	protected $variantID;
-	protected $userID;
-	protected $memberID;
+	protected $user;
+	/** @var \Diplomacy\Models\Entities\Games\Member $member */
+	protected $member;
+	/** @var \Diplomacy\Models\Entities\Games\Turn $turn */
 	protected $turn;
+	/** @var \Diplomacy\Models\Entities\Games\Phase $phase */
 	protected $phase;
-	protected $countryID;
+	/** @var \Diplomacy\Models\Entities\Games\Country $country */
+	protected $country;
 	public $orderStatus;
 	protected $tokenExpireTime;
 	protected $maxOrderID;
 
-	public function __construct($gameID, $variantID, $userID, $memberID, $turn, $phase, $countryID,
+    /**
+     * OrderInterface constructor.
+     * @param $gameID
+     * @param $variantID
+     * @param \Diplomacy\Models\Entities\User $user
+     * @param \Diplomacy\Models\Entities\Games\Member $member
+     * @param \Diplomacy\Models\Entities\Games\Turn $turn
+     * @param \Diplomacy\Models\Entities\Games\Phase $phase
+     * @param \Diplomacy\Models\Entities\Games\Country $country
+     * @param setMemberOrderStatus $orderStatus
+     * @param $tokenExpireTime
+     * @param bool $maxOrderID
+     */
+	public function __construct($gameID, $variantID, $user, $member, $turn, $phase, $country,
 		setMemberOrderStatus $orderStatus, $tokenExpireTime, $maxOrderID=false)
 	{
 		$this->gameID=(int)$gameID;
 		$this->variantID=(int)$variantID;
-		$this->userID=(int)$userID;
-		$this->memberID=(int)$memberID;
-		$this->turn=(int)$turn;
-		$this->phase=$phase;
-		$this->countryID=$countryID;
+		$this->user = $user;
+		$this->member = $member;
+		$this->turn = $turn;
+		$this->phase = $phase;
+		$this->country = $country;
 		$this->orderStatus=$orderStatus;
 		$this->tokenExpireTime=$tokenExpireTime;
 		$this->maxOrderID=$maxOrderID;
@@ -121,18 +152,18 @@ class OrderInterface
 		global $app;
 		$DB = $app->make('DB');
 
-		$DB->sql_put("SELECT * FROM wD_Members WHERE gameID = ".$this->gameID." AND countryID=".$this->countryID." ".UPDATE);
+		$DB->sql_put("SELECT * FROM wD_Members WHERE gameID = ".$this->gameID." AND countryID=".$this->country->id." ".UPDATE);
 
 		$tabl = $DB->sql_tabl("SELECT id, type, unitID, toTerrID, fromTerrID, viaConvoy
-			FROM wD_Orders WHERE gameID = ".$this->gameID." AND countryID=".$this->countryID);
+			FROM wD_Orders WHERE gameID = ".$this->gameID." AND countryID=".$this->country->id);
 
-		$this->Orders = array();
+		$this->Orders = [];
 		$maxOrderID=0;
 		while ( $row = $DB->tabl_hash($tabl) )
 		{
 			if( $row['id'] > $maxOrderID ) $maxOrderID = $row['id'];
 
-			$Order = userOrder::load($this->phase,$row['id'],$this->gameID, $this->countryID);
+			$Order = userOrder::load($this->phase->name,$row['id'],$this->gameID, $this->country->id);
 
 			$Order->loadFromDB($row);
 
@@ -140,13 +171,10 @@ class OrderInterface
 		}
 
 		list($checkTurn, $checkPhase) = $DB->sql_row("SELECT turn, phase FROM wD_Games WHERE id=".$this->gameID);
-		if( $checkTurn != $this->turn || $checkPhase != $this->phase )
+		if( $checkTurn != $this->turn->id || $checkPhase != $this->phase->name )
 			throw new Exception(l_t("The game has moved on, you can no longer alter these orders, please refresh."));
 
 		if( $this->maxOrderID == false ) $this->maxOrderID = $maxOrderID;
-		//elseif( $this->maxOrderID < $maxOrderID )
-
-		//if( $this->tokenExpireTime < time() ) throw new Exception("The game has moved on, you can no longer alter these orders, please refresh.");
 	}
 
 	public function set($orderUpdates)
@@ -174,7 +202,7 @@ class OrderInterface
 		require_once(l_r('objects/game.php'));
 		$directory = libCache::dirID($orderlogDirectory, $this->gameID, true);
 
-		$file = $this->countryID.'.txt';
+		$file = $this->country->id.'.txt';
 
 		if ( ! ($orderLog = fopen($directory.'/'.$file, 'a')) )
 			trigger_error(l_t("Couldn't open order log file."));
@@ -186,7 +214,13 @@ class OrderInterface
 		fclose($orderLog);
 	}
 
-	protected $results = array('orders'=>array(),'notice'=>'','statusIcon'=>'','statusText'=>'','invalid'=>false);
+	protected $results = [
+	    'orders' => [],
+        'notice' => '',
+        'statusIcon' => '',
+        'statusText' => '',
+        'invalid' => false
+    ];
 	public function validate() {
 
 		if( count($this->Orders)==0 )
@@ -248,10 +282,10 @@ class OrderInterface
 
 		if( $this->orderStatus->updated )
 		{
-			if( isset($Member) && $Member instanceof Member && $Member->id == $this->memberID )
+			if( isset($Member) && $Member instanceof Member && $Member->id == $this->member->id )
 				$Member->orderStatus = $this->orderStatus;
 
-			$DB->sql_put("UPDATE wD_Members SET orderStatus = '".$this->orderStatus."' WHERE id = ".$this->memberID);
+			$DB->sql_put("UPDATE wD_Members SET orderStatus = '".$this->orderStatus."' WHERE id = ".$this->member->id);
 
 			$newContext = $this->getContext($this);
 			$this->results['newContext'] = $newContext['context'];
@@ -263,25 +297,41 @@ class OrderInterface
 		return $this->results;
 	}
 
-	protected static $contextVars=array('gameID','userID','memberID','variantID','turn','phase','countryID','tokenExpireTime','maxOrderID');
+	protected static $contextVars = ['gameID','user','memberID','variantID','turn','phase','countryID','tokenExpireTime','maxOrderID'];
+
+    /**
+     * @param $contextOf
+     * @return array
+     */
 	public static function getContext($contextOf) {
+        if (is_array($contextOf)) {
+            $context = [];
+            foreach($contextOf as $name=>$val)
+            {
+                if(!in_array($name, self::$contextVars)) continue;
+                $context[$name] = $val;
+            }
+            $context['orderStatus'] = ''.$contextOf['orderStatus'];
+        } else {
+            $context = [
+                'gameID' => $contextOf->gameID,
+                'variantID' => $contextOf->variantID,
+                'userID' => $contextOf->user->id,
+                'memberID' => $contextOf->member->id,
+                'turn' => $contextOf->turn->id,
+                'phase' => $contextOf->phase->name,
+                'tokenExpireTime' => $contextOf->tokenExpireTime,
+                'maxOrderID' => $contextOf->maxOrderID,
+                'orderStatus' => $contextOf->orderStatus,
+            ];
+        }
+        $json = json_encode($context);
 
-		$context=array();
-		foreach($contextOf as $name=>$val)
-		{
-			if(!in_array($name, self::$contextVars)) continue;
-
-			$context[$name] = $val;
-		}
-
-		if( is_array($contextOf) )
-			$context['orderStatus'] = ''.$contextOf['orderStatus'];
-		else
-			$context['orderStatus'] = ''.$contextOf->orderStatus;
-
-		$json=json_encode($context);
-
-		return array('context'=>$context, 'json'=>$json, 'key'=>md5(Config::$jsonSecret.$json).sha1(Config::$jsonSecret.$json));
+		return [
+		    'context' => $context,
+            'json' => $json,
+            'key' => md5(Config::$jsonSecret.$json).sha1(Config::$jsonSecret.$json),
+        ];
 	}
 
 	protected function jsContextVars() {
@@ -297,7 +347,7 @@ class OrderInterface
 		libHTML::$footerIncludes[] = l_j('board/model.js');
 		libHTML::$footerIncludes[] = l_j('board/load.js');
 		libHTML::$footerIncludes[] = l_j('orders/order.js');
-		libHTML::$footerIncludes[] = l_j('orders/phase'.$this->phase.'.js');
+		libHTML::$footerIncludes[] = l_j('orders/phase'.$this->phase->name.'.js');
 		libHTML::$footerIncludes[] = l_s('../'.libVariant::$Variant->territoriesJSONFile());
 
 		foreach(array('loadTerritories','loadBoardTurnData','loadModel','loadBoard','loadOrdersModel','loadOrdersForm','loadOrdersPhase') as $jf)
@@ -310,12 +360,13 @@ class OrderInterface
 	}
 
 	protected function jsLiveBoardData() {
-		$jsonBoardDataFile=Game::mapFilename($this->gameID, ($this->phase=='Diplomacy'?$this->turn-1:$this->turn), 'json');
+	    $turnId = $this->phase->isMoves() ? $this->turn->id - 1 : $this->turn->id;
+		$jsonBoardDataFile=Game::mapFilename($this->gameID, $turnId, 'json');
 
 		if( !file_exists($jsonBoardDataFile) )
-			$jsonBoardDataFile='map.php?gameID='.$this->gameID.'&turn='.$this->turn.'&phase='.$this->phase.'&mapType=json'.(defined('DATC')?'&DATC=1':'').'&nocache='.rand(0,1000);
+			$jsonBoardDataFile='map.php?gameID='.$this->gameID.'&turn='.$this->turn->id.'&phase='.$this->phase->name.'&mapType=json'.(defined('DATC')?'&DATC=1':'').'&nocache='.rand(0,1000);
 		else
-			$jsonBoardDataFile.='?phase='.$this->phase.'&nocache='.rand(0,10000);
+			$jsonBoardDataFile.='?phase='.$this->phase->name.'&nocache='.rand(0,10000);
 
 		return '<script type="text/javascript" src="'.STATICSRV.$jsonBoardDataFile.'"></script>';
 	}
@@ -348,12 +399,12 @@ class OrderInterface
 		}
 
 		$html .= "</table></div>".'
-				<div style="text-align:center;"><span id="ordersNoticeArea'.$this->memberID.'"></span>
+				<div style="text-align:center;"><span id="ordersNoticeArea'.$this->member->id.'"></span>
 				'.
-				($Game->pressType == 'RulebookPress' && $Game->phase != 'Diplomacy' ? ''  : 
-			'<input id="UpdateButton'.$this->memberID.'" type="Submit" class="form-submit spaced-button" name="'.
+				($Game->pressType == 'RulebookPress' && !$this->phase->isMoves() ? ''  :
+			'<input id="UpdateButton'.$this->member->id.'" type="Submit" class="form-submit spaced-button" name="'.
 				l_t('Update').'" value="'.l_t('Save').'" disabled />' ) .'
-			<input id="FinalizeButton'.$this->memberID.'" type="Submit" class="form-submit spaced-button" name="'.
+			<input id="FinalizeButton'.$this->member->id.'" type="Submit" class="form-submit spaced-button" name="'.
 				l_t($this->orderStatus->Ready?'Not ready':'Ready').'" value="'.l_t($this->orderStatus->Ready?'Not ready':'Ready').'" disabled />
 		</div>
 	</form>';

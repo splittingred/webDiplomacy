@@ -28,18 +28,28 @@ class ClassicChaosVariant_OrderInterface extends OrderInterface {
 
 	/**
 	 * Call the parent constructor transparently to keep things working
+	 * @param $gameID
+	 * @param $variantID
+	 * @param $user
+	 * @param $memberID
+	 * @param $turn
+	 * @param $phase
+	 * @param $countryID
+	 * @param setMemberOrderStatus $orderStatus
+	 * @param $tokenExpireTime
+	 * @param bool $maxOrderID
 	 */
-	public function __construct($gameID, $variantID, $userID, $memberID, $turn, $phase, $countryID,
+	public function __construct($gameID, $variantID, $user, $memberID, $turn, $phase, $countryID,
 		setMemberOrderStatus $orderStatus, $tokenExpireTime, $maxOrderID=false)
 	{
-		parent::__construct($gameID, $variantID, $userID, $memberID, $turn, $phase, $countryID,
+		parent::__construct($gameID, $variantID, $user, $memberID, $turn, $phase, $countryID,
 			$orderStatus, $tokenExpireTime, $maxOrderID);
 	}
 
 	protected function jsLoadBoard() {
 		parent::jsLoadBoard();
 
-		if( $this->phase=='Builds' )
+		if( $this->phase->isBuilds())
 		{
 			// Expand the allowed SupplyCenters array to include non-home SCs.
 			libHTML::$footerIncludes[] = '../variants/ClassicChaos/resources/supplycenterscorrect.js';
