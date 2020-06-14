@@ -12,9 +12,16 @@
 
     <link rel="stylesheet" href="/css/bootstrap-4.0.0.min.css?ver={{ css_version }}" />
     <script type="text/javascript" src="/api/users/options.js?c=a{{ random() }}a{{ random() }}"></script>
+    <script src="/javascript/clickhandler.js?ver={{ js_version }}"></script>
+    {# here because of deficiencies with JS OOE in webdip; this needs to load before footerscripts #}
+    <script src="/javascript/contrib/jquery-3.3.1.min.js?ver={{ js_version }}"></script>
+    <script>$.noConflict();</script>
+    <script src="/javascript/global.js?ver={{ js_version }}"></script>
+    <script src="/contrib/js/prototype.js"></script>
+    <script src="/contrib/js/scriptaculous.js"></script>
+    <link rel="stylesheet" type="text/css" href="/contrib/js/pushup/src/css/pushup.css" />
+    <script src="/contrib/js/pushup/src/js/pushup.js"></script>
     <script type="text/javascript">
-        // backwards compat for scriptaculous migration
-        function $H(h) { return h; }
         let STATICSRV = '/';
         let cssDirectory = "/css";
         let cssVersion = "/css";
@@ -26,11 +33,6 @@
     <link rel="stylesheet" id="game-panel-css" href="/css/gamepanel.css?ver={{ css_version }}" type="text/css" />
     <link rel="stylesheet" id="home-css" href="/css/home.css?ver={{ css_version }}" type="text/css" />
     <link rel="stylesheet" id="menu-css" href="/css/menu.css?ver={{ css_version }}" type="text/css" />
-
-    {# here because of deficiencies with JS OOE in webdip; this needs to load before footerscripts #}
-    <script src="/javascript/contrib/jquery-3.3.1.min.js?ver={{ js_version }}"></script>
-    <script src="/javascript/global.js?ver={{ js_version }}"></script>
-    <script src="/javascript/clickhandler.js?ver={{ js_version }}"></script>
 
     <title>{{ title }} - webDiplomacy</title>
     <base href="/">

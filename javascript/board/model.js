@@ -115,7 +115,7 @@ function loadModel() {
 		// Territories I can move to, not including army convoy moves
 		getMovableTerritories : function () {
 			
-			if( !this.getMovableTerritoriesCache )
+			if( Object.isUndefined(this.getMovableTerritoriesCache) )
 				this.getMovableTerritoriesCache = this.Territory.CoastalBorders
 					.select(this.canCrossBorder,this).pluck('id').compact()
 					.map(function(n){return Territories.get(n);},this);
@@ -126,7 +126,7 @@ function loadModel() {
 		// Territories I can move to, including convoyable locations for an army
 		getReachableTerritories : function () {
 			
-			if( !(this.getReachableTerritoriesCache) )
+			if( Object.isUndefined(this.getReachableTerritoriesCache) )
 			{
 				this.getReachableTerritoriesCache = this.getMovableTerritories();
 				
@@ -145,7 +145,7 @@ function loadModel() {
 		
 		// Units in territories I can move to (not including army convoy movable units)
 		getMovableUnits : function () {
-			if( !(this.getMovableUnitsCache) )
+			if( Object.isUndefined(this.getMovableUnitsCache) )
 				this.getMovableUnitsCache = this.getMovableTerritories().pluck('coastParent').pluck('Unit').compact();
 			
 			return this.getMovableUnitsCache;
@@ -209,7 +209,7 @@ function loadModel() {
 						// via a convoy containing this fleet. 
 						ConvoyArmies = AgainstTerritory.ConvoyGroup.Armies.select(function(ConvoyArmy) {
 							var path=AgainstTerritory.ConvoyGroup.pathArmyToCoastWithoutFleet(ConvoyArmy.Territory, AgainstTerritory, this.Territory);
-							if( !(path) )
+							if( Object.isUndefined(path) )
 								return false;
 							else
 								return true;
@@ -250,7 +250,7 @@ function loadModel() {
 							return false;
 						
 						var path=ToTerritory.ConvoyGroup.pathArmyToCoastWithFleet(ConvoyArmy.Territory, ToTerritory, this.Territory);
-						if( !(path) )
+						if( Object.isUndefined(path) )
 							return false;
 						else
 							return true;
@@ -400,7 +400,7 @@ function loadModel() {
 				return !(this.path === null);
 			},
 			isConvoyNode: function () {
-				return this.convoyNode && this.convoyNode;
+				return !Object.isUndefined(this.convoyNode) && this.convoyNode;
 			},
 			//add function to cache valid border territories with specific search params for efficiency
 			getValidBorderTerritories: function(){
@@ -441,7 +441,7 @@ function loadModel() {
 				// at least one internal node can be enforced in case of direct
 				// path searches from land to land that must include at least 
 				// one fleet.
-				if(!(forceInternalNode))
+				if(Object.isUndefined(forceInternalNode)) 
 					forceInternalNode = false;
 
 				// start with initial path only containing StartTerr
@@ -468,7 +468,7 @@ function loadModel() {
 					}
 
 					// check if node was already visited or fails fAllNode conditions
-					if (testPath.node.visited(this) || !(!(this.fAllNode) || this.fAllNode(testPath.node))) {
+					if (testPath.node.visited(this) || !(Object.isUndefined(this.fAllNode) || this.fAllNode(testPath.node))) {
 						continue;
 					}
 					// set the node visited
@@ -553,7 +553,7 @@ function loadModel() {
 				if(this.pathToNode === null)
 					this.setRank(0); //assure, the rank is set to 0 if this node is the start
 				
-				if(nextNode && this.pathNextNodes.indexOf(nextNode) === -1){
+				if(!Object.isUndefined(nextNode) && this.pathNextNodes.indexOf(nextNode) === -1){
 					// adjust the ranks / count of alternative routes
 					this.pathNextNodes.invoke('changeRank',1);
 					nextNode.setRank(/*this.rank +*/ this.pathNextNodes.length);
@@ -769,7 +769,7 @@ function loadModel() {
 					this.pathToNode.markPath(path);
 			},
 			toArray: function (array) {
-				if (!(array))
+				if (Object.isUndefined(array))
 					array = new Array();
 				
 				//do not include last element of path in array representation
@@ -839,7 +839,7 @@ function loadModel() {
 					
 					// The EndTerr might not be part of the Convoy group.
 					// In this case no valid path can be found.
-					if(!(EndTerr))
+					if(Object.isUndefined(EndTerr))
 						return false;
 					
 					// find path simple path to AnyNode (from now on middle node)
@@ -1033,7 +1033,7 @@ function loadModel() {
 				this.Fleets.set(Fleet.Territory.id, Fleet);
 				
 				Fleet.Territory.getBorderTerritories().map(function(t) {
-						if ( t.type == 'Sea' && t.Unit )
+						if ( t.type == 'Sea' && !Object.isUndefined(t.Unit) )
 							this.loadFleet(t.Unit);
 					},this);
 			},
@@ -1048,16 +1048,16 @@ function loadModel() {
 								if( c.type != 'Coast' ) return;
 								c = c.coastParent;
 								
-								if( this.Coasts.get(c.id) ) return;
+								if( !Object.isUndefined(this.Coasts.get(c.id)) ) return;
 								
-								if( !(c.ConvoyGroups) )
+								if( Object.isUndefined(c.ConvoyGroups) )
 									c.ConvoyGroups = [ ];
 								
 								c.ConvoyGroups.push(this);
 								
 								this.Coasts.set(c.id, c);
 								
-								if( c.Unit && c.Unit.type=='Army' )
+								if( !Object.isUndefined(c.Unit) && c.Unit.type=='Army' )
 									this.Armies.set(c.id, c.Unit);
 								
 							}, this);
@@ -1067,7 +1067,7 @@ function loadModel() {
 			linkGroups : function() {
 				this.Coasts.values().map(function(c) {
 					
-					if( c.convoyLink && c.convoyLink ) return;
+					if( !Object.isUndefined(c.convoyLink) && c.convoyLink ) return;
 					
 					if( c.ConvoyGroups.length == 1 )
 					{
@@ -1089,7 +1089,7 @@ function loadModel() {
 					c.ConvoyGroups = undefined;
 					
 					c.convoyLink=true;
-					if( c.Unit && c.Unit.type=='Army' )
+					if( !Object.isUndefined(c.Unit) && c.Unit.type=='Army' )
 					{
 						c.Unit.convoyLink=true;
 						c.Unit.ConvoyGroup = c.ConvoyGroup;

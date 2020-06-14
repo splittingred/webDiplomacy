@@ -1,5 +1,5 @@
-$(document).ready(function() {
-    $('#message-send').bind('click', function(event) {
+document.observe("dom:loaded", function() {
+    Event.observe('message-send', 'click', function(event) {
         $('chatForm').request({
             onFailure: function() {
                 alert("Error while sending message");

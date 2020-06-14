@@ -141,4 +141,14 @@ class OrdersState
             return '<img src="' . l_s('images/icons/lock.png') . '" alt="' . l_t('Anon') . '" title="' . l_t('This country has options this turn') . '" /> ';
         }
     }
+
+    /**
+     * Legacy toSet function for migration assistance
+     *
+     * @return \setMemberOrderStatus
+     */
+    public function toSet() : \setMemberOrderStatus
+    {
+        return new \setMemberOrderStatus(implode(',', $this->states));
+    }
 }

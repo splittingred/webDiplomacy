@@ -22,15 +22,15 @@
 // function setUserOnlineIcons() {
 // 	if( !Object.isUndefined(onlineUsers) )
 // 		onlineUsers.map(function(userID) {
-// 			$('img[userID="'+userID+'"].userOnlineImg').invoke('show');
+// 			$$('img[userID="'+userID+'"].userOnlineImg').invoke('show');
 // 		});
 // }
 
 // Update new message icon for forum posts depending on stored cookie values
 function setForumMessageIcons() {
-	$(".messageIconForum").map(function (e) {
-		let messageID = e.getAttribute("messageID");
-		let threadID = e.getAttribute("threadID");
+	$$(".messageIconForum").map(function (e) {
+		var messageID = e.getAttribute("messageID");
+		var threadID = e.getAttribute("threadID");
 		
 		if( isPostNew(threadID, messageID) )
 			e.show();
@@ -40,7 +40,7 @@ function setForumMessageIcons() {
 
 function setForumParticipatedIcons() {
 	if( !Object.isUndefined(participatedThreadIDs) ) {
-		$(".participatedIconForum").map(function (e) {
+		$$(".participatedIconForum").map(function (e) {
 			var threadID = e.getAttribute("threadID");
 			
 			if( participatedThreadIDs.member(threadID) )
@@ -51,7 +51,7 @@ function setForumParticipatedIcons() {
 
 // Set messages sent by the current user to be italic
 function setPostsItalicized() {
-	$('div[fromUserID="'+User.id+'"].message-contents').map(function(c) {
+	$$('div[fromUserID="'+User.id+'"].message-contents').map(function(c) {
 		c.setStyle({ fontStyle: "italic" });
 	});
 }
@@ -65,8 +65,8 @@ function readThread(threadID, lastMessageID) {
 function isPostNew(threadID, messageID) {
 	if( messageID <= User.lastMessageIDViewed )
 		return false;
-
-	let lastReadID = readCookie("wD_Read_"+threadID);
+	
+	var lastReadID = readCookie("wD_Read_"+threadID);
 
 	if( Object.isUndefined(lastReadID) )
 		return true;
@@ -78,21 +78,19 @@ function isPostNew(threadID, messageID) {
 // "This script was originally written by Scott Andrew. Copied and edited by permission."
 function createCookie(name,value,days) {
 	if (days) {
-		let date = new Date();
+		var date = new Date();
 		date.setTime(date.getTime()+(days*24*60*60*1000));
-		let expires = "; expires="+date.toGMTString();
+		var expires = "; expires="+date.toGMTString();
 	}
-	else {
-		let expires = "";
-	}
+	else var expires = "";
 	document.cookie = name+"="+value+expires+"; path=/";
 }
 
 function readCookie(name) {
-	let nameEQ = name + "=";
-	let ca = document.cookie.split(';');
-	for(let i=0;i < ca.length;i++) {
-		let c = ca[i];
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
 		while (c.charAt(0)==' ') c = c.substring(1,c.length);
 		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
 	}

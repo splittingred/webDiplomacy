@@ -60,11 +60,6 @@ var inErrorCode=0;
 };
 */
 
-$(function () {
-	$('[data-toggle="popover"]').popover({ animation: false });
-	$('[data-toggle="tooltip"]').tooltip({ animation: false });
-});
-
 // Attach the method to the unbeforeunload event
 if(window.addEventListener){
 	window.addEventListener('beforeunload',onbeforeunload_unsubmittedtext,false);
@@ -85,7 +80,7 @@ function onbeforeunload_unsubmittedtext(e) {
 	if( !window.leavepagedanger ) return;
 
 	// Don't give a warning dialog if no large amount of text is at stake
-	if( $("textarea").all(function (t) { return ( t.value.length <= 10 ); }) )
+	if( $$("textarea").all(function (t) { return ( t.value.length <= 10 ); }) )
 		return;
 
 	var str=l_t("You seem to have an unsubmitted message.");
@@ -96,4 +91,18 @@ function onbeforeunload_unsubmittedtext(e) {
 	
 	//For Safari
 	return str;
+};
+
+// Mark that the page shouldn't be left if there are unsent messages, and add form onsubmit handlers to disarm the 
+// confirm dialog when submitting the message which the user would otherwise be warned about.
+function makeFormsSafe() {
+	window.leavepagedanger=true;
+	
+	// A function which disables the confirmation dialog
+	var safeToSubmit = function() { 
+		window.leavepagedanger=false; 
+		return true;
+	};
+	
+	$$(".safeForm").map( function(e) { e.onsubmit = safeToSubmit; } );
 }

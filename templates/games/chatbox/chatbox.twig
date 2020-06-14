@@ -21,8 +21,8 @@
 {{ form|raw }}
 
 <script>
-$(window).on("load", function() {
-    let cbs = $('#chatboxscroll');
+jQuery(document).bind("ready", function() {
+    let cbs = jQuery('#chatboxscroll');
     cbs.scrollTop(cbs.prop("scrollHeight"));
     // Don't focus the chatbox if the user is entering orders
     {% if app.request.countryId %}

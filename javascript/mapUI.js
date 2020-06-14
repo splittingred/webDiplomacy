@@ -19,10 +19,10 @@
 // See doc/javascript.txt for information on JavaScript in webDiplomacy
 
 // Current turn, -2 is undefined, -1 is pre-game
-let turn=-2;
+var turn=-2;
 
-let noMoves='';
-let preview='';
+var noMoves='';
+var preview='';
 
 // Toggle the display of the Move arrows.
 function toggleMoves(gameID, currentTurn) {
@@ -88,25 +88,25 @@ function mapArrows(currentTurn, newTurn)
 {
 	if ( newTurn == -1 )
 	{
-		$('Start').src = ("images/historyicons/Start_disabled.png");
-		$('Backward').src = ("images/historyicons/Backward_disabled.png");
+		$('Start').src = l_s("images/historyicons/Start_disabled.png");
+		$('Backward').src = l_s("images/historyicons/Backward_disabled.png");
 	}
 	else
 	{
-		$('Start').src = ("images/historyicons/Start.png");
-		$('Backward').src = ("images/historyicons/Backward.png");
+		$('Start').src = l_s("images/historyicons/Start.png");
+		$('Backward').src = l_s("images/historyicons/Backward.png");
 	}
 	
 	// Draw the greyed icons if the user can go no further forward
 	if ( newTurn == currentTurn )
 	{
-		$('Forward').src = ("images/historyicons/Forward_disabled.png");
-		$('End').src = ("images/historyicons/End_disabled.png");
+		$('Forward').src = l_s("images/historyicons/Forward_disabled.png");
+		$('End').src = l_s("images/historyicons/End_disabled.png");
 	}
 	else
 	{
-		$('Forward').src = ("images/historyicons/Forward.png");
-		$('End').src = ("images/historyicons/End.png");
+		$('Forward').src = l_s("images/historyicons/Forward.png");
+		$('End').src = l_s("images/historyicons/End.png");
 	}
 }
 turnToText='';//() { return ''; }
@@ -156,6 +156,5 @@ function recolorMap()
 	}
 }
 
-$(window).on("load", function() {
-	$('#mapImage').bind('load', recolorMap);
-});
+recolorMap();
+Event.observe($('mapImage'),'load',recolorMap);

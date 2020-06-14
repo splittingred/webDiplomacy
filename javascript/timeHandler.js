@@ -23,49 +23,47 @@
  */
 
 // Update class timestamps to be in the local time, taking the unixtime attribute and converting it via dateToText()
-let updateTimestamps = function () {
-	$('.timestamp').map(function() {
-		let c = $(this);
-		let cDate = new Date( parseInt(c.attr("unixtime"))*1000 );
-		c.html( dateToText(cDate) );
+var updateTimestamps = function () {
+	$$('.timestamp').map(function(c) {
+		var cDate = new Date( parseInt(c.getAttribute("unixtime"))*1000 );
+		c.update( dateToText(cDate) );
 	},this);
 }
 
 // update class timestampGames to be in the local time, taking the unixtime attribute and converting it via dateToText()
-let updateTimestampGames = function () {
-	$('.timestampGames').map(function() {
-		let c = $(this);
-		const cDate = new Date( parseInt(c.attr("unixtime"))*1000 );
-		c.html( dateToTextTimestampGames(cDate) );
+var updateTimestampGames = function () {
+	$$('.timestampGames').map(function(c) {
+		const cDate = new Date( parseInt(c.getAttribute("unixtime"))*1000 );
+		c.update( dateToTextTimestampGames(cDate) );
 	},this);
 }
 
-let dayNames=["Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-let monthNames=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var dayNames=["Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+var monthNames=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
 // Convert a JavaScript (new Date()) into text
 const dateToText = function (date) {
-	let secondDifference = ((date - (new Date()))/1000);
+	var secondDifference = ((date - (new Date()))/1000);
 	if( secondDifference < 0 ) secondDifference *= -1;
 
-	let a = dayNames[date.getDay()];
+	var a = l_t(dayNames[date.getDay()]);
 	
 	if ( secondDifference < 4*24*60*60 )
 	{
-		let I = date.getHours();
-		let M = date.getMinutes();
+		var I = date.getHours();
+		var M = date.getMinutes();
 		if( M<10 ) M="0"+M;
-
-		let p = "AM";
+	
+		var p = "AM";
 		if( I >= 12 ) {
 			I -= 12;
 			p = "PM";
 		}
 		
-		if (I == 0) I = 12;
+		if( I==0 ) I="12";
 		
 		// apply leading zero to single digit hour
-		if (I < 10) I = "0"+I.toString();
+		if( I<10 ) I="0"+I.toString();
 
 		if ( secondDifference < 22*60*60 ) // within 22 hours
 			return I+":"+M+" "+p; // HH:MM AM/PM
@@ -74,9 +72,9 @@ const dateToText = function (date) {
 	}
 	else
 	{
-		let d = date.getDate();
-		let b = monthNames[date.getMonth()];
-		let y = date.getYear();
+		var d = date.getDate();
+		var b = l_t(monthNames[date.getMonth()]);
+		var y = date.getYear();
 		if ( y < 1900 ) y+=1900;
 		
 		if ( secondDifference < 3*7*22*60*60 ) // within 19 days, 6 hours
@@ -87,26 +85,26 @@ const dateToText = function (date) {
 }
 
 const dateToTextTimestampGames = function (date)  {
-	let secondDifference = ((date - (new Date()))/1000);
+    var secondDifference = ((date - (new Date()))/1000);
     if( secondDifference < 0 ) secondDifference *= -1;
 
-	let a = dayNames[date.getDay()];
-	let d = date.getDate();
-	let b = monthNames[date.getMonth()];
-	let y = date.getYear();
+    var a = l_t(dayNames[date.getDay()]);
+    var d = date.getDate();
+    var b = l_t(monthNames[date.getMonth()]);
+    var y = date.getYear();
     if ( y < 1900 ) y+=1900;
-	let I = date.getHours();
-	let M = date.getMinutes();
+    var I = date.getHours();
+    var M = date.getMinutes();
     if( M<10 ) M="0"+M;
 
-	let p = "AM";
+    var p = "AM";
     if( I >= 12 ) {
         I -= 12;
         p = "PM";
     }
     
-    if( I == 0 ) I = 12;
-    if( I < 10 ) I="0"+I.toString();
+    if( I==0 ) I="12";
+    if( I<10 ) I="0"+I.toString();
     
     // If the difference is more than a month then show the year 
     if ( secondDifference > 3*7*30*60*60 ) {
@@ -123,41 +121,40 @@ const dateToTextTimestampGames = function (date)  {
 // Update the timezone offset info in the footer, which tells the user which timezone the page's times are in
 function updateUTCOffset() {
 	// Time needed to add to UTC times to get our time
-	let UTCHoursOffset = -1*((new Date).getTimezoneOffset()/60);
-	let sign='+';
+	var UTCHoursOffset = -1*((new Date).getTimezoneOffset()/60);
+	var sign='+';
 	if( UTCHoursOffset < 0 )
 	{
 		UTCHoursOffset *= -1;
 		sign='-';
 	}
-
-	let hours = Math.floor(UTCHoursOffset);
-	let minutes = (UTCHoursOffset*60 - hours*60);
+	
+	var hours = Math.floor(UTCHoursOffset);
+	var minutes = (UTCHoursOffset*60 - hours*60);
 	
 	if( hours < 10 ) hours = '0'+hours.toString();
 	if( minutes < 10 ) minutes = '0'+minutes.toString();
-
-	let utcE = $("UTCOffset");
-	if (utcE !== undefined && utcE != null) {
-		utcE.html('UTC' + sign.toString() + hours.toString() + ':' + minutes.toString());
-	}
+	
+	var utcE = $("UTCOffset");
+	if( !Object.isUndefined(utcE) && utcE != null )
+		utcE.update('UTC'+sign.toString()+hours.toString()+':'+minutes.toString());
 }
 
 
 // Above are timestamp functions, below are countdown functions:
 
-let timerCheck=false; // Stores the PeriodicalExecutor which updates countdowns
-let timerCheckMinTime=7*24*60*60; // The refresh time for the PeriodicalExecutor
-let newTimerCheckMinTime=7*24*60*60; // The new refresh time, to detect when it has to be restarted at a new rate
+var timerCheck=false; // Stores the PeriodicalExecutor which updates countdowns
+var timerCheckMinTime=7*24*60*60; // The refresh time for the PeriodicalExecutor
+var newTimerCheckMinTime=7*24*60*60; // The new refresh time, to detect when it has to be restarted at a new rate
 
 // Update countdown timers, needs to be run repeatedly. The first time it is run it will set up future runs
 function updateTimers() {
-
-	let timeFrom = Math.floor((new Date).getTime() / 1000);
 	
-	$(".timeremaining").map(function(c) {
+	var timeFrom = Math.floor((new Date).getTime() / 1000);
+	
+	$$(".timeremaining").map(function(c) {
 		
-		var givenTime = parseInt(c.attr("unixtime"));
+		var givenTime = parseInt(c.getAttribute("unixtime"));
 		var secondsRemaining = givenTime - timeFrom;
 
 		if( secondsRemaining < 300 )
@@ -220,7 +217,7 @@ function remainingText(secondsRemaining)
 		if ( hours < 4 )
 		{
 			setMinimumTimerInterval(seconds);
-			return hours + ' hours, ' + minutes + ' minutes';
+			return l_t('%s hours, %s mins', hours, minutes);
 		}
 		else
 		{
@@ -228,7 +225,7 @@ function remainingText(secondsRemaining)
 			
 			hours += Math.round(minutes/60); // Add an hour if the minutes almost gives an hour
 			
-			return hours + ' hours';
+			return l_t('%s hours', hours);
 		}
 	}
 	else // M, S
@@ -236,7 +233,7 @@ function remainingText(secondsRemaining)
 		if( minutes >= 5 )
 		{
 			setMinimumTimerInterval(seconds);
-			return minutes + ' mins';
+			return l_t('%s mins',minutes);
 		}
 		else
 		{

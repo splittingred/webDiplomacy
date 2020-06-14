@@ -35,9 +35,9 @@
 </div>
 
 <script>
-    turnToText={{ game.variant.turnAsDateJS|raw }}
-    $(window).on('load', function() {
-        mapArrows({{ mapTurn }},{{ mapTurn }});
-    });
+jQuery(document).bind("ready", function() {
+    turnToText ={{ game.variant.turnAsDateJS|raw }}
+    mapArrows({{ mapTurn }},{{ mapTurn }});
+});
 </script>
 <script type="text/javascript" src="/javascript/mapUI.js"></script>

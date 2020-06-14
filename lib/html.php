@@ -831,7 +831,9 @@ class libHTML
 
 		// Add the javascript includes:
 		$footerIncludes = array();
-		$footerIncludes[] ='contrib/sprintf.js';
+        $footerIncludes[] = '../locales/layer.js';
+        $footerIncludes[] = '../locales/English/layer.js';
+		$footerIncludes[] = 'contrib/sprintf.js';
 		$footerIncludes[] = 'utility.js';
 		$footerIncludes[] = 'cacheUpdate.js';
 		$footerIncludes[] = 'timeHandler.js';
@@ -845,7 +847,7 @@ class libHTML
 		// time handling functions. Only logged-in users need to run these
 		$buf .= '
 		<script type="text/javascript">
-			let UserClass = function () {
+			var UserClass = function () {
 				this.id='.$User->id.';
 				this.username="'.htmlentities($User->username).'";
 				this.points='.$User->points.'
@@ -855,11 +857,11 @@ class libHTML
 				this.darkMode="'.$User->options->value['darkMode'].'";
 			}
 			User = new UserClass();
-			let headerEvent = document.getElementsByClassName("clickable");
+			var headerEvent = document.getElementsByClassName("clickable");
 
-			let WEBDIP_DEBUG='.(Config::$debug ? 'true':'false').';
+			var WEBDIP_DEBUG='.(Config::$debug ? 'true':'false').';
 
-			$(window).on("load", function() {
+			document.observe("dom:loaded", function() {
                 setForumMessageIcons();
                 setPostsItalicized();
                 updateTimestamps();

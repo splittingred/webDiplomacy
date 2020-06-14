@@ -378,9 +378,7 @@ class panelGame extends Game
 	 */
 	public function archiveBar() : string
 	{
-		return $this->renderer->render('games/board/archive_bar.twig', [
-			'id' => $this->id,
-		]);
+	    return (string)(new \Diplomacy\Views\Components\Games\ArchiveBarComponent($this->id));
 	}
 
 	/**

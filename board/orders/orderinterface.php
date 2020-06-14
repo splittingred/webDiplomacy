@@ -51,6 +51,10 @@ require_once(l_r('board/orders/builds.php'));
  */
 class OrderInterface
 {
+	/**
+	 * @return OrderInterface
+	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
+	 */
 	public static function newBoard() {
 		global $Game, $Member;
 		global $app;
@@ -357,5 +361,3 @@ class OrderInterface
 		return $html;
 	}
 }
-
-?>

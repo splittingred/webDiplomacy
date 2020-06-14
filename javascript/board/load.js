@@ -82,7 +82,7 @@ function loadBoard()
 			var u=p[1];
 			
 			// Retreating units don't yet have any Territory set
-			if( !u.Territory )
+			if( Object.isUndefined(u.Territory) )
 			{
 				var unit = Units.get(u.id);
 				Object.extend(unit, ProtoUnit);
@@ -103,7 +103,7 @@ function loadBoard()
 		
 		Territories.each(function(p){
 			var t=p[1];
-			if( t.coastParent.supply && t.coastParent.countryID == context.countryID && t.coastParent.ownerCountryID == context.countryID && !t.coastParent.Unit )
+			if( t.coastParent.supply && t.coastParent.countryID == context.countryID && t.coastParent.ownerCountryID == context.countryID && Object.isUndefined(t.coastParent.Unit) )
 			{
 				SupplyCenters.push(t);
 			}

@@ -108,12 +108,12 @@ function OrdersHTMLFormClass() {
 		}
 		else
 		{
-			if( response.headerJSON.newContext )
+			if( !Object.isUndefined(response.headerJSON.newContext) )
 			{
 				this.context = response.headerJSON.newContext;
 				this.contextKey = response.headerJSON.newContextKey;
-
-				let tmpFinalized = this.context.orderStatus.match('Ready');
+				
+				var tmpFinalized = this.context.orderStatus.match('Ready');
 				
 				if( tmpFinalized && !this.finalized )
 					this.setFinalized();
@@ -122,21 +122,21 @@ function OrdersHTMLFormClass() {
 			}
 			
 			if( response.headerJSON.statusIcon.length>0 )
-				$('.member'+this.context.memberID+'StatusIcon').map(function(e){ e.update(response.headerJSON.statusIcon); });
+				$$('.member'+this.context.memberID+'StatusIcon').map(function(e){ e.update(response.headerJSON.statusIcon); });
 			
 			if( response.headerJSON.statusText.length>0 )
-				$('.member'+this.context.memberID+'StatusText').map(function(e){ e.update(response.headerJSON.statusText); });
+				$$('.member'+this.context.memberID+'StatusText').map(function(e){ e.update(response.headerJSON.statusText); });
 			
 			if( response.headerJSON.notice.length > 0 )
 				this.ordersNoticeArea.update(response.headerJSON.statusIcon+' '+response.headerJSON.notice+'<br />');
 			else
 				this.ordersNoticeArea.update(response.headerJSON.statusIcon);
-
-			let orderMessages = response.headerJSON.orders;
+			
+			var orderMessages = $H(response.headerJSON.orders);
 			
 			this.OrdersIndex.each(function(p){
-				let orderID = p[0];
-				let Order = p[1];
+				var orderID = p[0];
+				var Order = p[1];
 
 				Order.setResult(orderMessages.get(orderID));
 			},this);

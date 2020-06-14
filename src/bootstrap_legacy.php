@@ -10,10 +10,43 @@ require_once ROOT_PATH . 'lib/time.php';
 require_once ROOT_PATH . 'lib/html.php';
 require_once ROOT_PATH . 'locales/layer.php';
 
-require_once ROOT_PATH . 'objects/silence.php';
-require_once ROOT_PATH . 'objects/user.php';
-require_once ROOT_PATH . 'objects/game.php';
-require_once ROOT_PATH . 'board/chatbox.php';
+// objects
+require_once ROOT_PATH . 'objects/basic/baseset.php';   // class baseSet
+require_once ROOT_PATH . 'objects/basic/set.php';       // abstract class set and others
+require_once ROOT_PATH . 'objects/database.php';        // class Database
+require_once ROOT_PATH . 'objects/mailer.php';          // class Mailer
+require_once ROOT_PATH . 'objects/silence.php';         // class Silence
+require_once ROOT_PATH . 'objects/user.php';            // class User
+require_once ROOT_PATH . 'objects/useroptions.php';     // class UserOptions
+require_once ROOT_PATH . 'objects/game.php';            // class Game
+require_once ROOT_PATH . 'objects/member.php';          // class Member
+
+// GM stuff
+require_once ROOT_PATH . 'gamemaster/gamemaster.php';   // class libGameMaster
+require_once ROOT_PATH . 'gamemaster/game.php';         // class processGame extends Game
+require_once ROOT_PATH . 'gamemaster/member.php';       // class processMember extends Member
+require_once ROOT_PATH . 'gamemaster/members.php';      // class processMembers extends Members
+require_once ROOT_PATH . 'gamemaster/misc.php';         // class miscUpdate
+
+// game stuff
+require_once ROOT_PATH . 'gamepanel/game.php';          // class panelGame extends Game
+require_once ROOT_PATH . 'gamepanel/member.php';        // class panelMember extends Member
+require_once ROOT_PATH . 'gamepanel/memberhome.php';    // class panelMemberHome extends panelMember
+require_once ROOT_PATH . 'gamepanel/gameboard.php';     // class panelGameBoard extends panelGame
+require_once ROOT_PATH . 'board/member.php';            // class userMember extends panelMember
+require_once ROOT_PATH . 'board/chatbox.php';           // class Chatbox
+require_once ROOT_PATH . 'objects/members.php';         // class Members
+require_once ROOT_PATH . 'gamepanel/members.php';       // class panelMembers extends Members
+require_once ROOT_PATH . 'gamepanel/membershome.php';   // class panelMembersHome extends panelMembers
+require_once ROOT_PATH . 'variants/variant.php';        // class WDVariant
+require_once ROOT_PATH . 'board/orders/orderinterface.php'; // class OrderInterface
+require_once ROOT_PATH . 'board/orders/base/order.php'; // abstract class order
+require_once ROOT_PATH . 'board/orders/base/territory.php'; // class Territory
+require_once ROOT_PATH . 'board/orders/base/unit.php';  // class Unit
+require_once ROOT_PATH . 'board/orders/order.php';      // abstract class userOrder extends order
+require_once ROOT_PATH . 'board/orders/diplomacy.php';
+require_once ROOT_PATH . 'board/orders/retreats.php';
+require_once ROOT_PATH . 'board/orders/builds.php';
 
 global $Locale;
 $loc = !empty(Config::$locale) ? Config::$locale : 'English';

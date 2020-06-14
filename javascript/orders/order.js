@@ -40,7 +40,7 @@ function Order(orderData)
 			toTerrID:this.toTerrID, fromTerrID:this.fromTerrID,
 			viaConvoy:this.viaConvoy };
 
-		if( this.convoyPath && this.convoyPath.length>0)
+		if( !Object.isUndefined(this.convoyPath) && this.convoyPath.length>0)
 			da.convoyPath = this.convoyPath;
 
 		return da;
@@ -104,7 +104,7 @@ function Order(orderData)
 			e.observe('change', this.onChange.bindAsEventListener(this));
 		},this);
 
-		if( (this.Unit) )
+		if( !Object.isUndefined(this.Unit) )
 		{
 			this.setUnitIconArea(this.Unit.type);
 		}
@@ -236,14 +236,14 @@ function Order(orderData)
 			case 'viaConvoy': choices = $H(this.viaConvoyChoices).keys(); break;
 		}
 
-		if( !(choices) || choices.length==0 || ! choices.member(value) )
+		if( Object.isUndefined(choices) || choices.length==0 || ! choices.member(value) )
 			return false;
 		else
 			return true;
 	};
 
 	this.updateValue = function(name,newValue) {
-		if( !(newValue) ) return;
+		if( Object.isUndefined(newValue) ) return;
 
 		var updatedChoices=[ ];
 
@@ -317,7 +317,7 @@ function Order(orderData)
 		if( newChoices.values().length == 1 )
 		{
 			var onlyValue=newChoices.keys()[0];
-			if( !(onlyValue) || onlyValue=='undefined' )
+			if( Object.isUndefined(onlyValue) || onlyValue=='undefined' )
 				this.updateValue(name, '');
 			else if( onlyValue != currentValue )
 				this.updateValue(name, onlyValue);
@@ -331,14 +331,14 @@ function Order(orderData)
 	this.formDropDown=function(name, aoptions, value) {
 		var elementName='orderForm['+this.id+']['+name+']';
 
-		if( !(aoptions) ){ return ''; }
+		if( Object.isUndefined(aoptions) ){ return ''; }
 
 		var optionsCount = aoptions.length;
 
 		if( optionsCount == 0 ) return '<em>['+l_t('No options available!')+'</em>]';
 
 		var options = $H(aoptions);
-		if( optionsCount == 1 && (options.get('undefined')) )
+		if( optionsCount == 1 && !Object.isUndefined(options.get('undefined')) )
 			 return '<em>['+l_t('No options available!')+'</em>]';
 
 		if( OrdersHTML.finalized )
@@ -350,7 +350,7 @@ function Order(orderData)
 			var html=' <select orderType="'+name+'" class="orderDropDown '+(isDisabled?' orderDisabled':'')+'" name="'+
 				elementName+'" style="background-color:#ffd4c9" '+(isDisabled?' disabled':'')+' >';
 
-			if( (value) && value != '' )
+			if( !Object.isUndefined(value) && value != '' )
 			{
 				var valueName = options.get(value);
 				html=html+'<option selected="selected" value="'+value+'">'+valueName+'</option>';
@@ -382,7 +382,7 @@ function Order(orderData)
 				});
 			}
 			optArray.forEach(function(pair){
-				if( !( !(pair[0]) || pair[0]=='undefined' ) && pair[0] != value )
+				if( !( Object.isUndefined(pair[0]) || pair[0]=='undefined' ) && pair[0] != value )
 					html=html+'<option value="'+pair[0]+'">'+pair[1]+'</option>';
 			});
 
@@ -396,7 +396,7 @@ function Order(orderData)
 		var icon = '';
 		var message = '';
 
-		if( !(Result) || Result.changed == 'No' )
+		if( Object.isUndefined(Result) || Result.changed == 'No' )
 		{
 			this.setMessageSpan('');
 			return;
@@ -442,7 +442,7 @@ function Order(orderData)
 	};
 
 	this.arrayToChoices = function(arr) {
-		if(!(arr)) arr = [ ];
+		if(Object.isUndefined(arr)) arr = [ ];
 
 		var choices = new Hash();
 		arr.map(function(c) { choices.set(c, l_t(Territories.get(c).name)); });

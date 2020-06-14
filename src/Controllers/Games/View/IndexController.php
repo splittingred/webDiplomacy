@@ -12,6 +12,7 @@ use Diplomacy\Services\Request;
 use \Diplomacy\Models\Entities\Games\GameBoard;
 use Diplomacy\Views\Components\Games\ChatBox\ChatBoxComponent;
 use Diplomacy\Views\Components\Games\MapComponent;
+use Diplomacy\Views\Components\Games\OrdersComponent;
 
 class IndexController extends Base
 {
@@ -67,17 +68,22 @@ class IndexController extends Base
         $this->currentMember = $this->gameEntity->members->byUser($this->currentUserEntity);
     }
 
+    /**
+     * @return string
+     */
     protected function getForum()
     {
         $targetCountryId = $this->request->get('countryId', -1, Request::TYPE_REQUEST);
         return (string)(new ChatBoxComponent($this->gameEntity, $this->currentMember, $targetCountryId));
     }
 
+    /**
+     * @return string
+     */
     protected function getOrders()
     {
         if (!$this->gameEntity->phase->isActive()) return '';
 
-        // TODO: Will require redoing _all_ of the orderinterface class
-        return '';
+        return (string)(new OrdersComponent($this->gameEntity, $this->currentMember));
     }
 }
