@@ -16,6 +16,11 @@ class PointsPerSupplyCenter extends PotType
         return 'Survivors-Win Scoring';
     }
 
+    public function getDescription(): string
+    {
+        return 'This game is scored using points per supply center. In a draw, points are split evenly among all players remaining.';
+    }
+
     public function grantsPointsOnSurvivals(): bool
     {
         return true;

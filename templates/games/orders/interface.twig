@@ -1,0 +1,26 @@
+{{ javascript|raw }}
+<form id="orderFormElement" onsubmit="return false;">
+    <a id="orders"></a>
+    <div class="chatWrapper">
+        <table class="orders">
+            {% for order in orders %}
+                <tr class="barAlt{{ cycle(['1','2'], loop.index0) }}">
+                <td class="uniticon">
+                    <span id="orderID{{ order.id }}UnitIconArea"></span>
+                </td>
+                <td class="order">
+                    <div id="orderID{{ order.id }}">Loading order...</div>
+                </td>
+                {% endfor %}
+            </tr>
+        </table>
+    </div>
+    <div style="text-align:center;">
+        <span id="ordersNoticeArea{{ member.id }}"></span>
+
+        {% if canSaveOrders %}
+            <input id="UpdateButton{{ member.id }}" type="Submit" class="form-submit spaced-button" name="Update" value="Save" disabled="disabled" />
+        {% endif %}
+        <input id="FinalizeButton{{ member.id }}" type="Submit" class="form-submit spaced-button" name="{{ readyText }}" value="{{ readyText }}" disabled="disabled" />
+    </div>
+</form>

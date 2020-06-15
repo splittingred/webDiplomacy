@@ -28,6 +28,11 @@ abstract class PotType
     abstract public function getLongName() : string;
 
     /**
+     * @return string
+     */
+    abstract public function getDescription(): string;
+
+    /**
      * @return bool
      */
     abstract public function grantsPointsOnSurvivals(): bool;

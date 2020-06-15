@@ -14,6 +14,11 @@ class DrawVotesHidden extends DrawType
         return 'Hidden draw votes';
     }
 
+    public function getDescription(): string
+    {
+        return 'Draw votes are not publicly known in this game.';
+    }
+
     /**
      * @return bool
      */

@@ -91,7 +91,7 @@ function onbeforeunload_unsubmittedtext(e) {
 	
 	//For Safari
 	return str;
-};
+}
 
 // Mark that the page shouldn't be left if there are unsent messages, and add form onsubmit handlers to disarm the 
 // confirm dialog when submitting the message which the user would otherwise be warned about.

@@ -468,6 +468,9 @@ class SetOrders extends ApiEntry {
 			}
 		}
 
+		global $app;
+		$renderer = $app->make('renderer');
+
         $gameEntity = OrderInterface::loadGameEntity($game->id);
         $userEntity = new \Diplomacy\Models\Entities\User();
         $userEntity->id = $userID;
@@ -482,13 +485,14 @@ class SetOrders extends ApiEntry {
 		    // TODO: FIX
 			// Create order interface in any case.
 			$orderInterface = new OrderInterface(
+			    $renderer,
                 $gameEntity,
 				$userEntity,
                 $memberEntity,
                 $turnEntity,
 				$phaseEntity,
 				$countryEntity,
-				$member->orderStatus,
+				new \Diplomacy\Models\Entities\Games\Members\OrdersState($member->orderStatus),
 				null,
 				false
 			);

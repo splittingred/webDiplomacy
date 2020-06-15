@@ -1,26 +1,21 @@
-const $dropdown = jQuery(".dropdown");
-const $dropdownToggle = jQuery(".dropdown-toggle");
-const $dropdownMenu = jQuery(".dropdown-menu");
-const showClass = "show";
+if (Prototype.BrowserFeatures.ElementExtensions) {
+    let disablePrototypeJS = function (method, pluginsToDisable) {
+        let handler = function (event) {
+            event.target[method] = undefined;
+            setTimeout(function () {
+                delete event.target[method];
+            }, 0);
+        };
+        pluginsToDisable.each(function (plugin) {
+            jQuery(window).on(method + '.bs.' + plugin, handler);
+        });
+    },
+    pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover', 'tab'];
+    disablePrototypeJS('show', pluginsToDisable);
+    disablePrototypeJS('hide', pluginsToDisable);
+}
 
-
-jQuery(window).on("load resize", function() {
-    if (this.matchMedia("(min-width: 768px)").matches) {
-        $dropdown.hover(
-            function() {
-                const $this = jQuery(this);
-                $this.addClass(showClass);
-                $this.find($dropdownToggle).attr("aria-expanded", "true");
-                $this.find($dropdownMenu).addClass(showClass);
-            },
-            function() {
-                const $this = jQuery(this);
-                $this.removeClass(showClass);
-                $this.find($dropdownToggle).attr("aria-expanded", "false");
-                $this.find($dropdownMenu).removeClass(showClass);
-            }
-        );
-    } else {
-        $dropdown.off("mouseenter mouseleave");
-    }
+jQuery(document).ready(function () {
+    jQuery('[data-toggle="popover"]').popover({ delay: { show: 10, hide: 1000 }});
+    jQuery('[data-toggle="tooltip"]').tooltip();
 });

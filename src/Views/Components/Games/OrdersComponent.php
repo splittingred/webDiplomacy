@@ -33,6 +33,7 @@ class OrdersComponent extends BaseComponent
         $Member = $Game->Members->ByUserID[$this->currentMember->user->id];
 
         $interface = $this->game->variant->OrderInterface(
+            $this->renderer,
             $this->game,
             $this->currentMember->user,
             $this->currentMember,

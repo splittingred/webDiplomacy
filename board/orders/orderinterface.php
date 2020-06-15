@@ -22,6 +22,7 @@ use Diplomacy\Models\Entities\Games\Country;
 use Diplomacy\Models\Entities\Games\Members\OrdersState;
 use Diplomacy\Models\Entities\Games\Phase;
 use Diplomacy\Models\Entities\Games\Turn;
+use Diplomacy\Views\Renderer;
 
 defined('IN_CODE') or die('This script can not be run by itself.');
 
@@ -70,6 +71,8 @@ class OrderInterface
     {
         require_once ROOT_PATH . 'lib/variant.php';
         require_once ROOT_PATH . 'objects/basic/set.php';
+        global $app;
+        $renderer = $app->make('renderer');
 
 		$inContext = (array)json_decode($json);
 		$authContext = self::getContext($inContext);
@@ -91,6 +94,7 @@ class OrderInterface
         $countryEntity = new Country($inContext['countryID'], '');
         $ordersStateEntity = new OrdersState(explode(',',$inContext['orderStatus']));
 		return $gameEntity->variant->OrderInterface(
+		    $renderer,
 		    $gameEntity,
             $userEntity,
             $memberEntity,
@@ -103,8 +107,11 @@ class OrderInterface
         );
 	}
 
+	/** @var Renderer $renderer */
+	protected $renderer;
 	/** @var \Diplomacy\Models\Entities\Game */
 	public $game;
+	/** @var \Diplomacy\Models\Entities\User  */
 	protected $user;
 	/** @var \Diplomacy\Models\Entities\Games\Member $member */
 	protected $member;
@@ -121,6 +128,8 @@ class OrderInterface
 
     /**
      * OrderInterface constructor.
+     *
+     * @param Renderer $renderer
      * @param \Diplomacy\Models\Entities\Game $game
      * @param \Diplomacy\Models\Entities\User $user
      * @param \Diplomacy\Models\Entities\Games\Member $member
@@ -132,6 +141,7 @@ class OrderInterface
      * @param bool $maxOrderID
      */
 	public function __construct(
+	    Renderer $renderer,
         \Diplomacy\Models\Entities\Game $game,
         \Diplomacy\Models\Entities\User $user,
         \Diplomacy\Models\Entities\Games\Member $member,
@@ -142,6 +152,7 @@ class OrderInterface
         $tokenExpireTime,
         $maxOrderID=false
     ) {
+	    $this->renderer = $renderer;
 		$this->game = $game;
 		$this->user = $user;
 		$this->member = $member;
@@ -334,7 +345,7 @@ class OrderInterface
                 'phase' => $contextOf->phase->name,
                 'tokenExpireTime' => $contextOf->tokenExpireTime,
                 'maxOrderID' => $contextOf->maxOrderID,
-                'orderStatus' => $contextOf->orderStatus->toArray(),
+                'orderStatus' => implode(',',$contextOf->orderStatus->toArray()),
             ];
         }
         $json = json_encode($context);
@@ -393,33 +404,13 @@ class OrderInterface
 
 	public function html()
 	{
-		global $Game;
-		$html = $this->jsHTML();
-
-		$html .= '
-	<form id="orderFormElement" onsubmit="return false;">
-		<a id="orders"></a><div class = "chatWrapper"><table class="orders">';
-
-		$alternate = false;
-		foreach($this->Orders as $Order)
-		{
-			$alternate = ! $alternate;
-			$html .= '<tr class="barAlt'.($alternate ? '1' : '2').'">
-				<td class="uniticon"><span id="orderID'.$Order->id.'UnitIconArea"></span></td>
-				<td class="order"><div id="orderID'.$Order->id.'">'.l_t('Loading order').'...</div></td>
-				</tr>';
-		}
-
-		$html .= "</table></div>".'
-				<div style="text-align:center;"><span id="ordersNoticeArea'.$this->member->id.'"></span>
-				'.
-				($Game->pressType == 'RulebookPress' && !$this->phase->isMoves() ? ''  :
-			'<input id="UpdateButton'.$this->member->id.'" type="Submit" class="form-submit spaced-button" name="Update" value="Save" disabled="disabled" />' ) .'
-			<input id="FinalizeButton'.$this->member->id.'" type="Submit" class="form-submit spaced-button" name="'.
-				l_t($this->orderStatus->isReady() ? 'Not ready' : 'Ready').'" value="'.l_t($this->orderStatus->isReady() ? 'Not ready' : 'Ready').'" disabled="disabled" />
-		</div>
-	</form>';
-
-		return $html;
+	    return $this->renderer->render('games/orders/interface.twig', [
+	        'game' => $this->game,
+	        'member' => $this->member,
+	        'orders' => $this->Orders,
+            'javascript' => $this->jsHTML(),
+            'readyText' => $this->orderStatus->isReady() ? 'Not ready' : 'Ready',
+            'canSaveOrders' => $this->phase->isMoves(),
+        ]);
 	}
 }

@@ -21,27 +21,8 @@
 
 defined('IN_CODE') or die('This script can not be run by itself.');
 
-class Modern2Variant_OrderInterface extends OrderInterface {
-
-	/**
-	 * Call the parent constructor transparently to keep things working
-	 * @param $game
-	 * @param $user
-	 * @param $member
-	 * @param $turn
-	 * @param $phase
-	 * @param $country
-	 * @param setMemberOrderStatus $orderStatus
-	 * @param $tokenExpireTime
-	 * @param bool $maxOrderID
-	 */
-	public function __construct($game, $user, $member, $turn, $phase, $country,
-		setMemberOrderStatus $orderStatus, $tokenExpireTime, $maxOrderID=false)
-	{
-		parent::__construct($game, $user, $member, $turn, $phase, $country,
-			$orderStatus, $tokenExpireTime, $maxOrderID);
-	}
-
+class Modern2Variant_OrderInterface extends OrderInterface
+{
 	protected function jsLoadBoard() {
 		parent::jsLoadBoard();
 

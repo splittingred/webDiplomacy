@@ -30,5 +30,12 @@
         <div class="hr"></div>
     {% endif %}
 
-    {{ game.summary|raw }}
+    <div class="gamePanel variant{{ game.variant.name }}">
+        {% if current_member.isAuthenticated %}
+            {{ component('Games.Votes', { game: game, currentMember: current_member })|raw }}
+        {% endif %}
+        {{ members|raw }}
+        {{ links|raw }}
+        <div class="bar lastBar"> </div>
+    </div>
 </div>

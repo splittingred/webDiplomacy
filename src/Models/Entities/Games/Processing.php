@@ -7,10 +7,10 @@ namespace Diplomacy\Models\Entities\Games;
  */
 class Processing
 {
-    const STATUS_NOT_PROCESSING = 'Not-processing';
-    const STATUS_PROCESSING = 'Processing';
-    const STATUS_CRASHED = 'Crashed';
-    const STATUS_PAUSED = 'Paused';
+    const STATUS_NOT_PROCESSING = 'not-processing';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_CRASHED = 'crashed';
+    const STATUS_PAUSED = 'paused';
     const TIME_NOW_TEXT = 'Now';
 
     /** @var string $status */

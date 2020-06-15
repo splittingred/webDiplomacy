@@ -1,0 +1,25 @@
+{% if show %}
+<div style="width: 300px; margin: 0 auto; text-align:center;">
+    <a href="/help/contact-direct" align="center">Need help?</a>
+</div>
+<div class="bar membersList memberVotePanel">
+    <a id="votebar"></a>
+    <table>
+        <tr class="member">
+            <td class="memberLeftSide">
+                <strong>
+                    Votes:
+                    {{ component('Utilities.HelpIcon', {
+                        id: 'votes-help-btn',
+                        text: helpText,
+                        title: 'Votes'
+                    })|raw }}
+                </strong>
+            </td>
+            <td class="memberRightSide">
+                {{ form|raw }}
+            </td>
+        </tr>
+    </table>
+</div>
+{% endif %}

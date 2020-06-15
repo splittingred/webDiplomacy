@@ -10,6 +10,7 @@ use Diplomacy\Models\Entities\Games\PlayersTypes\Mixed;
 abstract class PlayersType
 {
     abstract public function getLongName() : string;
+    abstract public function hasBots(): bool;
 
     /**
      * @param $type

@@ -16,6 +16,11 @@ class Unranked extends PotType
         return 'Unranked';
     }
 
+    public function getDescription(): string
+    {
+        return 'This game is unranked. In a draw, all points are returned to their previous owners.';
+    }
+
     public function grantsPointsOnSurvivals(): bool
     {
         return false;

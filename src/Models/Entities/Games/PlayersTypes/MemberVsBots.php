@@ -13,4 +13,9 @@ class MemberVsBots extends PlayersType
     {
         return 'Bot Game';
     }
+    
+    public function hasBots(): bool
+    {
+        return true;
+    }
 }

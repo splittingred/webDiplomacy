@@ -18,6 +18,11 @@ class WinnerTakesAll extends PotType
         return 'Draw-Size Scoring';
     }
 
+    public function getDescription(): string
+    {
+        return 'This game is scored using draw size scoring. In a draw, points are split evenly among all players remaining.';
+    }
+
     public function grantsPointsOnSurvivals(): bool
     {
         return false;

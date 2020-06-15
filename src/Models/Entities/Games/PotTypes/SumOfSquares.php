@@ -16,6 +16,11 @@ class SumOfSquares extends PotType
         return 'Sum-of-Squares Scoring';
     }
 
+    public function getDescription(): string
+    {
+        return 'This game is scored using sum of squares. In a draw, points are split among remaining players based upon how many supply centers they have.';
+    }
+
     public function grantsPointsOnSurvivals(): bool
     {
         return false;

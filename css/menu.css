@@ -87,3 +87,12 @@
     display: table-cell;
     text-align: center;
 }
+
+/* these next two declaratives make the dropdown on hover magic happen */
+.dropdown:hover>.dropdown-menu {
+    display: block;
+}
+.dropdown>.dropdown-toggle:active {
+    /* Without this, clicking will make it sticky */
+    pointer-events: none;
+}

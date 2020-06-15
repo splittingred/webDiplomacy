@@ -18,6 +18,7 @@ class User
     const ROLE_ADMIN = 'Admin';
     const ROLE_SYSTEM = 'System';
     const ROLE_BANNED = 'Banned';
+    const ROLE_BOT = 'Bot';
 
     public $id;
     public $username;

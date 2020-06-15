@@ -27,6 +27,9 @@ use Diplomacy\Services\Games\Factory;
 
 require_once('header.php');
 
+global $app;
+$renderer = $app->make('renderer');
+
 if ( ! isset($_REQUEST['gameID']) )
 {
 	libHTML::error(l_t("You haven't specified a game to view, please go back to the game listings and choose one."));
@@ -224,6 +227,7 @@ if (isset($Member) && $Member->status == 'Playing' && !$Game->isFinished())
 	if ($gameEntity->phase->isActive())
 	{
 		$interface = $Game->Variant->OrderInterface(
+		    $renderer,
             $gameEntity,
             $userEntity,
             $currentMember,

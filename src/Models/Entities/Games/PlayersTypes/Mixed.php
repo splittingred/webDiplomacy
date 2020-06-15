@@ -13,4 +13,9 @@ class Mixed extends PlayersType
     {
         return 'Fill with Bots';
     }
+
+    public function hasBots(): bool
+    {
+        return true;
+    }
 }

@@ -20,6 +20,7 @@ abstract class DrawType
     }
 
     abstract public function getLongName(): string;
+    abstract public function getDescription(): string;
     abstract public function hideDrawVotes(): bool;
 
     /**

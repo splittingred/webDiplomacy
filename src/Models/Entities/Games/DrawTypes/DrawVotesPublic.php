@@ -14,6 +14,11 @@ class DrawVotesPublic extends DrawType
         return 'Public draw votes';
     }
 
+    public function getDescription(): string
+    {
+        return 'Draw votes are publicly displayed in this game.';
+    }
+
     /**
      * @return bool
      */

@@ -47,7 +47,7 @@ class Members extends \ArrayObject
     }
 
     /**
-     * Get a Member for a given status
+     * Get Members for a given status
      *
      * @param string $status
      * @return array<Member>
@@ -60,6 +60,14 @@ class Members extends \ArrayObject
             if ((string)$member->status == $status) $members[] = $member;
         }
         return $members;
+    }
+
+    /**
+     * @return int
+     */
+    public function totalMembersLeftInGame(): int
+    {
+        return count($this->allWithStatus(Status::STATUS_ACTIVE));
     }
 
     /**

@@ -13,4 +13,9 @@ class Members extends PlayersType
     {
         return ''; // no name for normal mode
     }
+
+    public function hasBots(): bool
+    {
+        return false;
+    }
 }
