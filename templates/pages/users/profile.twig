@@ -1,0 +1,174 @@
+<div class="content">
+    <h2 class="profileUsername">
+        {{ user.username }} {{ user.roleIcons|raw }}
+        {% if muted %}
+            <a id="mute"></a>
+            {{ muteIcon }}
+        {% endif %}
+    </h2>
+    <div class="profile-show">
+        <div class="rightHalf">
+            <ul class="formlist">
+                <li title="Diplomat/Mastermind/Pro/Experienced/Member/Casual/Puppet (top 5/10/20/50/90/100%/not ranked)">
+                    <strong>Rank: </strong>{{ rankings.rank }}
+                </li>
+                {% if rankings.position < rankings.rankingPlayers %}
+                    <li>
+                        <strong>Position:</strong>
+                        {{ rankings.position }}/{{ rankings.rankingPlayers }} (top {{ rankings.percentile }}%)
+                    </li>
+                {% endif %}
+
+                <li>
+                    <strong>Available points:</strong>
+                    {{ user.points }} {{ pointsIcon }}
+                </li>
+
+                <li>
+                    <strong>Points in play:</strong>
+                    {{ rankings.pointsInPlay }} {{ pointsIcon }}
+                </li>
+
+                <li>
+                    <strong>Total points:</strong>
+                    {{ rankings.worth }} {{ pointsIcon }}
+                </li>
+
+                {% if user.isDonator %}
+                    <li>&nbsp;</li>
+                    <li>
+                        <strong>Donator:</strong>
+                        {% if user.isRole('DonatorPlatium') %}
+                            {{ badges.platinum|raw }} - <strong>Platinum</strong>
+                        {% elseif user.isRole('DonatorGold') %}
+                            {{ badges.gold|raw }} - <strong>Gold</strong>
+                        {% elseif user.isRole('DonatorSilver') %}
+                            {{ badges.silver|raw }} - <strong>Silver</strong>
+                        {% elseif user.isRole('DonatorBronze') %}
+                            {{ badges.bronze|raw }} - <strong>Bronze</strong>
+                        {% endif %}
+                    </li>
+                {% endif %}
+
+                <li>&nbsp;</li>
+
+                <li>
+                    <strong>Game messages:</strong> {{ gameMessagesCount }}
+                </li>
+                <li>&nbsp;</li>
+            </ul>
+
+            {{ component('Users.Profile.RankingStatsPanel', { title: 'All Games', stats: rankings.byStatus, show: true })|raw }}
+            {{ component('Users.Profile.RankingStatsPanel', { title: 'Anonymous Games', stats: rankings.anon })|raw }}
+            {{ component('Users.Profile.RankingStatsPanel', { title: 'Classic', stats: rankings.classic })|raw }}
+            {{ component('Users.Profile.RankingStatsPanel', { title: 'Classic Press', stats: rankings.press })|raw }}
+            {{ component('Users.Profile.RankingStatsPanel', { title: 'Classic Ranked', stats: rankings.ranked })|raw }}
+
+            <br />
+            <ul>
+                <li>
+                    <strong>Reliability:
+                        {% if user.isModerator or current_user.id == user.id %}
+                        (<a href="/users/{{ user.id }}/civil-disorders">Reliability Explained</a>)
+                        {% endif %}
+                    </strong>
+                </li>
+
+                {% if user.isModerator or current_user.id == user.id %}
+                    {#
+                    $recentMissedTurns = $UserProfile->getRecentUnExcusedMissedTurns();
+                    $allMissedTurns = $UserProfile->getYearlyUnExcusedMissedTurns();
+                    #}
+                    {% if recentMissedTurns %}
+                        <li class="rr-profile-info"> Recent un-excused delays: {{ recentMissedTurns }}</li>
+                        <li class="rr-profile-info"> Recent delay RR penalty: {{ recentMissedTurns * 6}}%</li>
+                        <li class="rr-profile-info"> Yearly delay RR penalty: {{ allMissedTurns * 5 }}%</li>
+                    {% endif %}
+                    <li style="font-size:13px">
+                        Un-excused delays/phases:
+                        <strong>{{ allMissedTurns}}/{{ user.yearlyPhaseCount }}</strong>
+                    </li>
+                {% endif %}
+                <li style="font-size:13px">
+                    Reliability rating:
+                    <strong>{{ user.reliabilityRating|round }}%</strong>
+                </li>
+            </ul>
+        </div>
+
+        {# Regular user info starts here: #}
+        <div class="leftHalf" style="width:50%">
+            {% if user.isBanned %}
+            <p><strong>Banned</strong></p>
+            {% endif %}
+            {% if user.isBot %}
+            <p class="profileCommentURL">Bot User</p>
+            {% endif %}
+
+            {# MOD STUFF HERE #}
+
+            {% if user.comment is not empty %}
+                <p class="profileComment">{{ user.comment }}</p>
+            {% endif %}
+
+            <ul class="formlist">
+                {# forum stuff #}
+
+            </ul>
+
+        </div>
+        <div class="clear-both"></div>
+    </div>
+
+    <div id="profile-separator"></div>
+
+    {# Start interactive area: #}
+
+    {% if current_user_entity.isModerator and current_user_entity.id != user.id %}
+        {% if current_user_entity.isAdmin %}
+            <a href="/index.php?auid={{ user.id }}">Enter this user's account</a> |
+        {% endif %}
+
+        <a href="/admincp.php?tab=Control%20Panel&amp;globalUserID={{ user.id }}#userActions">View User admin-actions</a> |
+
+        {% if not user.isAdmin and (current_user.isAdmin or user.isModerator) %}
+            {{ adminLinks.banUser|raw }} |
+        {% endif %}
+
+        <a href="/admincp.php?tab=Multi-accounts&aUserID={{ user.id }}" class="light">Enter multi-account finder</a>
+    {% endif %}
+
+    {% if current_user_entity.isForumModerator and not user.isAdmin %}
+        <hr />
+        <ul class="formlist">
+            <li>
+                <strong>Silences:</strong>
+            </li>
+            {% if silence %}
+                <li>{{ silence }}
+            {% else %}
+                <li>No silences against this user.</li>
+            {% endif %}
+            <li>{{ adminLinks.createSilence|raw }}</li>
+        </ul>
+    {% endif %}
+
+    {% if user.id != current_user_entity.id %}
+        <hr />
+        {{ sendPrivateMessageForm|raw }}
+    {% endif %}
+</div>
+
+<script type="text/javascript">
+    let coll = document.getElementsByClassName("profile_title");
+    let searchCounter;
+
+    for (searchCounter = 0; searchCounter < coll.length; searchCounter++) {
+        coll[searchCounter].addEventListener("click", function() {
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            if (content.style.display === "block") { content.style.display = "none"; }
+            else { content.style.display = "block"; }
+        });
+    }
+</script>

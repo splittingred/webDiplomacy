@@ -34,7 +34,7 @@ class userOrderBuilds extends userOrder
 		parent::__construct($orderID, $gameID, $countryID);
 	}
 
-	protected function updaterequirements()
+	protected function updateRequirements()
 	{
 		if( $this->type == 'Wait')
 			$this->requirements=array('type');

@@ -33,75 +33,75 @@ class Territory {
 	 *
 	 * @var int
 	 */
-	var $id;
+    public $id;
 
 	/**
 	 * The territory name
 	 *
 	 * @var string
 	 */
-	var $name;
+    public $name;
 
 	/**
 	 * Coast type: 'No','Parent','Child'
 	 *
 	 * @var string
 	 */
-	var $coast;
+    public $coast;
 
 	/**
 	 * 'Coast','Land','Sea'
 	 * @var string
 	 */
-	var $type;
+    public $type;
 
 	/**
 	 * Supply center present: 'Yes'/'No'
 	 *
 	 * @var string
 	 */
-	var $supply;
+    public $supply;
 
 	/**
 	 * Large map x coordinate
 	 * @var int
 	 */
-	var $mapX;
+    public $mapX;
 
 	/**
 	 * Large map y coordinate
 	 * @var int
 	 */
-	var $mapY;
+    public $mapY;
 
 	/**
 	 * Small map x coordinate
 	 * @var int
 	 */
-	var $smallMapX;
+    public $smallMapX;
 
 	/**
 	 * Small map y coordinate
 	 * @var int
 	 */
-	var $smallMapY;
+    public $smallMapY;
 
 	/**
 	 * The countryID which initially owns this territory
 	 * @var int
 	 */
-	var $countryID;
+    public $countryID;
 
 	/**
 	 * The ID of the parent coast, or the own ID if not a coast child.
 	 * @var int
 	 */
-	var $coastParentID;
+    public $coastParentID;
 
 	/**
 	 * @param int/array The array of territory data or the territory ID
 	 */
-	function __construct($row)
+    public function __construct($row)
 	{
         global $app;
         $DB = $app->make('DB');
@@ -115,5 +115,3 @@ class Territory {
 		$this->supply = ( $this->supply == 'Yes' );
 	}
 }
-
-?>

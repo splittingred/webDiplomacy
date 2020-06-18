@@ -42,7 +42,6 @@ class Game
 
     public $pauseTimeRemaining;
 
-    /* groupings for value objects TODO! */
     /** @var Processing $processing */
     public $processing;
     /** @var MissingPlayerPolicy $missingPlayerPolicy */

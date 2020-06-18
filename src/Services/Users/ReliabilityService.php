@@ -2,18 +2,19 @@
 
 namespace Diplomacy\Services\Users;
 
-use Diplomacy\Models\User;
+use Diplomacy\Models\Entities\User;
 
 class ReliabilityService
 {
     /**
      * TODO: Review this to make sure it's accurate.
      *
-     * @param User $user
+     * @param User $userEntity
      * @return array
      */
-    public function forUser(User $user)
+    public function forUser(User $userEntity)
     {
+        $user = \Diplomacy\Models\User::find($userEntity->id);
         $allMissedTurns = $user->missedTurns()->unexcused()->count();
         $yearlyMissedTurns = $user->missedTurns()->nonLive()->unexcused()->lastYear()->count();
         $recentUnexcusedMissedTurns = $user->missedTurns()->unexcused()->recent()->count();

@@ -146,7 +146,7 @@ function loadOrdersPhase() {
 				}
 			};
 			
-			OrderObj.updaterequirements = function () {
+			OrderObj.updateRequirements = function () {
 			
 				var oldrequirements = this.requirements;
 				

@@ -34,7 +34,7 @@ class HelpIconComponent extends BaseComponent
      */
     public function __construct(
         string $id,
-        string $text,
+        string $text = '',
         string $title = '',
         string $toggle = 'popover',
         string $trigger = 'hover',

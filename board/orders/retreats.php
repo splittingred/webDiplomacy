@@ -29,33 +29,21 @@ defined('IN_CODE') or die('This script can not be run by itself.');
  */
 class userOrderRetreats extends userOrder
 {
-	public function __construct($orderID, $gameID, $countryID)
+	protected function updateRequirements()
 	{
-		parent::__construct($orderID, $gameID, $countryID);
-	}
-
-	protected function updaterequirements()
-	{
-		if( $this->type == 'Retreat' )
-			$this->requirements=array('type','toTerrID');
-		else
-			$this->requirements=array('type');
+	    $this->requirements = ['type'];
+        if ($this->type == 'Retreat') $this->requirements[] = 'toTerrID';
+        return $this->requirements;
 	}
 
 	protected function typeCheck()
 	{
-		switch($this->type) {
-			case 'Retreat':
-			case 'Disband':
-				return true;
-			default:
-				return false;
-		}
+	    return in_array($this->type, ['Retreat', 'Disband']);
 	}
 
 	protected function toTerrIDCheck()
 	{
-		$this->toTerrID=(int)$this->toTerrID;
+		$this->toTerrID = (int)$this->toTerrID;
 
 		return $this->sqlCheck(
 			"SELECT
@@ -86,5 +74,3 @@ class userOrderRetreats extends userOrder
 		);
 	}
 }
-
-?>

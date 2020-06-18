@@ -36,7 +36,7 @@ class userOrderDiplomacy extends userOrder
 		$this->requirements = array('type');
 	}
 
-	protected function updaterequirements()
+	protected function updateRequirements()
 	{
 		switch($this->type)
 		{

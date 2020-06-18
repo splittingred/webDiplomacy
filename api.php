@@ -471,7 +471,7 @@ class SetOrders extends ApiEntry {
 		global $app;
 		$renderer = $app->make('renderer');
 
-        $gameEntity = OrderInterface::loadGameEntity($game->id);
+		$gameEntity = \Diplomacy\Services\Games\GamesService::getEntityLegacy($game->id);
         $userEntity = new \Diplomacy\Models\Entities\User();
         $userEntity->id = $userID;
         $memberEntity = $gameEntity->members->byUser($userEntity);

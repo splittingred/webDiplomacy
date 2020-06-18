@@ -23,7 +23,7 @@ class ForgotPasswordForm extends BaseForm
         parent::setUp();
     }
 
-    public function handleSubmit()
+    public function handleSubmit(): BaseForm
     {
         $result = $this->authService->sendForgotPasswordConfirmation(
             $this->request->get('username', '', Request::TYPE_POST)
@@ -34,5 +34,6 @@ class ForgotPasswordForm extends BaseForm
         } else {
             $this->setPlaceholder('notice', $result->getValue()->getMessage());
         }
+        return parent::handleSubmit();
     }
 }

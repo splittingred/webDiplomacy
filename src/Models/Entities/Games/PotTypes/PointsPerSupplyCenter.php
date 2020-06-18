@@ -46,7 +46,7 @@ class PointsPerSupplyCenter extends PotType
 
     public function pointsForDefeat(Game $game, Member $member): int
     {
-        // TODO
+        // TODO: Ensure this is correct
         return $member->bet;
     }
 

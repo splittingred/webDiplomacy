@@ -57,16 +57,6 @@ require_once(l_r('board/orders/builds.php'));
  */
 class OrderInterface
 {
-	public static function loadGameEntity(int $gameId)
-    {
-        $gameModel = \Diplomacy\Models\Game::find($gameId);
-		$gameFactory = new \Diplomacy\Services\Games\Factory();
-		$gameEntity = $gameFactory->build($gameModel);
-		libVariant::setGlobals($gameEntity->variant);
-		return $gameEntity;
-    }
-
-
 	public static function newJSON($key, $json)
     {
         require_once ROOT_PATH . 'lib/variant.php';
@@ -82,7 +72,7 @@ class OrderInterface
             throw new Exception("JSON token given is invalid");
         }
 
-		$gameEntity = static::loadGameEntity((int)$authContext['gameID']);
+		$gameEntity = \Diplomacy\Services\Games\GamesService::getEntityLegacy((int)$authContext['gameID']);
 
 		// TODO: Eventually convert upstream, coalesce this better
         $userEntity = new \Diplomacy\Models\Entities\User();

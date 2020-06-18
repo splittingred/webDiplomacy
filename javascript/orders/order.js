@@ -90,7 +90,7 @@ function Order(orderData)
 				}
 			},this);
 
-		this.updaterequirements();
+		this.updateRequirements();
 		this.updateChoices(this.requirements);
 
 		this.reHTML('orderBegin');
@@ -253,7 +253,7 @@ function Order(orderData)
 			case 'type':
 				this.type=newValue;
 				this.wipe( ['toTerrID','fromTerrID','viaConvoy'] );
-				this.updaterequirements();
+				this.updateRequirements();
 				updatedChoices=this.updateChoices( this.fromrequirements(['toTerrID','viaConvoy']) );
 				break;
 			case 'toTerrID':

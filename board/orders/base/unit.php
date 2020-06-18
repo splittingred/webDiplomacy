@@ -27,54 +27,55 @@ require_once(l_r('board/orders/base/territory.php'));
  * @package Base
  * @subpackage Game
  */
-class Unit {
+class Unit
+{
 	/**
 	 * Unit ID
 	 *
 	 * @var int
 	 */
-	var $id;
+	public $id;
 
 	/**
 	 * Unit type: 'Army'/'Fleet'
 	 *
 	 * @var string
 	 */
-	var $type;
+	public $type;
 
 	/**
 	 * Occupying territory, with coast data
 	 *
 	 * @var string
 	 */
-	var $terrID;
+	public $terrID;
 
 	/**
 	 * CountryID owner
 	 *
 	 * @var string
 	 */
-	var $countryID;
+	public $countryID;
 
 	/**
 	 * Game ID
 	 *
 	 * @var int
 	 */
-	var $gameID;
+	public $gameID;
 
 	/**
 	 * Occupied Territory object
 	 * @var Territory
 	 */
-	var $Territory;
+	public $Territory;
 
 	/**
 	 * Initialize a unit
 	 *
-	 * @param int $id Unit ID
+	 * @param int|array $row
 	 */
-	function __construct($row)
+    public function __construct($row)
 	{
 		global $app;
 		$DB = $app->make('DB');
@@ -86,4 +87,3 @@ class Unit {
 			$this->{$name} = $value;
 	}
 }
-?>

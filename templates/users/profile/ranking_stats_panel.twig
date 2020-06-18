@@ -1,0 +1,17 @@
+<div class="profile_title">
+    <ul>
+        <li><strong>{{ title }}:</strong>
+    </ul>
+</div>
+<div class="profile_content{% if show %}_show{% endif %}">
+    <ul>
+        {% for status, number in stats.statuses %}
+            <li>
+                {{ status|capitalize }}: <strong>{{ number }}</strong>
+            </li>
+        {% endfor %}
+        <li>
+            Total (finished): <strong>{{ stats.total }}</strong>
+        </li>
+    </ul>
+</div>

@@ -6,6 +6,9 @@ use Diplomacy\Models\Entities\Game;
 use Diplomacy\Models\Entities\Games\Member;
 use Diplomacy\Models\Entities\Games\Status;
 use Diplomacy\Models\Entities\User;
+use Diplomacy\Models\Territory;
+use Diplomacy\Models\TerritoryStatusArchive;
+use Illuminate\Database\Eloquent\Builder;
 
 class BotVotesService
 {
@@ -18,8 +21,6 @@ class BotVotesService
      */
     public function getForGame(Member $member, Game $game)
     {
-        global $DB;
-
         $membersPlaying = $game->members->allWithStatus(Status::STATUS_ACTIVE);
 
         //Each bot will automatically vote for a pause
@@ -37,9 +38,16 @@ class BotVotesService
 
         //This variable and the following query get the SC count for 2 years ago, which will be used to prevent bot stalemates
         $oldSC = 0;
-        list($oldSC) = $DB->sql_row("SELECT COUNT(ts.terrID) FROM wD_TerrStatusArchive ts INNER JOIN wD_Territories t ON ( ts.terrID = t.id ) 
-				WHERE t.supply='Yes' AND ts.countryID = ".$member->country->id." AND ts.gameID = ".$game->id." 
-				AND t.mapID=".$game->variant->mapID." AND ts.turn = ".max(0,$game->currentTurn->id - 4));
+
+        /** @var Builder $q */
+        $oldSC = \Diplomacy\Models\TerritoryStatusArchive::query()
+            ->join(Territory::getTableName(), TerritoryStatusArchive::getTableName().'.terrID', '=', Territory::getTableName().'.id')
+            ->forCountry($member->country->id)
+            ->forGame($game->id)
+            ->forTurn(max(0, $game->currentTurn->id - 4))
+            ->where(Territory::getTableName().'.supply', '=', 'Yes')
+            ->where(Territory::getTableName().'.mapID', '=', $game->variant->mapID)
+            ->count(TerritoryStatusArchive::getTableName().'.terrID');
 
         //A bot will draw or cancel if it is stalled out or if it is the first year
         if ($oldSC >= $botSC || $game->currentTurn->id < 2)

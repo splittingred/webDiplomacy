@@ -65,13 +65,11 @@ class VotesComponent extends BaseComponent
             }
         }
 
-        $voteForm = $this->showVoteForm($vVote, $vCancel);
-
-        return [
+        return array_merge([
             'show' => $show,
+            'formTicket' => \libHTML::formTicket(),
             'helpText' => $this->getVotesHelp(),
-            'form' => $voteForm,
-        ];
+        ], $this->getVotes($vVote, $vCancel));
     }
 
     public function getVotesHelp(): string
@@ -115,43 +113,29 @@ class VotesComponent extends BaseComponent
      *
      * @param array $vVote Allowed votes
      * @param array $vCancel Votes which can be cancelled
-     * @return string
+     * @return array
      */
-    public function showVoteForm($vVote, $vCancel) : string
+    public function getVotes(array $vVote = [], array $vCancel = []) : array
     {
-        $buf = '<form onsubmit="return confirm(\'Are you sure you want to cast this vote?\');" action="board.php?gameID='.$this->game->id.'#votebar" method="post">';
-        $buf .= '<input type="hidden" name="formTicket" value="'.\libHTML::formTicket().'" />';
-
-        $buf .= '<div class="memberUserDetail">';
-
+        $votes = [];
         foreach($vVote as $vote)
         {
             if ($vote == 'Pause' && $this->game->processing->isPaused()) $vote = 'Unpause';
-
-            $buf .= '<input type="submit" class="form-submit" name="'.$vote.'" value="'.$vote.'" /> ';
+            $votes[] = $vote;
         }
-        $buf .= '</div></form>';
-        $buf .= '<form onsubmit="return confirm(\'Are you sure you want to withdraw this vote?\');" action="/games/'.$this->game->id.'/view#votebar" method="post">';
-        $buf .= '<input type="hidden" name="formTicket" value="'.\libHTML::formTicket().'" />';
-
-        if( $vCancel )
+        $cancelableVotes = [];
+        if ($vCancel)
         {
-            $buf .= '<div class="memberGameDetail">Cancel: ';
             foreach($vCancel as $vote)
             {
-                if ( $vote == 'Pause' && $this->game->processing->isPaused())
-                    $vote = 'Unpause';
-
-                $buf .= '<input type="submit" class="form-submit" name="'.$vote.'" value="'.$vote.'" /> ';
+                if ($vote == 'Pause' && $this->game->processing->isPaused()) $vote = 'Unpause';
+                $cancelableVotes[] = $vote;
             }
-
-            $buf .= '</div>';
         }
 
-        $buf .= '</form>';
-
-        $buf .= '<div style="clear:both"></div>';
-
-        return $buf;
+        return [
+            'votes' => $votes,
+            'cancelableVotes' => $cancelableVotes,
+        ];
     }
 }

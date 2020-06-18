@@ -25,7 +25,7 @@ class LoginForm extends BaseForm
         parent::setUp();
     }
 
-    public function handleSubmit()
+    public function handleSubmit(): BaseForm
     {
         $result = $this->authService->login(
             $this->request->get('username', '', Request::TYPE_POST),
@@ -37,5 +37,6 @@ class LoginForm extends BaseForm
         } else {
             $this->setPlaceholder('notice', $result->getValue()->getMessage());
         }
+        return parent::handleSubmit();
     }
 }

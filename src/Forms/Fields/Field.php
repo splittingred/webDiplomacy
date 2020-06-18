@@ -5,23 +5,36 @@ namespace Diplomacy\Forms\Fields;
 use Diplomacy\Views\Renderer;
 use function PHPUnit\Framework\callback;
 
-class Field
+/**
+ * Represents a generic field in a form
+ *
+ * @package Diplomacy\Forms\Fields
+ */
+abstract class Field
 {
+    /** @var string */
     const BASE_CSS_CLS = 'form-control';
+    /** @var string $template */
     protected $template = 'forms/fields/text.twig';
 
     /** @var string $id */
     public $id;
     /** @var string $name */
     public $name;
+    /** @var string  */
     public $label;
+    /** @var string  */
     public $default;
+    /** @var string $cssCls */
     public $cssCls = self::BASE_CSS_CLS;
-    public $errors = [];
     /** @var string|array $value */
     public $value = '';
+    /** @var string $helpText */
+    public $helpText = '';
+    /** @var array $attributes */
     public $attributes = [];
-
+    /** @var array $errors */
+    public $errors = [];
     /** @var Renderer $renderer */
     protected $renderer;
 
@@ -31,11 +44,33 @@ class Field
         $this->label = array_key_exists('label', $attributes) ? $attributes['label'] : ucfirst($name);
         $this->renderer = $renderer;
         $this->default = array_key_exists('default', $attributes) ? $attributes['default'] : '';
+        $this->helpText = array_key_exists('helpText', $attributes) ? $attributes['helpText'] : '';
         $this->value = $value;
         $this->errors = $errors;
         $this->cssCls .= !empty($errors) ? ' is-invalid' : '';
-        $this->id = str_replace(['_', '.', ' '], '-', strtolower($name));
+        $idPrefix = !empty($attributes['idPrefix']) ? $attributes['idPrefix'] : substr(sha1(time()), 0, 5);
+        $this->id = $idPrefix.'-'.str_replace(['_', '.', ' '], '-', strtolower($name));
         $this->attributes = $attributes;
+    }
+
+    /**
+     * @param mixed $default
+     * @return Field
+     */
+    public function setDefault($default): Field
+    {
+        $this->default = $default;
+        return $this;
+    }
+
+    /**
+     * @param mixed $value
+     * @return $this
+     */
+    public function setValue($value): Field
+    {
+        $this->value = $value;
+        return $this;
     }
 
     /**

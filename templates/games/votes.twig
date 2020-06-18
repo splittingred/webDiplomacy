@@ -17,7 +17,28 @@
                 </strong>
             </td>
             <td class="memberRightSide">
-                {{ form|raw }}
+                <form onsubmit="return confirm('Are you sure you want to cast this vote?');" action="/games/{{ game.id }}/view#votebar" method="post">
+                    <input type="hidden" name="formTicket" value="{{ formTicket }}" />
+
+                    <div class="memberUserDetail">
+                        {% for vote in votes %}
+                            <input type="submit" class="form-submit" name="{{ vote }}" value="{{ vote }}" />
+                        {% endfor %}
+                    </div>
+                </form>
+
+                {% if cancelableVotes is not empty %}
+                <form onsubmit="return confirm('Are you sure you want to withdraw this vote?');" action="/games/{{ game.id }}/view#votebar" method="post">
+                    <input type="hidden" name="formTicket" value="{{ formTicket }}" />
+
+                    <div class="memberGameDetail">Cancel:
+                        {% for cvote in cancelableVotes %}
+                            <input type="submit" class="form-submit" name="{{ cvote }}" value="{{ cvote }}" />
+                        {% endfor %}
+                    </div>
+                </form>
+                {% endif %}
+                <div class="clear-both"></div>
             </td>
         </tr>
     </table>

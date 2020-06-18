@@ -33,7 +33,7 @@ class MessagesService
      */
     public function totalForUser(int $userId) : int
     {
-        return Member::select(Member::raw('SUM(gameMessagesSent)'))->forUser($userId)->count();
+        return (int)Member::select(Member::raw('SUM(gameMessagesSent)'))->forUser($userId)->count();
     }
 
     /**

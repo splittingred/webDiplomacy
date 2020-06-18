@@ -30,7 +30,9 @@ class OrdersComponent extends BaseComponent
         \libVariant::setGlobals($this->game->variant);
         global $Member, $Game;
         $Game = $this->game->variant->panelGameBoard($this->game->id);
-        $Member = $Game->Members->ByUserID[$this->currentMember->user->id];
+        if ($this->currentMember->isAuthenticated()) {
+            $Member = $Game->Members->ByUserID[$this->currentMember->user->id];
+        }
 
         $interface = $this->game->variant->OrderInterface(
             $this->renderer,

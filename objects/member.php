@@ -34,122 +34,122 @@ class Member
 	 * The member ID
 	 * @var int
 	 */
-	var $id;
+	public $id;
 	/**
 	 * The user ID
 	 * @var int
 	 */
-	var $userID;
+	public $userID;
 	/**
 	 * The game ID
 	 * @var int
 	 */
-	var $gameID;
+	public $gameID;
 	/**
 	 * The countryID this member is playing as.
 	 * @var int
 	 */
-	var $countryID;
+	public $countryID;
 	/**
 	 * The country this member is playing as. Will be 'Unassigned' if pre-game.
 	 * @var string
 	 */
-	var $country;
+	public $country;
 	/**
 	 * The member status; 'Playing','Left','Defeated'
 	 * @var string
 	 */
-	var $status;
+	public $status;
 	/**
 	 * The username corresponding to this member
 	 * @var string
 	 */
-	var $username;
+	public $username;
 	/**
 	 * The number of points the user currently has available to bet
 	 * @var int
 	 */
-	var $points;
+	public $points;
 	/**
 	 * The amount the user bet into the game
 	 * @var int
 	 */
-	var $bet;
+	public $bet;
 	/**
 	 * An array of countries from which this member has new messages. 'Global' may
 	 * also be within this array.
 	 *
 	 * @var string[]
 	 */
-	var $newMessagesFrom;
+	public $newMessagesFrom;
 
 	/**
 	 * The time the player last logged into the game
 	 *
 	 * @var int
 	 */
-	var $timeLoggedIn;
+	public $timeLoggedIn;
 
 	/**
 	 * A link to the Game object this Member is a member of
 	 *
 	 * @var Game
 	 */
-	var $Game;
+	public $Game;
 
 	/**
 	 * The number of phases this Member has missed in a row
 	 *
 	 * @var int
 	 */
-	var $missedPhases;
+	public $missedPhases;
 
 	/**
 	 * The number of excused misses the member has left
 	 */
-	var $excusedMissedTurns;
+	public $excusedMissedTurns;
 
 	/**
 	 * The number of units this member owns
 	 *
 	 * @var int
 	 */
-	var $unitNo;
+	public $unitNo;
 
 	/**
 	 * The number of supply centers this member owns
 	 * @var int
 	 */
-	var $supplyCenterNo;
+	public $supplyCenterNo;
 
 	/**
 	 * Whether this member is online or not
 	 * @var bool
 	 */
-	var $online;
+	public $online;
 
 	/**
 	 * An array of vote-flags which this member has voted for
 	 *
 	 * @var string[]
 	 */
-	var $votes;
+	public $votes;
 
-	var $pointsWon;
+	public $pointsWon;
 
 	/**
 	 * An array of the order status flags currently set: 'None','Saved','Completed','Ready'
 	 *
 	 * @var string[]
 	 */
-	var $orderStatus;
+	public $orderStatus;
 
 	/**
 	 * A comma delimited list of the user's access permissions (used to determine what kind of donator the user is)
 	 *
 	 * @var string
 	 */
-	var $userType;
+	public $userType;
 
 	/**
 	 * Create a Member object from a database Member record row
@@ -235,4 +235,3 @@ class Member
 			$keep, $private, $text, $this->Game->name, $this->gameID);
 	}
 }
-?>

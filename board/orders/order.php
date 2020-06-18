@@ -28,7 +28,7 @@ require_once(l_r('board/orders/base/order.php'));
  *
  * construct->loadDB->loadInput->
  * validate->{
- * 		updaterequirements->checkComplete->
+ * 		updateRequirements->checkComplete->
  * 		wipeUnrequiredParams->wipeInvalidatedParams
  * 		{
  * 			paramIsset->
@@ -39,17 +39,22 @@ require_once(l_r('board/orders/base/order.php'));
  */
 abstract class userOrder extends order
 {
+	const STATUS_LOADING = 'Loading';
+	const STATUS_MOVES = 'Diplomacy';
+	const STATUS_RETREATS = 'Retreats';
+	const STATUS_BUILDS = 'Builds';
+
 	/**
 	 * An array of requirements; Type is chosen, and this selects the sub-array of further
 	 * requirements which need to be filled to complete the order.
 	 *
 	 * @var array
 	 */
-	protected $requirements=array();
+	protected $requirements = [];
 
 	public $error;
 	// The status, invalid until proven valid
-	public $status='Loading'; // Loading, Loaded, Validating, Incomplete, Invalid, Complete
+	public $status = 'Loading'; // Loading, Loaded, Validating, Incomplete, Invalid, Complete
 
 	/**
 	 * Load different orders depending on the current phase
@@ -62,15 +67,15 @@ abstract class userOrder extends order
 		$Order = null;
 		switch ( $phase )
 		{
-			case 'Diplomacy':
+			case static::STATUS_MOVES:
 				$Order = libVariant::$Variant->userOrderDiplomacy($orderID, $gameID, $countryID);
 			break;
 
-			case 'Retreats':
+			case static::STATUS_RETREATS:
 				$Order = libVariant::$Variant->userOrderRetreats($orderID, $gameID, $countryID);
 			break;
 
-			case 'Builds':
+			case static::STATUS_BUILDS:
 				$Order = libVariant::$Variant->userOrderBuilds($orderID, $gameID, $countryID);
 			break;
 		}
@@ -89,13 +94,13 @@ abstract class userOrder extends order
 		parent::__construct($orderID, $gameID, $countryID);
 	}
 
-	protected static $paramsValidLoadDB = array('type','unitID','toTerrID','fromTerrID','viaConvoy');
-	protected static $paramsValidLoadInput = array('type','toTerrID','fromTerrID','viaConvoy');
+	protected static $paramsValidLoadDB = ['type','unitID','toTerrID','fromTerrID','viaConvoy'];
+	protected static $paramsValidLoadInput = ['type','toTerrID','fromTerrID','viaConvoy'];
 
-	protected $loaded=array();
-	protected $changed=array();
-	protected $unchanged=array();
-	protected $wiped=array();
+	protected $loaded = [];
+	protected $changed = [];
+	protected $unchanged = [];
+	protected $wiped = [];
 
 	/**
 	 * Load stuff from the database
@@ -103,7 +108,7 @@ abstract class userOrder extends order
 	 * @param array $inputs
 	 */
 	public function loadFromDB(array $inputs) {
-		$data=array();
+		$data = [];
 
 		foreach(self::$paramsValidLoadDB as $paramName)
 		{
@@ -131,7 +136,7 @@ abstract class userOrder extends order
 		global $app;
 		$DB = $app->make('DB');
 
-		$data = array();
+		$data = [];
 
 		/*
 		 * Load valid params, check which have changed and which haven't,
@@ -182,7 +187,7 @@ abstract class userOrder extends order
 
 		$this->setStatus('Loaded');
 
-		$this->updaterequirements();
+		$this->updateRequirements();
 		$this->wipeUnrequiredParams();
 	}
 
@@ -190,7 +195,7 @@ abstract class userOrder extends order
 	 * This sets up $this->requirements, after all data has been loaded from the DB
 	 * and the user.
 	 */
-	protected abstract function updaterequirements();
+	protected abstract function updateRequirements();
 
 	/**
 	 * This wipes values which were loaded, but aren't fixed and aren't required.
@@ -287,7 +292,7 @@ abstract class userOrder extends order
 	 *
 	 * @var bool
 	 */
-	protected $followingNeedValidation=false;
+	protected $followingNeedValidation = false;
 
 	/**
 	 * Does this param need to be checked? True if it has changed, if a preceding
@@ -324,7 +329,7 @@ abstract class userOrder extends order
 	 *
 	 * @var bool
 	 */
-	protected $followingAreInvalid=false;
+	protected $followingAreInvalid = false;
 	/**
 	 * Is a param valid?
 	 * If a preceding param was found to be invalid it returns false,
@@ -375,7 +380,8 @@ abstract class userOrder extends order
 	 *
 	 * @param string $sql A SQL query returning a row if valid, and nothing if invalid
 	 *
-	 * @return array An array of options
+	 * @return bool
+	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
 	 */
 	protected function sqlCheck($sql)
 	{
@@ -457,9 +463,12 @@ abstract class userOrder extends order
 		return false;
 	}
 
-	public function results() {
-		return array('status'=>$this->status,'notice'=>$this->error,'changed'=>($this->hasChanged?'Yes':'No'));
+	public function results(): array
+	{
+		return [
+			'status' => $this->status,
+			'notice' => $this->error,
+			'changed' => $this->hasChanged ? 'Yes' : 'No'
+		];
 	}
 }
-
-?>

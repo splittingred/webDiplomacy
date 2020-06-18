@@ -31,6 +31,10 @@ class Member extends EloquentBase
     protected $with = ['user'];
     protected $hidden = [];
 
+    /*****************************************************************************************************************
+     * RELATIONSHIPS
+     ****************************************************************************************************************/
+
     /**
      * @return BelongsTo
      */
@@ -47,6 +51,10 @@ class Member extends EloquentBase
         return $this->belongsTo(User::class, 'userID');
     }
 
+    /*****************************************************************************************************************
+     * SCOPES
+     ****************************************************************************************************************/
+
     /**
      * @param Builder $query
      * @param integer $userId
@@ -54,7 +62,7 @@ class Member extends EloquentBase
      */
     public function scopeForUser(Builder $query, int $userId) : Builder
     {
-        return $query->where('userID', $userId);
+        return $query->where(static::getTableName().'.userID', $userId);
     }
 
     /**
@@ -77,10 +85,120 @@ class Member extends EloquentBase
         return $query->leftJoin($usersTable, $usersTable . '.id', '=', static::getTableName() . '.userID');
     }
 
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeJoinGame(Builder $query): Builder
+    {
+        $membersTable = $this->getTable();
+        $gamesTable = Game::getTableName();
+        return $query->join($gamesTable, $gamesTable.'.id', '=', $membersTable.'.gameID');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopePlaying(Builder $query): Builder
+    {
+        return $query->where($this->getTable().'.status', '=', 'Playing');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNotPlaying(Builder $query): Builder
+    {
+        return $query->where($this->getTable().'.status', '!=', 'Playing');
+    }
+
+    /**
+     * Get only finished Gunboat games with humans for the Classic Variant
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeFinishedClassicHumanGames(Builder $query): Builder
+    {
+        return $query->whereHas('game', function($q) {
+            $q->gameOver()->onlyHumans()->classic();
+        });
+    }
+
+    /**
+     * Get only finished Gunboat games with humans for the Classic Variant
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeFinishedClassicHumanGunboatGames(Builder $query): Builder
+    {
+        return $query->whereHas('game', function($q) {
+            $q->gameOver()->onlyHumans()->classic()->gunboat();
+        });
+    }
+
+    /**
+     * Get only finished games with humans
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeFinishedHumanGames(Builder $query): Builder
+    {
+        return $query->whereHas('game', function($q) {
+            $q->gameOver()->onlyHumans();
+        });
+    }
+
+    /**
+     * Get only finished press games with humans for the Classic Variant
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeFinishedClassicHumanPressGames(Builder $query): Builder
+    {
+        return $query->whereHas('game', function($q) {
+            $q->gameOver()->onlyHumans()->classic()->press();
+        });
+    }
+
+    /**
+     * Get only finished ranked games for the Classic Variant
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeFinishedClassicRankedGames(Builder $query): Builder
+    {
+        return $query->whereHas('game', function($q) {
+            $q->gameOver()->onlyHumans()->classic()->ranked();
+        });
+    }
+
+    /**
+     * Get only finished ranked games for the Classic Variant
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeFinishedHumanVariantGames(Builder $query): Builder
+    {
+        return $query->whereHas('game', function($q) {
+            $q->gameOver()->onlyHumans()->nonClassic();
+        });
+    }
+
+    /*****************************************************************************************************************
+     * QUERY METHODS
+     ****************************************************************************************************************/
+
     /*****************************************************************************************************************
      * INSTANCE METHODS
      ****************************************************************************************************************/
-
 
     /**
      * Register that you have viewed the messages from a certain countryID and

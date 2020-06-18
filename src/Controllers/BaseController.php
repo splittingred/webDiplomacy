@@ -86,12 +86,13 @@ abstract class BaseController
     protected $form;
 
     /**
-     * @param $class
+     * @param string $class
+     * @param array $defaultValues
      * @return BaseForm
      */
-    protected function makeForm($class): BaseForm
+    protected function makeForm(string $class, array $defaultValues = []): BaseForm
     {
-        $this->form = new $class($this->request, $this->renderer, $this->validationFactory);
+        $this->form = new $class($this->request, $this->renderer, $this->validationFactory, $defaultValues);
         return $this->form;
     }
 

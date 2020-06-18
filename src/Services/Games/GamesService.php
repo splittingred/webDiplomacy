@@ -25,6 +25,27 @@ class GamesService
     }
 
     /**
+     * Legacy way to load a game. Loads the globals needed for variant.
+     *
+     * @param int $gameId
+     * @return \Diplomacy\Models\Entities\Game|mixed
+     * @throws \Exception
+     */
+    public static function getEntityLegacy(int $gameId)
+    {
+        try {
+            $gameModel = \Diplomacy\Models\Game::find($gameId);
+            $gameFactory = new \Diplomacy\Services\Games\Factory();
+            $gameEntity = $gameFactory->build($gameModel);
+            \libVariant::setGlobals($gameEntity->variant);
+            return $gameEntity;
+        } catch (\Exception $e) {
+            throw new \Exception('Failed to load game '.$gameId.': '.$e->getMessage());
+        }
+    }
+
+
+    /**
      * @param int $gameId
      * @return Game
      * @throws \Exception

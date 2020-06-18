@@ -25,6 +25,8 @@ abstract class BaseForm
     protected $fields = [];
     /** @var string */
     protected $submitFieldName = 'submit';
+    /** @var string $id */
+    protected $id = '';
     /** @var string */
     protected $nestedIn = '';
     /** @var string */
@@ -52,20 +54,19 @@ abstract class BaseForm
      * @param Request $request
      * @param Renderer $renderer
      * @param ValidationFactory $validatorFactory
+     * @param array $defaultValues
      */
-    public function __construct(Request $request, Renderer $renderer, ValidationFactory $validatorFactory)
+    public function __construct(Request $request, Renderer $renderer, ValidationFactory $validatorFactory, array $defaultValues = [])
     {
         $this->request = $request;
         $this->renderer = $renderer;
         $this->setUp();
         $this->validator = $validatorFactory->make(array_keys($this->fields), $this->validationRules, $this->validationMessages, $this->validationCustomAttributes);
-
         $clsNameLength = strlen(self::class);
         $defaultFieldPrefix = substr(self::class, 0, $clsNameLength < 4 ? $clsNameLength : 4);
         $fieldPrefix = !empty($this->fieldPrefix) ? $this->fieldPrefix : $defaultFieldPrefix;
         $this->fieldFactory = new FieldFactory($this->renderer, $fieldPrefix, $this->nestedIn);
-
-        $this->buildFields();
+        $this->buildFields($defaultValues);
     }
 
     public function setUp() : void
@@ -75,10 +76,12 @@ abstract class BaseForm
 
     /**
      * @param callable $callback
+     * @return BaseForm
      */
     public function onSubmit(callable $callback)
     {
         $this->onSubmissionCallbacks[] = $callback;
+        return $this;
     }
 
     public function beforeRender() { }
@@ -115,7 +118,12 @@ abstract class BaseForm
         }
 
         $this->beforeRender();
-        $this->setPlaceholder('fields', $this->getFields());
+        $this->setPlaceholders([
+            'id'                => $this->id,
+            'fields'            => $this->getFields(),
+            'submitFieldName'   => $this->submitFieldName,
+            'nestedIn'          => $this->nestedIn,
+        ]);
         $output = $this->renderer->render($this->template, $this->placeholders);
         $this->afterRender();
         return $output;
@@ -131,12 +139,15 @@ abstract class BaseForm
 
     /**
      * Handle form submissions. You may override this in extended classes.
+     *
+     * @return BaseForm
      */
-    protected function handleSubmit()
+    protected function handleSubmit(): BaseForm
     {
         foreach ($this->onSubmissionCallbacks as $callback) {
             $callback($this);
         }
+        return $this;
     }
 
     /**
@@ -178,20 +189,25 @@ abstract class BaseForm
 
     /**
      * @param string $path
+     * @return BaseForm
      */
-    public function redirectRelative(string $path = '/') : void
+    public function redirectRelative(string $path = '/') : BaseForm
     {
         $baseUrl = rtrim(\Config::$url, '/');
         $path = ltrim($path, '/');
         header("Location: {$baseUrl}/{$path}");
+        return $this;
     }
 
     /**
      * Build the field objects
+     *
+     * @param array $defaultValues
+     * @return BaseForm
      */
-    protected function buildFields(): void
+    protected function buildFields(array $defaultValues = []): BaseForm
     {
-        $postValues = [];
+        $values = $defaultValues;
         $errors = [];
         if ($this->isSubmitted()) {
             $postValues = $this->request->getParameters($this->requestType);
@@ -199,7 +215,17 @@ abstract class BaseForm
                 $postValues = array_key_exists($this->nestedIn, $postValues) ? $postValues[$this->nestedIn] : [];
             }
             $errors = $this->getErrors();
+            $values = array_merge($defaultValues, $postValues);
         }
-        $this->fieldObjects = $this->fieldFactory->build($this->fields, $postValues, $errors);
+        $this->fieldObjects = $this->fieldFactory->build($this->id, $this->fields, $values, $errors);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->render();
     }
 }

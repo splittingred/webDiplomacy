@@ -1,0 +1,12 @@
+<div class="form-group">
+    <label for="{{ field.id }}">{{ field.label }}: {{ field.helpIcon|raw }}</label>
+    <textarea id="{{ field.id }}"
+              type="text"
+              name="{{ field.fieldName }}"
+              class="{{ field.cssCls }}"
+    {% for ikey, ival in field.inputAttributes %} {{ ikey }}="{{ ival }}"{% endfor %}
+    >{{ field.value }}</textarea>
+    {% if field.helpText %}<small id="{{ field.id }}-help-text" class="form-text text-muted">{{ field.helpText }}</small>{% endif %}
+
+    {{ field.errorMessages|raw }}
+</div>

@@ -78,5 +78,3 @@ class Misc
 		$this->updated=array();
 	}
 }
-
-?>

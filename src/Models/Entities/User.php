@@ -2,6 +2,7 @@
 
 namespace Diplomacy\Models\Entities;
 
+use Diplomacy\Models\Entities\Users\Counts;
 use Diplomacy\Models\Entities\Users\TemporaryBan;
 
 class User
@@ -14,6 +15,7 @@ class User
     const ROLE_DONATOR_GOLD = 'DonatorGold';
     const ROLE_DONATOR_PLATINUM = 'DonatorPlatinum';
     const ROLE_MODERATOR = 'Moderator';
+    const ROLE_FORUM_MODERATOR = 'ForumModerator';
     const ROLE_SENIOR_MODERATOR = 'SeniorMod';
     const ROLE_ADMIN = 'Admin';
     const ROLE_SYSTEM = 'System';
@@ -34,6 +36,8 @@ class User
     public $roles = [];
     /** @var int $timeLastSessionEnded */
     public $timeLastSessionEnded;
+    /** @var Counts $counts */
+    public $counts;
     /* some more fields and i'll get to them */
 
     /**
@@ -65,9 +69,25 @@ class User
     /**
      * @return bool
      */
+    public function isForumModerator(): bool
+    {
+        return $this->hasRole([static::ROLE_FORUM_MODERATOR, static::ROLE_ADMIN]);
+    }
+
+    /**
+     * @return bool
+     */
     public function isAdmin(): bool
     {
         return $this->hasRole(static::ROLE_ADMIN);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDonator(): bool
+    {
+        return $this->hasRole([static::ROLE_DONATOR_BRONZE, static::ROLE_DONATOR_SILVER, static::ROLE_DONATOR_GOLD, static::ROLE_DONATOR_PLATINUM]);
     }
 
     /**

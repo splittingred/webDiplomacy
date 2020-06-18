@@ -21,7 +21,9 @@
 /**
  * @package Map
  */
-
+if (!defined('ROOT_PATH')) {
+    define('ROOT_PATH', dirname(__FILE__) . '/');
+}
 if( !isset($_REQUEST['variantID']) && ( !isset($_REQUEST['gameID']) || !isset($_REQUEST['turn']) ) )
 	die('gameID or turn not provided; cannot draw map');
 
@@ -72,10 +74,10 @@ if( !IGNORECACHE && !PREVIEW)
 {
 	// We might be able to fetch the map from the cache
 	
-	require_once('locales/layer.php'); // Load the localization layer; by itself it will do no localization
-	require_once('objects/game.php');
-	require_once('lib/html.php');
-	require_once('lib/cache.php');
+	require_once ROOT_PATH . 'locales/layer.php'; // Load the localization layer; by itself it will do no localization
+	require_once ROOT_PATH . 'objects/game.php';
+	require_once ROOT_PATH . 'lib/html.php';
+	require_once ROOT_PATH . 'lib/cache.php';
 
 	$filename = Game::mapFilename((int)$_REQUEST['gameID'], (int)$_REQUEST['turn']);
     
@@ -97,9 +99,9 @@ if( !IGNORECACHE && !PREVIEW)
 }
 
 // Cache isn't an option; set things up to draw the map
-require_once('header.php');
+require_once ROOT_PATH . 'header.php';
 
-if( DELETECACHE && !$User->type['Admin'] )
+if( DELETECACHE && !$User->isAdmin())
 	die(l_t('Disable-cacheing flags set, but you are not an admin.'));
 
 if ( isset($_REQUEST['DATC']) )

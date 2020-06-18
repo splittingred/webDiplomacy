@@ -373,6 +373,8 @@ class Game extends EloquentBase
     }
 
     /**
+     * Filter to only games that are not paused in processing
+     *
      * @param Builder $query
      * @return Builder
      */
@@ -382,6 +384,8 @@ class Game extends EloquentBase
     }
 
     /**
+     * Filter games by variant ID
+     *
      * @param Builder $query
      * @param string|int $variant Either the ID or name of the variant
      * @return Builder
@@ -390,6 +394,72 @@ class Game extends EloquentBase
     {
         $variantId = intval($variant) > 0 ? $variant : VariantsService::variantIdFromName($variant);
         return !empty($variant) ? $query->where('variantID', '=', $variantId) : $query;
+    }
+
+    /**
+     * Filter to games with humans only
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeOnlyHumans(Builder $query): Builder
+    {
+        return $query->where('playerTypes', '=', 'Members');
+    }
+
+    /**
+     * Filter to only Gunboat games
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeGunboat(Builder $query): Builder
+    {
+        return $query->where('pressType', '=', 'NoPress');
+    }
+
+    /**
+     * Filter to only regular or rulebook Press games
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopePress(Builder $query): Builder
+    {
+        return $query->where('pressType', '=', ['NoPress', 'Regular']);
+    }
+
+    /**
+     * Filter to only ranked games
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeRanked(Builder $query): Builder
+    {
+        return $query->where('potType', '!=', 'Unranked');
+    }
+
+    /**
+     * Filter to only Classic games
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeClassic(Builder $query): Builder
+    {
+        return $query->where('variantID', '=', 1);
+    }
+
+    /**
+     * Filter to only variants
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNonClassic(Builder $query): Builder
+    {
+        return $query->where('variantID', '!=', 1);
     }
 
     /*****************************************************************************************************************

@@ -15,16 +15,17 @@
 * Admin ability to sudo user links per-member isn't there
 * Ensure members not in-game dont mess things up
 * Ensure hidden draw votes works
+* Voting WIP
 
 ## Forms
 
+- Field IDs don't prefix form name atm
 - Fix games search form
 - Finish game create form 
 
 ## Frontend
 
-- Lots of javascript will need to be fixed to deal with scriptaculous removal
-- Map JS is totally broken
+- Eventually deprecate prototype/scriptaculous. Eventually.
 
 ## Test Cases To Do
 

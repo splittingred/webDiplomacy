@@ -2,6 +2,7 @@
 
 namespace Diplomacy\Models;
 
+use Diplomacy\Models\Entities\Users\Counts;
 use Diplomacy\Models\Entities\Users\TemporaryBan;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -134,7 +135,71 @@ class User extends EloquentBase
     }
 
     /*****************************************************************************************************************
-     * Methods
+     * QUERY METHODS
+     ****************************************************************************************************************/
+
+    /**
+     * Get all status counts for the user
+     * @return Builder
+     */
+    public function statusCountsForUser(): Builder
+    {
+        $membersTable = Member::getTableName();
+        $query = Member::query();
+        return $query->select([
+            $query->raw('COUNT('.$membersTable.'.id) AS total'),
+            'status',
+            $query->raw('SUM('.$membersTable.'.bet) AS bet'),
+        ])->forUser($this->id)->groupBy('status');
+    }
+
+    /**
+     * @return int
+     */
+    public function queryWorth(): int
+    {
+        return $this->points + Member::forUser($this->id)->sum('bet');
+    }
+
+    /**
+     * @return int
+     */
+    public function queryRanking(): int
+    {
+        return static::where('points', '>', $this->points)->count();
+    }
+
+    /**
+     * @return int
+     */
+    public function queryActiveRanking(): int
+    {
+        $sixMonthsAgo = time() - 15552000;
+        return static::where('points', '>', $this->points)->where('timeLastSessionEnded', '>', $sixMonthsAgo)->count() + 1;
+    }
+
+    /**
+     * @return Builder
+     */
+    public function queryAnonymousGameCounts(): Builder
+    {
+        $membersTable = Member::getTableName();
+        $gamesTable = Game::getTableName();
+        $query = Member::query();
+        return $query->select([
+            $query->raw('COUNT('.$membersTable.'.id) AS total'),
+            $membersTable.'.status',
+            $query->raw('SUM('.$membersTable.'.bet) AS bet'),
+        ])
+            ->join($gamesTable, $membersTable.'.gameID','=',$gamesTable.'.id')
+            ->forUser($this->id)
+            ->where($gamesTable.'.phase', '!=', 'Finished')
+            ->where($gamesTable.'.anon', '=', 'Yes')
+            ->groupBy($membersTable.'status');
+    }
+
+    /*****************************************************************************************************************
+     * INSTANCE METHODS
      ****************************************************************************************************************/
 
     /**
@@ -215,6 +280,15 @@ class User extends EloquentBase
         $entity->roles = explode(',', $this->type);
         $entity->points = (int)$this->points;
         $entity->timeLastSessionEnded = (int)$this->timeLastSessionEnded;
+        $entity->counts = new Counts(
+            $this->cdCount,
+            $this->cdTakenCount,
+            $this->deletedCDs,
+            $this->nmrCount,
+            $this->phaseCount,
+            $this->yearlyPhaseCount,
+            $this->gameCount
+        );
         return $entity;
     }
 }

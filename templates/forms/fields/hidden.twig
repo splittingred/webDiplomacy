@@ -1,0 +1,7 @@
+<input id="{{ field.id }}"
+          type="hidden"
+          name="{{ field.fieldName }}"
+          class="{{ field.cssCls }}"
+          value="{{ field.value }}"
+{% for ikey, ival in field.inputAttributes %} {{ ikey }}="{{ ival }}"{% endfor %}
+/>

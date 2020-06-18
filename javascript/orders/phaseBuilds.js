@@ -22,7 +22,7 @@ function loadOrdersPhase() {
 
 	
 	MyOrders.map(function(OrderObj) {
-			OrderObj.updaterequirements = function () {
+			OrderObj.updateRequirements = function () {
 			
 				var oldrequirements = this.requirements;
 				

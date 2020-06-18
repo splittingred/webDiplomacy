@@ -98,9 +98,10 @@ class NewForm extends BaseForm
         $this->optionsService = new OptionsService();
     }
 
-    public function handleSubmit()
+    public function handleSubmit(): BaseForm
     {
         var_dump($this->getValues()); die();
+        return parent::handleSubmit();
     }
 
     public function getVariants()

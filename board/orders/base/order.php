@@ -95,11 +95,13 @@ abstract class order
 	 */
 	public $viaConvoy;
 
-	/**
-	 * Create the order and initialize objects from a $row
-	 *
-	 * @param array $row
-	 */
+    /**
+     * Create the order and initialize objects from a $row
+     *
+     * @param int $orderID
+     * @param int $gameID
+     * @param int $countryID
+     */
 	protected function __construct($orderID, $gameID, $countryID)
 	{
 		$this->id = $orderID;
@@ -162,5 +164,3 @@ abstract class order
 		return false;
 	}
 }
-
-?>
