@@ -41,28 +41,25 @@ class TabsComponent extends BaseComponent
     protected function getTabs(): array
     {
         $tabs = [];
-        for($countryId = 0; $countryId <= $this->game->getCountryCount(); $countryId++)
+        for ($countryId = 0; $countryId <= $this->game->getCountryCount(); $countryId++)
         {
             $member = $this->game->members->byCountryId($countryId);
             $isCurrent = $this->targetCountryId == $member->country->id;
+            $isGlobal = $countryId == 0; // only the first
+            $isSelf = $this->currentMember->id == $member->id;
+            $isCountry = !$isGlobal && !$isSelf;
 
             $tab = [
                 'countryId' => $member->country->id,
-                'countryName' => $countryId == Country::GLOBAL ? 'Global' : $member->country->name,
+                'countryName' => $isGlobal ? 'Global' : $member->country->name,
                 'current' => $isCurrent,
                 'currentCls' => $isCurrent ? 'current' : '',
-                'isGlobal' => $member->country->isGlobal(),
-                'rendered' => '',
+                'isGlobal' => $isGlobal,
+                'isCountry' => $isCountry,
+                'isAssigned' => $member->isAssigned(),
             ];
 
-            if ($this->currentMember->id == $member->id)
-            {
-                $tab['countryName'] = 'Notes';
-            }
-            elseif ($member->isInGame)
-            {
-                $tab['rendered'] = $member->getRenderedCountryName($this->game, $this->currentMember);
-            }
+            if ($isSelf) $tab['countryName'] = 'Notes';
 
             if (!$isCurrent && in_array($member->country->id, $this->currentMember->newMessagesFrom) )
             {

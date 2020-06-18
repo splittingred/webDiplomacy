@@ -264,4 +264,12 @@ class Game
 
         return $percentages;
     }
+
+    /**
+     * Process the game through the variant mechanism
+     */
+    public function process()
+    {
+        return $this->variant->processGame($this->id);
+    }
 }

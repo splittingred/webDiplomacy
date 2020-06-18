@@ -125,5 +125,3 @@ class libGameMaster
 		$DB->sql_put("COMMIT");
 	}
 }
-
-?>

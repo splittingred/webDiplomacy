@@ -6,4 +6,5 @@
         <option value="{{ option.value }}"{% if option.value == field.value %} selected="selected"{% endif %}>{{ option.text }}</option>
     {% endfor %}
     </select>
+    {{ field.errorMessages|raw }}
 </div>

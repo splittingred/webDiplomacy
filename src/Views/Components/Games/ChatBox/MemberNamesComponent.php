@@ -81,7 +81,10 @@ class MemberNamesComponent extends BaseComponent
     {
         $memberList = [];
         for ($countryID = 1; $countryID <= $this->game->getCountryCount(); $countryID++) {
-            $memberList[] = $this->game->members->byCountryId($countryID)->getMemberNameForGame($this->game, $this->currentMember);
+            $member = $this->game->members->byCountryId($countryID);
+            if ($member->isAssigned()) {
+                $memberList[] = $member->getMemberNameForGame($this->game, $this->currentMember);
+            }
         }
         return $memberList;
     }

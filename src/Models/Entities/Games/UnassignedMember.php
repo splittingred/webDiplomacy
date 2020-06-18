@@ -47,6 +47,15 @@ class UnassignedMember extends Member
     /**
      * @return bool
      */
+    public function isAssigned(): bool
+    {
+        return false;
+    }
+
+
+    /**
+     * @return bool
+     */
     public function isAuthenticated(): bool
     {
         return false;

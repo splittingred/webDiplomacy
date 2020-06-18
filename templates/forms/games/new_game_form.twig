@@ -1,19 +1,23 @@
 <form method="post" action="/games/new" class="new-game-form">
+    {% include 'common/notice.twig' with { notice: notice } %}
+
+    {{ fields.new_game|raw }}
     {{ fields.name|raw }}
     {{ fields.bet|raw }}
     {{ fields.phase_minutes|raw }}
     {{ fields.phase_switch_period|raw }}
     {{ fields.next_phase_minutes|raw }}
     {{ fields.join_period|raw }}
-    {{ fields.press_type|raw }}
+    {{ fields.press_type_id|raw }}
     {{ fields.variant_id|raw }}
-    {{ fields.pot_type|raw }}
+    {{ fields.pot_type_id|raw }}
     {{ fields.anon|raw }}
 
     <br />
 
-    {{ fields.draw_type|raw }}
+    {{ fields.draw_type_id|raw }}
     {{ fields.min_rr|raw }}
+    {{ fields.max_rr|raw }}
     {{ fields.excused_missed_turns|raw }}
 
     <div class="row">

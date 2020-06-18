@@ -3,16 +3,22 @@
 namespace Diplomacy\Forms\Games;
 
 use Diplomacy\Forms\BaseForm;
+use Diplomacy\Models\Entities\Game;
+use Diplomacy\Models\Entities\User;
 use Diplomacy\Services\Games\OptionsService;
+use Diplomacy\Services\Games\Creation\Request as GameCreationRequest;
 use Diplomacy\Services\Request;
 
 class NewForm extends BaseForm
 {
     protected $template = 'forms/games/new_game_form.twig';
     protected $requestType = Request::TYPE_POST;
-    protected $submitFieldName = 'newGame';
-    protected $nestedIn = 'newGame';
+    protected $submitFieldName = 'new_game';
     protected $fields = [
+        'new_game' => [
+            'type' => 'hidden',
+            'default' => 1,
+        ],
         'name'                      => [
             'label' => 'Game Name',
         ],
@@ -39,29 +45,30 @@ class NewForm extends BaseForm
         'join_period'               => [
             'type' => 'Games\JoinPeriodSelect',
         ],
-        'press_type'                => [
+        'press_type_id'             => [
             'type' => 'Games\PressTypeSelect',
         ],
         'variant_id'                => [
             'type' => 'Games\VariantSelect',
         ],
-        'pot_type'                  => [
+        'pot_type_id'               => [
             'type' => 'Games\PotTypeSelect',
         ],
         'anon'                      => [
             'type'      => 'checkbox',
             'label'     => 'Anonymous players',
+            'default'   => 1,
             'helpIcon'  => [
                 'title' => 'Anonymous Players',
                 'text'  => 'Decide if player names should be shown or hidden.</br></br> *Please note that games with no messaging are always anonymous regardless of what is set here to prevent cheating.',
             ],
         ],
-        'draw_type'                 => [
+        'draw_type_id'              => [
             'type' => 'Games\DrawTypeSelect',
         ],
         'min_rr'                    => [
             'type'      => 'number',
-            'label'     => 'Required Reliability Rating',
+            'label'     => 'Minimum Reliability Rating',
             'default'   => 80,
             'max'       => 100,
         ],
@@ -83,12 +90,6 @@ class NewForm extends BaseForm
         'password_confirmation'     => ['type' => 'password', 'default' => ''],
     ];
 
-    protected $validationRules = [
-        'name'      => 'required',
-        'bet'       => 'between:0,1000',
-        'password'  => 'confirmation',
-    ];
-
     /** @var OptionsService $optionsService */
     protected $optionsService;
 
@@ -98,23 +99,50 @@ class NewForm extends BaseForm
         $this->optionsService = new OptionsService();
     }
 
-    public function handleSubmit(): BaseForm
+    /** @var User $currentUser */
+    protected $currentUser;
+    public function setCurrentUser(User $user)
     {
-        var_dump($this->getValues()); die();
-        return parent::handleSubmit();
+        $this->currentUser = $user;
     }
 
-    public function getVariants()
-    {}
-
-    public function beforeRender()
+    /**
+     * @return array
+     */
+    protected function getValidationRules(): array
     {
-        $this->setPlaceholders([
-//            'variants' => OptionsService::getVariants((int)$this->getValue('variant_id')),
-//            'phaseLengths' => $this->optionsService->getPhaseLengths((int)$this->getValue('phase_minutes')),
-//            'switchPeriods' => $this->optionsService->getSwitchPeriods((int)$this->getValue('phase_switch_period')),
-//            'nextPhaseLengths' => $this->optionsService->getNextPhaseLengths((int)$this->getValue('next_phase_minutes')),
-//            'joinPeriods' => $this->optionsService->getJoinPeriods((int)$this->getValue('join_period')),
-        ]);
+        return [
+            'name'          => 'required|max:49',
+            'bet'           => 'between:5,'.$this->currentUser->points,
+            'phase_minutes' => 'required|between:5,14400|in:'.join(',', OptionsService::PHASE_LENGTHS),
+            'phase_switch_period' => 'required|between:5,14400|in:'.join(',', OptionsService::NEXT_PHASE_LENGTHS),
+            'join_period'   => 'required|between:5,14400|in:'.join(',', OptionsService::JOIN_PERIODS),
+            'press_type_id' => 'required|in:'.join(',', OptionsService::PRESS_TYPES),
+            'variant_id'    => 'required|in:'.join(',', OptionsService::getVariantIds()),
+            'pot_type_id'   => 'required|in:'.join(',', OptionsService::POT_TYPES),
+            'draw_type_id'  => 'required|in:'.join(',', OptionsService::DRAW_TYPES),
+            'min_rr'        => 'required|between:0,'.$this->currentUser->reliabilityRating,
+            'excused_missed_turns' => 'required|between:-1,100',
+            'password'      => 'confirmation',
+        ];
+    }
+
+    public function handleSubmit(): BaseForm
+    {
+        if ($this->currentUser->isBanned() || $this->currentUser->temporaryBan) {
+            $this->setPlaceholder('notice', 'You are banned from creating games.');
+            return $this;
+        }
+
+        $values = $this->getValues();
+        $request = new GameCreationRequest($values, $this->currentUser);
+        $result = $request->submit();
+        if ($result->successful()) {
+            $this->redirectRelative('/games/'.$result->getValue()->id.'/view');
+            close();
+        } else {
+            $this->setPlaceholder('notice', $result->getValue()->getMessage());
+        }
+        return parent::handleSubmit();
     }
 }

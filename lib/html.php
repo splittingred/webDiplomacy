@@ -353,7 +353,7 @@ class libHTML
 	 */
 	static public function notice($title, $message)
 	{
-		ob_clean();
+		@ob_clean();
 
 		libHTML::starthtml($title);
 
@@ -380,10 +380,15 @@ class libHTML
 				<p>'.$message.'</p></body></html>');
 		}
 
-		if(!defined('ERROR'))
-			define('ERROR',true);
+		if (!defined('ERROR')) { define('ERROR',true); }
 
-		self::notice(l_t('Error'), $message);
+		try {
+            self::notice(l_t('Error'), $message);
+        } catch (\Exception $e) {
+		    echo $e->getMessage();
+		    var_dump($e->getTraceAsString());
+		    close();
+        }
 	}
 
 	/**

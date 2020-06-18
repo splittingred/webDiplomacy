@@ -109,7 +109,7 @@ if( ini_get('request_order') !== false ) {
 /*
  * If register_globals in enabled remove globals.
  */
-if (ini_get('register_globals') or get_magic_quotes_gpc())
+if (ini_get('register_globals'))
 {
     function stripslashes_deep(&$value)
     {
@@ -152,3 +152,29 @@ ini_set('max_execution_time','8');
 //ini_set('session.cache_limiter','public');
 ignore_user_abort(TRUE); // Carry on if the user exits before the script gets printed.
 // This shouldn't be necessary for data integrity, but either way it may save reprocess time
+
+// This gets called by libHTML::footer
+function close()
+{
+    global $app;
+    $DB = $app->make('DB');
+    $Misc = $app->make('Misc');
+
+    // This isn't put into the database destructor in case of dieing due to an error
+
+    if ( is_object($DB) )
+    {
+        $Misc->write();
+        if (!defined('ERROR')) $DB->sql_put("COMMIT");
+        unset($DB);
+    }
+
+    $sessionHandler = new \Diplomacy\Services\Authorization\SessionHandler();
+    $session = $sessionHandler->get();
+    if ($session) {
+        $session->commit();
+    }
+
+    @ob_end_flush();
+    die();
+}

@@ -134,6 +134,15 @@ class Database {
 		}
 	}
 
+    /**
+     * @return $this
+     */
+	public function commit(): Database
+    {
+        $this->sql_put("COMMIT");
+        return $this;
+    }
+
 	/**
 	 * Sanitize incoming strings, leaving newlines. Suitable for messages.
 	 * Replace newlines with <br />, and allow <br /> through the filter.

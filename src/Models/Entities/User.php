@@ -85,6 +85,14 @@ class User
     /**
      * @return bool
      */
+    public function isBot(): bool
+    {
+        return $this->hasRole(static::ROLE_BOT);
+    }
+
+    /**
+     * @return bool
+     */
     public function isDonator(): bool
     {
         return $this->hasRole([static::ROLE_DONATOR_BRONZE, static::ROLE_DONATOR_SILVER, static::ROLE_DONATOR_GOLD, static::ROLE_DONATOR_PLATINUM]);

@@ -12,7 +12,9 @@ class NewController extends BaseController
 
     public function setUp()
     {
-        $this->makeForm(NewForm::class);
+        /** @var NewForm $form */
+        $form = $this->makeForm(NewForm::class);
+        $form->setCurrentUser($this->currentUserEntity);
         parent::setUp();
     }
 

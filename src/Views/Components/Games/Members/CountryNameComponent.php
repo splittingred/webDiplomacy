@@ -20,7 +20,7 @@ class CountryNameComponent extends BaseComponent
     /**
      * @param Game $game
      * @param Member $member
-     * @param int $currentUserId
+     * @param Member $currentMember
      */
     public function __construct(Game $game, Member $member, Member $currentMember)
     {
@@ -38,6 +38,7 @@ class CountryNameComponent extends BaseComponent
             'member' => $this->member,
             'game' => $this->game,
             'isGlobal' => $this->member->country->isGlobal(),
+            'isSelf' => $this->currentMember->id == $this->member->id,
             'isHidden' => $this->game->isMemberNameHidden($this->member, $this->currentMember),
         ];
     }

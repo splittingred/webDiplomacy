@@ -55,6 +55,10 @@ $capsule->addConnection([
 $capsule->setAsGlobal();
 // Setup the Eloquent ORM.
 $capsule->bootEloquent();
+$app->instance('database.capsule', $capsule);
+$app->instance('database.connection', function($app) {
+    return $app->make('database.capsule')->getConnection();
+});
 
 /****************************************************************
 /* Controllers

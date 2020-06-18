@@ -1,10 +1,6 @@
 <div id="chatboxtabs" class="gamelistings-tabs">
     {% for tab in tabs %}
-        {% if tab.isCountry %}
-            {% if privateMessagesAllowed %}
-                {{ tab.rendered|raw }}
-            {% endif %}
-        {% else %}{# notes or global #}
+        {% if not tab.isCountry %}{# notes or global #}
             <a href="/games/{{ game.id }}/view?countryId={{ tab.countryId }}#chatboxanchor"
                class="country{{ tab.countryId }} {{ tab.currentCls }}"
                title="Open {{ tab.countryName }} chatbox tab">
@@ -12,6 +8,18 @@
 
                 {{ tab.unreadIcon|raw }}
             </a>
+        {% elseif not tab.isAssigned %}
+            {# skip unassigned members #}
+        {% else %}
+            {% if privateMessagesAllowed %}
+            <a href="/games/{{ game.id }}/view?countryId={{ tab.countryId }}#chatboxanchor"
+               class="country{{ tab.countryId }} {{ tab.currentCls }}"
+               title="Open {{ tab.countryName }} chatbox tab">
+                {{ tab.countryName|raw }}
+
+                {{ tab.unreadIcon|raw }}
+            </a>
+            {% endif %}
         {% endif %}
     {% endfor %}
 </div>

@@ -24,7 +24,7 @@ abstract class BaseForm
     /** @var array */
     protected $fields = [];
     /** @var string */
-    protected $submitFieldName = 'submit';
+    protected $submitFieldName = 'newGame';
     /** @var string $id */
     protected $id = '';
     /** @var string */
@@ -61,12 +61,11 @@ abstract class BaseForm
         $this->request = $request;
         $this->renderer = $renderer;
         $this->setUp();
-        $this->validator = $validatorFactory->make(array_keys($this->fields), $this->validationRules, $this->validationMessages, $this->validationCustomAttributes);
         $clsNameLength = strlen(self::class);
         $defaultFieldPrefix = substr(self::class, 0, $clsNameLength < 4 ? $clsNameLength : 4);
         $fieldPrefix = !empty($this->fieldPrefix) ? $this->fieldPrefix : $defaultFieldPrefix;
         $this->fieldFactory = new FieldFactory($this->renderer, $fieldPrefix, $this->nestedIn);
-        $this->buildFields($defaultValues);
+        $this->buildFields($validatorFactory, $defaultValues);
     }
 
     public function setUp() : void
@@ -138,6 +137,14 @@ abstract class BaseForm
     }
 
     /**
+     * @return array
+     */
+    protected function getValidationRules(): array
+    {
+        return $this->validationRules;
+    }
+
+    /**
      * Handle form submissions. You may override this in extended classes.
      *
      * @return BaseForm
@@ -200,22 +207,33 @@ abstract class BaseForm
     }
 
     /**
-     * Build the field objects
+     * Build the field objects.
      *
+     * Field default inheritance (last takes precedence):
+     * -> Defined on form fields var -> passed into this method -> submitted via Request
+     *
+     * @param ValidationFactory $validatorFactory
      * @param array $defaultValues
      * @return BaseForm
      */
-    protected function buildFields(array $defaultValues = []): BaseForm
+    protected function buildFields(ValidationFactory $validatorFactory, array $defaultValues = []): BaseForm
     {
-        $values = $defaultValues;
         $errors = [];
+        $values = array_merge(array_map(function($f) {
+            return array_key_exists('default', $f) ? $f['default'] : null;
+        }, $this->fields), $defaultValues);
+
         if ($this->isSubmitted()) {
             $postValues = $this->request->getParameters($this->requestType);
             if (!empty($this->nestedIn)) {
                 $postValues = array_key_exists($this->nestedIn, $postValues) ? $postValues[$this->nestedIn] : [];
             }
+            $derivedValues = array_merge($values, $postValues);
+            $this->validator = $validatorFactory->make($derivedValues, $this->validationRules, $this->validationMessages, $this->validationCustomAttributes);
             $errors = $this->getErrors();
             $values = array_merge($defaultValues, $postValues);
+        } else {
+            $this->validator = $validatorFactory->make($values, $this->validationRules, $this->validationMessages, $this->validationCustomAttributes);
         }
         $this->fieldObjects = $this->fieldFactory->build($this->id, $this->fields, $values, $errors);
         return $this;

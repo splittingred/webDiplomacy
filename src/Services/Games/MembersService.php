@@ -49,4 +49,27 @@ class MembersService
         }
         return $result ? new Success() : Failure::withError('internal', 'Failed to persist mute to database.');
     }
+
+    public function makeBet(\Diplomacy\Models\Entities\Games\Member $member)
+    {
+        if ( $bet > $this->points && !$User->type['Bot'] )
+        {
+            throw new Exception(l_t('You do not have enough points to join this game. You need to bet %s.',$bet.' '.libHTML::points()));
+        }
+
+        if ($User->type['Bot'])
+        {
+            User::pointsTransfer($this->userID, 'Bet', $bet, $this->gameID, $this->id);
+            $this->Game->pot += 5;
+            return 5;
+        }
+
+        User::pointsTransfer($this->userID, 'Bet', $bet, $this->gameID, $this->id);
+
+        $this->points -= $bet;
+        $this->Game->pot += $bet;
+
+        if($User instanceof User && $User->id == $this->userID) $User->points -= $bet;
+
+    }
 }

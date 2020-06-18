@@ -7,13 +7,9 @@ use Diplomacy\Models\Entities\Games\Members\OrdersState;
 use Diplomacy\Models\Entities\Games\Members\Status;
 use Diplomacy\Models\Entities\User;
 use Diplomacy\Models\Entities\Users\MutedCountry;
-use Diplomacy\Views\Components\Games\Members\BetWonComponent;
 use Diplomacy\Views\Components\Games\Members\CountryNameComponent;
 use Diplomacy\Views\Components\Games\Members\MemberNameComponent;
-use Diplomacy\Views\Components\Games\Members\MuteIconComponent;
 use Diplomacy\Views\Components\Games\Members\NameComponent;
-use Diplomacy\Views\Components\Games\Members\ProgressBarComponent;
-use Diplomacy\Views\Components\Games\Members\UnitCountComponent;
 
 class Member
 {
@@ -72,6 +68,14 @@ class Member
     public function isAuthenticated(): bool
     {
         return $this->user->isAuthenticated();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAssigned(): bool
+    {
+        return $this->country->id > 0;
     }
 
     /**
