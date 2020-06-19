@@ -9,7 +9,11 @@ use League\FactoryMuffin\Faker\Facade as Faker;
 $faker = Faker::instance()->getGenerator();
 
 /** @var FactoryMuffin $fm */
-$fm->define(Country::class)->setDefinitions([
+$definition = $fm->define(Country::class);
+$definition->setDefinitions([
     'id' => 1,
     'name' => 'England',
 ]);
+$definition->setMaker(function($class) {
+    return new $class(1, 'England');
+});

@@ -71,11 +71,17 @@ class OrdersState
         return count(array_intersect($this->states, $submittedStates)) > 0;
     }
 
+    /**
+     * @return bool
+     */
     public function isReady(): bool
     {
         return $this->hasState(OrdersState::STATE_READY);
     }
 
+    /**
+     * @return bool
+     */
     public function isCompleted(): bool
     {
         return $this->hasState(OrdersState::STATE_COMPLETED);
@@ -92,21 +98,35 @@ class OrdersState
 
     /**
      * @param string $state
+     * @return $this
      */
-    public function addState(string $state)
+    public function addState(string $state): OrdersState
     {
         $this->states[] = $state;
         $this->states = array_unique($this->states);
+        return $this;
     }
 
     /**
      * @param string $state
+     * @return $this
      */
-    public function removeState(string $state)
+    public function removeState(string $state): OrdersState
     {
         if (array_search($state, $this->states) !== false) {
             unset($this->states[$state]);
         }
+        return $this;
+    }
+
+    /**
+     * @param array $states
+     * @return $this
+     */
+    public function setStates(array $states): OrdersState
+    {
+        $this->states = $states;
+        return $this;
     }
 
     /**
