@@ -20,6 +20,10 @@
 
 defined('IN_CODE') or die('This script can not be run by itself.');
 
+if (!defined('TMP_DIR')) {
+    define('TMP_DIR', dirname(__FILE__) . '/tmp');
+}
+
 /**
  * The configuration object. This is the only file that will require modification by
  * end users.
@@ -48,14 +52,14 @@ class Config
 	 *
 	 * @var string
 	 */
-	public static $database_username='root';
+	public static $database_username='webdiplomacy';
 
 	/**
 	 * The password of the above user
 	 *
 	 * @var string
 	 */
-	public static $database_password='password';
+	public static $database_password='magic';
 
 	/**
 	 * The database name
@@ -177,7 +181,7 @@ class Config
 	 */
 	public static function errorlogDirectory()
 	{
-		return '/Users/shaun.mccormick/www/webDiplomacy/tmp/logs/errors/';
+		return TMP_DIR . '/logs/errors/';
 	}
 
 	/**
@@ -197,7 +201,7 @@ class Config
 	 */
 	public static function orderlogDirectory()
 	{
-		return '/Users/shaun.mccormick/www/webDiplomacy/tmp/logs/orders/';
+		return TMP_DIR . '/logs/orders/';
 	}
 
 	/**
@@ -206,7 +210,7 @@ class Config
 	 *
 	 * @var string
 	 */
-	public static $pointsLogFile='/Users/shaun.mccormick/www/webDiplomacy/tmp/logs/points.txt';
+	public static $pointsLogFile = TMP_DIR . '/logs/points.txt';
 
 	/**
 	 * An array of e-mail settings, to validate e-mails etc.
