@@ -55,35 +55,6 @@ class GameBoard
     }
 
     /**
-     * @return string
-     */
-    public function getNoticeBar() : string
-    {
-        if ($this->gameEntity->phase->isFinished())
-        {
-            return $this->getGameOverDetails();
-        }
-        elseif ($this->gameEntity->phase->isPreGame())
-        {
-            $totalPlayers = $this->gameEntity->getMemberCount();
-            if ($this->gameEntity->allSlotsFilled()) {
-                if ($this->gameEntity->phase->isLive()) {
-                    return $totalPlayers . ' players joined; game will start at the scheduled time';
-                } else {
-                    return $totalPlayers . ' players joined; game will start on next process cycle';
-                }
-            } else {
-                $neededPlayers = $this->gameEntity->getCountryCount();
-                return "Game is currently at $totalPlayers members out of $neededPlayers - waiting for remaining to join.";
-            }
-        }
-        elseif ($this->gameEntity->missingPlayerPolicy->isWait() && !$this->gameEntity->members->isReadyForProcessing() && $this->gameEntity->processing->overdue()) {
-            return 'One or more players need to complete their orders before this wait-mode game can go on';
-        }
-        return '';
-    }
-
-    /**
      * TODO: not sure this is correct. Fix it.
      *
      * @return bool
@@ -110,14 +81,6 @@ class GameBoard
             return 'Game drawn';
         }
         return '';
-    }
-
-    /**
-     * @return string
-     */
-    public function occupationBar() : string
-    {
-        return (string)(new AllMembersBarComponent($this->gameEntity));
     }
 }
 

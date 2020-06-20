@@ -3,7 +3,7 @@
         <div class="variant{{ game.variant.name }}">
             <a id="gamePanel"></a>
             {% include 'games/board/title_bar.twig' with { game: game, board: board } %}
-            {% include 'games/board/notice_bar.twig' with { game: game, board: board } %}
+            {{ component('Games.NoticeBar', { game: game })|raw }}
             {% if game.allSlotsFilled() and game.phase.isStarted() and current_member.isAuthenticated() %}
                 <div class="membersList">
                     {% include 'games/board/header_bar.twig' with { game: game, member: current_member } %}
@@ -11,7 +11,7 @@
             {% endif %}
 
             <div class="panelBarGraphTop occupationBar">
-                {{ board.occupationBar|raw }}
+                {{ component('Games.Members.AllMembersBar', { game: game })|raw }}
             </div>
         </div>
     </div>
@@ -34,8 +34,14 @@
         {% if current_member.isAuthenticated %}
             {{ component('Games.Votes', { game: game, currentMember: current_member })|raw }}
         {% endif %}
-        {{ members|raw }}
-        {{ links|raw }}
+        <div class="panelbarGraph occupationBar">
+            {{ component('Games.OccupationBar', { game: game })|raw }}
+        </div>
+        {{ component('Games.Members.Summary', { game: game, currentMember: current_member })|raw }}
+        <div class="panelbarGraph occupationBar">
+            {{ component('Games.OccupationBar', { game: game })|raw }}
+        </div>
+        {{ component('Games.ArchiveBar', { id: game.id })|raw }}
         <div class="bar lastBar"> </div>
     </div>
 </div>

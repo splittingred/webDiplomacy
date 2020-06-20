@@ -664,7 +664,6 @@ class Game extends EloquentBase
 
     /** @var \Misc */
     private $misc;
-
     private function getMisc() : \Misc
     {
         if (empty($this->misc)) {
@@ -682,6 +681,7 @@ class Game extends EloquentBase
         return $this->oldGame;
     }
 
+    /** @var \Members $members */
     protected $members;
     public function getMembers()
     {

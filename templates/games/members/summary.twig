@@ -1,0 +1,15 @@
+{#
+  A summary component, which has a BarComponent for each member, displaying their name, messages, order status,
+  bet, and unit statuses.
+#}
+<div class="membersList membersFullTable">
+    <table>
+        <tbody>
+        {% for member in members %}
+            <tr class="member memberAlternate{{ cycle([1, 2], loop.index0) }}">
+                {{ component('Games.Members.Bar', { game: game, member: member, currentMember: current_member })|raw }}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

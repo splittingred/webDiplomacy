@@ -30,7 +30,7 @@ class ArchiveBarComponent extends BaseComponent
     public function attributes(): array
     {
         return [
-            'gameId' => $this->gameId,
+            'game_id' => $this->gameId,
         ];
     }
 }

@@ -52,7 +52,7 @@ class Command
             $game = new Game();
             $game->variantID = $this->request->variantId;
             $game->turn = 0;
-            $game->phase = 'Pre-game';
+            $game->phase = 'Pre-game'; // All games start in pre-game phase until everyone is assigned
             $game->processTime = $pTime;
             $game->pot = 0;
             $game->name = $this->request->name;
@@ -89,7 +89,7 @@ class Command
             $member = new Member();
             $member->userID = $currentUser->id;
             $member->gameID = $gameEntity->id;
-            $member->countryID = 1; // TODO: Assign appropriate country here
+            $member->countryID = 0;
             $member->orderStatus = 'None,Completed,Ready';
             $member->bet = 0;
             $member->timeLoggedIn = time();
