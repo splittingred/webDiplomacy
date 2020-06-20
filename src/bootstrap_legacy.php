@@ -63,6 +63,7 @@ date_default_timezone_set('UTC');
 global $app;
 // Create database object
 require_once ROOT_PATH . 'objects/database.php';
+global $DB;
 $DB = new Database();
 $app->instance('DB', $DB);
 
