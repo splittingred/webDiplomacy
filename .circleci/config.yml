@@ -48,16 +48,16 @@ commands:
           name: Create non-admin user
           command: |
             sudo mysql -u root -ppassword -e "CREATE user webdiplomacy IDENTIFIED BY 'magic';"
-      - run: sudo composer self-update
-
-#################################################################################
-# Jobs
-#################################################################################
-jobs:
-  test:
-    executor: php
+      - run:
+          name: Copy .env
+          command: |
+            cp ~/repo/.env.circleci ~/repo/.env
+  composer-install:
     steps:
-      - setup
+      - run:
+          name: Update composer
+          command: |
+            sudo composer self-update
       - restore_cache:
           keys:
             - composer-v1-{{ checksum "composer.lock" }}
@@ -67,11 +67,23 @@ jobs:
           key: composer-v1-{{ checksum "composer.lock" }}
           paths:
             - vendor
+  create-database:
+    steps:
       - run:
           name: Create database
           command: |
             sudo mysql -u root -ppassword -e "CREATE DATABASE webdiplomacy_test;"
-#      - run: cp .env.circle .env
+
+#################################################################################
+# Jobs
+#################################################################################
+jobs:
+  test:
+    executor: php
+    steps:
+      - setup
+      - composer-install
+      - create-database
 #      - run: php artisan key:generate
 #      - run: php artisan migrate
       - run: php vendor/bin/phpunit
