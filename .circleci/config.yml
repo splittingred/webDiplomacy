@@ -52,6 +52,10 @@ commands:
           name: Copy .env
           command: |
             cp ~/repo/.env.circleci ~/repo/.env
+      - run:
+          name: Copy config
+          command: |
+            cp ~/repo/config.circleci.php ~/repo/config.php
   composer-install:
     steps:
       - run:
