@@ -553,11 +553,11 @@ CREATE TABLE `wD_MuteCountry` (
 	PRIMARY KEY ( `userID` , `gameID` , `muteCountryID` )
 ) ENGINE=MYISAM ;
 
-UPDATE wD_Misc SET `value`=101 WHERE `name`='Version';
+UPDATE `wD_Misc` SET `value`= 101 WHERE `name` = 'Version';
 
 ALTER TABLE `wD_Users` CHANGE `type` `type` SET( 'Banned', 'Guest', 'System', 'User', 'Moderator', 'Admin', 'Donator', 'DonatorBronze', 'DonatorSilver', 'DonatorGold', 'DonatorPlatinum' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'User';
 
-UPDATE wD_Misc SET `value`=102 WHERE `name`='Version';
+UPDATE `wD_Misc` SET `value`= 102 WHERE `name` = 'Version';
 
 CREATE TABLE IF NOT EXISTS `wD_LikePost` (
   `userID` mediumint(8) unsigned NOT NULL,
@@ -576,7 +576,7 @@ ALTER TABLE `wD_MuteThread` ADD `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_T
 ALTER TABLE `wD_MuteUser` ADD `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
 ALTER TABLE `wD_MuteCountry` ADD `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
-UPDATE wD_Misc SET `value`=103 WHERE `name`='Version';
+UPDATE `wD_Misc` SET `value`=103 WHERE `name` = 'Version';
 
 CREATE TABLE `wD_Silences` (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
