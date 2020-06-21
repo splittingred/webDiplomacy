@@ -49,6 +49,8 @@ commands:
           name: Create non-admin user
           command: |
             sudo mysql -u root -ppassword -e "CREATE user webdiplomacy IDENTIFIED BY 'magic';"
+            sudo mysql -u root -ppassword -e "GRANT ALL PRIVILEGES ON *.* TO 'webdiplomacy' WITH GRANT OPTION"
+            sudo mysql -u root -ppassword webdiplomacy_test < ~/repo/install/FullInstall/fullInstall.sql
       - run:
           name: Copy .env
           command: |

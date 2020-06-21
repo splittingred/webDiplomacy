@@ -26,11 +26,16 @@ defined('IN_CODE') or die('This script can not be run by itself.');
  * @package Base
  */
 
-set_exception_handler('exception_handler');
-set_error_handler('error_handler');
-assert_options (ASSERT_CALLBACK, 'assert_handler');
-assert_options (ASSERT_WARNING, 0);
-error_reporting(E_STRICT | E_ALL | E_NOTICE);
+// Don't create custom error handlers in test env
+if (!array_key_exists('APP_ENV', $_ENV) || $_ENV['APP_ENV'] != 'test') {
+    set_exception_handler('exception_handler');
+    set_error_handler('error_handler');
+    assert_options (ASSERT_CALLBACK, 'assert_handler');
+    assert_options (ASSERT_WARNING, 0);
+    error_reporting(E_STRICT | E_ALL | E_NOTICE);
+} else {
+    error_reporting(E_ALL);
+}
 
 function assert_handler ($file, $line, $expr)
 {

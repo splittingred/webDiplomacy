@@ -42,7 +42,7 @@ class Config
 	 *
 	 * @var string
 	 */
-	public static $database_socket='localhost';
+	public static $database_socket = '127.0.0.1:3306';
 
 	/**
 	 * The user who will perform all database actions. You should
@@ -52,14 +52,14 @@ class Config
 	 *
 	 * @var string
 	 */
-	public static $database_username='webdiplomacy';
+	public static $database_username = 'webdiplomacy';
 
 	/**
 	 * The password of the above user
 	 *
 	 * @var string
 	 */
-	public static $database_password='magic';
+	public static $database_password = 'magic';
 
 	/**
 	 * The database name
@@ -223,7 +223,7 @@ class Config
 			or it may trip spam filters. */
 			"FromName"=> "webDiplomacy gamemaster",
 			/* The name being mailed from. */
-			"UseMail" => false,
+			"UseMail" => true,
 			/* Use the php mail() function. Either UseMail, UseSendmail or UseSMTP has to be TRUE,
 				if you're using e-mail. */
 			"UseSendmail" => false,
@@ -236,7 +236,7 @@ class Config
 			/* Use SMTP, if this is FALSE the variable below is ignored. */
 			'SMTPSettings' => [
             ],
-			"UseDebug" => false // If this is set to true mail will be output to the browser instead of sent, useful for debugging
+			"UseDebug" => true // If this is set to true mail will be output to the browser instead of sent, useful for debugging
 		);
 
 	/**
