@@ -74,7 +74,7 @@ commands:
     steps:
       - run:
           name: Setup database, users, import schema and default data
-          command: sudo ~/repo/.circleci/setup-db.sh
+          command: ~/repo/.circleci/setup-db.sh
 
 #################################################################################
 # Jobs

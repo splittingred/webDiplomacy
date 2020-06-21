@@ -642,27 +642,27 @@ CREATE TABLE `wD_VariantData` (
 ALTER TABLE `wD_VariantData` ADD PRIMARY KEY ( `variantID` , `gameID`, `systemToken` , `typeID` , `userID` , `offset` ) ;
 
 INSERT INTO wD_VariantData (variantID, systemToken, userID, offset, val_float )
-SELECT 1, 948379409, u.id, 1, ChanceEngland
-FROM wD_Users u
-WHERE NOT ChanceEngland = 0.142857
-UNION SELECT 1, 948379409, u.id, 2, ChanceFrance
-FROM wD_Users u
-WHERE NOT ChanceFrance = 0.142857
-UNION SELECT 1, 948379409, u.id, 3, ChanceItaly
-FROM wD_Users u
-WHERE NOT ChanceItaly = 0.142857
-UNION SELECT 1, 948379409, u.id, 4, ChanceGermany
-FROM wD_Users u
-WHERE NOT ChanceGermany = 0.142857
-UNION SELECT 1, 948379409, u.id, 5, ChanceAustria
-FROM wD_Users u
-WHERE NOT ChanceAustria = 0.142857
-UNION SELECT 1, 948379409, u.id, 6, ChanceRussia
-FROM wD_Users u
-WHERE NOT ChanceRussia = 0.142857
-UNION SELECT 1, 948379409, u.id, 7, ChanceTurkey
-FROM wD_Users u
-WHERE NOT ChanceTurkey = 0.142857;
+SELECT 1, 948379409, u.id, 1, `ChanceEngland`
+FROM `wD_Users` u
+WHERE NOT `ChanceEngland` = 0.142857
+UNION SELECT 1, 948379409, u.id, 2, `ChanceFrance`
+FROM `wD_Users` u
+WHERE NOT `ChanceFrance` = 0.142857
+UNION SELECT 1, 948379409, u.id, 3, `ChanceItaly`
+FROM `wD_Users` u
+WHERE NOT `ChanceItaly` = 0.142857
+UNION SELECT 1, 948379409, u.id, 4, `ChanceGermany`
+FROM `wD_Users` u
+WHERE NOT `ChanceGermany` = 0.142857
+UNION SELECT 1, 948379409, u.id, 5, `ChanceAustria`
+FROM `wD_Users` u
+WHERE NOT `ChanceAustria` = 0.142857
+UNION SELECT 1, 948379409, u.id, 6, `ChanceRussia`
+FROM `wD_Users` u
+WHERE NOT `ChanceRussia` = 0.142857
+UNION SELECT 1, 948379409, u.id, 7, `ChanceTurkey`
+FROM `wD_Users` u
+WHERE NOT `ChanceTurkey` = 0.142857;
 
 ALTER TABLE `wD_Users` ADD COLUMN `cdCount` mediumint(8) unsigned NOT NULL DEFAULT '0',
   ADD COLUMN `nmrCount` mediumint(8) unsigned NOT NULL DEFAULT '0',
@@ -929,7 +929,7 @@ CREATE TABLE `wD_EmailHistory` (
   `date` int(10) unsigned NOT NULL,
   `reason` varchar(50) NOT NULL,
   `changedBy` varchar(30) NOT NULL
-)
+);
 
 UPDATE `wD_Misc` SET `value` = '164' WHERE `name` = 'Version';
 
