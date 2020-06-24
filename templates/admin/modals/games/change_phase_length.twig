@@ -1,0 +1,13 @@
+<p>
+    Change the maximum number of minutes that a phase lasts. The time is in minutes (5 minutes to 10 days = 5-14400).
+    Also the next process time is reset to the new phase length.
+</p>
+
+<div class="form-group">
+    <label for="admin-game-change-phase-length-length" class="col-form-label">Minutes Per Phase:</label>
+    <select name="length" class="form-control" id="admin-game-change-phase-length-length">
+        {% for phase in phase_lengths %}
+            <option value="{{ phase.value }}">{{ phase.text }}</option>
+        {% endfor %}
+    </select>
+</div>

@@ -3,6 +3,7 @@
 namespace Diplomacy\Forms\Fields\Games;
 
 use Diplomacy\Forms\Fields\SelectField;
+use Diplomacy\Services\Games\OptionsService;
 use Diplomacy\Views\Renderer;
 
 /**
@@ -30,13 +31,11 @@ class PressTypeSelectField extends SelectField
         return parent::helpIcon();
     }
 
+    /**
+     * @return array
+     */
     protected function getDefaultOptions(): array
     {
-        return [
-            ['value' => 'Regular', 'text' => 'All'],
-            ['value' => 'PublicPressOnly', 'text' => 'Global only'],
-            ['value' => 'NoPress', 'text' => 'None (No messaging)'],
-            ['value' => 'RulebookPress', 'text' => 'Per rulebook'],
-        ];
+        return OptionsService::getPressTypes();
     }
 }

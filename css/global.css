@@ -2113,3 +2113,7 @@ ul.threads-list li p {
 	font-size: 18px;
 	border-bottom: 1px solid #0a2b1d;
 }
+
+.modal-backdrop {
+	position: inherit;
+}

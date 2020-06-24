@@ -2,11 +2,19 @@
     <div class="boardHeader">
         <div class="variant{{ game.variant.name }}">
             <a id="gamePanel"></a>
-            {% include 'games/board/title_bar.twig' with { game: game, board: board } %}
+            {{ component('Games.Board.TitleBar', { game: game })|raw }}
+
+            {% if current_user_entity.isModerator %}
+                {# mod actions #}
+            {% endif %}
+            {% if game.hasDirectorAccess(current_user_entity) %}
+                {{ component('Admin.Games.Dropdown', { game: game, currentUser: current_user_entity })|raw }}
+            {% endif %}
+
             {{ component('Games.NoticeBar', { game: game })|raw }}
-            {% if game.allSlotsFilled() and game.phase.isStarted() and current_member.isAuthenticated() %}
+            {% if game.allSlotsFilled and game.phase.isStarted and current_member.isAuthenticated %}
                 <div class="membersList">
-                    {% include 'games/board/header_bar.twig' with { game: game, member: current_member } %}
+                    {{ component('Games.Board.HeaderBar', { game: game, member: current_member })|raw }}
                 </div>
             {% endif %}
 

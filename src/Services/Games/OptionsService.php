@@ -110,4 +110,22 @@ class OptionsService
         }
         return $joinPeriods;
     }
+
+    /**
+     * @param string $selected
+     * @return array
+     */
+    public static function getPressTypes(string $selected = ''): array
+    {
+        $types = [
+            ['value' => 'Regular', 'text' => 'All'],
+            ['value' => 'PublicPressOnly', 'text' => 'Global only'],
+            ['value' => 'NoPress', 'text' => 'None (No messaging)'],
+            ['value' => 'RulebookPress', 'text' => 'Per rulebook'],
+        ];
+        foreach ($types as &$type) {
+            $type['selected'] = $type == $selected;
+        }
+        return $types;
+    }
 }

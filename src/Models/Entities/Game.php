@@ -140,6 +140,19 @@ class Game
     }
 
     /**
+     * Does the given user have director-level privileges to this game?
+     *
+     * This is different than isDirector, as this also checks tournament status
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function hasDirectorAccess(User $user): bool
+    {
+        return $user->isAdmin() || $this->isDirector($user) || $this->isTournamentDirector($user) || $this->isTournamentCoDirector($user);
+    }
+
+    /**
      * Is the given user a Director for this game?
      *
      * @param int|User $user

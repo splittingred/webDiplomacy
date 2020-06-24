@@ -1,0 +1,31 @@
+<div class="float-right">
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="admin-game-menu-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Admin
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#admin-game-toggle-pause">Toggle Pause Game</a>
+            {% if game.isPrivate %}
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#admin-game-publicize">Make Public</a>
+            {% else %}
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#admin-game-privatize">Make Private</a>
+            {% endif %}
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#admin-game-force-user-cd">Force User into CD</a>
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#admin-game-reset-process-time">Reset Process Time</a>
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#admin-game-change-phase-length">Change Phase Length</a>
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#admin-game-change-press-type">Change Press Type</a>
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#admin-game-reallocate-countries">Reallocate Countries</a>
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#admin-game-adjust-excused-missed-turns">Adjust Excused Missed Turns</a>
+        </div>
+    </div>
+</div>
+{{ component('Admin.Modals.Games.TogglePause', { game: game })|raw }}
+{{ component('Admin.Modals.Games.Publicize', { game: game })|raw }}
+{{ component('Admin.Modals.Games.Privatize', { game: game })|raw }}
+{{ component('Admin.Modals.Games.ForceUserIntoDisorder', { game: game })|raw }}
+{{ component('Admin.Modals.Games.ResetProcessTime', { game: game })|raw }}
+{{ component('Admin.Modals.Games.ProcessGameNow', { game: game })|raw }}
+{{ component('Admin.Modals.Games.ChangePhaseLength', { game: game })|raw }}
+{{ component('Admin.Modals.Games.ChangePressType', { game: game })|raw }}
+{{ component('Admin.Modals.Games.ReallocateCountries', { game: game })|raw }}
+{{ component('Admin.Modals.Games.AdjustExcusedMissedTurns', { game: game })|raw }}
