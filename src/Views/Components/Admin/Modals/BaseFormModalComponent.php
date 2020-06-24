@@ -10,6 +10,7 @@ use Diplomacy\Views\Components\BaseComponent;
  */
 abstract class BaseFormModalComponent extends BaseComponent
 {
+    protected $showLink = true;
     /** @var string $modalId */
     protected $modalId = '';
     /** @var string $modalTitle */
@@ -22,6 +23,28 @@ abstract class BaseFormModalComponent extends BaseComponent
     protected $formAction = '';
     /** @var string $formMethod */
     protected $formMethod = 'post';
+
+    /**
+     * @param bool $showLink
+     * @param string $modalTitle
+     * @param string $modalId
+     * @param string $modalSubmitText
+     * @param string $modalCloseText
+     */
+    public function __construct(
+        bool $showLink = true,
+        string $modalTitle = 'Modal',
+        string $modalId = '',
+        string $modalSubmitText = 'Submit',
+        string $modalCloseText = 'Close'
+    )
+    {
+        $this->showLink = $showLink;
+        if (!empty($modalTitle)) $this->modalTitle = $modalTitle;
+        if (!empty($modalId)) $this->modalId = $modalId;
+        if (!empty($modalSubmitText)) $this->modalSubmitText = $modalSubmitText;
+        if (!empty($modalCloseText)) $this->modalCloseText = $modalCloseText;
+    }
 
     /**
      * @return string
@@ -40,6 +63,14 @@ abstract class BaseFormModalComponent extends BaseComponent
     }
 
     /**
+     * @return array
+     */
+    public function attributes(): array
+    {
+        return [];
+    }
+
+    /**
      * @return string
      */
     public function __toString(): string
@@ -53,6 +84,8 @@ abstract class BaseFormModalComponent extends BaseComponent
             'close_text'    => $this->modalCloseText,
             'action'        => $this->getFormAction(),
             'method'        => $this->getFormMethod(),
+            'show_link'     => $this->showLink,
+            'link_title'    => $this->modalTitle,
         ]);
     }
 }

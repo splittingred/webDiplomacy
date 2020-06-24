@@ -1,3 +1,6 @@
+{% if show_link %}
+<a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#{{ id }}">{{ link_title }}</a>
+{% endif %}
 <div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="{{ id }}-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
