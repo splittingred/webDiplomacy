@@ -1,9 +1,9 @@
 {% if game.hasDirectorAccess(user) %}
     {{ component('Admin.Modals.Games.TogglePause', { game: game })|raw }}
     {% if game.isPrivate %}
-        {{ component('Admin.Modals.Games.Privatize', { game: game })|raw }}
-    {% else %}
         {{ component('Admin.Modals.Games.Publicize', { game: game })|raw }}
+    {% else %}
+        {{ component('Admin.Modals.Games.Privatize', { game: game })|raw }}
     {% endif %}
     {{ component('Admin.Modals.Games.ForceUserIntoDisorder', { game: game })|raw }}
     {{ component('Admin.Modals.Games.ResetProcessTime', { game: game })|raw }}
@@ -30,9 +30,9 @@
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-togglepause">Toggle Pause</a>
             {% if game.isPrivate %}
-                <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-privatize">Privatize</a>
-            {% else %}
                 <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-publicize">Publicize</a>
+            {% else %}
+                <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-privatize">Privatize</a>
             {% endif %}
             <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-forceuserintodisorder">Force User CD</a>
             <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-resetprocesstime">Reset Process Time</a>

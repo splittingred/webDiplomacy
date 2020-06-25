@@ -3,6 +3,7 @@
 namespace Diplomacy\Forms\Admin\Games;
 
 use Diplomacy\Forms\BaseForm;
+use Diplomacy\Models\Member;
 use Diplomacy\Services\Request;
 
 class AdjustExcusedMissedTurnsForm extends BaseForm
@@ -18,6 +19,7 @@ class AdjustExcusedMissedTurnsForm extends BaseForm
         ],
         'amount' => [
             'type' => 'number',
+            'label' => 'Set To',
             'default' => 1,
             'min' => -100,
             'max' => 100,
@@ -26,6 +28,10 @@ class AdjustExcusedMissedTurnsForm extends BaseForm
 
     public function handleSubmit(): BaseForm
     {
+        Member::forGame($this->getValue('game_id'))->where('excusedMissedTurns', '>', 0)->update([
+            'excusedMissedTurns' => (int)$this->getValue('amount'),
+        ]);
+        $this->redirectRelative($this->request->getCurrentUri());
         return $this;
     }
 }

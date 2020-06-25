@@ -280,4 +280,31 @@ abstract class BaseForm
     {
         return $this->render();
     }
+
+    /**
+     * @return $this
+     */
+    public function redirectToSelf(): BaseForm
+    {
+        $this->redirectRelative($this->request->getCurrentUri());
+        return $this;
+    }
+
+    /**
+     * @param $message
+     * @return $this
+     */
+    public function setNotice($message) : BaseForm
+    {
+        $this->setPlaceholder('notice', $message);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotice(): string
+    {
+        return $this->getPlaceholder('notice', '');
+    }
 }

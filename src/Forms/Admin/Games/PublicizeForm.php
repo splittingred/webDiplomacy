@@ -3,6 +3,7 @@
 namespace Diplomacy\Forms\Admin\Games;
 
 use Diplomacy\Forms\BaseForm;
+use Diplomacy\Models\Game;
 use Diplomacy\Services\Request;
 
 class PublicizeForm extends BaseForm
@@ -20,6 +21,10 @@ class PublicizeForm extends BaseForm
 
     public function handleSubmit(): BaseForm
     {
+        $game = Game::find((int)$this->getValue('game_id'));
+        $game->password = null;
+        $game->save();
+        $this->redirectToSelf();
         return $this;
     }
 }

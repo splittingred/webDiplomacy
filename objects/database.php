@@ -118,8 +118,9 @@ class Database {
 			 * committed data, but /all selects/ get the latest data (having the latest data is a pretty useful
 			 * transaction-mode)
 			 */
-		$this->sql_put("SET AUTOCOMMIT=0, NAMES utf8, time_zone = '+0:00'");
-		$this->sql_put("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED"); // Changed from READ COMMITTED which was causing too many deadlocks; use LOCK IN SHARE MODE when the latest query is needed instead
+		// Commenting these out as this interferes with Eloquent's ability to do anything
+        //$this->sql_put("SET AUTOCOMMIT=0, NAMES utf8, time_zone = '+0:00'");
+		//$this->sql_put("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED"); // Changed from READ COMMITTED which was causing too many deadlocks; use LOCK IN SHARE MODE when the latest query is needed instead
 	}
 
 	/**
