@@ -1,42 +1,38 @@
-<form method="post" action="/games/new" class="new-game-form">
-    {% include 'common/notice.twig' with { notice: notice } %}
+{{ fields.new_game|raw }}
+{{ fields.name|raw }}
+{{ fields.bet|raw }}
+{{ fields.phase_minutes|raw }}
+{{ fields.phase_switch_period|raw }}
+{{ fields.next_phase_minutes|raw }}
+{{ fields.join_period|raw }}
+{{ fields.press_type_id|raw }}
+{{ fields.variant_id|raw }}
+{{ fields.pot_type_id|raw }}
+{{ fields.anon|raw }}
 
-    {{ fields.new_game|raw }}
-    {{ fields.name|raw }}
-    {{ fields.bet|raw }}
-    {{ fields.phase_minutes|raw }}
-    {{ fields.phase_switch_period|raw }}
-    {{ fields.next_phase_minutes|raw }}
-    {{ fields.join_period|raw }}
-    {{ fields.press_type_id|raw }}
-    {{ fields.variant_id|raw }}
-    {{ fields.pot_type_id|raw }}
-    {{ fields.anon|raw }}
+<br />
 
-    <br />
+{{ fields.draw_type_id|raw }}
+{{ fields.min_rr|raw }}
+{{ fields.max_rr|raw }}
+{{ fields.excused_missed_turns|raw }}
 
-    {{ fields.draw_type_id|raw }}
-    {{ fields.min_rr|raw }}
-    {{ fields.max_rr|raw }}
-    {{ fields.excused_missed_turns|raw }}
-
-    <div class="row">
-        <div class="col-md-6">
-            <img src="/images/icons/lock.png" alt="Private" />
-            <label for="ng-password">Add Invite Code (optional):</label>
-            <input type="password" autocomplete="off" name="newGame[password]" value="" size="20" id="ng-password" class="{{ fields.password.cssCls }}" />
-        </div>
-
-        <div class="col-md-6">
-            <img src="/images/icons/lock.png" alt="Private" />
-            <label for="ng-password-confirm">Confirm Invite Code:</label>
-            <input autocomplete="off" type="password" name="newGame[password_confirmation]" value="" size="20" id="ng-password-confirm" class="{{ fields.password_confirmation.cssCls }}" />
-        </div>
+<div class="row">
+    <div class="col-md-6">
+        <img src="/images/icons/lock.png" alt="Private" />
+        <label for="ng-password">Add Invite Code (optional):</label>
+        <input type="password" autocomplete="off" name="newGame[password]" value="" size="20" id="ng-password" class="{{ fields.password.cssCls }}" />
     </div>
 
-    <br />
-
-    <div class="form-group">
-        <button class="btn btn-primary green-Submit" type="submit">Create Game</button>
+    <div class="col-md-6">
+        <img src="/images/icons/lock.png" alt="Private" />
+        <label for="ng-password-confirm">Confirm Invite Code:</label>
+        <input autocomplete="off" type="password" name="newGame[password_confirmation]" value="" size="20" id="ng-password-confirm" class="{{ fields.password_confirmation.cssCls }}" />
     </div>
-</form>
+</div>
+
+<br />
+
+<div class="form-group">
+    <button class="btn btn-primary green-Submit" type="submit">Create Game</button>
+</div>

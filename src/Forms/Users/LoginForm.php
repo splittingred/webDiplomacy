@@ -11,7 +11,9 @@ class LoginForm extends BaseForm
 {
     protected $template = 'forms/users/login.twig';
     protected $requestType = Request::TYPE_POST;
-    protected $submitFieldName = 'username';
+    protected $action = '/users/login';
+    protected $formCls = '';
+    protected $name = 'users-login';
     protected $fields = [
         'username' => [],
         'password' => ['type' => 'password'],

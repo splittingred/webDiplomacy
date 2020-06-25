@@ -1,15 +1,14 @@
 <?php
 namespace Diplomacy\Views\Components\Admin\Modals\Games;
 
+use Diplomacy\Forms\Admin\Games\PrivatizeForm;
+
 /**
  * @package Diplomacy\Views\Components\Admin
  */
 class PrivatizeComponent extends BaseGameFormModalComponent
 {
-    /** @var string $template */
-    protected $template = 'admin/modals/games/privatize.twig';
-    protected $modalId = 'admin-game-privatize';
-    protected $modalTitle = 'Make Private';
-    protected $modalSubmitText = 'Privatize';
-    protected $formAction = '/admin/games/:game_id/privatize';
+    protected $title = 'Make Private';
+    protected $submitText = 'Privatize';
+    protected $formClass = PrivatizeForm::class;
 }

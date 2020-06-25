@@ -1,29 +1,53 @@
+{% if game.hasDirectorAccess(user) %}
+    {{ component('Admin.Modals.Games.TogglePause', { game: game })|raw }}
+    {% if game.isPrivate %}
+        {{ component('Admin.Modals.Games.Privatize', { game: game })|raw }}
+    {% else %}
+        {{ component('Admin.Modals.Games.Publicize', { game: game })|raw }}
+    {% endif %}
+    {{ component('Admin.Modals.Games.ForceUserIntoDisorder', { game: game })|raw }}
+    {{ component('Admin.Modals.Games.ResetProcessTime', { game: game })|raw }}
+    {{ component('Admin.Modals.Games.ProcessGameNow', { game: game })|raw }}
+    {{ component('Admin.Modals.Games.ChangePhaseLength', { game: game })|raw }}
+    {{ component('Admin.Modals.Games.ChangePressType', { game: game })|raw }}
+    {{ component('Admin.Modals.Games.ReallocateCountries', { game: game })|raw }}
+    {{ component('Admin.Modals.Games.AdjustExcusedMissedTurns', { game: game })|raw }}
+
+    {# Admin-only actions #}
+    {% if user.isAdmin %}
+        {{ component('Admin.Modals.Games.RestoreFromBackup', { game: game })|raw }}
+    {% endif %}
+    {% if user.isSeniorModerator %}
+        {{ component('Admin.Modals.Games.ForceDraw', { game: game })|raw }}
+    {% endif %}
+{% endif %}
+
 <div class="float-right">
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="admin-game-menu-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Admin
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            {% if game.hasDirectorAccess(user) %}
-                {{ component('Admin.Modals.Games.TogglePause', { game: game })|raw }}
-                {% if game.isPrivate %}
-                    {{ component('Admin.Modals.Games.Privatize', { game: game })|raw }}
-                {% else %}
-                    {{ component('Admin.Modals.Games.Publicize', { game: game })|raw }}
-                {% endif %}
-                {{ component('Admin.Modals.Games.ForceUserIntoDisorder', { game: game })|raw }}
-                {{ component('Admin.Modals.Games.ResetProcessTime', { game: game })|raw }}
-                {{ component('Admin.Modals.Games.ProcessGameNow', { game: game })|raw }}
-                {{ component('Admin.Modals.Games.ChangePhaseLength', { game: game })|raw }}
-                {{ component('Admin.Modals.Games.ChangePressType', { game: game })|raw }}
-                {{ component('Admin.Modals.Games.ReallocateCountries', { game: game })|raw }}
-                {{ component('Admin.Modals.Games.AdjustExcusedMissedTurns', { game: game })|raw }}
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-togglepause">Toggle Pause</a>
+            {% if game.isPrivate %}
+                <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-privatize">Privatize</a>
+            {% else %}
+                <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-publicize">Publicize</a>
+            {% endif %}
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-forceuserintodisorder">Force User CD</a>
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-resetprocesstime">Reset Process Time</a>
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-processgamenow">Process Game Now</a>
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-changephaselength">Change Phase Length</a>
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-reallocatecountries">Reallocate Countries</a>
+            <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-adjustexcusedmissedturns">Adjust Excused Missed Turns</a>
+            {% if user.isAdmin %}
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-restorefrombackup">Restore From Backup</a>
+            {% endif %}
 
-                {# Admin-only actions #}
-                {% if user.isAdmin %}
-                    <div class="dropdown-divider"></div>
-                    {{ component('Admin.Modals.Games.RestoreFromBackup', { game: game })|raw }}
-                {% endif %}
+            {% if user.isSeniorModerator %}
+               <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#modals-games-forcedraw">Force Draw</a>
             {% endif %}
         </div>
     </div>

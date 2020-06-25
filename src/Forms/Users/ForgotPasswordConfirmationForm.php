@@ -10,7 +10,9 @@ class ForgotPasswordConfirmationForm extends BaseForm
 {
     protected $template = 'forms/users/forgot-password-confirmation.twig';
     protected $requestType = Request::TYPE_POST;
-    protected $submitFieldName = 'user_id';
+    protected $action = '/users/forgot-confirmation';
+    protected $formCls = '';
+    protected $name = 'users-forgot-password-confirmation';
     protected $fields = [
         'user_id' => [],
         'old_password' => ['type' => 'password'],

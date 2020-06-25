@@ -13,7 +13,9 @@ class NewForm extends BaseForm
 {
     protected $template = 'forms/games/new_game_form.twig';
     protected $requestType = Request::TYPE_POST;
-    protected $submitFieldName = 'new_game';
+    protected $action = '/games/new';
+    protected $name = 'games-new';
+    protected $formCls = 'new-game-form';
     protected $fields = [
         'new_game' => [
             'type' => 'hidden',

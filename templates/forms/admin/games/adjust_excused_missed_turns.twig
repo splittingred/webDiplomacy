@@ -3,6 +3,7 @@
     If a user's value drops below 0, it will remain at 0.
 </p>
 
+{{ fields.game_id|raw }}
 
 <div class="form-group">
     <label for="admin-game-adjust-excused-missed-turns-user-id" class="col-form-label">User:</label>
@@ -15,8 +16,5 @@
         {% endfor %}
     </select>
 
-    <div class="form-group">
-        <label for="admin-game-adjust-excused-missed-turns-amount">Amount:</label>
-        <input type="number" name="amount" value="1" class="form-control" />
-    </div>
+    {{ fields.amount|raw }}
 </div>

@@ -1,6 +1,6 @@
-<p>
-    Alter which player has which country.
-</p>
+<p>Alter which player has which country.</p>
+
+{{ fields.game_id|raw }}
 
 {% for member in game.members %}
     {% if member.isAssigned %}
@@ -13,7 +13,7 @@
         </div>
         <div class="col-md-6 ml-auto">
             <select name="countries[{{ member.id }}]" id="admin-game-reallocate-countries-{{ member.id }}" class="form-control">
-            {% for country in countries %}
+            {% for country in game.countries %}
                 <option value="{{ country.id }}"{% if country.id == member.country.id %} selected="selected"{% endif %}>{{ country.name }}</option>
             {% endfor %}
             </select>

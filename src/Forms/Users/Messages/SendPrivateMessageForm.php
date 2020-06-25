@@ -9,7 +9,9 @@ class SendPrivateMessageForm extends BaseForm
 {
     protected $template = 'forms/users/messages/send_pm.twig';
     protected $requestType = Request::TYPE_POST;
-    protected $submitFieldName = 'new_user_pm';
+    protected $action = '/users/messages#messagebox';
+    protected $formCls = '';
+    protected $name = 'users-new-pm';
     protected $nestedIn = 'new_user_pm';
     protected $id = 'new-user-pm';
     protected $fields = [

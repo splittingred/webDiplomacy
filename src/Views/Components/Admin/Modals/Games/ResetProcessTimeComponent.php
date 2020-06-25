@@ -1,15 +1,14 @@
 <?php
 namespace Diplomacy\Views\Components\Admin\Modals\Games;
 
+use Diplomacy\Forms\Admin\Games\ResetProcessTimeForm;
+
 /**
  * @package Diplomacy\Views\Components\Admin
  */
 class ResetProcessTimeComponent extends BaseGameFormModalComponent
 {
-    /** @var string $template */
-    protected $template = 'admin/modals/games/reset_process_time.twig';
-    protected $modalId = 'admin-game-reset-process-time';
-    protected $modalTitle = 'Reset Process Time';
-    protected $modalSubmitText = 'Reset';
-    protected $formAction = '/admin/games/:game_id/processing/reset';
+    protected $title = 'Reset Process Time';
+    protected $submitText = 'Reset';
+    protected $formClass = ResetProcessTimeForm::class;
 }

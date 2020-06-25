@@ -1,15 +1,14 @@
 <?php
 namespace Diplomacy\Views\Components\Admin\Modals\Games;
 
+use Diplomacy\Forms\Admin\Games\RestoreFromBackupForm;
+
 /**
  * @package Diplomacy\Views\Components\Admin
  */
 class RestoreFromBackupComponent extends BaseGameFormModalComponent
 {
-    /** @var string $template */
-    protected $template = 'admin/modals/games/restore.twig';
-    protected $formAction = '/admin/games/:game_id/restore';
-    protected $modalTitle = 'Restore from Backup';
-    protected $modalId = 'admin-game-restore';
-    protected $modalSubmitText = 'Restore';
+    protected $title = 'Restore from Backup';
+    protected $submitText = 'Restore';
+    protected $formClass = RestoreFromBackupForm::class;
 }

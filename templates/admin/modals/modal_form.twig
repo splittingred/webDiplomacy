@@ -1,24 +1,19 @@
-{% if show_link %}
-<a class="dropdown-item" href="javascript:" data-toggle="modal" data-target="#{{ id }}">{{ link_title }}</a>
-{% endif %}
 <div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="{{ id }}-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form action="{{ action }}" method="{{ method }}">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="{{ id }}-label">{{ title }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    {{ form|raw }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ close_text }}</button>
-                    <button type="submit" class="btn btn-primary">{{ submit_text }}</button>
-                </div>
-            </form>
+            <div class="modal-header">
+                <h5 class="modal-title" id="{{ id }}-label">{{ title }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ form|raw }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ close_text }}</button>
+                <button type="submit" class="btn btn-primary" id="{{ id }}-modal-submit" onclick="!this.form && document.getElementById('{{ form_id }}').submit(); return false;">{{ submit_text }}</button>
+            </div>
         </div>
     </div>
 </div>

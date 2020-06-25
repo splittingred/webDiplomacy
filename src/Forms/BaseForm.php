@@ -24,15 +24,19 @@ abstract class BaseForm
     /** @var array */
     protected $fields = [];
     /** @var string */
-    protected $submitFieldName = 'newGame';
+    protected $name = '';
     /** @var string $id */
-    protected $id = '';
-    /** @var string */
+    public $id = '';
+    /** @var string $nestedIn */
     protected $nestedIn = '';
-    /** @var string */
+    /** @var string $requestType */
     protected $requestType = Request::TYPE_POST;
-    /** @var array */
+    /** @var array $onSubmissionCallbacks */
     protected $onSubmissionCallbacks = [];
+    /** @var string $action */
+    protected $action = '';
+    /** @var string $formCls */
+    protected $formCls = '';
 
     /** @var Validator  */
     protected $validator;
@@ -68,7 +72,7 @@ abstract class BaseForm
         $this->buildFields($validatorFactory, $defaultValues);
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
 
     }
@@ -120,12 +124,41 @@ abstract class BaseForm
         $this->setPlaceholders([
             'id'                => $this->id,
             'fields'            => $this->getFields(),
-            'submitFieldName'   => $this->submitFieldName,
+            'name'              => $this->name,
+            'action'            => $this->getAction(),
+            'method'            => $this->requestType,
+            'formCls'           => $this->formCls,
             'nestedIn'          => $this->nestedIn,
+            'current_uri'       => $this->request->getCurrentUri(),
         ]);
-        $output = $this->renderer->render($this->template, $this->placeholders);
+        $notice = $this->getPlaceholder('notice', false);
+        $output = $this->renderer->render('common/form_wrapper.twig', [
+            'id' => $this->id,
+            'name' => $this->name,
+            'action' => $this->getAction(),
+            'method' => $this->requestType,
+            'notice' => !empty($notice) ? $this->renderer->render('common/notice.twig', ['notice' => $notice]) : '',
+            'cls' => $this->getFormCssCls(),
+            'content' => $this->renderer->render($this->template, $this->placeholders),
+        ]);
         $this->afterRender();
         return $output;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormCssCls(): string
+    {
+        return !empty($this->formCls) ? $this->formCls : 'form';
+    }
+
+    /**
+     * @return string
+     */
+    public function getAction(): string
+    {
+        return !empty($this->action) ? $this->action : $this->request->getCurrentUri();
     }
 
     /**
@@ -183,7 +216,7 @@ abstract class BaseForm
      */
     public function isSubmitted() : bool
     {
-        return !$this->request->isEmpty($this->submitFieldName, $this->requestType);
+        return !empty($this->name) && $this->request->get('form', '', $this->requestType) == $this->name;
     }
 
     /**
@@ -222,6 +255,7 @@ abstract class BaseForm
         $values = array_merge(array_map(function($f) {
             return array_key_exists('default', $f) ? $f['default'] : null;
         }, $this->fields), $defaultValues);
+
 
         if ($this->isSubmitted()) {
             $postValues = $this->request->getParameters($this->requestType);

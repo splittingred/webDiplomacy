@@ -69,6 +69,14 @@ class User
     /**
      * @return bool
      */
+    public function isSeniorModerator(): bool
+    {
+        return $this->hasRole([static::ROLE_SENIOR_MODERATOR, static::ROLE_ADMIN]);
+    }
+
+    /**
+     * @return bool
+     */
     public function isForumModerator(): bool
     {
         return $this->hasRole([static::ROLE_FORUM_MODERATOR, static::ROLE_ADMIN]);

@@ -1,14 +1,12 @@
-<form action="/users/login" method="post">
-    {% include 'common/notice.twig' with { notice: notice } %}
-    <div class="form-group">
-        <label for="login-username">Username</label>
-        <input type="text" tabindex="1" maxlength="30" class="form-control" name="username" id="login-username" value="{{ values.username }}"/>
-    </div>
+<div class="form-group">
+    <label for="login-username">Username</label>
+    <input type="text" tabindex="1" maxlength="30" class="form-control" name="username" id="login-username" value="{{ values.username }}"/>
+</div>
 
-    <div class="form-group">
-        <label for="login-password">Password</label>
-        <input type="password" tabindex="2" maxlength="30" class="form-control" name="password" />
-    </div>
+<div class="form-group">
+    <label for="login-password">Password</label>
+    <input type="password" tabindex="2" maxlength="30" class="form-control" name="password" />
+</div>
 
 {#    <div class="form-check custom-control custom-checkbox">#}
 {#        <input type="checkbox" name="remember_me" id="login-remember-me" tabindex="3" class="form-check-input" />#}
@@ -16,5 +14,4 @@
 {#        <small class="form-text text-muted">Do you want to stay logged in permanently? Do not use on a public computer!</small>#}
 {#    </div>#}
 
-    <button type="submit" class="btn btn-primary green-Submit" tabindex="4">Log in</button>
-</form>
+<button type="submit" class="btn btn-primary green-Submit" tabindex="4">Log in</button>

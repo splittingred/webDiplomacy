@@ -1,9 +1,10 @@
+{{ fields.game_id|raw }}
+
 <p>
     Force a user into Civil Disorder for game "{{ game.name }}".<br />
     Forced CDs do not count against the player's RR. <br />
     If the game has not started yet the user will be removed from the game entirely, and if they were the only user in the game, the game will be cancelled.
 </p>
-
 
 <div class="form-group">
     <label for="admin-game-force-user-cd-user-id" class="col-form-label">User:</label>

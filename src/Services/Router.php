@@ -25,7 +25,7 @@ class Router
         $this->router->set404('IntroController@handle');
 
         /* game view */
-        $this->router->get('games/(\d+)/view', function($gameId) {
+        $this->router->all('games/(\d+)/view', function($gameId) {
             \Diplomacy\Controllers\Games\View\IndexController::handle(['id' => (int)$gameId]);
         });
         $this->router->get('games/(\d+)', function($gameId) {

@@ -10,6 +10,9 @@ class SearchForm extends BaseForm
 {
     protected $template = 'forms/games/search_form.twig';
     protected $requestType = Request::TYPE_GET;
+    protected $action = '/games/search#results';
+    protected $name = 'games-search';
+    protected $formCls = 'advancedSearch';
     protected $fields = [
         'status'            => [
             'default' => 'all'

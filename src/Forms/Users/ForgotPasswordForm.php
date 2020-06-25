@@ -10,7 +10,9 @@ class ForgotPasswordForm extends BaseForm
 {
     protected $template = 'forms/users/forgot-password.twig';
     protected $requestType = Request::TYPE_POST;
-    protected $submitFieldName = 'username';
+    protected $action = '/users/forgot';
+    protected $formCls = '';
+    protected $name = 'users-forgot-password';
     protected $fields = [
         'username' => [],
     ];

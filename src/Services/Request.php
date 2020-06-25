@@ -26,6 +26,14 @@ class Request
     }
 
     /**
+     * @return string
+     */
+    public function getCurrentUri(): string
+    {
+        return $_SERVER['REQUEST_URI'];
+    }
+
+    /**
      * @param string $k
      * @param null $default
      * @param string $type

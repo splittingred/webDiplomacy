@@ -1,104 +1,102 @@
 <div class="gameCreateShow search-form">
-    <form class="advancedSearch" method="get" action="/games/search#results">
+    <div class="form-group">
+        <label for="sf-status">Game Status:</label>
+        <select name="status" id="sf-status" class="gameCreate form-control">
+            {% for opt, text in game_statuses %}
+                <option value="{{ opt }}"{% if opt == values.status %} selected="selected"{% endif %}>{{ text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="sf-user-games">My Games:</label>
+        <select name="user_games" id="sf-user-games" class="gameCreate form-control">
+            <option{% if user_games == 'all' %} selected="selected"{% endif %} value="all">All Games</option>
+            <option{% if user_games == 'include' %} selected="selected"{% endif %} value="include">My Games</option>
+        </select>
+    </div>
+
+    {% if values.tournament_id > 0 %}
         <div class="form-group">
-            <label for="sf-status">Game Status:</label>
-            <select name="status" id="sf-status" class="gameCreate form-control">
-                {% for opt, text in game_statuses %}
-                    <option value="{{ opt }}"{% if opt == values.status %} selected="selected"{% endif %}>{{ text }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="sf-user-games">My Games:</label>
-            <select name="user_games" id="sf-user-games" class="gameCreate form-control">
-                <option{% if user_games == 'all' %} selected="selected"{% endif %} value="all">All Games</option>
-                <option{% if user_games == 'include' %} selected="selected"{% endif %} value="include">My Games</option>
-            </select>
-        </div>
-
-        {% if values.tournament_id > 0 %}
-            <div class="form-group">
-                <label for="sf-round">Round:</label>
-                <select name="round" id="sf-round" class="gameCreate form-control">
-                <option value="all" {% if values.round == 'all' %} selected="selected"{% endif %}>All</option>
-                {% for i in range(1, tournament_rounds) %}
-                    <option value="{{ i }}"{% if values.round == i %} selected="selected"{% endif%}>
-                        {{ i }}
-                    </option>
-                {% endfor %}
-                </select>
-            </div>
-        {% else %}
-            <div class="form-group">
-                <label for="sf-joinable">Joinable Games:</label>
-                <select name="joinable" id="sf-joinable" class="gameCreate form-control">
-                    {% for opt, text in joinable_options %}
-                        <option value="{{ opt }}"{% if opt == values.joinable %} selected="selected"{% endif %}>{{ text }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        {% endif %}
-
-        <div class="form-group">
-            <label for="sf-privacy">Privacy:</label>
-            <select name="privacy" id="sf-privacy" class="gameCreate form-control">
-                {% for opt, text in privacy_options %}
-                    <option value="{{ opt }}"{% if opt == values.privacy %} selected="selected"{% endif %}>{{ text }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        {{ fields.pot_type|raw }}
-
-        {{ fields.draw_votes|raw }}
-
-        {{ fields.variant|raw }}
-
-        <div class="form-group">
-            <label for="sf-excused-turns">Excused Missing Turns:</label>
-            <select name="excused_turns" id="sf-excused-turns" class="gameCreate form-control">
-                {% for i in -1..5 %}
-                <option value="{{ i }}"{% if values.excused_turns == i %} selected="selected"{% endif%}>
-                    {% if i == -1 %}All{% else %}{{ i }}{% endif %}
+            <label for="sf-round">Round:</label>
+            <select name="round" id="sf-round" class="gameCreate form-control">
+            <option value="all" {% if values.round == 'all' %} selected="selected"{% endif %}>All</option>
+            {% for i in range(1, tournament_rounds) %}
+                <option value="{{ i }}"{% if values.round == i %} selected="selected"{% endif%}>
+                    {{ i }}
                 </option>
+            {% endfor %}
+            </select>
+        </div>
+    {% else %}
+        <div class="form-group">
+            <label for="sf-joinable">Joinable Games:</label>
+            <select name="joinable" id="sf-joinable" class="gameCreate form-control">
+                {% for opt, text in joinable_options %}
+                    <option value="{{ opt }}"{% if opt == values.joinable %} selected="selected"{% endif %}>{{ text }}</option>
                 {% endfor %}
             </select>
         </div>
+    {% endif %}
 
-        {{ fields.anonymity|raw }}
+    <div class="form-group">
+        <label for="sf-privacy">Privacy:</label>
+        <select name="privacy" id="sf-privacy" class="gameCreate form-control">
+            {% for opt, text in privacy_options %}
+                <option value="{{ opt }}"{% if opt == values.privacy %} selected="selected"{% endif %}>{{ text }}</option>
+            {% endfor %}
+        </select>
+    </div>
 
-        {{ fields.phase_length_min|raw }}
-        {{ fields.phase_length_max|raw }}
+    {{ fields.pot_type|raw }}
 
-        {{ fields.rr_min|raw }}
-        {{ fields.rr_max|raw }}
+    {{ fields.draw_votes|raw }}
 
-        {{ fields.bet_min|raw }}
-        {{ fields.bet_max|raw }}
+    {{ fields.variant|raw }}
 
-        {{ fields.messaging_types|raw }}
+    <div class="form-group">
+        <label for="sf-excused-turns">Excused Missing Turns:</label>
+        <select name="excused_turns" id="sf-excused-turns" class="gameCreate form-control">
+            {% for i in -1..5 %}
+            <option value="{{ i }}"{% if values.excused_turns == i %} selected="selected"{% endif%}>
+                {% if i == -1 %}All{% else %}{{ i }}{% endif %}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
 
-        <div class="form-group">
-            <label for="sf-sort-by">Sort By:</label>
-            <select class="gameCreate form-control" name="sort_by" id="sf-sort-by">
-                {% for value, text in sort_columns %}
-                    <option{% if value == values.sort_by %} selected="selected"{% endif %} value="{{ value }}">{{ text }}</option>
-                {% endfor %}
-            </select>
-        </div>
+    {{ fields.anonymity|raw }}
 
-        <div class="form-group">
-            <label for="sf-sort-dir">Sort Direction:</label>
-            <select class="gameCreate form-control" name="sort_dir" id="sf-sort-dir">
-                <option{% if values.sort_dir == 'asc' %} selected="selected"{% endif %} value="asc">Ascending</option>
-                <option{% if values.sort_dir == 'desc' %} selected="selected"{% endif %} value="desc">Descending</option>
-            </select>
-        </div>
+    {{ fields.phase_length_min|raw }}
+    {{ fields.phase_length_max|raw }}
 
-        <div class="form-group">
-            <br />
-            <input type="submit" name="submit" class="btn btn-primary green-Submit" value="Search" />
-        </div>
-    </form>
+    {{ fields.rr_min|raw }}
+    {{ fields.rr_max|raw }}
+
+    {{ fields.bet_min|raw }}
+    {{ fields.bet_max|raw }}
+
+    {{ fields.messaging_types|raw }}
+
+    <div class="form-group">
+        <label for="sf-sort-by">Sort By:</label>
+        <select class="gameCreate form-control" name="sort_by" id="sf-sort-by">
+            {% for value, text in sort_columns %}
+                <option{% if value == values.sort_by %} selected="selected"{% endif %} value="{{ value }}">{{ text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="sf-sort-dir">Sort Direction:</label>
+        <select class="gameCreate form-control" name="sort_dir" id="sf-sort-dir">
+            <option{% if values.sort_dir == 'asc' %} selected="selected"{% endif %} value="asc">Ascending</option>
+            <option{% if values.sort_dir == 'desc' %} selected="selected"{% endif %} value="desc">Descending</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <br />
+        <input type="submit" name="submit" class="btn btn-primary green-Submit" value="Search" />
+    </div>
 </div>
