@@ -4,21 +4,26 @@ namespace Diplomacy\Controllers\Admin;
 
 use Diplomacy\Models\AdminLog;
 use Diplomacy\Models\User;
+use Diplomacy\Services\Admin\LogsService;
 use Diplomacy\Services\Request;
 
 class LogsController extends BaseController
 {
-    public $template = 'admin/logs/index.twig';
-    public $perPage = 200;
+    public string $template = 'admin/logs/index.twig';
+    public int $perPage = 200;
+    protected LogsService $logsService;
 
-    public function call()
+    public function setUp(): void
     {
-        $query = AdminLog::with('user')->orderBy('time', 'desc');
-        $total = $query->count();
-        $query->paginate($this->perPage);
+        $this->logsService = new LogsService();
+    }
+
+    public function call(): array
+    {
+        $logs = $this->logsService->search($this->perPage);
         return [
-            'logs' => $query->get(),
-            'pagination' => $this->getPagination($total),
+            'logs' => $logs,
+            'pagination' => $this->getPagination($logs->getTotal()),
         ];
     }
 }

@@ -9,12 +9,12 @@ use Diplomacy\Views\Renderer;
 
 class GameBoard
 {
-    public $game;
-    public $gameEntity;
-    public $currentUser;
+    public Game $game;
+    public GameEntity $gameEntity;
+    public ?\User $currentUser;
 
     /** @var Renderer $renderer */
-    protected $renderer;
+    protected Renderer $renderer;
 
     public function __construct(Game $game, GameEntity $gameEntity, \User $currentUser)
     {

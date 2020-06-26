@@ -12,11 +12,11 @@ class Request
     const TYPE_GET = 'get';
 
     /** @var array */
-    protected $requestVars;
+    protected array $requestVars;
     /** @var array */
-    protected $postVars;
+    protected array $postVars;
     /** @var array */
-    protected $getVars;
+    protected array $getVars;
 
     public function __construct()
     {

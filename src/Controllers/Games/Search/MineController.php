@@ -8,9 +8,9 @@ use Diplomacy\Models\Game;
 class MineController extends BaseController
 {
     use HasGamesTab;
-    public $template = 'pages/games/list/mine.twig';
+    public string $template = 'pages/games/list/mine.twig';
 
-    public function call()
+    public function call(): array
     {
         if (!$this->currentUser->isAuthenticated()) { $this->redirectRelative('/'); exit(); }
 

@@ -1,28 +1,31 @@
 <div class="content content-follow-on">
-{% include 'admin/_topnav.twig' with { current: 'logs' } %}
+    {% include 'admin/_topnav.twig' with { current: 'logs' } %}
 
-<br />
+    <br />
 
-{{ pagination|raw }}
+    {{ pagination|raw }}
 
-<table class= "modTools">
-    <thead>
-    <tr>
-        <th class="modTools">Time</th>
-        <th class="modTools">Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for log in logs %}
-    <tr>
-        <td class="modTools" style="vertical-align: top">{{ log.timeAsText()|raw }}</td>
-        <td class="modTools" style="vertical-align: top">
-            {{ log.user.username }}: <strong>{{ log.name }}</strong>:
-            {{ log.details }}
-            <br />
-            <pre>{{ log.paramsAsString() }}</pre>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+    <div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Time</th>
+            <th scope="col">Action</th>
+            <th scope="col">User</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.timeAsText()|raw }}</td>
+            <td>
+                <strong>{{ log.name }}</strong>:
+                <p>{{ log.details }}</p>
+                {% if log.params %}<pre>{{ log.paramsAsString }}</pre>{% endif %}
+            </td>
+            <td>{{ log.user.username }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
 </div>

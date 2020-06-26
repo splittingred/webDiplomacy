@@ -7,21 +7,21 @@ use Diplomacy\Forms\Users\LoginForm;
 class LoginController extends BaseController
 {
     /** @var string */
-    protected $template = 'pages/users/login.twig';
-    protected $pageTitle = 'Log on';
-    protected $pageDescription = 'Enter your webDiplomacy account username and password to log into your account.';
+    protected string $template = 'pages/users/login.twig';
+    protected string $pageTitle = 'Log on';
+    protected string $pageDescription = 'Enter your webDiplomacy account username and password to log into your account.';
 
-    protected $noticeMappings = [
+    protected array $noticeMappings = [
         'password_changed' => 'Your password has successfully been changed. Please login again.',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->makeForm(LoginForm::class);
         parent::setUp();
     }
 
-    public function call()
+    public function call(): array
     {
         return [
             'login_form' => $this->form->render(),

@@ -10,7 +10,7 @@ use Diplomacy\Models\Entities\Games\PressType;
  */
 class NoPress extends PressType
 {
-    protected $type = 'NoPress';
+    protected string $type = PressType::TYPE_NONE;
 
     public function allowPrivateMessages(): bool
     {

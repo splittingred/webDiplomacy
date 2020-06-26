@@ -9,10 +9,8 @@ namespace Diplomacy\Models\Entities\Users;
  */
 class TemporaryBan
 {
-    /** @var int $until */
-    public $until;
-    /** @var string $reason */
-    public $reason;
+    public int $until;
+    public string $reason;
 
     /**
      * @param int $until

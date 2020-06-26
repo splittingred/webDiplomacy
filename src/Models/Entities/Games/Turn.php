@@ -9,10 +9,8 @@ namespace Diplomacy\Models\Entities\Games;
  */
 class Turn
 {
-    /** @var int $id */
-    public $id;
-    /** @var string $name */
-    public $name;
+    public int $id;
+    public string $name;
 
     /**
      * @param int $id The ID of the turn

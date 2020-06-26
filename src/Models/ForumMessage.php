@@ -5,6 +5,20 @@ namespace Diplomacy\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $toUserID
+ * @property int $fromUserID
+ * @property int $timeSent
+ * @property string $message
+ * @property string $subject
+ * @property string $type
+ * @property int $replies
+ * @property int latestReplySent
+ * @property int $silenceID
+ * @property int $likeCount
+ * @package Diplomacy\Models
+ */
 class ForumMessage extends EloquentBase
 {
     protected $table = 'wD_ForumMessages';
@@ -88,6 +102,9 @@ class ForumMessage extends EloquentBase
         return $this->type == 'ThreadReply';
     }
 
+    /**
+     * @return string
+     */
     public function timeSentAsText() : string
     {
         return \libTime::text($this->timeSent);

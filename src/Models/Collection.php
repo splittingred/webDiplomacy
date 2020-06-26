@@ -12,9 +12,9 @@ class Collection implements Iterator
     /** @var array */
     protected $entities;
     /** @var int */
-    protected $total;
+    protected int $total;
     /** @var int */
-    private $position = 0;
+    private int $position = 0;
 
     /**
      * @param $entities

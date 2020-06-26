@@ -17,6 +17,11 @@ use Diplomacy\Models\Entities\Games\Turn;
 use Diplomacy\Models\Entities\User;
 use Diplomacy\Models\Entities\Tournament;
 
+/**
+ * Robust hydrated object that displays a full entity of a webDip Game
+ *
+ * @package Diplomacy\Models\Entities
+ */
 class Game
 {
     public int $id;

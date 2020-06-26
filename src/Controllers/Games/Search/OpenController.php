@@ -8,9 +8,9 @@ use Diplomacy\Models\Game;
 class OpenController extends BaseController
 {
     use HasGamesTab;
-    public $template = 'pages/games/list/open.twig';
+    public string $template = 'pages/games/list/open.twig';
 
-    public function call()
+    public function call(): array
     {
         $query = Game::joinableForUser($this->currentUser->id, $this->currentUser->points, $this->currentUser->reliabilityRating)
             ->orderBy('id', 'desc');

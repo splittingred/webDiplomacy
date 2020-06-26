@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @property int $userID
+ * @property int $gameID
+ * @property User $user
+ * @property Game $game
  * @package Diplomacy\Models
  */
 class WatchedGame extends EloquentBase
@@ -57,6 +61,4 @@ class WatchedGame extends EloquentBase
     {
         return $query->where($this->getTableName().'.userID', '=', $userId);
     }
-
-
 }

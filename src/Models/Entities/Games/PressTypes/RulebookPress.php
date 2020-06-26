@@ -10,7 +10,7 @@ use Diplomacy\Models\Entities\Games\PressType;
  */
 class RulebookPress extends PressType
 {
-    protected $type = 'RulebookPress';
+    protected string $type = PressType::TYPE_RULEBOOK;
 
     public function allowPrivateMessages(): bool
     {

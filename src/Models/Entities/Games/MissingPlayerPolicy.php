@@ -11,7 +11,7 @@ class MissingPlayerPolicy
     const TYPE_NORMAL = 'normal';
     const TYPE_WAIT = 'wait';
 
-    protected $type;
+    protected string $type;
 
     /**
      * @param string $type Values of Normal, Strict, Wait

@@ -8,9 +8,9 @@ use Diplomacy\Models\Game;
 class ActiveController extends BaseController
 {
     use HasGamesTab;
-    public $template = 'pages/games/list/active.twig';
+    public string $template = 'pages/games/list/active.twig';
 
-    public function call()
+    public function call(): array
     {
         $query = Game::active()->orderBy('id', 'desc');
         $total = $query->count();

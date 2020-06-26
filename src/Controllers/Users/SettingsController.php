@@ -8,24 +8,24 @@ require_once 'objects/mailer.php';
 
 class SettingsController extends BaseController
 {
-    protected $template = 'pages/users/settings.twig';
-    protected $pageTitle = 'User account settings';
-    protected $pageDescription = 'Control settings for your account.';
+    protected string $template = 'pages/users/settings.twig';
+    protected string $pageTitle = 'User account settings';
+    protected string $pageDescription = 'Control settings for your account.';
 
-    protected $mailer;
-    protected $noticeMappings = [
+    protected \Mailer $mailer;
+    protected array $noticeMappings = [
         'updated' => '{{ user.username }} successfully updated.',
         'emailUpdated' => 'A validation e-mail was sent to the new address, containing a link which will confirm the e-mail change. If you don\'t see it after a few minutes check your spam folder.',
         'passwordUpdated' => 'Password updated successfully. You have been logged out and will need to login with the new password.'
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         global $Mailer;
         $this->mailer = new \Mailer();
     }
 
-    public function call()
+    public function call(): array
     {
         $variables = [
             'user' => $this->currentUser,

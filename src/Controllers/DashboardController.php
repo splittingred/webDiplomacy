@@ -7,7 +7,7 @@ use Diplomacy\Models\Game;
 use Diplomacy\Models\WatchedGame;
 use Diplomacy\Services\Games\GamesService;
 use Diplomacy\Services\Games\MembersService;
-use Diplomacy\Tournaments\Service as TournamentsService;
+use Diplomacy\Services\Tournaments\Service as TournamentsService;
 use Diplomacy\Services\Request;
 use Diplomacy\Views\Components\Games\HomePanelComponent;
 use libHome;
@@ -15,15 +15,12 @@ use libHome;
 class DashboardController extends BaseController
 {
     /** @var string */
-    protected $template = 'pages/home/index.twig';
-    /** @var TournamentsService */
-    protected $tournamentsService;
-    /** @var MembersService */
-    protected $membersService;
-    /** @var GamesService */
-    protected $gamesService;
+    protected string $template = 'pages/home/index.twig';
+    protected TournamentsService $tournamentsService;
+    protected MembersService $membersService;
+    protected GamesService $gamesService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->tournamentsService = new TournamentsService();
         $this->membersService = new MembersService();
@@ -32,7 +29,7 @@ class DashboardController extends BaseController
         \libHTML::$footerScript[] = l_jf('homeGameHighlighter').'();';
     }
 
-    public function call()
+    public function call(): array
     {
         if ($this->request->exists('submit', Request::TYPE_POST)) {
             $this->handleDisableNotices();

@@ -5,14 +5,14 @@ namespace Diplomacy\Models\Entities;
 class Tournament
 {
     /** @var int $id */
-    public $id;
+    public int $id;
     /** @var string $name */
-    public $name;
+    public string $name;
     /** @var int $totalRounds */
-    public $totalRounds;
+    public int $totalRounds;
     /** @var User $director */
-    public $director;
+    public ?User $director;
     /** @var User $coDirector */
-    public $coDirector;
+    public ?User $coDirector;
 }
 

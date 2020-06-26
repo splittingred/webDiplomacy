@@ -9,20 +9,13 @@ namespace Diplomacy\Models\Entities\Users;
  */
 class Counts
 {
-    /** @var int $civilDisorders */
-    public $civilDisorders;
-    /** @var int $civilDisordersTakenOver */
-    public $civilDisordersTakenOver;
-    /** @var int $civilDisordersDeleted */
-    public $civilDisordersDeleted;
-    /** @var int $nmrs */
-    public $nmrs;
-    /** @var int $phases */
-    public $phases;
-    /** @var int $yearlyPhases */
-    public $yearlyPhases;
-    /** @var int $games */
-    public $games;
+    public int $civilDisorders;
+    public int $civilDisordersTakenOver;
+    public int $civilDisordersDeleted;
+    public int $nmrs;
+    public int $phases;
+    public int $yearlyPhases;
+    public int $games;
 
     /**
      * @param int $civilDisorders

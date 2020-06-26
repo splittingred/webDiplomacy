@@ -6,11 +6,11 @@ use Diplomacy\Controllers\BaseController;
 
 class HelpController extends BaseController
 {
-    public $template = 'pages/help/help.twig';
-    public $pageTitle = 'Information and Links';
-    public $pageDescription = 'Links to pages with more information about webDiplomacy.';
+    public string $template = 'pages/help/help.twig';
+    public string $pageTitle = 'Information and Links';
+    public string $pageDescription = 'Links to pages with more information about webDiplomacy.';
 
-    public function call()
+    public function call(): array
     {
         return [];
     }

@@ -4,7 +4,8 @@ namespace Diplomacy\Controllers\Admin;
 
 use Diplomacy\Controllers\BaseController as Base;
 
-abstract class BaseController extends Base {
+abstract class BaseController extends Base
+{
     /**
      * Handle auth check
      */
@@ -15,5 +16,4 @@ abstract class BaseController extends Base {
         }
         parent::setDefaultPlaceholders();
     }
-
 }

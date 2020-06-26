@@ -6,6 +6,23 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @property int $id
+ * @property int $gameID
+ * @property int $userID
+ * @property int $countryID
+ * @property int $turn
+ * @property int $bet
+ * @property int $SCCount
+ * @property bool $forcedByMod
+ * @property bool $systemExcused
+ * @property bool $modExcused
+ * @property int $turnDateTime
+ * @property string $modExcusedReason
+ * @property bool $samePeriodExcused
+ * @property bool $liveGame
+ *
+ * @property Game $game
+ * @property User $user
  * @package Diplomacy\Models
  */
 class MissedTurn extends EloquentBase
@@ -16,13 +33,9 @@ class MissedTurn extends EloquentBase
     protected $table = 'wD_MissedTurns';
     protected $hidden = [];
 
-    /**
-     * @return string
-     */
-    public function getTimeText() : string
-    {
-        return \libTime::detailedText($this->turnDateTime);
-    }
+    /*****************************************************************************************************************
+     * RELATIONSHIPS
+     ****************************************************************************************************************/
 
     /**
      * @return BelongsTo
@@ -39,6 +52,10 @@ class MissedTurn extends EloquentBase
     {
         return $this->belongsTo(Game::class, 'gameID');
     }
+
+    /*****************************************************************************************************************
+     * SCOPES
+     ****************************************************************************************************************/
 
     /**
      * @param Builder $query
@@ -102,5 +119,17 @@ class MissedTurn extends EloquentBase
                 ->orWhere('samePeriodExcused', 1)
                 ->orWhere('systemExcused', 1);
         });
+    }
+
+    /*****************************************************************************************************************
+     * INSTANCE METHODS
+     ****************************************************************************************************************/
+
+    /**
+     * @return string
+     */
+    public function getTimeText() : string
+    {
+        return \libTime::detailedText($this->turnDateTime);
     }
 }

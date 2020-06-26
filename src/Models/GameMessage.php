@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use WDVariant;
 
 /**
- * @package Diplomacy\Models
  * @property int id
  * @property int timeSent
  * @property string message
@@ -15,6 +14,9 @@ use WDVariant;
  * @property int toCountryID
  * @property int fromCountryID
  * @property int gameID
+ *
+ * @property Game $game
+ * @package Diplomacy\Models
  */
 class GameMessage extends EloquentBase
 {

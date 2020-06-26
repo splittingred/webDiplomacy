@@ -11,8 +11,7 @@ class Status
     const STATUS_WON = 'won';
     const STATUS_DRAWN = 'drawn';
 
-    /** @var string $type */
-    protected $type;
+    protected string $type = 'no';
 
     /**
      * @param string $type

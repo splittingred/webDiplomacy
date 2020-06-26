@@ -12,23 +12,20 @@ use Diplomacy\Services\Request;
 
 class ContactDirectController extends BaseController
 {
-    public $template = 'pages/help/contact_direct.twig';
-    public $pageTitle = 'Contact Us';
-    public $pageDescription = 'Directly submit a support request to the moderator team.';
+    public string $template = 'pages/help/contact_direct.twig';
+    public string $pageTitle = 'Contact Us';
+    public string $pageDescription = 'Directly submit a support request to the moderator team.';
+    protected IssueFactory $issueFactory;
+    protected SubmissionService $submissionService;
 
-    /** @var IssueFactory */
-    protected $issueFactory;
-    /** @var SubmissionService */
-    protected $submissionService;
-
-    public function setUp()
+    public function setUp(): void
     {
         $this->issueFactory = new IssueFactory();
         $this->submissionService = new SubmissionService();
         parent::setUp();
     }
 
-    public function call()
+    public function call(): array
     {
         $this->handleSubmit();
         return [

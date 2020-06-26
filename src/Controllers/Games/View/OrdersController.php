@@ -9,18 +9,16 @@ use Diplomacy\Services\Games\ArchivedMovesService;
 
 class OrdersController extends BaseController
 {
-    protected $template = 'pages/games/view/orders.twig';
+    protected string $template = 'pages/games/view/orders.twig';
+    protected ArchivedMovesService $archivedMoves;
 
-    /** @var ArchivedMovesService */
-    protected $archivedMoves;
-
-    public function setUp()
+    public function setUp(): void
     {
         $this->archivedMoves = new ArchivedMovesService();
         parent::setUp();
     }
 
-    public function call()
+    public function call(): array
     {
         $moves = $this->archivedMoves->getForGame($this->game->id);
 

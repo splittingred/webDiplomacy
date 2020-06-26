@@ -1,16 +1,14 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__.'/vendor/autoload.php';
+define('IN_CODE', true);
+define('LOAD_LEGACY_BOOTSTRAP', false);
+require __DIR__ . '/src/bootstrap.php';
 
-use Illuminate\Container\Container;
-use Illuminate\Events\Dispatcher;
 use Illuminate\Console\Application;
 
-$container = new Container;
-$events = new Dispatcher($container);
-
-$artisan = new Application($container, $events, 'Version 1');
+global $app;
+$artisan = new Application($app, $app->make('events.dispatcher'), 'Version 1');
 $artisan->setName('webDiplomacy CLI');
 
 // Bind a command

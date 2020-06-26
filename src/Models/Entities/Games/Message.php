@@ -7,18 +7,12 @@ namespace Diplomacy\Models\Entities\Games;
  */
 class Message
 {
-    /** @var int $gameId */
-    public $gameId;
-    /** @var int $timeSent */
-    public $timeSent;
-    /** @var string $message */
-    public $message;
-    /** @var Turn $turn */
-    public $turn;
-    /** @var Country $toCountry */
-    public $toCountry;
-    /** @var Country $fromCountry */
-    public $fromCountry;
+    public int $gameId = 0;
+    public int $timeSent = 0;
+    public string $message = '';
+    public ?Turn $turn;
+    public ?Country $toCountry;
+    public ?Country $fromCountry;
 
     /**
      * @return string

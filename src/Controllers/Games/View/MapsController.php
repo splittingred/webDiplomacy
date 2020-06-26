@@ -8,9 +8,9 @@ use Diplomacy\Services\Games\OrdersService;
 
 class MapsController extends BaseController
 {
-    protected $template = 'pages/games/view/maps.twig';
+    protected string $template = 'pages/games/view/maps.twig';
 
-    public function call()
+    public function call(): array
     {
         return [
             'maps' => $this->getMaps(),
@@ -20,7 +20,7 @@ class MapsController extends BaseController
     /**
      * @return array
      */
-    protected function getMaps()
+    protected function getMaps(): array
     {
         $maps = [];
         for ($i = $this->game->turn; $i >= 0; $i--)

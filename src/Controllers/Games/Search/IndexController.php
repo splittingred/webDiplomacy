@@ -16,20 +16,17 @@ class IndexController extends BaseController
 {
     use HasGamesTab;
 
-    public $template = 'pages/games/list/search.twig';
-    /** @var SearchForm */
-    protected $searchForm;
-    /** @var SearchService */
-    protected $searchService;
+    public string $template = 'pages/games/list/search.twig';
+    protected SearchService $searchService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->makeForm(SearchForm::class);
         $this->searchService = new SearchService();
         parent::setUp();
     }
 
-    public function call()
+    public function call(): array
     {
         $collection = $this->getGames($this->form);
         return [

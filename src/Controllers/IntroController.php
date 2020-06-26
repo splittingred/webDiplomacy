@@ -7,11 +7,11 @@ use libHome;
 class IntroController extends BaseController
 {
     /** @var string */
-    protected $template = 'pages/home/intro.twig';
-    protected $footerScripts = ['homeGameHighlighter();'];
-    protected $footerIncludes = ['home.js'];
+    protected string $template = 'pages/home/intro.twig';
+    protected array $footerScripts = ['homeGameHighlighter();'];
+    protected array $footerIncludes = ['home.js'];
 
-    public function call()
+    public function call(): array
     {
         return [
             'globalInfo' => libHome::globalInfo()

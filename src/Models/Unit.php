@@ -6,21 +6,23 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @property int $id
+ * @property string $type
+ * @property int $terrID
+ * @property int $countryID
+ * @property int $gameID
+ *
+ * @property Territory $territory
+ * @property Game $game
  * @package Diplomacy\Models
  */
 class Unit extends EloquentBase
 {
     protected $table = 'wD_Units';
 
-    /**
-     * @param Builder $query
-     * @param int $gameId
-     * @return Builder
-     */
-    public function scopeForGame(Builder $query, int $gameId) : Builder
-    {
-        return $query->where('gameID', '=', $gameId);
-    }
+    /*****************************************************************************************************************
+     * RELATIONSHIPS
+     ****************************************************************************************************************/
 
     /**
      * @return BelongsTo
@@ -37,4 +39,22 @@ class Unit extends EloquentBase
     {
         return $this->belongsTo(Territory::class, 'terrID');
     }
+
+    /*****************************************************************************************************************
+     * SCOPES
+     ****************************************************************************************************************/
+
+    /**
+     * @param Builder $query
+     * @param int $gameId
+     * @return Builder
+     */
+    public function scopeForGame(Builder $query, int $gameId) : Builder
+    {
+        return $query->where('gameID', '=', $gameId);
+    }
+
+    /*****************************************************************************************************************
+     * INSTANCE METHODS
+     ****************************************************************************************************************/
 }

@@ -9,11 +9,15 @@ use Diplomacy\Models\Entities\Games\PlayersTypes\Mixed;
 
 abstract class PlayersType
 {
+    const TYPE_MEMBERS = 'members';
+    const TYPE_MEMBERS_VS_BOTS = 'members-vs-bots';
+    const TYPE_MIXED = 'mixed';
+
     abstract public function getLongName() : string;
     abstract public function hasBots(): bool;
 
     /**
-     * @param $type
+     * @param string $type
      * @return Members|MemberVsBots|Mixed
      * @throws InvalidTypeException
      */
@@ -21,13 +25,13 @@ abstract class PlayersType
     {
         $instance = null;
         switch (strtolower($type)) {
-            case 'members':
+            case static::TYPE_MEMBERS:
                 $instance = new Members();
                 break;
-            case 'member-vs-bots':
+            case static::TYPE_MEMBERS_VS_BOTS:
                 $instance = new MemberVsBots();
                 break;
-            case 'mixed':
+            case static::TYPE_MIXED:
                 $instance = new Mixed();
                 break;
             default:

@@ -13,17 +13,12 @@ class Processing
     const STATUS_PAUSED = 'paused';
     const TIME_NOW_TEXT = 'Now';
 
-    /** @var string $status */
-    protected $status;
-    /** @var int $time */
-    protected $time;
-    /** @var int $phaseMinutes */
-    protected $phaseMinutes;
-    /** @var int $pauseTimeRemaining */
-    protected $pauseTimeRemaining;
+    protected string $status = 'not-processing';
+    protected int $time = 0;
+    protected int $phaseMinutes = 60;
+    protected int $pauseTimeRemaining = 0;
 
     /**
-     *
      * @param string $status Values of 'Not-processing','Processing','Crashed','Paused'
      * @param int $time processing time
      * @param int $pauseTimeRemaining

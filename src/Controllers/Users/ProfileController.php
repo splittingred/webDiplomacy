@@ -8,21 +8,18 @@ use Diplomacy\Services\Users\RankingsService;
 
 class ProfileController extends BaseController
 {
-    /** @var string $template */
-    protected $template = 'pages/users/profile.twig';
-    /** @var GameMessagesService $gameMessagesService */
-    protected $gameMessagesService;
-    /** @var RankingsService $rankingsService */
-    protected $rankingsService;
+    protected string $template = 'pages/users/profile.twig';
+    protected GameMessagesService $gameMessagesService;
+    protected RankingsService $rankingsService;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->gameMessagesService = new GameMessagesService();
         $this->rankingsService = new RankingsService();
     }
 
-    public function call()
+    public function call(): array
     {
         $rankings = $this->rankingsService->getForUser($this->user);
         return [

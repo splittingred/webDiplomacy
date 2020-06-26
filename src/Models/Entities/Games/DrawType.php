@@ -8,8 +8,7 @@ use Diplomacy\Models\Entities\Games\DrawTypes\InvalidTypeException;
 
 abstract class DrawType
 {
-    /** @var string $type */
-    protected $type;
+    protected string $type;
 
     /**
      * @param string $type

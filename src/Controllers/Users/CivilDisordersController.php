@@ -5,19 +5,16 @@ use Diplomacy\Services\Users\ReliabilityService;
 
 class CivilDisordersController extends BaseController
 {
-    /** @var string  */
-    protected $template = 'pages/users/civil-disorders.twig';
+    protected string $template = 'pages/users/civil-disorders.twig';
+    protected ReliabilityService $reliabilityService;
 
-    /** @var ReliabilityService */
-    protected $reliabilityService;
-
-    public function setUp()
+    public function setUp(): void
     {
         $this->reliabilityService = new ReliabilityService();
         parent::setUp();
     }
 
-    public function call()
+    public function call(): array
     {
         return array_merge($this->reliabilityService->forUser($this->user),[
            'missed_turns' => $this->getMissedTurns(),

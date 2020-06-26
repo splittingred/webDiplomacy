@@ -6,6 +6,16 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @property int $gameID
+ * @property int $userID
+ * @property int $countryID
+ * @property int $turn
+ * @property int $bet
+ * @property int $SCCount
+ * @property bool $forcedByMod
+ *
+ * @property Game $game
+ * @property User $user
  * @package Diplomacy\Models
  */
 class CivilDisorder extends EloquentBase

@@ -24,19 +24,17 @@
 
 use Diplomacy\Controllers\DashboardController;
 use Diplomacy\Controllers\IntroController;
-use Diplomacy\Controllers\Users\NoticesController;
 use Diplomacy\Services\Router;
 
-require_once('header.php');
-require_once(l_r('lib/message.php'));
-require_once(l_r('objects/game.php'));
-require_once(l_r('gamepanel/gamehome.php'));
-require_once(l_r('lib/libHome.php'));
+require_once dirname(__FILE__) . '/header.php';
+require_once ROOT_PATH . 'lib/message.php';
+require_once ROOT_PATH . 'objects/game.php';
+require_once ROOT_PATH . 'gamepanel/gamehome.php';
+require_once ROOT_PATH . 'lib/libHome.php';
 
 if (!empty($_REQUEST['q']))
 {
-    $router = new Router();
-    $router->route();
+    (new Router())->route();
 }
 else
 {

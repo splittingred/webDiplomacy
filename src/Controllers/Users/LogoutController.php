@@ -8,20 +8,19 @@ use Diplomacy\Services\Authorization\SessionHandler;
 class LogoutController extends BaseController
 {
     /** @var string */
-    protected $template = 'pages/users/logout.twig';
-    protected $pageTitle = 'Logout';
-    protected $pageDescription = '';
+    protected string $template = 'pages/users/logout.twig';
+    protected string $pageTitle = 'Logout';
+    protected string $pageDescription = '';
 
-    /** @var SessionHandler */
-    protected $sessionHandler;
+    protected SessionHandler $sessionHandler;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sessionHandler = new SessionHandler();
         parent::setUp();
     }
 
-    public function call()
+    public function call(): array
     {
         $this->sessionHandler->destroy();
         $this->redirectRelative('/');

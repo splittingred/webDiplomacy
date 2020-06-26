@@ -6,7 +6,6 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Container\Container as Container;
 use Illuminate\Support\Facades\Facade as Facade;
 use \Illuminate\Pagination\Paginator as Paginator;
-use Twig\Loader\FilesystemLoader;
 
 if (!defined('IN_CODE')) {
     http_response_code(404);
@@ -26,7 +25,9 @@ global $app;
 $app = new Container();
 $app->singleton('app', 'Illuminate\Container\Container');
 
-require_once ROOT_PATH . 'src/bootstrap_legacy.php';
+if (!defined('LOAD_LEGACY_BOOTSTRAP') || LOAD_LEGACY_BOOTSTRAP !== false) {
+    require_once ROOT_PATH . 'src/bootstrap_legacy.php';
+}
 require_once ROOT_PATH . 'global/definitions.php';
 require_once ROOT_PATH . 'objects/mailer.php';
 
@@ -38,6 +39,12 @@ Facade::setFacadeApplication($app);
 $log = new Illuminate\Log\Logger(new Monolog\Logger('webDiplomacy Logger'));
 $log->pushHandler(new Monolog\Handler\StreamHandler('./log/development.log')); // TODO: make env specific
 $app->instance('logger', $log);
+
+/****************************************************************
+/* Events
+/****************************************************************/
+$eventDispatcher = new \Illuminate\Events\Dispatcher($app);
+$app->instance('events.dispatcher', $eventDispatcher);
 
 /****************************************************************
 /* Database
@@ -55,6 +62,8 @@ $capsule->addConnection([
 $capsule->setAsGlobal();
 // Setup the Eloquent ORM.
 $capsule->bootEloquent();
+// Setup the event dispatcher
+$capsule->setEventDispatcher($eventDispatcher);
 $app->instance('database.capsule', $capsule);
 $app->instance('database.connection', function($app) {
     return $app->make('database.capsule')->getConnection();

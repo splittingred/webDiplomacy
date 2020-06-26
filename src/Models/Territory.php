@@ -5,11 +5,27 @@ namespace Diplomacy\Models;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @property int $mapID
+ * @property int $id
+ * @property string $name
+ * @property string $type
+ * @property string $supply
+ * @property int $mapX
+ * @property int $mapY
+ * @property int $smallMapX
+ * @property int $smallMapY
+ * @property int $countryID
+ * @property string $coast
+ * @property int $coastParentID
  * @package Diplomacy\Models
  */
 class Territory extends EloquentBase
 {
     protected $table = 'wD_Territories';
+
+    /*****************************************************************************************************************
+     * RELATIONSHIPS
+     ****************************************************************************************************************/
 
     /**
      * @return HasMany
@@ -58,6 +74,14 @@ class Territory extends EloquentBase
     {
         return $this->hasMany(UnitDestroyIndex::class, 'terrID');
     }
+
+    /*****************************************************************************************************************
+     * SCOPES
+     ****************************************************************************************************************/
+
+    /*****************************************************************************************************************
+     * INSTANCE METHODS
+     ****************************************************************************************************************/
 
     /**
      * @return bool

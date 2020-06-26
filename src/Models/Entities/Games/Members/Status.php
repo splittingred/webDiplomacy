@@ -17,7 +17,7 @@ class Status
     const STATUS_UNASSIGNED = 'unassigned';
 
     /** @var string */
-    public $type;
+    public string $type;
 
     /**
      * @param string $type

@@ -2,9 +2,17 @@
 
 namespace Diplomacy\Models;
 
+use Diplomacy\Models\Entities\AdminLog as AdminLogEntity;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @property int $id
+ * @property string $name
+ * @property int $userId
+ * @property int $time
+ * @property string $details
+ * @property string $params
+ * @property User $user
  * @package Diplomacy\Models
  */
 class AdminLog extends EloquentBase
@@ -20,21 +28,18 @@ class AdminLog extends EloquentBase
         return $this->belongsTo(User::class, 'userID', null, 'user');
     }
 
-    public function timeAsText()
-    {
-        return \libTime::text($this->time);
-    }
-
     /**
-     * @return array
+     * @return AdminLogEntity
      */
-    public function paramsAsHash() : array
+    public function toEntity(): AdminLogEntity
     {
-        return $this->params ? unserialize($this->params) : [];
-    }
-
-    public function paramsAsString() : string
-    {
-        return print_r($this->paramsAsHash(), true);
+        $adminLog = new AdminLogEntity();
+        $adminLog->id = $this->id;
+        $adminLog->name = $this->name;
+        $adminLog->user = $this->user->toEntity();
+        $adminLog->time = $this->time;
+        $adminLog->details = $this->details;
+        $adminLog->params = isset($this->params) && !empty($this->params) ? unserialize($this->params) : [];
+        return $adminLog;
     }
 }

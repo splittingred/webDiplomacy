@@ -7,8 +7,8 @@ namespace Diplomacy\Services\Monads;
  */
 class Error
 {
-    protected $code;
-    protected $message;
+    protected string $code;
+    protected string $message;
 
     /**
      * @param string $code

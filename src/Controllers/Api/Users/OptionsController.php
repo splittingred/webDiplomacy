@@ -6,7 +6,7 @@ use Diplomacy\Controllers\BaseController;
 
 class OptionsController extends BaseController
 {
-    public function call()
+    public function call(): array
     {
         header('Content-type: application/javascript');
         if (!is_null($this->currentUser->options))
@@ -18,5 +18,6 @@ class OptionsController extends BaseController
             echo \UserOptions::defaultJS();
         }
         close();
+        return [];
     }
 }

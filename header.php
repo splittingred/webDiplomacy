@@ -30,7 +30,9 @@ if( strpos($_SERVER['PHP_SELF'], 'header.php') )
 	die("You can't view this document by itself.");
 }
 
-define('ROOT_PATH', dirname(__FILE__) . '/');
+if (!defined('ROOT_PATH')) {
+    define('ROOT_PATH', dirname(__FILE__) . '/');
+}
 
 if( !defined('IN_CODE') )
 	define('IN_CODE', 1); // A flag to tell scripts they aren't being executed by themselves

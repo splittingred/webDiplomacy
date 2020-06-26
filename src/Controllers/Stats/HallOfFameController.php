@@ -7,19 +7,17 @@ use Diplomacy\Services\Stats\HallOfFame;
 
 class HallOfFameController extends BaseController
 {
-    /** @var string */
-    protected $template = 'pages/stats/hall_of_fame.twig';
-    protected $pageTitle = 'Hall of Fame';
-    protected $pageDescription = 'The webDiplomacy hall of fame; the 100 highest ranking players on this server.';
+    protected string $template = 'pages/stats/hall_of_fame.twig';
+    protected string $pageTitle = 'Hall of Fame';
+    protected string $pageDescription = 'The webDiplomacy hall of fame; the 100 highest ranking players on this server.';
+    protected HallOfFame $hallOfFame;
 
-    protected $hallOfFame;
-
-    public function setUp()
+    public function setUp(): void
     {
         $this->hallOfFame = new HallOfFame();
     }
 
-    public function call()
+    public function call(): array
     {
         return [
             'current_user_ranking' => $this->currentUser->rankingDetails(),

@@ -13,7 +13,7 @@ trait HasPlaceholders
      * @param mixed $v
      * @return $this
      */
-    public function setPlaceholder($k,$v = null)
+    public function setPlaceholder(string $k, $v = null)
     {
         $this->placeholders[$k] = $v;
         return $this;
@@ -35,7 +35,7 @@ trait HasPlaceholders
      * @param string $k
      * @return $this
      */
-    public function unsetPlaceholder($k)
+    public function unsetPlaceholder(string $k)
     {
         unset($this->placeholders[$k]);
         return $this;
@@ -48,7 +48,7 @@ trait HasPlaceholders
      * @param mixed $default
      * @return mixed
      */
-    public function getPlaceholder($k,$default = null)
+    public function getPlaceholder(string $k, $default = null)
     {
         return array_key_exists($k,$this->placeholders) ? $this->placeholders[$k] : $default;
     }

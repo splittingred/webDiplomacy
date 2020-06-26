@@ -6,11 +6,11 @@ use Diplomacy\Controllers\BaseController;
 
 class FaqController extends BaseController
 {
-    public $template = 'pages/help/faq.twig';
-    public $pageTitle = 'webDiplomacy FAQ';
-    public $pageDescription = 'Frequently asked questions about webDiplomacy';
+    public string $template = 'pages/help/faq.twig';
+    public string $pageTitle = 'webDiplomacy FAQ';
+    public string $pageDescription = 'Frequently asked questions about webDiplomacy';
 
-    public function call()
+    public function call(): array
     {
         return [];
     }

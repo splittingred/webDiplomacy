@@ -16,21 +16,15 @@ use Diplomacy\Views\Components\Games\OrdersComponent;
 
 class IndexController extends Base
 {
-    protected $template = 'pages/games/view/index.twig';
-    protected $renderPageTitle = false;
+    protected string $template = 'pages/games/view/index.twig';
+    protected bool $renderPageTitle = false;
+    protected GamesService $gamesService;
+    protected Factory $gameFactory;
+    protected Game $game;
+    protected GameEntity $gameEntity;
+    protected ?Member $currentMember;
 
-    /** @var GamesService $gamesService */
-    protected $gamesService;
-    /** @var Factory $gameFactory */
-    protected $gameFactory;
-    /** @var Game $game */
-    protected $game;
-    /** @var GameEntity */
-    protected $gameEntity;
-    /** @var Member $currentMember */
-    protected $currentMember;
-
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->gameFactory = new Factory();
@@ -43,7 +37,7 @@ class IndexController extends Base
         $this->pageTitle = $this->game->name;
     }
 
-    public function call()
+    public function call(): array
     {
         $gameBoard = new GameBoard($this->game, $this->gameEntity, $this->currentUser);
         return [
@@ -56,7 +50,7 @@ class IndexController extends Base
         ];
     }
 
-    protected function loadGame()
+    protected function loadGame(): IndexController
     {
         $gameId = $this->request->get('id', 0, Request::TYPE_REQUEST);
         if (empty($gameId)) $this->redirectRelative('/', true);
@@ -66,12 +60,13 @@ class IndexController extends Base
 
         $this->gameEntity = $this->gameFactory->build($this->game->id);
         $this->currentMember = $this->gameEntity->members->byUser($this->currentUserEntity);
+        return $this;
     }
 
     /**
      * @return string
      */
-    protected function getForum()
+    protected function getForum(): string
     {
         $targetCountryId = $this->request->get('countryId', -1, Request::TYPE_REQUEST);
         return (string)(new ChatBoxComponent($this->gameEntity, $this->currentMember, $targetCountryId));
@@ -80,7 +75,7 @@ class IndexController extends Base
     /**
      * @return string
      */
-    protected function getOrders()
+    protected function getOrders(): string
     {
         if (!$this->gameEntity->phase->isActive()) return '';
 

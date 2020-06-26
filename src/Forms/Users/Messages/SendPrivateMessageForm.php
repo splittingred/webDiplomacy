@@ -7,13 +7,13 @@ use Diplomacy\Services\Request;
 
 class SendPrivateMessageForm extends BaseForm
 {
+    public string $id = 'new-user-pm';
     protected string $template = 'forms/users/messages/send_pm.twig';
     protected string $requestType = Request::TYPE_POST;
     protected string $action = '/users/messages#messagebox';
     protected string $formCls = '';
     protected string $name = 'users-new-pm';
     protected string $nestedIn = 'new_user_pm';
-    protected string $id = 'new-user-pm';
     protected array $fields = [
         'user_id' => [
             'type' => 'hidden',

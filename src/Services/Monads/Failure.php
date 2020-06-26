@@ -4,7 +4,12 @@ namespace Diplomacy\Services\Monads;
 
 class Failure extends Result
 {
-    public static function withError(string $code, string $message)
+    /**
+     * @param string $code
+     * @param string $message
+     * @return Failure
+     */
+    public static function withError(string $code, string $message): Failure
     {
         return new static(new Error($code, $message));
     }

@@ -2,10 +2,27 @@
 
 namespace Diplomacy\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use panelGameBoard;
 use WDVariant;
 
 /**
+ * @property int $gameID
+ * @property int $turn
+ * @property int $terrID
+ * @property int $countryID
+ * @property string $unitType
+ * @property string $success
+ * @property string $dislodged
+ * @property string $type
+ * @property int $toTerrID
+ * @property int $fromTerrID
+ * @property string $viaConvoy
+ *
+ * @property Game $game
+ * @property Territory $territory
+ * @property Territory $toTerritory
+ * @property Territory $fromTerritory
  * @package Diplomacy\Models
  */
 class ArchivedMove extends EloquentBase
@@ -20,6 +37,50 @@ class ArchivedMove extends EloquentBase
     protected $territoryName = '';
     /** @var string */
     protected $toTerritoryName = '';
+
+    /*****************************************************************************************************************
+     * RELATIONSHIPS
+     ****************************************************************************************************************/
+
+    /**
+     * @return BelongsTo
+     */
+    public function game(): BelongsTo
+    {
+        return $this->belongsTo(Game::class, 'gameID');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function territory(): BelongsTo
+    {
+        return $this->belongsTo(Territory::class, 'terrID');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function toTerritory(): BelongsTo
+    {
+        return $this->belongsTo(Territory::class, 'toTerrID');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function fromTerritory(): BelongsTo
+    {
+        return $this->belongsTo(Territory::class, 'fromTerrID');
+    }
+
+    /*****************************************************************************************************************
+     * SCOPES
+     ****************************************************************************************************************/
+
+    /*****************************************************************************************************************
+     * INSTANCE METHODS
+     ****************************************************************************************************************/
 
     /**
      * @param WDVariant $variant

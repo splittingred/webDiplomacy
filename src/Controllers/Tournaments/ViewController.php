@@ -4,23 +4,21 @@ namespace Diplomacy\Controllers\Tournaments;
 
 use Diplomacy\Controllers\BaseController;
 use Diplomacy\Models\Tournament;
-use Diplomacy\Models\TournamentScore;
 use Diplomacy\Services\Request;
-use Diplomacy\Tournaments\Service as TournamentService;
+use Diplomacy\Services\Tournaments\Service as TournamentService;
 
 class ViewController extends BaseController
 {
-    /** @var string */
-    protected $template = 'pages/tournaments/view.twig';
-    protected $pageTitle = 'webDiplomacy Tournaments';
-    protected $pageDescription = 'Information on Tournaments and Feature Game rules and setup.';
+    protected string $template = 'pages/tournaments/view.twig';
+    protected string $pageTitle = 'webDiplomacy Tournaments';
+    protected string $pageDescription = 'Information on Tournaments and Feature Game rules and setup.';
 
     /** @var TournamentService */
     protected $tournamentService;
     /** @var Tournament */
     protected $tournament;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tournamentService = new TournamentService();
     }
@@ -30,7 +28,7 @@ class ViewController extends BaseController
         $this->loadTournament();
     }
 
-    public function call()
+    public function call(): array
     {
         $this->handleSubmit();
         return [

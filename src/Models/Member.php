@@ -23,6 +23,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string orderStatus
  * @property int hideNotifications
  * @property int excusedMissedTurns
+ *
+ * @property Game $game
+ * @property User $user
  * @package Diplomacy\Models
  */
 class Member extends EloquentBase

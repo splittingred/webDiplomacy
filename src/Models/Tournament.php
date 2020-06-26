@@ -9,6 +9,23 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property string $status
+ * @property int $minRR
+ * @property int $year
+ * @property int $totalRounds
+ * @property string $forumThreadLink
+ * @property string $externalLink
+ * @property int $directorID
+ * @property int $coDirectorID
+ * @property int $firstPlace
+ * @property int $secondPlace
+ * @property int $thirdPlace
+ *
+ * @property User $director
+ * @property User $coDirector
  * @package Diplomacy\Models
  */
 class Tournament extends EloquentBase
@@ -16,6 +33,10 @@ class Tournament extends EloquentBase
     protected $table = 'wD_Tournaments';
     protected $hidden = [];
     protected $primaryKey = 'id';
+
+    /*****************************************************************************************************************
+     * RELATIONSHIPS
+     ****************************************************************************************************************/
 
     /**
      * @return HasManyThrough
@@ -68,6 +89,22 @@ class Tournament extends EloquentBase
     /**
      * @return HasMany
      */
+    public function acceptedParticipants() : HasMany
+    {
+        return $this->hasMany(TournamentParticipant::class, 'tournamentID')->inTournament();
+    }
+
+    /*****************************************************************************************************************
+     * SCOPES
+     ****************************************************************************************************************/
+
+    /*****************************************************************************************************************
+     * INSTANCE METHODS
+     ****************************************************************************************************************/
+
+    /**
+     * @return HasMany
+     */
     public function scoresOrderedByUser() : HasMany
     {
         return $this->scores()
@@ -106,14 +143,6 @@ class Tournament extends EloquentBase
     }
 
     /**
-     * @return HasMany
-     */
-    public function acceptedParticipants() : HasMany
-    {
-        return $this->hasMany(TournamentParticipant::class, 'tournamentID')->inTournament();
-    }
-
-    /**
      * @return bool
      */
     public function isRunning() : bool
@@ -137,6 +166,9 @@ class Tournament extends EloquentBase
         return $this->status != 'Registration';
     }
 
+    /**
+     * @return Entities\Tournament
+     */
     public function toEntity(): \Diplomacy\Models\Entities\Tournament
     {
         /** @var User $director */

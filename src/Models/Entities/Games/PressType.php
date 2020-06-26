@@ -10,7 +10,12 @@ use Diplomacy\Models\Entities\Games\PressTypes\RulebookPress;
 
 abstract class PressType
 {
-    protected $type;
+    const TYPE_REGULAR = 'Regular';
+    const TYPE_PUBLIC_ONLY = 'PublicPressOnly';
+    const TYPE_NONE = 'NoPress';
+    const TYPE_RULEBOOK = 'RulebookPress';
+
+    protected string $type;
 
     abstract public function getLongName() : string;
     abstract public function allowPrivateMessages(): bool;
@@ -21,20 +26,20 @@ abstract class PressType
      * @return NoPress|PublicPressOnly|Regular|RulebookPress
      * @throws InvalidTypeException
      */
-    public static function build(string $type)
+    public static function build(string $type): PressType
     {
         $instance = null;
-        switch (strtolower($type)) {
-            case 'regular':
+        switch ($type) {
+            case static::TYPE_REGULAR:
                 $instance = new Regular();
                 break;
-            case 'publicpressonly':
+            case static::TYPE_PUBLIC_ONLY:
                 $instance = new PublicPressOnly();
                 break;
-            case 'nopress':
+            case static::TYPE_NONE:
                 $instance = new NoPress();
                 break;
-            case 'rulebookpress':
+            case static::TYPE_RULEBOOK:
                 $instance = new RulebookPress();
                 break;
             default:
@@ -43,7 +48,10 @@ abstract class PressType
         return $instance;
     }
 
-    public function __toString()
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
         return $this->type;
     }

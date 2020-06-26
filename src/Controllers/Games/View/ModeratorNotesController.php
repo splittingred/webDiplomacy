@@ -6,9 +6,9 @@ use libModNotes;
 
 class ModeratorNotesController extends BaseController
 {
-    protected $template = 'pages/games/view/moderator_notes.twig';
+    protected string $template = 'pages/games/view/moderator_notes.twig';
 
-    public function call()
+    public function call(): array
     {
         require_once ROOT_PATH . 'lib/modnotes.php';
         libModNotes::checkDeleteNote();

@@ -17,11 +17,10 @@ class Phase
 
     const LIVE_THRESHOLD_MINUTES = 60;
 
-    public $name;
-    public $minutes;
-    public $nextSwitchPeriod;
-    /** @var string $type */
-    protected $type;
+    public string $name;
+    public int $minutes;
+    public int $nextSwitchPeriod;
+    protected string $type;
 
     /**
      * @param string $name 'Finished','Pre-game','Diplomacy','Retreats','Builds'

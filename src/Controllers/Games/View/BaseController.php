@@ -7,22 +7,17 @@ use Diplomacy\Services\Request;
 
 abstract class BaseController extends Base
 {
-    /** @var string  */
-    protected $template = 'pages/games/view.twig';
-
-    /** @var \WDVariant */
-    protected $variant;
-    /** @var \panelGameBoard */
-    protected $game;
-    /** @var \userMember */
-    protected $member;
+    protected string $template = 'pages/games/view.twig';
+    protected \WDVariant $variant;
+    protected \panelGameBoard $game;
+    protected \userMember $member;
 
     public function beforeRender() : void
     {
         $this->loadGame();
     }
 
-    public function call()
+    public function call(): array
     {
         return [];
     }
@@ -51,7 +46,7 @@ abstract class BaseController extends Base
         return $this->game;
     }
 
-    protected function loadCountries(\WDVariant $variant) : void
+    protected function loadCountries(\WDVariant $variant) : BaseController
     {
         $idx = 1;
         $countries = [];
@@ -60,5 +55,6 @@ abstract class BaseController extends Base
             $idx++;
         }
         $this->setPlaceholder('countries', $countries);
+        return $this;
     }
 }

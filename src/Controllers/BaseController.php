@@ -4,53 +4,39 @@ namespace Diplomacy\Controllers;
 
 use Diplomacy\Forms\BaseForm;
 use Diplomacy\Models\User;
+use Diplomacy\Models\Entities\User as UserEntity;
 use Diplomacy\Services\Request;
 use Diplomacy\Utilities\HasPlaceholders;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Log\Logger;
 use Illuminate\Validation\Factory as ValidationFactory;
 use libHTML;
 use Twig\Environment as Twig;
 use Twig\Error\Error as TwigError;
-use Illuminate\Container\Container as Container;
 
 abstract class BaseController
 {
     use HasPlaceholders;
 
     /** @var Twig */
-    protected $renderer;
-    /** @var \Database */
-    protected $database;
-    /** @var \User */
-    protected $currentUser;
-    /** @var \Diplomacy\Models\Entities\User */
-    protected $currentUserEntity;
-    /** @var Request */
-    protected $request;
-    /** @var ValidationFactory $validationFactory */
-    protected $validationFactory;
+    protected Twig $renderer;
+    protected \Database $database;
+    protected ?\User $currentUser;
+    protected ?UserEntity $currentUserEntity;
+    protected Request $request;
+    protected ValidationFactory $validationFactory;
 
-    /** @var string */
-    protected $template;
-    /** @var bool */
-    protected $renderPageTitle = true;
-    /** @var string */
-    protected $pageTitle = '';
-    /** @var string */
-    protected $pageDescription = '';
-    /** @var int */
-    protected $perPage = 10;
+    protected string $template;
+    protected bool $renderPageTitle = true;
+    protected string $pageTitle = '';
+    protected string $pageDescription = '';
+    protected int $perPage = 10;
 
-    /** @var array */
-    protected $footerIncludes = [];
-    /** @var array */
-    protected $footerScripts = [];
-    /** @var array */
-    protected $noticeMappings = [];
+    protected array $footerIncludes = [];
+    protected array $footerScripts = [];
+    protected array $noticeMappings = [];
 
-    /** @var Logger */
-    protected $logger;
+    protected Logger $logger;
+    protected ?BaseForm $form;
 
     public function __construct()
     {
@@ -67,12 +53,12 @@ abstract class BaseController
         $this->setUp();
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
 
     }
 
-    abstract public function call();
+    abstract public function call(): array;
 
     /**
      * @return string
@@ -81,9 +67,6 @@ abstract class BaseController
     {
         return $this->template;
     }
-
-    /** @var BaseForm $form */
-    protected $form;
 
     /**
      * @param string $class

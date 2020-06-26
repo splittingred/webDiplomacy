@@ -6,12 +6,22 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @property int $terrID
+ * @property int $turn
+ * @property string $standoff
+ * @property int $gameID
+ * @property int $countryID
+ *
+ * @property Game $game
+ * @property Territory $territory
  * @package Diplomacy\Models
  */
 class TerritoryStatusArchive extends EloquentBase
 {
+    use HasCompositePrimaryKey;
     protected $table = 'wD_TerrStatusArchive';
     protected $hidden = [];
+    public $primaryKey = ['gameID', 'turn'];
 
     /*****************************************************************************************************************
      * RELATIONSHIPS

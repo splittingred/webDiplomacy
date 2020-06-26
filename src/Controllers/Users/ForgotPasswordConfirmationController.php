@@ -11,29 +11,27 @@ use Diplomacy\Services\Request;
 
 class ForgotPasswordConfirmationController extends BaseController
 {
-    /** @var string */
-    protected $template = 'pages/users/forgot-password-confirmation.twig';
-    protected $pageTitle = 'Reset your password/find lost username';
-    protected $pageDescription = 'Get back into your account!';
+    protected string $template = 'pages/users/forgot-password-confirmation.twig';
+    protected string $pageTitle = 'Reset your password/find lost username';
+    protected string $pageDescription = 'Get back into your account!';
 
-    /** @var Service */
-    protected $authService;
+    protected Service $authService;
 
-    protected $noticeMappings = [
+    protected array $noticeMappings = [
         'changed' => 'Your password has successfully been changed. Please login again.',
         'invalid_old_password' => 'Incorrect old password. Please check your spelling and try again.',
         'invalid_new_password' => 'Invalid new password. Please ensure at least 8 characters long, one uppercase, and one lowercase, and try again.',
         'invalid_new_password_confirm' => 'Your new password and confirmation do not match. Please try again.',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->authService = new Service();
         $this->makeForm(ForgotPasswordConfirmationForm::class);
         parent::setUp();
     }
 
-    public function call()
+    public function call(): array
     {
         $token = $this->request->get('token', '', Request::TYPE_REQUEST);
         /** @var Result $result */

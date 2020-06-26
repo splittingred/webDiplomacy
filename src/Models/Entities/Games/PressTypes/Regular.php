@@ -10,7 +10,7 @@ use Diplomacy\Models\Entities\Games\PressType;
  */
 class Regular extends PressType
 {
-    protected $type = 'Regular';
+    protected string $type = PressType::TYPE_REGULAR;
 
     public function allowPrivateMessages(): bool
     {

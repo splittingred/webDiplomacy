@@ -3,24 +3,23 @@
 namespace Diplomacy\Controllers\Games\View;
 
 use Diplomacy\Controllers\Games\View\BaseController;
+use Diplomacy\Models\Collection;
 use Diplomacy\Models\GameMessage;
 use Diplomacy\Services\Games\MessagesService;
 use Diplomacy\Services\Request;
 
 class MessagesController extends BaseController
 {
-    protected $template = 'pages/games/view/messages.twig';
+    protected string $template = 'pages/games/view/messages.twig';
+    protected MessagesService $gameMessagesService;
 
-    /** @var MessagesService */
-    protected $gameMessagesService;
-
-    public function setUp()
+    public function setUp(): void
     {
         $this->gameMessagesService = new MessagesService();
         parent::setUp();
     }
 
-    public function call()
+    public function call(): array
     {
         $filter = (int)$this->request->get('filter', -1, Request::TYPE_GET);
         if (empty($this->member)) $filter = 0;
@@ -34,7 +33,7 @@ class MessagesController extends BaseController
         ];
     }
 
-    protected function getMessages(int $filter)
+    protected function getMessages(int $filter): Collection
     {
         $memberCountryId = $this->member ? $this->member->countryID : 0;
         $messages = $this->gameMessagesService->search($this->game->id, $filter, $memberCountryId, $this->perPage);

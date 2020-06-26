@@ -4,16 +4,14 @@ namespace Diplomacy\Controllers\Tournaments;
 
 use Diplomacy\Controllers\BaseController;
 use Diplomacy\Services\Request;
-use Diplomacy\Tournaments\Service as TournamentService;
+use Diplomacy\Services\Tournaments\Service as TournamentService;
 
 class IndexController extends BaseController
 {
-    /** @var string */
-    protected $template = 'pages/tournaments/index.twig';
-    /** @var TournamentService */
-    protected $tournamentService;
+    protected string $template = 'pages/tournaments/index.twig';
+    protected TournamentService $tournamentService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tournamentService = new TournamentService();
     }

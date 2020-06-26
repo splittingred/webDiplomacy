@@ -13,54 +13,29 @@ use Diplomacy\Views\Components\Games\Members\NameComponent;
 
 class Member
 {
-    /** @var int $id */
-    public $id;
-    /** @var User $user */
-    public $user;
-    /** @var int $gameId */
-    public $gameId;
-    /** @var Country $country */
-    public $country;
-    /** @var Status $status */
-    public $status;
-    /** @var int $timeLoggedIn */
-    public $timeLoggedIn;
-    /** @var int $bet */
-    public $bet;
-    /** @var string $missedPhases */
-    public $missedPhases;
-    /** @var array $newMessagesFrom */
-    public $newMessagesFrom = [];
-    /** @var int $supplyCenterCount */
-    public $supplyCenterCount;
-    /** @var int $unitCount */
-    public $unitCount;
-    /** @var array<string> $votes */
-    public $votes = [];
-    /** @var int $pointsWon */
-    public $pointsWon;
-    /** @var int $gameMessagesSent */
-    public $gameMessagesSent;
-    /** @var OrdersState $ordersState */
-    public $ordersState;
-    /** @var boolean $hideNotifications */
-    public $hideNotifications;
-    /** @var int $excusedMissedTurns */
-    public $excusedMissedTurns;
-    /** @var int $supplyCenterTarget The target number of SCs to win for this member */
-    public $supplyCenterTarget;
-    /** @var array $mutedCountries */
-    public $mutedCountries = [];
-
-    /** @var bool $isDirector */
-    public $isDirector;
-    /** @var bool $isTournamentDirector */
-    public $isTournamentDirector;
-    /** @var bool $isTournamentCoDirector */
-    public $isTournamentCoDirector;
-
-    /** @var bool $isInGame */
-    public $isInGame = true;
+    public int $id = 0;
+    public User $user;
+    public int $gameId = 0;
+    public Country $country;
+    public Status $status;
+    public int $timeLoggedIn = 0;
+    public int $bet = 0;
+    public int $missedPhases = 0;
+    public array $newMessagesFrom = [];
+    public int $supplyCenterCount = 0;
+    public int $unitCount = 0;
+    public array $votes = [];
+    public int $pointsWon = 0;
+    public int $gameMessagesSent = 0;
+    public OrdersState $ordersState;
+    public bool $hideNotifications = false;
+    public int $excusedMissedTurns = 0;
+    public int $supplyCenterTarget = 0;
+    public array $mutedCountries = [];
+    public bool $isDirector = false;
+    public bool $isTournamentDirector = false;
+    public bool $isTournamentCoDirector = false;
+    public bool $isInGame = true;
 
     /**
      * @return bool

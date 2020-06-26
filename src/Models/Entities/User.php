@@ -22,22 +22,18 @@ class User
     const ROLE_BANNED = 'Banned';
     const ROLE_BOT = 'Bot';
 
-    public $id;
-    public $username;
-    public $email;
-    public $points;
-    public $comment;
-    public $homepage;
-    public $locale;
-    /** @var TemporaryBan $temporaryBan */
-    public $temporaryBan;
-    /** @var double $reliabilityRating */
-    public $reliabilityRating;
-    public $roles = [];
-    /** @var int $timeLastSessionEnded */
-    public $timeLastSessionEnded;
-    /** @var Counts $counts */
-    public $counts;
+    public int $id;
+    public string $username;
+    public string $email;
+    public int $points;
+    public string $comment;
+    public string $homepage;
+    public string $locale;
+    public ?TemporaryBan $temporaryBan;
+    public float $reliabilityRating;
+    public array $roles = [];
+    public int $timeLastSessionEnded;
+    public Counts $counts;
     /* some more fields and i'll get to them */
 
     /**

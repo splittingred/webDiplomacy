@@ -7,8 +7,7 @@ use \Bramus\Router\Router as RouterService;
 
 class Router
 {
-    /** @var RouterService */
-    protected $router;
+    protected RouterService $router;
 
     public function __construct()
     {
@@ -108,10 +107,11 @@ class Router
     }
 
     /**
-     * @return void
+     * @return $this
      */
-    public function route() : void
+    public function route(): Router
     {
         $this->router->run();
+        return $this;
     }
 }

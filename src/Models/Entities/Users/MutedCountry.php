@@ -4,9 +4,9 @@ namespace Diplomacy\Models\Entities\Users;
 
 class MutedCountry
 {
-    public $countryId;
-    public $gameId;
-    public $time;
+    public int $countryId;
+    public int $gameId;
+    public int $time;
 
     public function __construct(int $countryId, int $gameId, int $time)
     {

@@ -7,15 +7,15 @@ use libHome;
 
 class NoticesController extends BaseController
 {
-    protected $template = 'pages/users/notices.twig';
-    protected $footerScripts = [
+    protected string $template = 'pages/users/notices.twig';
+    protected array $footerScripts = [
         'homeGameHighlighter();'
     ];
-    protected $footerIncludes = [
+    protected array $footerIncludes = [
         'home.js'
     ];
 
-    public function call()
+    public function call(): array
     {
         $this->currentUser->clearNotification('PrivateMessage');
         \notice::$noticesPage = true;

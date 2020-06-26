@@ -11,8 +11,7 @@ use Diplomacy\Models\Entities\Games\PotTypes\WinnerTakesAll;
 
 abstract class PotType
 {
-    /** @var int $amount */
-    public $amount;
+    public int $amount;
 
     /**
      * @param int $amount

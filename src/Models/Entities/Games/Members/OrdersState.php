@@ -32,7 +32,7 @@ class OrdersState
     const STATE_READY = 'ready'; // has saved all orders and clicked ready
 
     /** @var array $states Current states of the member */
-    public $states;
+    public array $states;
 
     /**
      * @param array $states

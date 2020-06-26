@@ -12,8 +12,8 @@ class Country
     const ALL = -1;
     const GLOBAL = 0;
 
-    public $id = self::GLOBAL;
-    public $name = 'Global';
+    public int $id = self::GLOBAL;
+    public string $name = 'Global';
 
     public function __construct(int $id, string $name)
     {

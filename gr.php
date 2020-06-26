@@ -103,5 +103,3 @@ function printTable($fp,$tbl)
     }
     $enc=$enclosure;
  }
-
-?>

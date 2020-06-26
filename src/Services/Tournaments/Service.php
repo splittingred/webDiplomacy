@@ -1,6 +1,6 @@
 <?php
 
-namespace Diplomacy\Tournaments;
+namespace Diplomacy\Services\Tournaments;
 
 use Diplomacy\Models\Collection;
 use Diplomacy\Models\Tournament;

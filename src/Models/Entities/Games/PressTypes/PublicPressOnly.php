@@ -10,7 +10,7 @@ use Diplomacy\Models\Entities\Games\PressType;
  */
 class PublicPressOnly extends PressType
 {
-    protected $type = 'PublicPressOnly';
+    protected string $type = PressType::TYPE_PUBLIC_ONLY;
 
     public function allowPrivateMessages(): bool
     {
