@@ -8,7 +8,7 @@ use Diplomacy\Forms\Admin\Games\PublicizeForm;
  */
 class PublicizeComponent extends BaseGameFormModalComponent
 {
-    protected $title = 'Make Public';
-    protected $submitText = 'Publicize';
-    protected $formClass = PublicizeForm::class;
+    protected string $title = 'Make Public';
+    protected string $submitText = 'Publicize';
+    protected string $formClass = PublicizeForm::class;
 }

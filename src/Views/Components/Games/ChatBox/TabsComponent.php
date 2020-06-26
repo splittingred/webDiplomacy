@@ -8,14 +8,10 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class TabsComponent extends BaseComponent
 {
-    protected $template = 'games/chatbox/tabs.twig';
-
-    /** @var Game $game */
-    protected $game;
-    /** @var Member|null $currentMember */
-    protected $currentMember;
-    /** @var int $targetCountryId */
-    protected $targetCountryId;
+    protected string $template = 'games/chatbox/tabs.twig';
+    protected Game $game;
+    protected ?Member $currentMember;
+    protected int $targetCountryId;
 
     /**
      * @param Game $game
@@ -26,7 +22,7 @@ class TabsComponent extends BaseComponent
     {
         $this->game = $game;
         $this->currentMember = $currentMember;
-        $this->targetCountryId = $this->targetCountryId > Country::GLOBAL && $this->targetCountryId < $this->game->getCountryCount() ? (int)$targetCountryId : Country::GLOBAL;
+        $this->targetCountryId = $targetCountryId > Country::GLOBAL && $targetCountryId < $this->game->getCountryCount() ? (int)$targetCountryId : Country::GLOBAL;
     }
 
     public function attributes(): array

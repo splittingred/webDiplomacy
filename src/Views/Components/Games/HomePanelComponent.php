@@ -13,9 +13,9 @@ use Diplomacy\Views\Components\BaseComponent;
  */
 class HomePanelComponent extends BaseComponent
 {
-    protected $template = 'games/home_panel.twig';
-    protected $game;
-    protected $currentMember;
+    protected string $template = 'games/home_panel.twig';
+    protected Game $game;
+    protected Member $currentMember;
 
     public function __construct(Game $game, Member $currentMember)
     {

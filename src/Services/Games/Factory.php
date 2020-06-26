@@ -23,11 +23,12 @@ use Diplomacy\Models\Entities\Games\PotTypes\InvalidTypeException as InvalidPotT
 use Diplomacy\Models\Entities\Games\PressTypes\InvalidTypeException as InvalidPressTypeException;
 use \Diplomacy\Models\Entities\Games\DrawTypes\InvalidTypeException as InvalidDrawTypeException;
 use Diplomacy\Models\Entities\Games\PlayersTypes\InvalidTypeException as InvalidPlayersTypeException;
+use \Misc;
 use Diplomacy\Models\Tournament;
 
 class Factory
 {
-    protected $misc;
+    protected Misc $misc;
 
     public function __construct()
     {
@@ -66,11 +67,11 @@ class Factory
 
         /** @var Tournament $tournament */
         $tournament = $game->getTournament();
-        if ($tournament) $entity->tournament = $tournament->toEntity();
+        $entity->tournament = $tournament ? $tournament->toEntity() : null;
 
         // potential value objects
-        $entity->startTime = $game->startTime;
-        $entity->finishTime = $game->finishTime;
+        $entity->startTime = (int)$game->startTime;
+        $entity->finishTime = (int)$game->finishTime;
 
         $entity->processing = new Processing(
             (string)$game->processStatus,
@@ -134,6 +135,9 @@ class Factory
             if ($entity->tournament) {
                 $member->isTournamentDirector = $entity->tournament->director && $model->userID == $entity->tournament->director->id;
                 $member->isTournamentCoDirector = $entity->tournament->coDirector && $model->userID == $entity->tournament->coDirector->id;
+            } else {
+                $member->isTournamentDirector = false;
+                $member->isTournamentCoDirector = false;
             }
 
             $member->user = $model->user->toEntity();

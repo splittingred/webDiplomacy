@@ -8,7 +8,7 @@ use Diplomacy\Forms\Admin\Games\ForceDrawForm;
  */
 class ForceDrawComponent extends BaseGameFormModalComponent
 {
-    protected $title = 'Force Draw';
-    protected $submitText = 'Force Draw';
-    protected $formClass = ForceDrawForm::class;
+    protected string $title = 'Force Draw';
+    protected string $submitText = 'Force Draw';
+    protected string $formClass = ForceDrawForm::class;
 }

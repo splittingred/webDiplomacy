@@ -19,61 +19,37 @@ use Diplomacy\Models\Entities\Tournament;
 
 class Game
 {
-    /** @var int $id */
-    public $id;
-    /** @var string $name */
-    public $name;
-    /** @var int $minimumBet */
-    public $minimumBet;
-    /** @var string $password */
-    public $password;
-    /** @var bool $anonymous */
-    public $anonymous;
-    /** @var int $attempts */
-    public $attempts;
-    /** @var int $minimumReliabilityRating */
-    public $minimumReliabilityRating;
-    /** @var int $excusedMissedTurns */
-    public $excusedMissedTurns;
-    /** @var int $startTime */
-    public $startTime;
-    /** @var int $finishTime */
-    public $finishTime;
+    public int $id;
+    public string $name;
+    public int $minimumBet;
+    public string $password;
+    public bool $anonymous;
+    public int $attempts;
+    public int $minimumReliabilityRating;
+    public int $excusedMissedTurns;
 
-    public $pauseTimeRemaining;
+    public int $startTime;
+    public int $finishTime;
+    public int $pauseTimeRemaining;
 
-    /** @var Processing $processing */
-    public $processing;
-    /** @var MissingPlayerPolicy $missingPlayerPolicy */
-    public $missingPlayerPolicy;
-    /** @var Status $status */
-    public $status;
-    /** @var Turn $currentTurn */
-    public $currentTurn;
+    public Processing $processing;
+    public MissingPlayerPolicy $missingPlayerPolicy;
+    public Status $status;
+    public ?Turn $currentTurn;
     /** @var Members<Member> $members */
-    public $members;
+    public Members $members;
     /** @var array<Country> */
-    public $countries = [];
-    /** @var PlayersType $playersType */
-    public $playersType;
-    /** @var DrawType $drawType */
-    public $drawType;
-    /** @var PotType $potType */
-    public $potType;
-    /** @var PressType $pressType */
-    public $pressType;
-    /** @var \WDVariant $variant */
-    public $variant;
-    /** @var Phase $phase */
-    public $phase;
-    /** @var Phase $nextPhase */
-    public $nextPhase;
-    /** @var User $director */
-    public $director;
-    /** @var bool $featured */
-    public $featured = false;
-    /** @var Tournament $tournament */
-    public $tournament;
+    public array $countries = [];
+    public PlayersType $playersType;
+    public DrawType $drawType;
+    public PotType $potType;
+    public PressType $pressType;
+    public \WDVariant $variant;
+    public Phase $phase;
+    public Phase $nextPhase;
+    public ?User $director;
+    public bool $featured = false;
+    public ?Tournament $tournament;
 
     public function __construct()
     {

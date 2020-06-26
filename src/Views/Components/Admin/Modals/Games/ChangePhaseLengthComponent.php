@@ -8,9 +8,9 @@ use Diplomacy\Forms\Admin\Games\ChangePhaseLengthForm;
  */
 class ChangePhaseLengthComponent extends BaseGameFormModalComponent
 {
-    protected $title = 'Change Phase Length';
-    protected $submitText = 'Change';
-    protected $formClass = ChangePhaseLengthForm::class;
+    protected string $title = 'Change Phase Length';
+    protected string $submitText = 'Change';
+    protected string $formClass = ChangePhaseLengthForm::class;
 
     public function getDefaultValues(): array
     {

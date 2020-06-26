@@ -2,16 +2,15 @@
 
 namespace Diplomacy\Forms\Admin\Games;
 
-use Diplomacy\Forms\BaseForm;
 use Diplomacy\Services\Request;
 
 class ProcessGameNowForm extends BaseForm
 {
-    public $id = 'admin-game-process-game-now';
-    protected $name = 'admin-game-process-game-now';
-    protected $template = 'forms/admin/games/process_game_now.twig';
-    protected $requestType = Request::TYPE_POST;
-    protected $fields = [
+    public string $id = 'admin-game-process-game-now';
+    protected string $name = 'admin-game-process-game-now';
+    protected string $template = 'forms/admin/games/process_game_now.twig';
+    protected string $requestType = Request::TYPE_POST;
+    protected array $fields = [
         'game_id' => [
             'type' => 'hidden',
             'default' => 0,

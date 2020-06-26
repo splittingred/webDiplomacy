@@ -8,19 +8,18 @@ use Diplomacy\Services\Request;
 
 class ForgotPasswordConfirmationForm extends BaseForm
 {
-    protected $template = 'forms/users/forgot-password-confirmation.twig';
-    protected $requestType = Request::TYPE_POST;
-    protected $action = '/users/forgot-confirmation';
-    protected $formCls = '';
-    protected $name = 'users-forgot-password-confirmation';
-    protected $fields = [
+    protected string $template = 'forms/users/forgot-password-confirmation.twig';
+    protected string $requestType = Request::TYPE_POST;
+    protected string $action = '/users/forgot-confirmation';
+    protected string $formCls = '';
+    protected string $name = 'users-forgot-password-confirmation';
+    protected array $fields = [
         'user_id' => [],
         'old_password' => ['type' => 'password'],
         'new_password' => ['type' => 'password'],
         'new_password_confirmation' => ['type' => 'password'],
     ];
-    /** @var Service $authService */
-    protected $authService;
+    protected Service $authService;
 
     public function setUp(): void
     {

@@ -7,9 +7,8 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class UnitCountComponent extends BaseComponent
 {
-    protected $template = 'games/members/unitCount.twig';
-    /** @var Member $member */
-    protected $member;
+    protected string $template = 'games/members/unitCount.twig';
+    protected Member $member;
 
     public function __construct(Member $member)
     {

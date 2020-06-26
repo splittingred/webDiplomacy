@@ -2,17 +2,16 @@
 
 namespace Diplomacy\Forms\Admin\Games;
 
-use Diplomacy\Forms\BaseForm;
 use Diplomacy\Models\Member;
 use Diplomacy\Services\Request;
 
 class AdjustExcusedMissedTurnsForm extends BaseForm
 {
-    public $id = 'admin-game-adjust-excused-missed-turns';
-    protected $name = 'admin-game-adjust-excused-missed-turns';
-    protected $template = 'forms/admin/games/adjust_excused_missed_turns.twig';
-    protected $requestType = Request::TYPE_POST;
-    protected $fields = [
+    public string $id = 'admin-game-adjust-excused-missed-turns';
+    protected string $name = 'admin-game-adjust-excused-missed-turns';
+    protected string $template = 'forms/admin/games/adjust_excused_missed_turns.twig';
+    protected string $requestType = Request::TYPE_POST;
+    protected array $fields = [
         'game_id' => [
             'type' => 'hidden',
             'default' => 0,
@@ -28,7 +27,8 @@ class AdjustExcusedMissedTurnsForm extends BaseForm
 
     public function handleSubmit(): BaseForm
     {
-        Member::forGame($this->getValue('game_id'))->where('excusedMissedTurns', '>', 0)->update([
+        $gameEntity = $this->getGame();
+        Member::forGame($gameEntity->id)->where('excusedMissedTurns', '>', 0)->update([
             'excusedMissedTurns' => (int)$this->getValue('amount'),
         ]);
         $this->redirectRelative($this->request->getCurrentUri());

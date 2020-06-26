@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Builder;
 
 class SearchForm extends BaseForm
 {
-    protected $template = 'forms/games/search_form.twig';
-    protected $requestType = Request::TYPE_GET;
-    protected $action = '/games/search#results';
-    protected $name = 'games-search';
-    protected $formCls = 'advancedSearch';
-    protected $fields = [
+    protected string $template = 'forms/games/search_form.twig';
+    protected string $requestType = Request::TYPE_GET;
+    protected string $action = '/games/search#results';
+    protected string $name = 'games-search';
+    protected string $formCls = 'advancedSearch';
+    protected array $fields = [
         'status'            => [
             'default' => 'all'
         ],
@@ -115,7 +115,7 @@ class SearchForm extends BaseForm
         'sort_dir'          => ['default' => 'desc'],
     ];
 
-    protected $sortColumns = [
+    protected array $sortColumns = [
         'id'                        => 'Game ID',
         'name'                      => 'Game Name',
         'pot'                       => 'Pot Size',
@@ -126,35 +126,35 @@ class SearchForm extends BaseForm
         'turn'                      => 'Game Turn',
         'processTime'               => 'Time to Next Phase',
     ];
-    protected $anonymityLevels = [
+    protected array $anonymityLevels = [
         'all' => 'All',
         'yes' => 'Anonymous',
         'no'  => 'Non-Anonymous',
     ];
-    protected $drawVoteOptions = [
+    protected array $drawVoteOptions = [
         'all'    => 'All',
         'hidden' => 'Hidden Votes',
         'public' => 'Public Votes',
     ];
-    protected $potTypes = [
+    protected array $potTypes = [
         'all' => 'All',
         'dss' => 'Draw Size Scoring',
         'sos' => 'Sum of Squares',
         'ppsc' => 'Points Per Supply Center',
         'unranked' => 'Unranked',
     ];
-    protected $privacyOptions = [
+    protected array $privacyOptions = [
         'all' => 'All',
         'private' => 'Private',
         'public' => 'Public',
     ];
-    protected $joinableOptions = [
+    protected array $joinableOptions = [
         'all' => 'All Games',
         'yes' => 'All Joinable Games',
         'active' => 'Active Joinable Games Only',
         'new' => 'New Joinable Games Only',
     ];
-    protected $gameStatuses = [
+    protected array $gameStatuses = [
         'all'       => 'All',
         'pre-game'  => 'Pre-Game',
         'active'    => 'All Active',

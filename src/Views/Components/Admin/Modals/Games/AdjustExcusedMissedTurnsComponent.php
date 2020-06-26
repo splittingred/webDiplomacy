@@ -8,7 +8,7 @@ use Diplomacy\Forms\Admin\Games\AdjustExcusedMissedTurnsForm;
  */
 class AdjustExcusedMissedTurnsComponent extends BaseGameFormModalComponent
 {
-    protected $title = 'Adjust Excused Missed Turns';
-    protected $submitText = 'Adjust';
-    protected $formClass = AdjustExcusedMissedTurnsForm::class;
+    protected string $title = 'Adjust Excused Missed Turns';
+    protected string $submitText = 'Adjust';
+    protected string $formClass = AdjustExcusedMissedTurnsForm::class;
 }

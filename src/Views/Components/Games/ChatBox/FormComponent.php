@@ -9,20 +9,13 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class FormComponent extends BaseComponent
 {
-    protected $template = 'games/chatbox/form.twig';
-
-    /** @var Game $game */
-    protected $game;
-    /** @var Member|null $currentMember */
-    protected $currentMember;
-    /** @var int $targetCountryId */
-    protected $targetCountryId;
-    /** @var MessagesService $messagesService */
-    protected $messagesService;
-    /** @var bool $isGlobal */
-    protected $isGlobal;
-    /** @var bool $isAll */
-    protected $isAll;
+    protected string $template = 'games/chatbox/form.twig';
+    protected Game $game;
+    protected ?Member $currentMember;
+    protected int $targetCountryId;
+    protected MessagesService $messagesService;
+    protected bool $isGlobal;
+    protected bool $isAll;
 
     /**
      * @param Game $game
@@ -33,9 +26,9 @@ class FormComponent extends BaseComponent
     {
         $this->game = $game;
         $this->currentMember = $currentMember;
-        $this->targetCountryId = $this->targetCountryId > Country::GLOBAL && $this->targetCountryId < $this->game->getCountryCount() ? (int)$targetCountryId : Country::GLOBAL;
-        $this->isGlobal = $this->targetCountryId == Country::GLOBAL;
-        $this->isAll = $this->targetCountryId == Country::ALL;
+        $this->targetCountryId = $targetCountryId > Country::GLOBAL && $targetCountryId < $this->game->getCountryCount() ? (int)$targetCountryId : Country::GLOBAL;
+        $this->isGlobal = $targetCountryId == Country::GLOBAL;
+        $this->isAll = $targetCountryId == Country::ALL;
         $this->messagesService = new MessagesService();
     }
 

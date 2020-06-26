@@ -2,16 +2,15 @@
 
 namespace Diplomacy\Forms\Admin\Games;
 
-use Diplomacy\Forms\BaseForm;
 use Diplomacy\Services\Request;
 
 class ChangePressTypeForm extends BaseForm
 {
-    public $id = 'admin-game-change-press-type';
-    protected $name = 'admin-game-change-press-type';
-    protected $template = 'forms/admin/games/change_press_type.twig';
-    protected $requestType = Request::TYPE_POST;
-    protected $fields = [
+    public string $id = 'admin-game-change-press-type';
+    protected string $name = 'admin-game-change-press-type';
+    protected string $template = 'forms/admin/games/change_press_type.twig';
+    protected string $requestType = Request::TYPE_POST;
+    protected array $fields = [
         'game_id' => [
             'type' => 'hidden',
             'default' => 0,

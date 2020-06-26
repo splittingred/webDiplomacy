@@ -2,16 +2,15 @@
 
 namespace Diplomacy\Forms\Admin\Games;
 
-use Diplomacy\Forms\BaseForm;
 use Diplomacy\Services\Request;
 
 class TogglePauseForm extends BaseForm
 {
-    public $id = 'admin-game-toggle-pause';
-    protected $name = 'admin-game-toggle-pause';
-    protected $template = 'forms/admin/games/toggle_pause.twig';
-    protected $requestType = Request::TYPE_POST;
-    protected $fields = [
+    public string $id = 'admin-game-toggle-pause';
+    protected string $name = 'admin-game-toggle-pause';
+    protected string $template = 'forms/admin/games/toggle_pause.twig';
+    protected string $requestType = Request::TYPE_POST;
+    protected array $fields = [
         'game_id' => [
             'type' => 'hidden',
             'default' => 0,

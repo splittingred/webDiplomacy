@@ -9,20 +9,13 @@ use Diplomacy\Views\Components\Games\Members\BarComponent as MemberBarComponent;
 
 class MemberNamesComponent extends BaseComponent
 {
-    protected $template = 'games/chatbox/memberNames.twig';
-
-    /** @var Game $game */
-    protected $game;
-    /** @var Member|null $currentMember */
-    protected $currentMember;
-    /** @var int $targetCountryId */
-    protected $targetCountryId;
-    /** @var bool $isGlobal */
-    protected $isGlobal;
-    /** @var bool $isAll */
-    protected $isAll;
-    /** @var bool $isAuthenticated */
-    protected $isAuthenticated;
+    protected string $template = 'games/chatbox/memberNames.twig';
+    protected Game $game;
+    protected ?Member $currentMember;
+    protected int $targetCountryId;
+    protected bool $isGlobal;
+    protected bool $isAll;
+    protected bool $isAuthenticated;
 
     /**
      * @param Game $game

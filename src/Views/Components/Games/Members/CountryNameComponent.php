@@ -8,14 +8,10 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class CountryNameComponent extends BaseComponent
 {
-    protected $template = 'games/members/countryName.twig';
-
-    /** @var Game $game */
-    protected $game;
-    /** @var Member $member */
-    protected $member;
-    /** @var Member $currentMember */
-    protected $currentMember;
+    protected string $template = 'games/members/countryName.twig';
+    protected Game $game;
+    protected ?Member $member;
+    protected ?Member $currentMember;
 
     /**
      * @param Game $game

@@ -13,11 +13,9 @@ use Diplomacy\Views\Components\BaseComponent;
  */
 class SummaryComponent extends BaseComponent
 {
-    protected $template = 'games/members/summary.twig';
-    /** @var Game $game */
-    protected $game;
-    /** @var Member $currentMember */
-    protected $currentMember;
+    protected string $template = 'games/members/summary.twig';
+    protected Game $game;
+    protected ?Member $currentMember;
 
     public function __construct(Game $game, Member $currentMember)
     {

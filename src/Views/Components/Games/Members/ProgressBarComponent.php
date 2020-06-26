@@ -13,11 +13,9 @@ use Diplomacy\Views\Components\BaseComponent;
  */
 class ProgressBarComponent extends BaseComponent
 {
-    protected $template = 'games/members/progressBar.twig';
-    /** @var Game $game */
-    protected $game;
-    /** @var Member $member */
-    protected $member;
+    protected string $template = 'games/members/progressBar.twig';
+    protected Game $game;
+    protected Member $member;
 
     public function __construct(Game $game, Member $member)
     {

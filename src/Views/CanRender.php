@@ -6,15 +6,15 @@ use Twig\Loader\FilesystemLoader;
 
 trait CanRender
 {
-    protected $template = '';
-    protected $renderer;
+    protected string $template = '';
+    protected Renderer $renderer;
 
     /**
      * @return Renderer
      */
     public function renderer(): Renderer
     {
-        if (!$this->renderer) {
+        if (!isset($this->renderer)) {
             try {
                 global $app;
                 $this->renderer = $app->make('renderer');

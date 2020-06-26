@@ -9,13 +9,10 @@ use Diplomacy\Views\Components\BaseComponent;
  */
 class RankingStatsPanelComponent extends BaseComponent
 {
-    protected $template = 'users/profile/ranking_stats_panel.twig';
-    /** @var string $title */
-    protected $title;
-    /** @var array $stats */
-    protected $stats;
-    /** @var bool $show */
-    protected $show;
+    protected string $template = 'users/profile/ranking_stats_panel.twig';
+    protected string $title;
+    protected array $stats;
+    protected bool $show;
 
     public function __construct(string $title, array $stats, bool $show = false)
     {

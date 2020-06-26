@@ -8,7 +8,7 @@ use Diplomacy\Forms\Admin\Games\ForceUserIntoDisorderForm;
  */
 class ForceUserIntoDisorderComponent extends BaseGameFormModalComponent
 {
-    protected $title = 'Force User into Civil Disorder';
-    protected $submitText = 'Force User';
-    protected $formClass = ForceUserIntoDisorderForm::class;
+    protected string $title = 'Force User into Civil Disorder';
+    protected string $submitText = 'Force User';
+    protected string $formClass = ForceUserIntoDisorderForm::class;
 }

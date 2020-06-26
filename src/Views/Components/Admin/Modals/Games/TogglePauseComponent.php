@@ -8,8 +8,7 @@ use Diplomacy\Forms\Admin\Games\TogglePauseForm;
  */
 class TogglePauseComponent extends BaseGameFormModalComponent
 {
-    /** @var string $template */
-    protected $title = 'Toggle Game Pause Status';
-    protected $submitText  = 'Toggle Pause';
-    protected $formClass = TogglePauseForm::class;
+    protected string $title = 'Toggle Game Pause Status';
+    protected string $submitText  = 'Toggle Pause';
+    protected string $formClass = TogglePauseForm::class;
 }

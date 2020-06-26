@@ -12,10 +12,8 @@ use Diplomacy\Views\Components\BaseComponent;
  */
 class TitleBarComponent extends BaseComponent
 {
-    /** @var string $template */
-    protected $template = 'games/board/title_bar.twig';
-    /** @var Game $game */
-    protected $game;
+    protected string $template = 'games/board/title_bar.twig';
+    protected Game $game;
 
     /**
      * @param Game $game

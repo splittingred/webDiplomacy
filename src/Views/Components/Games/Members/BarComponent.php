@@ -8,10 +8,10 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class BarComponent extends BaseComponent
 {
-    protected $template = 'games/members/bar.twig';
-    protected $game;
-    protected $member;
-    protected $currentMember;
+    protected string $template = 'games/members/bar.twig';
+    protected Game $game;
+    protected ?Member $member;
+    protected ?Member $currentMember;
 
     public function __construct(Game $game, Member $member, Member $currentMember = null)
     {

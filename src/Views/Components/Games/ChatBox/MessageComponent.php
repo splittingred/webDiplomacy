@@ -8,18 +8,12 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class MessageComponent extends BaseComponent
 {
-    protected $template = 'games/chatbox/message.twig';
-
-    /** @var Message $message */
-    protected $message;
-    /** @var Game $game */
-    protected $game;
-    /** @var Member $currentMember */
-    protected $currentMember;
-    /** @var bool $showAuthors */
-    protected $showAuthors;
-    /** @var bool $alternate */
-    protected $alternate;
+    protected string $template = 'games/chatbox/message.twig';
+    protected Message $message;
+    protected Game $game;
+    protected ?Member $currentMember;
+    protected bool $showAuthors;
+    protected bool $alternate;
 
     /**
      * @param Message $message

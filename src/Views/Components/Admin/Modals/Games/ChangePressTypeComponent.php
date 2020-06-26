@@ -8,7 +8,7 @@ use Diplomacy\Forms\Admin\Games\ChangePressTypeForm;
  */
 class ChangePressTypeComponent extends BaseGameFormModalComponent
 {
-    protected $title = 'Change Press Type';
-    protected $closeText = 'Change';
-    protected $formClass = ChangePressTypeForm::class;
+    protected string $title = 'Change Press Type';
+    protected string $closeText = 'Change';
+    protected string $formClass = ChangePressTypeForm::class;
 }

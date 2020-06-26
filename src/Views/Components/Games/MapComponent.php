@@ -7,10 +7,9 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class MapComponent extends BaseComponent
 {
-    protected $template = 'games/board/map.twig';
-    protected $game;
-    protected $member;
-    protected $currentUser;
+    protected string $template = 'games/board/map.twig';
+    protected Game $game;
+    protected \User $currentUser;
 
     public function __construct(Game $game, \User $currentUser)
     {

@@ -11,12 +11,9 @@ use Diplomacy\Views\Components\BaseComponent;
  */
 class OrdersComponent extends BaseComponent
 {
-    protected $template = 'games/board/orders.twig';
-
-    /** @var Game $game */
-    protected $game;
-    /** @var Member $currentMember */
-    protected $currentMember;
+    protected string $template = 'games/board/orders.twig';
+    protected Game $game;
+    protected ?Member $currentMember;
 
     public function __construct(Game $game, Member $currentMember)
     {

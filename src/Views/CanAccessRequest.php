@@ -6,15 +6,14 @@ use Diplomacy\Services\Request;
 
 trait CanAccessRequest
 {
-    /** @var Request $request */
-    protected $request;
+    protected Request $request;
 
     /**
      * @return Request
      */
     public function getRequest(): Request
     {
-        if ($this->request) return $this->request;
+        if (isset($this->request)) return $this->request;
 
         try {
             global $app;

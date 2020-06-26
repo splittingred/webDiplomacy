@@ -7,9 +7,9 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class TimeRemainingComponent extends BaseComponent
 {
-    protected $template = 'games/time_remaining.twig';
-    protected $displayTimeAsText;
-    protected $game;
+    protected string $template = 'games/time_remaining.twig';
+    protected bool $displayTimeAsText;
+    protected Game $game;
 
     public function __construct(Game $game, bool $displayTimeAsText = true)
     {

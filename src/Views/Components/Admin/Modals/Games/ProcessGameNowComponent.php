@@ -8,7 +8,7 @@ use Diplomacy\Forms\Admin\Games\ProcessGameNowForm;
  */
 class ProcessGameNowComponent extends BaseGameFormModalComponent
 {
-    protected $title = 'Process Game Now';
-    protected $submitText = 'Process Now';
-    protected $formClass = ProcessGameNowForm::class;
+    protected string $title = 'Process Game Now';
+    protected string $submitText = 'Process Now';
+    protected string $formClass = ProcessGameNowForm::class;
 }

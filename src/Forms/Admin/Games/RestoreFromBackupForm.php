@@ -2,16 +2,15 @@
 
 namespace Diplomacy\Forms\Admin\Games;
 
-use Diplomacy\Forms\BaseForm;
 use Diplomacy\Services\Request;
 
 class RestoreFromBackupForm extends BaseForm
 {
-    public $id = 'admin-game-restore-from-backup';
-    protected $name = 'admin-game-restore-from-backup';
-    protected $template = 'forms/admin/games/restore_from_backup.twig';
-    protected $requestType = Request::TYPE_POST;
-    protected $fields = [
+    public string $id = 'admin-game-restore-from-backup';
+    protected string $name = 'admin-game-restore-from-backup';
+    protected string $template = 'forms/admin/games/restore_from_backup.twig';
+    protected string $requestType = Request::TYPE_POST;
+    protected array $fields = [
         'game_id' => [
             'type' => 'hidden',
             'default' => 0,

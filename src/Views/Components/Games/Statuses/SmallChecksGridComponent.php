@@ -12,15 +12,11 @@ use Diplomacy\Views\Components\BaseComponent;
  */
 class SmallChecksGridComponent extends BaseComponent
 {
-    protected $template = 'games/statuses/smallChecksGridActive.twig';
-    /** @var Game $game */
-    protected $game;
-    /** @var Member $currentMember */
-    protected $currentMember;
-    /** @var int $countryCount */
-    protected $countryCount;
-    /** @var int $memberCount */
-    protected $memberCount;
+    protected string $template = 'games/statuses/smallChecksGridActive.twig';
+    protected Game $game;
+    protected ?Member $currentMember;
+    protected int $countryCount;
+    protected int $memberCount;
 
     public function __construct(Game $game, Member $currentMember)
     {

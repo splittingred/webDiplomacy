@@ -8,7 +8,7 @@ use Diplomacy\Forms\Admin\Games\ResetProcessTimeForm;
  */
 class ResetProcessTimeComponent extends BaseGameFormModalComponent
 {
-    protected $title = 'Reset Process Time';
-    protected $submitText = 'Reset';
-    protected $formClass = ResetProcessTimeForm::class;
+    protected string $title = 'Reset Process Time';
+    protected string $submitText = 'Reset';
+    protected string $formClass = ResetProcessTimeForm::class;
 }

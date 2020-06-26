@@ -11,12 +11,15 @@ use Diplomacy\Services\Request;
 
 class NewForm extends BaseForm
 {
-    protected $template = 'forms/games/new_game_form.twig';
-    protected $requestType = Request::TYPE_POST;
-    protected $action = '/games/new';
-    protected $name = 'games-new';
-    protected $formCls = 'new-game-form';
-    protected $fields = [
+    protected OptionsService $optionsService;
+    protected ?User $currentUser;
+
+    protected string $template = 'forms/games/new_game_form.twig';
+    protected string $requestType = Request::TYPE_POST;
+    protected string $action = '/games/new';
+    protected string $name = 'games-new';
+    protected string $formCls = 'new-game-form';
+    protected array $fields = [
         'new_game' => [
             'type' => 'hidden',
             'default' => 1,
@@ -92,8 +95,6 @@ class NewForm extends BaseForm
         'password_confirmation'     => ['type' => 'password', 'default' => ''],
     ];
 
-    /** @var OptionsService $optionsService */
-    protected $optionsService;
 
     public function setUp(): void
     {
@@ -101,11 +102,10 @@ class NewForm extends BaseForm
         $this->optionsService = new OptionsService();
     }
 
-    /** @var User $currentUser */
-    protected $currentUser;
-    public function setCurrentUser(User $user)
+    public function setCurrentUser(User $user): NewForm
     {
         $this->currentUser = $user;
+        return $this;
     }
 
     /**

@@ -8,13 +8,10 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class NameComponent extends BaseComponent
 {
-    protected $template = 'games/members/name.twig';
-    /** @var Member $member */
-    protected $member;
-    /** @var Game $game */
-    protected $game;
-    /** @var Member $currentMember */
-    protected $currentMember;
+    protected string $template = 'games/members/name.twig';
+    protected Member $member;
+    protected Game $game;
+    protected Member $currentMember;
 
     public function __construct(Member $member, Game $game, Member $currentMember)
     {

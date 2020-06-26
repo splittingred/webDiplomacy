@@ -8,7 +8,7 @@ use Diplomacy\Forms\Admin\Games\RestoreFromBackupForm;
  */
 class RestoreFromBackupComponent extends BaseGameFormModalComponent
 {
-    protected $title = 'Restore from Backup';
-    protected $submitText = 'Restore';
-    protected $formClass = RestoreFromBackupForm::class;
+    protected string $title = 'Restore from Backup';
+    protected string $submitText = 'Restore';
+    protected string $formClass = RestoreFromBackupForm::class;
 }

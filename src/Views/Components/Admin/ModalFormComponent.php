@@ -13,23 +13,15 @@ use Illuminate\Validation\Factory as ValidatorFactory;
  */
 class ModalFormComponent extends BaseComponent
 {
-    /** @var string $template */
-    protected $template = 'admin/modals/modal_form.twig';
-    /** @var string $id */
-    protected $id;
-    /** @var string $title */
-    protected $title;
-    /** @var string $submitText */
-    protected $submitText = 'Submit';
-    /** @var string $closeText */
-    protected $closeText = 'Close';
+    protected string $template = 'admin/modals/modal_form.twig';
+    protected string $id = '';
+    protected string $title = '';
+    protected string $submitText = 'Submit';
+    protected string $closeText = 'Close';
 
-    /** @var string $formClass */
-    protected $formClass;
-    /** @var BaseForm $form */
-    protected $form;
-    /** @var array $defaultValues */
-    protected $defaultValues = [];
+    protected string $formClass;
+    protected ?BaseForm $form;
+    protected array $defaultValues = [];
 
     public function __construct()
     {
@@ -95,9 +87,7 @@ class ModalFormComponent extends BaseComponent
         try {
             $validationFactory = $app->make('validation.factory');
             $formClass = $this->formClass;
-            $form = new $formClass($this->getRequest(), $this->renderer(), $validationFactory, $this->getDefaultValues());
-            $form->setPlaceholders($this->getFormPlaceholders());
-            return $form;
+            return new $formClass($this->getRequest(), $this->renderer(), $validationFactory, $this->getDefaultValues(), $this->getFormPlaceholders());
         } catch (\Exception $e) {}
     }
 }

@@ -10,14 +10,10 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class VotesComponent extends BaseComponent
 {
-    protected $template = 'games/votes.twig';
-
-    /** @var Game $game */
-    protected $game;
-    /** @var Member $currentMember */
-    protected $currentMember;
-    /** @var VotesService $votesService */
-    protected $votesService;
+    protected string $template = 'games/votes.twig';
+    protected Game $game;
+    protected ?Member $currentMember;
+    protected VotesService $votesService;
 
     /**
      * @param Game $game

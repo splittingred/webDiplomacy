@@ -12,6 +12,7 @@ class Renderer extends Environment
     /**
      * @param Container $app
      * @return Renderer
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public static function initialize(Container $app)
     {

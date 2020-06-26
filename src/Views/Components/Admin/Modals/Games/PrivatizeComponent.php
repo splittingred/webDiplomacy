@@ -8,7 +8,7 @@ use Diplomacy\Forms\Admin\Games\PrivatizeForm;
  */
 class PrivatizeComponent extends BaseGameFormModalComponent
 {
-    protected $title = 'Make Private';
-    protected $submitText = 'Privatize';
-    protected $formClass = PrivatizeForm::class;
+    protected string $title = 'Make Private';
+    protected string $submitText = 'Privatize';
+    protected string $formClass = PrivatizeForm::class;
 }

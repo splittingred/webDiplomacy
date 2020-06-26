@@ -10,17 +10,12 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class MuteIconComponent extends BaseComponent
 {
-    public $template = 'games/members/muteIcon.twig';
-    /** @var Member $member */
-    protected $member;
-    /** @var Game $game */
-    protected $game;
-    /** @var Member $currentMember */
-    protected $currentMember;
-    /** @var bool $muted */
-    protected $muted;
-    /** @var MembersService $membersService */
-    protected $membersService;
+    public string $template = 'games/members/muteIcon.twig';
+    protected ?Member $member;
+    protected Game $game;
+    protected ?Member $currentMember;
+    protected bool $muted;
+    protected MembersService $membersService;
 
     /**
      * @param Game $game

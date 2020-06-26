@@ -9,17 +9,16 @@ use Diplomacy\Views\Renderer;
 
 class LoginForm extends BaseForm
 {
-    protected $template = 'forms/users/login.twig';
-    protected $requestType = Request::TYPE_POST;
-    protected $action = '/users/login';
-    protected $formCls = '';
-    protected $name = 'users-login';
-    protected $fields = [
+    protected string $template = 'forms/users/login.twig';
+    protected string $requestType = Request::TYPE_POST;
+    protected string $action = '/users/login';
+    protected string $formCls = '';
+    protected string $name = 'users-login';
+    protected array $fields = [
         'username' => [],
         'password' => ['type' => 'password'],
     ];
-    /** @var Service */
-    protected $authService;
+    protected Service $authService;
 
     public function setUp(): void
     {

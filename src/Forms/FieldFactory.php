@@ -10,9 +10,9 @@ use Diplomacy\Views\Renderer;
  */
 class FieldFactory
 {
-    protected $renderer;
-    protected $fieldPrefix;
-    protected $nestedIn;
+    protected Renderer $renderer;
+    protected string $fieldPrefix;
+    protected string $nestedIn;
 
     public function __construct(Renderer $renderer, string $fieldPrefix = '', string $nestedIn = '')
     {
@@ -28,7 +28,7 @@ class FieldFactory
      * @param array $errors
      * @return array<Field>
      */
-    public function build(string $formId, array $fields, array $postValues, array $errors = [])
+    public function build(string $formId, array $fields, array $postValues, array $errors = []): array
     {
         $data = [];
         foreach ($fields as $key => $attributes) {

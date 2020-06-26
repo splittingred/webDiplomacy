@@ -4,36 +4,41 @@ namespace Diplomacy\Utilities;
 
 trait HasPlaceholders
 {
-    /** @var array */
-    protected $placeholders = [];
+    protected array $placeholders = [];
 
     /**
      * Set a placeholder value for the view
      *
      * @param string $k
      * @param mixed $v
+     * @return $this
      */
     public function setPlaceholder($k,$v = null)
     {
         $this->placeholders[$k] = $v;
+        return $this;
     }
 
     /**
      * @param array $array
+     * @return $this
      */
     public function setPlaceholders(array $array)
     {
         $this->placeholders = array_merge($this->placeholders,$array);
+        return $this;
     }
 
     /**
      * Unset a placeholder value
      *
      * @param string $k
+     * @return $this
      */
     public function unsetPlaceholder($k)
     {
         unset($this->placeholders[$k]);
+        return $this;
     }
 
     /**
@@ -53,7 +58,7 @@ trait HasPlaceholders
      *
      * @return array
      */
-    public function getPlaceholders()
+    public function getPlaceholders(): array
     {
         return $this->placeholders;
     }

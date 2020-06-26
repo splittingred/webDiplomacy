@@ -15,55 +15,39 @@ abstract class BaseForm
 {
     use HasPlaceholders;
 
-    /** @var Request $request */
-    protected $request;
-    /** @var Renderer $renderer */
-    protected $renderer;
-    /** @var string $template */
-    protected $template;
-    /** @var array */
-    protected $fields = [];
-    /** @var string */
-    protected $name = '';
-    /** @var string $id */
-    public $id = '';
-    /** @var string $nestedIn */
-    protected $nestedIn = '';
-    /** @var string $requestType */
-    protected $requestType = Request::TYPE_POST;
-    /** @var array $onSubmissionCallbacks */
-    protected $onSubmissionCallbacks = [];
-    /** @var string $action */
-    protected $action = '';
-    /** @var string $formCls */
-    protected $formCls = '';
+    protected Request $request;
+    protected Renderer $renderer;
+    protected string $template;
+    protected array $fields = [];
+    protected string $name = '';
+    public string $id = '';
+    protected string $nestedIn = '';
+    protected string $requestType = Request::TYPE_POST;
+    protected array $onSubmissionCallbacks = [];
+    protected string $action = '';
+    protected string $formCls = '';
 
-    /** @var Validator  */
-    protected $validator;
-    /** @var array $validationRules */
-    protected $validationRules = [];
-    /** @var array $validationMessages */
-    protected $validationMessages = [];
-    /** @var array $validationCustomAttributes */
-    protected $validationCustomAttributes = [];
+    protected Validator $validator;
+    protected array $validationRules = [];
+    protected array $validationMessages = [];
+    protected array $validationCustomAttributes = [];
 
-    /** @var FieldFactory $fieldFactory */
-    protected $fieldFactory;
-    /** @var array $fieldObjects */
-    protected $fieldObjects = [];
-    /** @var string $fieldPrefix */
-    protected $fieldPrefix = '';
+    protected FieldFactory $fieldFactory;
+    protected array $fieldObjects = [];
+    protected string $fieldPrefix = '';
 
     /**
      * @param Request $request
      * @param Renderer $renderer
      * @param ValidationFactory $validatorFactory
      * @param array $defaultValues
+     * @param array $defaultPlaceholders
      */
-    public function __construct(Request $request, Renderer $renderer, ValidationFactory $validatorFactory, array $defaultValues = [])
+    public function __construct(Request $request, Renderer $renderer, ValidationFactory $validatorFactory, array $defaultValues = [], array $defaultPlaceholders = [])
     {
         $this->request = $request;
         $this->renderer = $renderer;
+        $this->placeholders = $defaultPlaceholders;
         $this->setUp();
         $clsNameLength = strlen(self::class);
         $defaultFieldPrefix = substr(self::class, 0, $clsNameLength < 4 ? $clsNameLength : 4);
@@ -104,7 +88,7 @@ abstract class BaseForm
     public function getErrors(): array
     {
         $data = [];
-        foreach (array_keys($this->fields) as $key) {
+        foreach (array_keys($this->getFieldDefinitions()) as $key) {
             $errors = $this->validator->errors()->get($key, '<div class="invalid-feedback">:message</div>');
             $data[$key] = $errors;
         }
@@ -143,6 +127,14 @@ abstract class BaseForm
         ]);
         $this->afterRender();
         return $output;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFieldDefinitions(): array
+    {
+        return $this->fields;
     }
 
     /**
@@ -224,7 +216,7 @@ abstract class BaseForm
      */
     protected function getFieldNames() : array
     {
-        return array_keys($this->fields);
+        return array_keys($this->getFieldDefinitions());
     }
 
     /**
@@ -254,7 +246,7 @@ abstract class BaseForm
         $errors = [];
         $values = array_merge(array_map(function($f) {
             return array_key_exists('default', $f) ? $f['default'] : null;
-        }, $this->fields), $defaultValues);
+        }, $this->getFieldDefinitions()), $defaultValues);
 
 
         if ($this->isSubmitted()) {
@@ -269,7 +261,7 @@ abstract class BaseForm
         } else {
             $this->validator = $validatorFactory->make($values, $this->validationRules, $this->validationMessages, $this->validationCustomAttributes);
         }
-        $this->fieldObjects = $this->fieldFactory->build($this->id, $this->fields, $values, $errors);
+        $this->fieldObjects = $this->fieldFactory->build($this->id, $this->getFieldDefinitions(), $values, $errors);
         return $this;
     }
 

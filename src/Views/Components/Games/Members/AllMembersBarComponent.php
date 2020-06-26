@@ -13,8 +13,8 @@ use Diplomacy\Views\Components\BaseComponent;
  */
 class AllMembersBarComponent extends BaseComponent
 {
-    protected $template = 'games/members/occupation_bar.twig';
-    protected $game;
+    protected string $template = 'games/members/occupation_bar.twig';
+    protected Game $game;
 
     public function __construct(Game $game)
     {

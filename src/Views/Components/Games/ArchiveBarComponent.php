@@ -12,9 +12,9 @@ use Diplomacy\Views\Components\BaseComponent;
 class ArchiveBarComponent extends BaseComponent
 {
     /** @var string $template */
-    protected $template = 'games/board/archive_bar.twig';
+    protected string $template = 'games/board/archive_bar.twig';
     /** @var int $gameId */
-    protected $gameId;
+    protected int $gameId;
 
     /**
      * @param int $gameId

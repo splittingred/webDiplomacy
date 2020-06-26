@@ -8,7 +8,7 @@ use Diplomacy\Forms\Admin\Games\ReallocateCountriesForm;
  */
 class ReallocateCountriesComponent extends BaseGameFormModalComponent
 {
-    protected $title = 'Reallocate Countries';
-    protected $submitText = 'Change';
-    protected $formClass = ReallocateCountriesForm::class;
+    protected string $title = 'Reallocate Countries';
+    protected string $submitText = 'Change';
+    protected string $formClass = ReallocateCountriesForm::class;
 }

@@ -10,11 +10,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class SmallPanelLinksComponent extends BaseComponent
 {
-    protected $template = 'games/small_panel_links.twig';
-    /** @var Game $game */
-    protected $game;
-    /** @var Member $currentMember */
-    protected $currentMember;
+    protected string $template = 'games/small_panel_links.twig';
+    protected Game $game;
+    protected ?Member $currentMember;
 
     public function __construct(Game $game, Member $currentMember)
     {

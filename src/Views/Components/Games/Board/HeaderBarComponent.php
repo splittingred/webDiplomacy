@@ -14,12 +14,9 @@ use Diplomacy\Views\Components\BaseComponent;
  */
 class HeaderBarComponent extends BaseComponent
 {
-    /** @var string $template */
-    protected $template = 'games/board/header_bar.twig';
-    /** @var Game $game */
-    protected $game;
-    /** @var Member $member */
-    protected $member;
+    protected string $template = 'games/board/header_bar.twig';
+    protected Game $game;
+    protected Member $member;
 
     /**
      * @param Game $game

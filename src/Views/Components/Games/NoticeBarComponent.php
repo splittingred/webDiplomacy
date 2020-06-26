@@ -7,8 +7,8 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class NoticeBarComponent extends BaseComponent
 {
-    protected $template = 'games/notice_bar.twig';
-    protected $game;
+    protected string $template = 'games/notice_bar.twig';
+    protected Game $game;
 
     public function __construct(Game $game)
     {

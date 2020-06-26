@@ -2,18 +2,17 @@
 
 namespace Diplomacy\Forms\Admin\Games;
 
-use Diplomacy\Forms\BaseForm;
 use Diplomacy\Models\Game;
 use Diplomacy\Services\Games\OptionsService;
 use Diplomacy\Services\Request;
 
 class ChangePhaseLengthForm extends BaseForm
 {
-    public $id = 'admin-game-change-phase-length';
-    protected $name = 'admin-game-change-phase-length';
-    protected $template = 'forms/admin/games/change_phase_length.twig';
-    protected $requestType = Request::TYPE_POST;
-    protected $fields = [
+    public string $id = 'admin-game-change-phase-length';
+    protected string $name = 'admin-game-change-phase-length';
+    protected string $template = 'forms/admin/games/change_phase_length.twig';
+    protected string $requestType = Request::TYPE_POST;
+    protected array $fields = [
         'game_id' => [
             'type' => 'hidden',
             'default' => 0,
@@ -36,7 +35,7 @@ class ChangePhaseLengthForm extends BaseForm
 
     public function handleSubmit(): BaseForm
     {
-        $game = Game::find($this->getValue('game_id'));
+        $game = Game::find($this->getGame()->id);
         $newPhaseMinutes = (int)$this->getValue('phase_length');
 
         if ($game->processStatus != 'Not-processing' || $game->phase == 'Finished') {

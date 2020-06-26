@@ -12,7 +12,7 @@ use Diplomacy\Views\Components\Admin\ModalFormComponent;
 abstract class BaseGameFormModalComponent extends ModalFormComponent
 {
     /** @var Game $game */
-    protected $game;
+    protected Game $game;
 
     /**
      * @param Game $game

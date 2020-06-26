@@ -2,16 +2,16 @@
 
 namespace Diplomacy\Forms\Admin\Games;
 
-use Diplomacy\Forms\BaseForm;
+use Diplomacy\Models\Game;
 use Diplomacy\Services\Request;
 
 class ResetProcessTimeForm extends BaseForm
 {
-    public $id = 'admin-game-reset-process-time';
-    protected $name = 'admin-game-reset-process-time';
-    protected $template = 'forms/admin/games/reset_process_time.twig';
-    protected $requestType = Request::TYPE_POST;
-    protected $fields = [
+    public string $id = 'admin-game-reset-process-time';
+    protected string $name = 'admin-game-reset-process-time';
+    protected string $template = 'forms/admin/games/reset_process_time.twig';
+    protected string $requestType = Request::TYPE_POST;
+    protected array $fields = [
         'game_id' => [
             'type' => 'hidden',
             'default' => 0,
@@ -20,6 +20,17 @@ class ResetProcessTimeForm extends BaseForm
 
     public function handleSubmit(): BaseForm
     {
+        $game = Game::find($this->getGame()->id);
+
+        if ($game->processStatus != 'Not-processing' || $game->phase == 'Finished') {
+            $this->setNotice('This game is paused/crashed/finished.');
+            return $this;
+        }
+
+        $game->processTime = time();
+        $game->save();
+        $this->redirectToSelf();
+
         return $this;
     }
 }

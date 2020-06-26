@@ -8,16 +8,15 @@ use Diplomacy\Services\Request;
 
 class ForgotPasswordForm extends BaseForm
 {
-    protected $template = 'forms/users/forgot-password.twig';
-    protected $requestType = Request::TYPE_POST;
-    protected $action = '/users/forgot';
-    protected $formCls = '';
-    protected $name = 'users-forgot-password';
-    protected $fields = [
+    protected string $template = 'forms/users/forgot-password.twig';
+    protected string $requestType = Request::TYPE_POST;
+    protected string $action = '/users/forgot';
+    protected string $formCls = '';
+    protected string $name = 'users-forgot-password';
+    protected array $fields = [
         'username' => [],
     ];
-    /** @var Service $authService */
-    protected $authService;
+    protected Service $authService;
 
     public function setUp(): void
     {

@@ -6,21 +6,14 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class HelpIconComponent extends BaseComponent
 {
-    protected $template = 'forms/fields/help_icon.twig';
+    protected string $template = 'forms/fields/help_icon.twig';
 
-    /** @var string $id */
-    protected $id;
-    /** @var string $text */
-    protected $text;
-    /** @var string $title */
-    protected $title;
-    /** @var string $toggle */
-    protected $toggle;
-    /** @var string $trigger */
-    protected $trigger;
-    /** @var string $alt */
-    protected $alt;
-    /** @var bool|string $delay */
+    protected string $id;
+    protected string $text;
+    protected string $title;
+    protected string $toggle;
+    protected string $trigger;
+    protected string $alt;
     protected $delay;
 
     /**

@@ -14,11 +14,11 @@ use Diplomacy\Views\Components\BaseComponent;
 class DropdownComponent extends BaseComponent
 {
     /** @var string $template */
-    protected $template = 'admin/games/dropdown.twig';
+    protected string $template = 'admin/games/dropdown.twig';
     /** @var Game $game */
-    protected $game;
+    protected Game $game;
     /** @var User $user */
-    protected $user;
+    protected User $user;
 
     /**
      * @param Game $game

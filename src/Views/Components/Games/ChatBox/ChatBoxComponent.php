@@ -23,28 +23,18 @@ use Diplomacy\Views\Components\Games\Members\BarComponent as MemberBarComponent;
  */
 class ChatBoxComponent extends BaseComponent
 {
-    protected $template = 'games/chatbox/chatbox.twig';
+    protected string $template = 'games/chatbox/chatbox.twig';
 
-    /** @var Game $game */
-    protected $game;
-    /** @var Member|null $currentMember */
-    protected $currentMember;
-    /** @var int $targetCountryId */
-    protected $targetCountryId;
-    /** @var Member|UnassignedMember  */
-    protected $targetMember;
-    /** @var bool $currentMemberIsTargetCountry */
-    protected $currentMemberIsTargetCountry;
-    /** @var bool $isGlobal */
-    protected $isGlobal;
-    /** @var bool $isAll */
-    protected $isAll;
-    /** @var bool $isAuthenticated */
-    protected $isAuthenticated;
-    /** @var MessagesService $messagesService */
-    protected $messagesService;
-    /** @var MembersService $membersService */
-    protected $membersService;
+    protected Game $game;
+    protected ?Member $currentMember;
+    protected int $targetCountryId;
+    protected ?Member $targetMember;
+    protected bool $currentMemberIsTargetCountry;
+    protected bool $isGlobal;
+    protected bool $isAll;
+    protected bool $isAuthenticated;
+    protected MessagesService $messagesService;
+    protected MembersService $membersService;
 
     /**
      * @param Game $game
@@ -55,8 +45,8 @@ class ChatBoxComponent extends BaseComponent
     {
         $this->game = $game;
         $this->currentMember = $currentMember;
-        $this->isAuthenticated = $this->currentMember->isAuthenticated();
         $this->targetCountryId = $this->findTargetCountry($targetCountryId);
+        $this->isAuthenticated = $this->currentMember->isAuthenticated();
         $this->targetMember = $this->game->members->byCountryId($this->targetCountryId);
         $this->currentMemberIsTargetCountry = $this->isAuthenticated && $this->currentMember->isCountry($this->targetCountryId);
         $this->isGlobal = $this->targetCountryId == Country::GLOBAL;
@@ -86,7 +76,7 @@ class ChatBoxComponent extends BaseComponent
     public function findTargetCountry(int $targetCountryId = 0)
     {
         // Ensure in proper range
-        $this->targetCountryId = $this->targetCountryId < -1 && $this->targetCountryId < $this->game->getCountryCount() ? $targetCountryId : Country::GLOBAL;
+        $this->targetCountryId = $targetCountryId < -1 && $targetCountryId < $this->game->getCountryCount() ? $targetCountryId : Country::GLOBAL;
 
         // Enforce Global and Notes tabs when its not Regular or Rulebook press game, and not looking at
         // own messages

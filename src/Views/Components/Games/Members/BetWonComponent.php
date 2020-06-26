@@ -8,11 +8,9 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class BetWonComponent extends BaseComponent
 {
-    protected $template = 'games/members/betWon.twig';
-    /** @var Member $member */
-    protected $member;
-    /** @var Game $game */
-    protected $game;
+    protected string $template = 'games/members/betWon.twig';
+    protected Member $member;
+    protected Game $game;
 
     public function __construct(Game $game, Member $member)
     {

@@ -9,13 +9,10 @@ use Diplomacy\Views\Components\BaseComponent;
 
 class MemberVotesComponent extends BaseComponent
 {
-    public $template = 'games/members/memberVotes.twig';
-    /** @var Member $member */
-    protected $member;
-    /** @var Game $game */
-    protected $game;
-    /** @var User $currentUser */
-    protected $currentUser;
+    public string $template = 'games/members/memberVotes.twig';
+    protected ?Member $member;
+    protected Game $game;
+    protected ?User $currentUser;
 
     public function __construct(Member $member, Game $game, User $currentUser)
     {
