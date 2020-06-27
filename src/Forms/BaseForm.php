@@ -38,6 +38,7 @@ abstract class BaseForm
     protected FieldFactory $fieldFactory;
     protected array $fieldObjects = [];
     protected string $fieldPrefix = '';
+    protected string $tplFormWrapper = 'common/form_wrapper.twig';
 
     /**
      * @param Request $request
@@ -122,7 +123,7 @@ abstract class BaseForm
             'submitBtnCls'      => $this->submitBtnCls,
         ]);
         $notice = $this->getPlaceholder('notice', false);
-        $output = $this->renderer->render('common/form_wrapper.twig', [
+        $output = $this->renderer->render($this->tplFormWrapper, [
             'id'            => $this->id,
             'name'          => $this->name,
             'action'        => $this->getAction(),

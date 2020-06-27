@@ -16,8 +16,7 @@ use Illuminate\Database\Query\JoinClause;
  */
 class GamesService
 {
-    /** @var Factory $entityFactory */
-    protected $entityFactory;
+    protected Factory $entityFactory;
 
     public function __construct()
     {
@@ -44,13 +43,22 @@ class GamesService
         }
     }
 
+    /**
+     * @param int $gameId
+     * @return \Diplomacy\Models\Entities\Game
+     */
+    public function find(int $gameId): \Diplomacy\Models\Entities\Game
+    {
+        $gameModel = $this->findModel($gameId);
+        return $this->entityFactory->build($gameModel, true);
+    }
 
     /**
      * @param int $gameId
      * @return Game
      * @throws \Exception
      */
-    public function find(int $gameId) : Game
+    public function findModel(int $gameId) : Game
     {
         $game = Game::find($gameId);
         if (!$game) {

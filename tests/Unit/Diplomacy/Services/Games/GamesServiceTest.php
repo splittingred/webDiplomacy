@@ -13,10 +13,10 @@ class GamesServiceTest extends TestCase
         return new GamesService();
     }
 
-    public function testFind()
+    public function testFindModel()
     {
         $factoryGame = $this->factories()->create(Game::class);
-        $game = $this->getService()->find($factoryGame->id);
+        $game = $this->getService()->findModel($factoryGame->id);
         $this->assertInstanceOf(Game::class, $game);
     }
     public function testFindNotFound()

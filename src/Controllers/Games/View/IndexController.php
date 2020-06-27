@@ -55,7 +55,7 @@ class IndexController extends Base
         $gameId = $this->request->get('id', 0, Request::TYPE_REQUEST);
         if (empty($gameId)) $this->redirectRelative('/', true);
 
-        $this->game = $this->gamesService->find($gameId);
+        $this->game = $this->gamesService->findModel($gameId);
         if (empty($this->game)) $this->redirectRelative('/', true);
 
         $this->gameEntity = $this->gameFactory->build($this->game->id);

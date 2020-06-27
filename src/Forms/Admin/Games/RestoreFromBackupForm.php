@@ -2,6 +2,8 @@
 
 namespace Diplomacy\Forms\Admin\Games;
 
+use Diplomacy\Services\Games\BackupService;
+use Diplomacy\Services\Games\GamesService;
 use Diplomacy\Services\Request;
 
 class RestoreFromBackupForm extends BaseForm
@@ -10,6 +12,15 @@ class RestoreFromBackupForm extends BaseForm
     protected string $name = 'admin-game-restore-from-backup';
     protected string $template = 'forms/admin/games/restore_from_backup.twig';
     protected string $requestType = Request::TYPE_POST;
+
+    protected GamesService $gamesService;
+    protected BackupService $backupService;
+
+    public function setUp(): void
+    {
+        $this->gamesService = new GamesService();
+        $this->backupService = new BackupService();
+    }
 
     /**
      * @return array
@@ -39,8 +50,25 @@ class RestoreFromBackupForm extends BaseForm
         }
     }
 
+    /**
+     * @return $this
+     */
     public function handleSubmit(): BaseForm
     {
+        $gameId = $this->getValue('game_id');
+        try {
+            $game = $this->gamesService->find($gameId);
+        } catch (\Exception $e) {
+            $this->setNotice("Game not found with ID: $gameId");
+            return $this;
+        }
+
+        $result = $this->backupService->create($game);
+        if ($result->successful()) {
+            $this->redirectToSelf();
+        } else {
+            $this->setNotice('Failed to backup game: '.$result->getValue()->getMessage());
+        }
         return $this;
     }
 }
