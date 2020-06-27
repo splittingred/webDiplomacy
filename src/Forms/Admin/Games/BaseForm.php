@@ -2,10 +2,10 @@
 
 namespace Diplomacy\Forms\Admin\Games;
 
-use Diplomacy\Forms\BaseForm as ModalBaseForm;
+use Diplomacy\Forms\BaseForm as Base;
 use Diplomacy\Models\Entities\Game;
 
-class BaseForm extends ModalBaseForm
+class BaseForm extends Base
 {
     /**
      * @return Game

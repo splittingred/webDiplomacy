@@ -13,6 +13,7 @@ class ForgotPasswordConfirmationForm extends BaseForm
     protected string $action = '/users/forgot-confirmation';
     protected string $formCls = '';
     protected string $name = 'users-forgot-password-confirmation';
+    public string $submitBtnText = 'Change Password';
     protected array $fields = [
         'user_id' => [],
         'old_password' => ['type' => 'password'],

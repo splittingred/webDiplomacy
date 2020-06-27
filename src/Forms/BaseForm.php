@@ -26,6 +26,9 @@ abstract class BaseForm
     protected array $onSubmissionCallbacks = [];
     protected string $action = '';
     protected string $formCls = '';
+    public bool $submitBtn = true;
+    public string $submitBtnText = 'Submit';
+    public string $submitBtnCls = 'btn btn-primary green-Submit';
 
     protected Validator $validator;
     protected array $validationRules = [];
@@ -114,16 +117,22 @@ abstract class BaseForm
             'formCls'           => $this->formCls,
             'nestedIn'          => $this->nestedIn,
             'current_uri'       => $this->request->getCurrentUri(),
+            'submitBtn'         => $this->submitBtn,
+            'submitBtnText'     => $this->submitBtnText,
+            'submitBtnCls'      => $this->submitBtnCls,
         ]);
         $notice = $this->getPlaceholder('notice', false);
         $output = $this->renderer->render('common/form_wrapper.twig', [
-            'id' => $this->id,
-            'name' => $this->name,
-            'action' => $this->getAction(),
-            'method' => $this->requestType,
-            'notice' => !empty($notice) ? $this->renderer->render('common/notice.twig', ['notice' => $notice]) : '',
-            'cls' => $this->getFormCssCls(),
-            'content' => $this->renderer->render($this->template, $this->placeholders),
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'action'        => $this->getAction(),
+            'method'        => $this->requestType,
+            'notice'        => !empty($notice) ? $this->renderer->render('common/notice.twig', ['notice' => $notice]) : '',
+            'cls'           => $this->getFormCssCls(),
+            'content'       => $this->renderer->render($this->template, $this->placeholders),
+            'submitBtn'     => $this->submitBtn,
+            'submitBtnText' => $this->submitBtnText,
+            'submitBtnCls'  => $this->submitBtnCls,
         ]);
         $this->afterRender();
         return $output;

@@ -13,6 +13,7 @@ class SearchForm extends BaseForm
     protected string $action = '/games/search#results';
     protected string $name = 'games-search';
     protected string $formCls = 'advancedSearch';
+    public string $submitBtnText = 'Search';
     protected array $fields = [
         'status'            => [
             'default' => 'all'

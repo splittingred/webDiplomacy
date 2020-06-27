@@ -2,4 +2,7 @@
     <input type="hidden" name="form" value="{{ name }}" />
     {{ notice|raw }}
     {{ content|raw }}
+    {% if submitBtn %}
+        <button type="submit" class="{{ submitBtnCls }}">{{ submitBtnText }}</button>
+    {% endif %}
 </form>

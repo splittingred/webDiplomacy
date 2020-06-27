@@ -20,8 +20,8 @@ abstract class Field
     public string $id;
     public string $name;
     public string $label;
-    public string $default;
     public string $cssCls = self::BASE_CSS_CLS;
+    public $default = null;
     public $value = '';
     public string $helpText = '';
     public array $attributes = [];

@@ -14,6 +14,7 @@ class SendPrivateMessageForm extends BaseForm
     protected string $formCls = '';
     protected string $name = 'users-new-pm';
     protected string $nestedIn = 'new_user_pm';
+    public string $submitBtnText = 'Send Message';
     protected array $fields = [
         'user_id' => [
             'type' => 'hidden',

@@ -13,6 +13,7 @@ class ForgotPasswordForm extends BaseForm
     protected string $action = '/users/forgot';
     protected string $formCls = '';
     protected string $name = 'users-forgot-password';
+    public string $submitBtnText = 'Send Reset Password Confirmation';
     protected array $fields = [
         'username' => [],
     ];

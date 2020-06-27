@@ -14,6 +14,7 @@ class LoginForm extends BaseForm
     protected string $action = '/users/login';
     protected string $formCls = '';
     protected string $name = 'users-login';
+    public string $submitBtnText = 'Login';
     protected array $fields = [
         'username' => [],
         'password' => ['type' => 'password'],

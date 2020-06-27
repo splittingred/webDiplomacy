@@ -19,6 +19,7 @@ class NewForm extends BaseForm
     protected string $action = '/games/new';
     protected string $name = 'games-new';
     protected string $formCls = 'new-game-form';
+    public string $submitBtnText = 'Create Game';
     protected array $fields = [
         'new_game' => [
             'type' => 'hidden',

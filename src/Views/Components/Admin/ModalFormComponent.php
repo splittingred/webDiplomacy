@@ -87,7 +87,10 @@ class ModalFormComponent extends BaseComponent
         try {
             $validationFactory = $app->make('validation.factory');
             $formClass = $this->formClass;
-            return new $formClass($this->getRequest(), $this->renderer(), $validationFactory, $this->getDefaultValues(), $this->getFormPlaceholders());
+            /** @var BaseForm $form */
+            $form = new $formClass($this->getRequest(), $this->renderer(), $validationFactory, $this->getDefaultValues(), $this->getFormPlaceholders());
+            $form->submitBtn = false;
+            return $form;
         } catch (\Exception $e) {}
     }
 }
