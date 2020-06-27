@@ -6,7 +6,7 @@ use Diplomacy\Views\Renderer;
 
 class CheckboxesField extends Field
 {
-    public $template = 'forms/fields/checkboxes.twig';
+    public string $template = 'forms/fields/checkboxes.twig';
 
     public function __construct(Renderer $renderer, $name, $value, array $attributes = [], array $errors = [])
     {

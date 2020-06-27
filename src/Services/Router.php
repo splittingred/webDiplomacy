@@ -100,6 +100,7 @@ class Router
 
         /* admin */
         $this->router->get('admin/logs', 'Admin\LogsController@handle');
+        $this->router->get('admin/games/backup', 'Admin\Games\BackupController@handle');
 
         /* api */
         $this->router->get('api/users/options', 'Api\Users\OptionsController@handle');

@@ -4,6 +4,6 @@ namespace Diplomacy\Forms\Fields;
 
 class CheckboxField extends Field
 {
-    public $template = 'forms/fields/checkbox.twig';
-    public $default = 1;
+    public string $template = 'forms/fields/checkbox.twig';
+    public string $default = '1';
 }

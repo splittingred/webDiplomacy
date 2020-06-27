@@ -9,9 +9,9 @@ use Diplomacy\Views\Renderer;
  */
 class PercentSelectField extends SelectField
 {
-    public $min;
-    public $max;
-    public $step;
+    public int $min;
+    public int $max;
+    public int $step;
 
     public function __construct(Renderer $renderer, $name, $value, array $attributes = [], array $errors = [])
     {

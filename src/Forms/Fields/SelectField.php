@@ -6,7 +6,7 @@ use Diplomacy\Views\Renderer;
 
 class SelectField extends Field
 {
-    protected $template = 'forms/fields/select.twig';
+    protected string $template = 'forms/fields/select.twig';
 
     public function __construct(Renderer $renderer, $name, $value, array $attributes = [], array $errors = [])
     {

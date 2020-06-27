@@ -6,12 +6,12 @@ use Diplomacy\Views\Renderer;
 
 class NumberField extends Field
 {
-    protected $template = 'forms/fields/number.twig';
+    protected string $template = 'forms/fields/number.twig';
 
-    public $size;
-    public $min;
-    public $max;
-    public $step;
+    public int $size;
+    public int $min;
+    public int $max;
+    public int $step;
 
     public function __construct(Renderer $renderer, $name, $value, array $attributes = [], array $errors = [])
     {

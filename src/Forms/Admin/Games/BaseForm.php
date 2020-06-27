@@ -10,7 +10,7 @@ class BaseForm extends ModalBaseForm
     /**
      * @return Game
      */
-    protected function getGame(): Game
+    protected function getGame()
     {
         return $this->getPlaceholder('game');
     }

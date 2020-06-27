@@ -15,28 +15,18 @@ abstract class Field
     /** @var string */
     const BASE_CSS_CLS = 'form-control';
     /** @var string $template */
-    protected $template = 'forms/fields/text.twig';
+    protected string $template = 'forms/fields/text.twig';
 
-    /** @var string $id */
-    public $id;
-    /** @var string $name */
-    public $name;
-    /** @var string  */
-    public $label;
-    /** @var string  */
-    public $default;
-    /** @var string $cssCls */
-    public $cssCls = self::BASE_CSS_CLS;
-    /** @var string|array $value */
+    public string $id;
+    public string $name;
+    public string $label;
+    public string $default;
+    public string $cssCls = self::BASE_CSS_CLS;
     public $value = '';
-    /** @var string $helpText */
-    public $helpText = '';
-    /** @var array $attributes */
-    public $attributes = [];
-    /** @var array $errors */
-    public $errors = [];
-    /** @var Renderer $renderer */
-    protected $renderer;
+    public string $helpText = '';
+    public array $attributes = [];
+    public array $errors = [];
+    protected Renderer $renderer;
 
     public function __construct(Renderer $renderer, string $name, $value, array $attributes = [], array $errors = [])
     {
