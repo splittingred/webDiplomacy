@@ -34,7 +34,7 @@ class RestoreFromBackupForm extends BaseForm
                     'type' => 'Games\Game',
                     'game' => $game,
                     'input' => [
-                        'disabled' => 'disabled',
+                        //'disabled' => 'disabled',
                     ],
                     'default' => 0,
                 ],

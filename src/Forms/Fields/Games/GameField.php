@@ -14,6 +14,7 @@ use Diplomacy\Views\Renderer;
  */
 class GameField extends SelectField
 {
+    public string $cssCls = 'custom-select select2-games';
     protected Game $game;
 
     public function __construct(Renderer $renderer, $name, $value, array $attributes = [], array $errors = [])

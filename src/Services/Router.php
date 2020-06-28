@@ -105,6 +105,7 @@ class Router
         /* api */
         $this->router->get('api/users/options', 'Api\Users\OptionsController@handle');
         $this->router->get('api/users/options.js', 'Api\Users\OptionsController@handle');
+        $this->router->get('api/games.js', 'Api\Games\IndexController@handle');
     }
 
     /**
