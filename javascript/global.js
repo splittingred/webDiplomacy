@@ -18,4 +18,5 @@ if (Prototype.BrowserFeatures.ElementExtensions) {
 jQuery(document).ready(function () {
     jQuery('[data-toggle="popover"]').popover({ delay: { show: 10, hide: 1000 }});
     jQuery('[data-toggle="tooltip"]').tooltip();
+    jQuery('.select2').select2({ theme: 'bootstrap4' });
 });

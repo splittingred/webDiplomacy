@@ -8,6 +8,13 @@ and strategic. webDiplomacy lets you play Diplomacy online.
 
 README.txt - Installation information. This is legacy and hopefully will be vastly improved in the future.
 
+Then run (you must have composer + yarn installed):
+
+```
+yarn install
+composer install
+```
+
 ### nginx setup
 
 Run on PHP 7.3+. Add the nginx config:

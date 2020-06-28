@@ -2104,6 +2104,8 @@ ul.threads-list li p {
 	height: 16px;
 }
 
+
+/** bootstrap overrides */
 .popover {
 	padding: 5px;
 }
@@ -2116,4 +2118,9 @@ ul.threads-list li p {
 
 .modal-backdrop {
 	position: inherit;
+}
+
+.select2-results__option {
+	text-align: left;
+	padding-left: 20px;
 }

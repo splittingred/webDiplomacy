@@ -1,0 +1,14 @@
+{
+  "name": "webDiplomacy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:splittingred/webDiplomacy.git",
+  "author": "Shaun McCormick <splittingred@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@ttskch/select2-bootstrap4-theme": "^1.4.0",
+    "bootstrap": "^4.5.0",
+    "jquery": "^3.5.1",
+    "select2": "^4.0.13"
+  }
+}

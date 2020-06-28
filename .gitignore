@@ -29,3 +29,6 @@ vendor/
 tests/coverage/
 log/*.log
 .env
+node_modules
+package-lock.json
+yarn-error.log

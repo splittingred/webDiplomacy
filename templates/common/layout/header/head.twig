@@ -10,22 +10,9 @@
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="icon" href="/favicon.ico" />
 
-    <link rel="stylesheet" href="/css/bootstrap-4.0.0.min.css?ver={{ css_version }}" />
-    <script type="text/javascript" src="/api/users/options.js?c=a{{ random() }}a{{ random() }}"></script>
-    <script src="/javascript/clickhandler.js?ver={{ js_version }}"></script>
-    {# here because of deficiencies with JS OOE in webdip; this needs to load before footerscripts #}
-    <script src="/javascript/contrib/jquery-3.3.1.min.js?ver={{ js_version }}"></script>
-    <script>$.noConflict();</script>
-    <script src="/contrib/js/prototype.js"></script>
-    <script src="/contrib/js/scriptaculous.js"></script>
-    <link rel="stylesheet" type="text/css" href="/contrib/js/pushup/src/css/pushup.css" />
-    <script src="/contrib/js/pushup/src/js/pushup.js"></script>
-    <script src="/javascript/global.js?ver={{ js_version }}"></script>
-    <script type="text/javascript">
-        let STATICSRV = '/';
-        let cssDirectory = "/css";
-        let cssVersion = "/css";
-    </script>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css?ver={{ css_version }}" />
+    <link href="/node_modules/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="/node_modules/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css" rel="stylesheet" />
     {% for variant in variants %}
         <link rel="stylesheet" href="/variants/{{ variant }}/resources/style.css?ver={{ css_version }}" type="text/css" />
     {% endfor %}
@@ -33,6 +20,21 @@
     <link rel="stylesheet" id="game-panel-css" href="/css/gamepanel.css?ver={{ css_version }}" type="text/css" />
     <link rel="stylesheet" id="home-css" href="/css/home.css?ver={{ css_version }}" type="text/css" />
     <link rel="stylesheet" id="menu-css" href="/css/menu.css?ver={{ css_version }}" type="text/css" />
+
+    <script type="text/javascript" src="/node_modules/jquery/dist/jquery.min.js?ver={{ js_version }}"></script>
+    <script type="text/javascript" src="/api/users/options.js?c=a{{ random() }}a{{ random() }}"></script>
+    <script type="text/javascript" src="/javascript/clickhandler.js?ver={{ js_version }}"></script>
+    {# here because of deficiencies with JS OOE in webdip; this needs to load before footerscripts #}
+    <script type="text/javascript">$.noConflict();</script>
+    <script type="text/javascript" src="/contrib/js/prototype.js"></script>
+    <script type="text/javascript" src="/contrib/js/scriptaculous.js"></script>
+    <link rel="stylesheet" type="text/css" href="/contrib/js/pushup/src/css/pushup.css" />
+    <script type="text/javascript" src="/contrib/js/pushup/src/js/pushup.js"></script>
+    <script type="text/javascript">
+        let STATICSRV = '/';
+        let cssDirectory = "/css";
+        let cssVersion = "/css";
+    </script>
 
     <title>{{ title }} - webDiplomacy</title>
     <base href="/">
